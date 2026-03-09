@@ -127,6 +127,10 @@ export default function PremiumSystemsHero() {
           }}
         />
 
+        {/* Grid + pattern overlays */}
+        <div className="cursor-trail-grid absolute inset-0 opacity-[0.12]" />
+        <div className="cursor-trail-pattern absolute inset-0 opacity-40" />
+
         <div
           className="absolute inset-0 transition-opacity duration-500"
           style={{
