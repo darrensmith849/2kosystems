@@ -39,29 +39,6 @@
   }
 }
 
-@keyframes hero-pulse {
-  0%,
-  100% {
-    transform: scale(1);
-    opacity: 0.4;
-  }
-  50% {
-    transform: scale(1.15);
-    opacity: 0;
-  }
-}
-
-.hero-pulse {
-  animation: hero-pulse 6s ease-in-out infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero-pulse {
-    animation: none;
-    opacity: 0;
-  }
-}
-
 * {
   box-sizing: border-box;
 }
@@ -83,61 +60,3 @@ body {
   color: #fff;
 }
 
-/* Premium hero effects */
-.cursor-trail-grid {
-  display: none;
-}
-
-.cursor-trail-pattern {
-  background-image:
-    repeating-linear-gradient(
-      120deg,
-      rgba(255, 255, 255, 0.05) 0px,
-      rgba(255, 255, 255, 0.05) 1px,
-      transparent 1px,
-      transparent 24px
-    ),
-    linear-gradient(
-      90deg,
-      transparent 0%,
-      rgba(255, 255, 255, 0.03) 50%,
-      transparent 100%
-    );
-  background-size: 220px 220px, 100% 100%;
-  animation: cursorTrailDrift 22s linear infinite;
-}
-
-.cursor-trail-node {
-  animation: cursorTrailPulse 7s ease-in-out infinite;
-}
-
-@keyframes cursorTrailDrift {
-  0% {
-    transform: translate3d(0, 0, 0);
-  }
-  50% {
-    transform: translate3d(-12px, 8px, 0);
-  }
-  100% {
-    transform: translate3d(0, 0, 0);
-  }
-}
-
-@keyframes cursorTrailPulse {
-  0%,
-  100% {
-    opacity: 0.2;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.85;
-    transform: scale(1.65);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .cursor-trail-pattern,
-  .cursor-trail-node {
-    animation: none !important;
-  }
-}
