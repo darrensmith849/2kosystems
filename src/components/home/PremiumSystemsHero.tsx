@@ -127,10 +127,6 @@ export default function PremiumSystemsHero() {
           }}
         />
 
-        {/* Grid + pattern overlays */}
-        <div className="cursor-trail-grid absolute inset-0 opacity-[0.12]" />
-        <div className="cursor-trail-pattern absolute inset-0 opacity-40" />
-
         <div
           className="absolute inset-0 transition-opacity duration-500"
           style={{
@@ -175,7 +171,7 @@ export default function PremiumSystemsHero() {
           <div className="mt-8 flex flex-col gap-4 sm:flex-row">
             <Link
               href="/get-started"
-              className="inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-medium text-slate-950 transition duration-200 hover:scale-[1.02]"
+              className="inline-flex items-center justify-center rounded-full bg-[#16a34a] px-6 py-3 text-sm font-medium text-white transition duration-200 hover:bg-[#22c55e] hover:scale-[1.02]"
             >
               Book a Systems Audit
             </Link>
