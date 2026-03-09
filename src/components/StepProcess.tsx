@@ -1,7 +1,10 @@
+import { ReactNode } from "react";
+
 interface Step {
   number: string;
   title: string;
   description: string;
+  icon?: ReactNode;
 }
 
 interface StepProcessProps {
@@ -16,7 +19,10 @@ export default function StepProcess({ steps }: StepProcessProps) {
           key={step.number}
           className="flex flex-col gap-3 bg-surface p-6"
         >
-          <span className="text-2xl font-semibold text-accent">{step.number}</span>
+          <div className="flex items-center gap-3">
+            <span className="text-2xl font-semibold text-accent">{step.number}</span>
+            {step.icon && <span className="text-accent/60">{step.icon}</span>}
+          </div>
           <h3 className="text-base font-semibold text-text">{step.title}</h3>
           <p className="text-sm leading-relaxed text-muted">{step.description}</p>
         </div>

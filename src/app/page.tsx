@@ -4,26 +4,51 @@ import SectionHeader from "@/components/SectionHeader";
 import Card from "@/components/Card";
 import StepProcess from "@/components/StepProcess";
 import CTASection from "@/components/CTASection";
+import HeroBackground from "@/components/HeroBackground";
+import {
+  WorkflowIcon,
+  PortalIcon,
+  ApprovalIcon,
+  DashboardIcon,
+  KnowledgeIcon,
+  AIIcon,
+  AuditIcon,
+  PilotIcon,
+  BuildIcon,
+  RetainerIcon,
+  MiningIcon,
+  AgricultureIcon,
+  LogisticsIcon,
+  IndustrialIcon,
+  ComplianceIcon,
+  MultiBranchIcon,
+  TrainingIcon,
+  SpreadsheetIcon,
+  ProcessIcon,
+  CustomIcon,
+  AdminIcon,
+  ScopeIcon,
+  PrototypeIcon,
+  OptimiseIcon,
+} from "@/components/Icons";
+
+const industryIcons = [
+  MiningIcon,
+  AgricultureIcon,
+  LogisticsIcon,
+  IndustrialIcon,
+  ComplianceIcon,
+  MultiBranchIcon,
+  TrainingIcon,
+  SpreadsheetIcon,
+];
 
 export default function Home() {
   return (
     <>
       {/* SECTION 1 — HERO */}
       <section className="relative overflow-hidden border-b border-border/60 bg-background">
-        {/* Background gradient */}
-        <div
-          className="pointer-events-none absolute inset-0"
-          aria-hidden="true"
-          style={{
-            background:
-              "radial-gradient(ellipse 60% 50% at 50% 0%, rgba(22,163,74,0.08) 0%, transparent 70%)",
-          }}
-        />
-        {/* Accent glow */}
-        <div
-          className="pointer-events-none absolute -top-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-accent/10 blur-3xl"
-          aria-hidden="true"
-        />
+        <HeroBackground />
 
         <div className="relative mx-auto max-w-6xl px-6 pb-20 pt-28 md:pb-28 md:pt-36">
           <div className="mx-auto max-w-3xl text-center">
@@ -34,7 +59,7 @@ export default function Home() {
               Custom operational systems for businesses that have outgrown spreadsheets, paper, and patchwork tools.
             </h1>
             <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-muted md:text-lg">
-              2KO Systems helps established businesses modernise critical workflows through custom web systems, approvals engines, reporting dashboards, portals, and embedded AI tools. We focus on practical operational leverage — less admin, better visibility, faster decisions, and systems that scale with your business.
+              We build custom web systems, approvals engines, dashboards, portals, and embedded AI tools for established businesses. Less admin, better visibility, faster decisions.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link
@@ -50,6 +75,20 @@ export default function Home() {
                 Explore Solutions
               </Link>
             </div>
+
+            {/* Proof strip */}
+            <div className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3">
+              {[
+                "Custom operational systems",
+                "Built for analogue-heavy businesses",
+                "Backed by 2KO process expertise",
+              ].map((item) => (
+                <div key={item} className="flex items-center gap-2">
+                  <span className="h-1 w-1 rounded-full bg-accent/60" />
+                  <span className="text-xs tracking-wide text-muted2">{item}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -62,28 +101,29 @@ export default function Home() {
         <div className="mx-auto max-w-6xl px-6 py-20">
           <SectionHeader
             title="Built for real operations, not tech theatre."
-            description="Most businesses do not need &quot;more software&quot;. They need the right operational system for the way their business actually runs."
+            description="You don't need more software. You need the right system for how your business actually runs."
           />
-          <p className="mx-auto mb-14 max-w-2xl text-center text-base leading-relaxed text-muted">
-            2KO Systems builds practical web-based systems that remove friction from approvals, reporting, handovers, requests, compliance, onboarding, field operations, and day-to-day coordination. We work especially well in environments where process matters, admin is heavy, and operational visibility is too dependent on people chasing updates.
-          </p>
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             <Card
+              icon={<ProcessIcon size={22} />}
               title="Process-first thinking"
-              description="We start with the operational bottleneck, not the technology trend."
+              description="We start with the bottleneck, not the trend."
             />
             <Card
+              icon={<CustomIcon size={22} />}
               title="Custom-built for your operation"
-              description="Every system is shaped around your workflows, approvals, and reporting reality."
+              description="Shaped around your workflows, approvals, and reporting reality."
             />
             <Card
+              icon={<AIIcon size={22} />}
               title="AI where it adds real value"
-              description="Embedded AI for drafting, routing, summarising, searching, and decision support — not for show."
+              description="Drafting, routing, summarising, and decision support — not for show."
             />
             <Card
-              title="Designed to reduce admin and delay"
-              description="Less manual follow-up. Faster movement. Better visibility for leaders."
+              icon={<AdminIcon size={22} />}
+              title="Less admin, faster decisions"
+              description="Reduced follow-up. Better movement. Clearer visibility."
             />
           </div>
         </div>
@@ -94,33 +134,39 @@ export default function Home() {
         <div className="mx-auto max-w-6xl px-6 py-20">
           <SectionHeader
             title="What we build"
-            description="We design and deploy custom systems that replace fragmented workflows with one clear operational layer."
+            description="Custom systems that replace fragmented workflows with one clear operational layer."
           />
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
             <Card
+              icon={<WorkflowIcon size={22} />}
               title="Workflow Automation"
-              description="Digitise repetitive operational flows so work moves cleanly from request to approval to completion."
+              description="Digitise operational flows from request to approval to completion."
             />
             <Card
+              icon={<PortalIcon size={22} />}
               title="Client & Staff Portals"
-              description="Secure role-based portals for onboarding, requests, communication, status visibility, and document access."
+              description="Role-based portals for onboarding, requests, status visibility, and document access."
             />
             <Card
+              icon={<ApprovalIcon size={22} />}
               title="Approvals & Governance"
-              description="Structured approval chains, audit trails, escalation logic, and compliance visibility built into the workflow."
+              description="Approval chains, audit trails, escalation logic, and compliance visibility."
             />
             <Card
+              icon={<DashboardIcon size={22} />}
               title="Dashboards & Reporting"
-              description="Live operational dashboards and automated reporting packs that remove manual status chasing."
+              description="Live operational dashboards and automated reporting that remove status chasing."
             />
             <Card
+              icon={<KnowledgeIcon size={22} />}
               title="SOP & Knowledge Copilots"
-              description="Make procedures, standards, and key answers accessible at the point of work."
+              description="Procedures, standards, and answers accessible at the point of work."
             />
             <Card
+              icon={<AIIcon size={22} />}
               title="AI-Assisted Operations"
-              description="Use AI for classification, summaries, draft generation, issue triage, search, and workflow support where it meaningfully improves speed and consistency."
+              description="Classification, summaries, draft generation, triage, and search where it improves speed."
             />
           </div>
         </div>
@@ -131,29 +177,33 @@ export default function Home() {
         <div className="mx-auto max-w-6xl px-6 py-20">
           <SectionHeader
             title="A low-risk path into custom systems"
-            description="We do not force clients into giant software projects on day one. We start narrow, prove value quickly, and scale from there."
+            description="Start narrow, prove value, scale from there."
           />
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             <Card
               number="01"
+              icon={<AuditIcon size={22} />}
               title="Systems Opportunity Audit"
-              description="Short paid diagnostic to identify the best workflow to digitise first, map the current pain, and define the ROI case."
+              description="Paid diagnostic to identify the best workflow to digitise first and define the ROI case."
             />
             <Card
               number="02"
+              icon={<PilotIcon size={22} />}
               title="Proof-of-Value Pilot"
-              description="A tightly scoped first system that solves one painful process quickly and visibly."
+              description="A tightly scoped system that solves one painful process quickly and visibly."
             />
             <Card
               number="03"
+              icon={<BuildIcon size={22} />}
               title="Core System Build"
-              description="A larger custom platform built around your operational workflows, approvals, reporting, and user roles."
+              description="Custom platform built around your workflows, approvals, reporting, and user roles."
             />
             <Card
               number="04"
+              icon={<RetainerIcon size={22} />}
               title="Managed Intelligence Retainer"
-              description="Ongoing optimisation, support, AI enhancements, reporting improvements, and system evolution."
+              description="Ongoing optimisation, AI enhancements, reporting improvements, and system evolution."
             />
           </div>
         </div>
@@ -175,16 +225,21 @@ export default function Home() {
               "Compliance-heavy organisations",
               "Multi-branch operational businesses",
               "Training, accreditation, and assessment environments",
-              "Teams stuck in spreadsheets, paper, email chains, and WhatsApp workflows",
-            ].map((item) => (
-              <div
-                key={item}
-                className="flex items-center gap-3 bg-surface p-5"
-              >
-                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
-                <span className="text-sm text-text">{item}</span>
-              </div>
-            ))}
+              "Teams stuck in spreadsheets, paper, and WhatsApp workflows",
+            ].map((item, i) => {
+              const Icon = industryIcons[i];
+              return (
+                <div
+                  key={item}
+                  className="flex items-center gap-3 bg-surface p-5"
+                >
+                  <span className="text-accent/70">
+                    <Icon size={18} />
+                  </span>
+                  <span className="text-sm text-text">{item}</span>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -199,32 +254,37 @@ export default function Home() {
               {
                 number: "01",
                 title: "Audit",
+                icon: <AuditIcon size={18} />,
                 description:
-                  "We identify the operational bottleneck, map the current workflow, and define the improvement target.",
+                  "Identify the bottleneck, map the workflow, define the improvement target.",
               },
               {
                 number: "02",
                 title: "Scope",
+                icon: <ScopeIcon size={18} />,
                 description:
-                  "We narrow the first solution to the highest-value use case with the clearest path to ROI.",
+                  "Narrow to the highest-value use case with the clearest ROI path.",
               },
               {
                 number: "03",
                 title: "Prototype",
+                icon: <PrototypeIcon size={18} />,
                 description:
-                  "We shape the user flow, interface, and logic quickly so stakeholders can see the future state.",
+                  "Shape the flow, interface, and logic so stakeholders see the future state.",
               },
               {
                 number: "04",
                 title: "Build",
+                icon: <BuildIcon size={18} />,
                 description:
-                  "We deploy the production-ready system with the right permissions, workflows, and reporting layers.",
+                  "Deploy production-ready with permissions, workflows, and reporting layers.",
               },
               {
                 number: "05",
                 title: "Optimise",
+                icon: <OptimiseIcon size={18} />,
                 description:
-                  "We refine, extend, and improve the system over time with support, analytics, and AI enhancements.",
+                  "Refine and extend over time with support, analytics, and AI enhancements.",
               },
             ]}
           />
@@ -236,7 +296,7 @@ export default function Home() {
         <div className="mx-auto max-w-6xl px-6 py-20">
           <SectionHeader
             title="The systems arm of the 2KO group"
-            description="2KO Systems is part of the wider 2KO ecosystem, alongside 2KO Africa and Six Sigma South Africa. That means our systems work is grounded in real operational improvement, not just software delivery."
+            description="Part of the wider 2KO ecosystem. Our systems work is grounded in real operational improvement, not just software delivery."
           />
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
@@ -271,7 +331,7 @@ export default function Home() {
       {/* SECTION 9 — FINAL CTA */}
       <CTASection
         title="Ready to modernise one critical workflow?"
-        description="Start with a Systems Audit and identify the highest-value place to digitise first."
+        description="Start with a Systems Audit — identify the highest-value place to digitise first."
         primaryCTA="Book a Systems Audit"
         primaryHref="/get-started"
         secondaryCTA="View Case Studies"

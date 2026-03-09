@@ -39,6 +39,29 @@
   }
 }
 
+@keyframes hero-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 0;
+  }
+}
+
+.hero-pulse {
+  animation: hero-pulse 6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-pulse {
+    animation: none;
+    opacity: 0;
+  }
+}
+
 * {
   box-sizing: border-box;
 }
