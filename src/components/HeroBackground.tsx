@@ -2,20 +2,35 @@
 
 import { useEffect, useRef, useCallback } from "react";
 
+const GRID_SPACING = 32;
+const REVEAL_RADIUS = 180;
+const DOT_BASE_RADIUS = 1;
+const DOT_GLOW_RADIUS = 2;
+const ACCENT_R = 22;
+const ACCENT_G = 163;
+const ACCENT_B = 74;
+
 export default function HeroBackground() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const glowRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const rafRef = useRef<number>(0);
-  const mouseRef = useRef({ x: 0.5, y: 0.5 });
+  const mouseRef = useRef({ x: -1000, y: -1000 });
+  const smoothMouseRef = useRef({ x: -1000, y: -1000 });
+  const hasEnteredRef = useRef(false);
 
   const handleMouseMove = useCallback((e: MouseEvent) => {
-    const container = containerRef.current;
-    if (!container) return;
-    const rect = container.getBoundingClientRect();
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
     mouseRef.current = {
-      x: (e.clientX - rect.left) / rect.width,
-      y: (e.clientY - rect.top) / rect.height,
+      x: (e.clientX - rect.left) * (canvas.width / rect.width),
+      y: (e.clientY - rect.top) * (canvas.height / rect.height),
     };
+    hasEnteredRef.current = true;
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    hasEnteredRef.current = false;
   }, []);
 
   useEffect(() => {
@@ -23,27 +38,124 @@ export default function HeroBackground() {
       "(prefers-reduced-motion: reduce)"
     ).matches;
 
-    if (prefersReduced) return;
-
     const container = containerRef.current;
-    const glow = glowRef.current;
-    if (!container || !glow) return;
+    const canvas = canvasRef.current;
+    if (!container || !canvas) return;
 
-    container.addEventListener("mousemove", handleMouseMove, {
-      passive: true,
-    });
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
 
-    let currentX = 0.5;
-    let currentY = 0.5;
+    function resize() {
+      if (!canvas || !container) return;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const rect = container.getBoundingClientRect();
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      canvas.style.width = `${rect.width}px`;
+      canvas.style.height = `${rect.height}px`;
+      ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    resize();
+    window.addEventListener("resize", resize, { passive: true });
+
+    if (prefersReduced) {
+      // Static faint grid only
+      drawStaticGrid(ctx, container.getBoundingClientRect());
+      return () => window.removeEventListener("resize", resize);
+    }
+
+    container.addEventListener("mousemove", handleMouseMove, { passive: true });
+    container.addEventListener("mouseleave", handleMouseLeave);
+
+    function drawStaticGrid(
+      context: CanvasRenderingContext2D,
+      rect: DOMRect
+    ) {
+      context.clearRect(0, 0, rect.width, rect.height);
+      const cols = Math.ceil(rect.width / GRID_SPACING) + 1;
+      const rows = Math.ceil(rect.height / GRID_SPACING) + 1;
+      const offsetX = (rect.width % GRID_SPACING) / 2;
+      const offsetY = (rect.height % GRID_SPACING) / 2;
+
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+          const x = offsetX + col * GRID_SPACING;
+          const y = offsetY + row * GRID_SPACING;
+          context.beginPath();
+          context.arc(x, y, DOT_BASE_RADIUS, 0, Math.PI * 2);
+          context.fillStyle = `rgba(245, 245, 245, 0.06)`;
+          context.fill();
+        }
+      }
+    }
 
     function animate() {
-      // Ease toward target
-      currentX += (mouseRef.current.x - currentX) * 0.08;
-      currentY += (mouseRef.current.y - currentY) * 0.08;
+      if (!canvas || !ctx || !container) return;
+      const rect = container.getBoundingClientRect();
 
-      if (glow) {
-        glow.style.transform = `translate(${currentX * 100 - 50}%, ${currentY * 100 - 50}%)`;
-        glow.style.opacity = "1";
+      // Smooth interpolation
+      const ease = hasEnteredRef.current ? 0.1 : 0.04;
+      const targetX = hasEnteredRef.current
+        ? mouseRef.current.x / (Math.min(window.devicePixelRatio || 1, 2))
+        : smoothMouseRef.current.x;
+      const targetY = hasEnteredRef.current
+        ? mouseRef.current.y / (Math.min(window.devicePixelRatio || 1, 2))
+        : smoothMouseRef.current.y;
+
+      smoothMouseRef.current.x += (targetX - smoothMouseRef.current.x) * ease;
+      smoothMouseRef.current.y += (targetY - smoothMouseRef.current.y) * ease;
+
+      const mx = smoothMouseRef.current.x;
+      const my = smoothMouseRef.current.y;
+
+      ctx.clearRect(0, 0, rect.width, rect.height);
+
+      const cols = Math.ceil(rect.width / GRID_SPACING) + 1;
+      const rows = Math.ceil(rect.height / GRID_SPACING) + 1;
+      const offsetX = (rect.width % GRID_SPACING) / 2;
+      const offsetY = (rect.height % GRID_SPACING) / 2;
+
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+          const x = offsetX + col * GRID_SPACING;
+          const y = offsetY + row * GRID_SPACING;
+
+          const dx = x - mx;
+          const dy = y - my;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          // Base dot (always visible, very faint)
+          const baseAlpha = 0.04;
+
+          if (dist < REVEAL_RADIUS && hasEnteredRef.current) {
+            // Revealed dot — glows green near cursor
+            const proximity = 1 - dist / REVEAL_RADIUS;
+            const glowAlpha = proximity * proximity * 0.6;
+            const radius =
+              DOT_BASE_RADIUS + (DOT_GLOW_RADIUS - DOT_BASE_RADIUS) * proximity;
+
+            // Green glow
+            ctx.beginPath();
+            ctx.arc(x, y, radius, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(${ACCENT_R}, ${ACCENT_G}, ${ACCENT_B}, ${glowAlpha})`;
+            ctx.fill();
+
+            // White core
+            if (proximity > 0.3) {
+              ctx.beginPath();
+              ctx.arc(x, y, DOT_BASE_RADIUS, 0, Math.PI * 2);
+              ctx.fillStyle = `rgba(245, 245, 245, ${proximity * 0.3})`;
+              ctx.fill();
+            }
+          } else {
+            // Static faint dot
+            ctx.beginPath();
+            ctx.arc(x, y, DOT_BASE_RADIUS, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(245, 245, 245, ${baseAlpha})`;
+            ctx.fill();
+          }
+        }
       }
 
       rafRef.current = requestAnimationFrame(animate);
@@ -52,10 +164,12 @@ export default function HeroBackground() {
     rafRef.current = requestAnimationFrame(animate);
 
     return () => {
+      window.removeEventListener("resize", resize);
       container.removeEventListener("mousemove", handleMouseMove);
+      container.removeEventListener("mouseleave", handleMouseLeave);
       cancelAnimationFrame(rafRef.current);
     };
-  }, [handleMouseMove]);
+  }, [handleMouseMove, handleMouseLeave]);
 
   return (
     <div
@@ -63,14 +177,11 @@ export default function HeroBackground() {
       className="pointer-events-none absolute inset-0 overflow-hidden"
       aria-hidden="true"
     >
-      {/* Dot grid */}
-      <div
-        className="absolute inset-0 opacity-[0.04]"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle, rgba(245,245,245,0.8) 1px, transparent 1px)",
-          backgroundSize: "32px 32px",
-        }}
+      {/* Canvas grid */}
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0"
+        style={{ pointerEvents: "none" }}
       />
 
       {/* Static radial gradient from top */}
@@ -81,22 +192,6 @@ export default function HeroBackground() {
             "radial-gradient(ellipse 60% 50% at 50% 0%, rgba(22,163,74,0.07) 0%, transparent 70%)",
         }}
       />
-
-      {/* Mouse-reactive glow */}
-      <div
-        ref={glowRef}
-        className="absolute left-0 top-0 h-[500px] w-[500px] rounded-full opacity-0 transition-opacity duration-1000 motion-reduce:hidden"
-        style={{
-          background:
-            "radial-gradient(circle, rgba(22,163,74,0.06) 0%, transparent 70%)",
-          willChange: "transform",
-        }}
-      />
-
-      {/* Subtle pulse ring */}
-      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 motion-reduce:hidden">
-        <div className="hero-pulse h-[300px] w-[300px] rounded-full border border-accent/[0.04]" />
-      </div>
 
       {/* Top accent glow */}
       <div className="absolute -top-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-accent/10 blur-3xl" />
