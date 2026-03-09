@@ -82,3 +82,42 @@ body {
   background: rgba(22, 163, 74, 0.3);
   color: #fff;
 }
+
+/* Premium hero effects */
+.cursor-trail-grid {
+  background-image:
+    linear-gradient(rgba(22, 163, 74, 0.15) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(22, 163, 74, 0.15) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.cursor-trail-pattern {
+  background-image: radial-gradient(
+    circle,
+    rgba(22, 163, 74, 0.08) 1px,
+    transparent 1px
+  );
+  background-size: 24px 24px;
+}
+
+@keyframes cursor-trail-pulse {
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.6);
+  }
+}
+
+.cursor-trail-node {
+  animation: cursor-trail-pulse 4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor-trail-node {
+    animation: none;
+  }
+}

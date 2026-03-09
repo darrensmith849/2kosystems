@@ -1,10 +1,9 @@
-import Link from "next/link";
 import LogoStrip from "@/components/LogoStrip";
 import SectionHeader from "@/components/SectionHeader";
 import Card from "@/components/Card";
 import StepProcess from "@/components/StepProcess";
 import CTASection from "@/components/CTASection";
-import HeroBackground from "@/components/HeroBackground";
+import PremiumHero from "@/components/PremiumHero";
 import {
   WorkflowIcon,
   PortalIcon,
@@ -47,51 +46,7 @@ export default function Home() {
   return (
     <>
       {/* SECTION 1 — HERO */}
-      <section className="relative overflow-hidden border-b border-border/60 bg-background">
-        <HeroBackground />
-
-        <div className="relative mx-auto max-w-6xl px-6 pb-20 pt-28 md:pb-28 md:pt-36">
-          <div className="mx-auto max-w-3xl text-center">
-            <span className="mb-6 inline-block rounded-full bg-accent/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-accent">
-              Custom Systems &amp; Intelligent Automation
-            </span>
-            <h1 className="text-3xl font-semibold leading-tight tracking-tight text-text sm:text-4xl md:text-5xl lg:text-6xl">
-              Custom operational systems for businesses that have outgrown spreadsheets, paper, and patchwork tools.
-            </h1>
-            <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-muted md:text-lg">
-              We build custom web systems, approvals engines, dashboards, portals, and embedded AI tools for established businesses. Less admin, better visibility, faster decisions.
-            </p>
-            <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <Link
-                href="/get-started"
-                className="rounded-full bg-accent px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-accent2"
-              >
-                Book a Systems Audit
-              </Link>
-              <Link
-                href="/solutions"
-                className="rounded-full border border-border px-7 py-3.5 text-sm font-semibold text-text transition-colors hover:border-accent/40 hover:bg-white/5"
-              >
-                Explore Solutions
-              </Link>
-            </div>
-
-            {/* Proof strip */}
-            <div className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3">
-              {[
-                "Custom operational systems",
-                "Built for analogue-heavy businesses",
-                "Backed by 2KO process expertise",
-              ].map((item) => (
-                <div key={item} className="flex items-center gap-2">
-                  <span className="h-1 w-1 rounded-full bg-accent/60" />
-                  <span className="text-xs tracking-wide text-muted2">{item}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+      <PremiumHero />
 
       {/* SECTION 2 — TRUST / LOGOS */}
       <LogoStrip />
