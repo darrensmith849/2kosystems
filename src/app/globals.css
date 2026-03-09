@@ -86,38 +86,75 @@ body {
 /* Premium hero effects */
 .cursor-trail-grid {
   background-image:
-    linear-gradient(rgba(22, 163, 74, 0.15) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(22, 163, 74, 0.15) 1px, transparent 1px);
-  background-size: 48px 48px;
+    linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 68px 68px;
+  mask-image: radial-gradient(
+    circle at 50% 38%,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.82) 46%,
+    rgba(0, 0, 0, 0.18) 76%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  -webkit-mask-image: radial-gradient(
+    circle at 50% 38%,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.82) 46%,
+    rgba(0, 0, 0, 0.18) 76%,
+    rgba(0, 0, 0, 0) 100%
+  );
 }
 
 .cursor-trail-pattern {
-  background-image: radial-gradient(
-    circle,
-    rgba(22, 163, 74, 0.08) 1px,
-    transparent 1px
-  );
-  background-size: 24px 24px;
+  background-image:
+    repeating-linear-gradient(
+      120deg,
+      rgba(255, 255, 255, 0.05) 0px,
+      rgba(255, 255, 255, 0.05) 1px,
+      transparent 1px,
+      transparent 24px
+    ),
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.03) 50%,
+      transparent 100%
+    );
+  background-size: 220px 220px, 100% 100%;
+  animation: cursorTrailDrift 22s linear infinite;
 }
 
-@keyframes cursor-trail-pulse {
+.cursor-trail-node {
+  animation: cursorTrailPulse 7s ease-in-out infinite;
+}
+
+@keyframes cursorTrailDrift {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(-12px, 8px, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes cursorTrailPulse {
   0%,
   100% {
     opacity: 0.2;
     transform: scale(1);
   }
   50% {
-    opacity: 0.6;
-    transform: scale(1.6);
+    opacity: 0.85;
+    transform: scale(1.65);
   }
 }
 
-.cursor-trail-node {
-  animation: cursor-trail-pulse 4s ease-in-out infinite;
-}
-
 @media (prefers-reduced-motion: reduce) {
+  .cursor-trail-pattern,
   .cursor-trail-node {
-    animation: none;
+    animation: none !important;
   }
 }

@@ -3,7 +3,7 @@ import SectionHeader from "@/components/SectionHeader";
 import Card from "@/components/Card";
 import StepProcess from "@/components/StepProcess";
 import CTASection from "@/components/CTASection";
-import PremiumHero from "@/components/PremiumHero";
+import PremiumCursorTrailHero from "@/components/home/PremiumCursorTrailHero";
 import {
   WorkflowIcon,
   PortalIcon,
@@ -46,7 +46,7 @@ export default function Home() {
   return (
     <>
       {/* SECTION 1 — HERO */}
-      <PremiumHero />
+      <PremiumCursorTrailHero />
 
       {/* SECTION 2 — TRUST / LOGOS */}
       <LogoStrip />
