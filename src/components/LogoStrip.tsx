@@ -14,6 +14,21 @@ const logos = [
   "Clientele Insurance",
 ];
 
+function LogoTrack() {
+  return (
+    <div className="flex shrink-0 items-center gap-12">
+      {logos.map((name) => (
+        <div
+          key={name}
+          className="flex h-10 shrink-0 items-center px-4 text-sm font-semibold tracking-wide text-muted2/60 md:h-14 md:text-base"
+        >
+          {name}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function LogoStrip() {
   return (
     <section className="border-t border-border/60 bg-background">
@@ -32,15 +47,9 @@ export default function LogoStrip() {
               "linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)",
           }}
         >
-          <div className="flex animate-marquee items-center gap-12 will-change-transform [backface-visibility:hidden] motion-reduce:animate-none">
-            {[...logos, ...logos].map((name, i) => (
-              <div
-                key={i}
-                className="flex h-10 shrink-0 items-center px-4 text-sm font-semibold tracking-wide text-muted2/60 transition-opacity hover:text-muted md:h-14 md:text-base"
-              >
-                {name}
-              </div>
-            ))}
+          <div className="flex w-max animate-marquee gap-12 will-change-transform [backface-visibility:hidden] motion-reduce:animate-none">
+            <LogoTrack />
+            <LogoTrack />
           </div>
         </div>
 
