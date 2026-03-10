@@ -67,11 +67,9 @@ export function KnowledgeIcon({ size, ...props }: IconProps) {
 export function AIIcon({ size, ...props }: IconProps) {
   return (
     <svg {...defaults(size)} {...props}>
-      <path d="M12 2a4 4 0 014 4v2a4 4 0 01-8 0V6a4 4 0 014-4z" />
-      <path d="M8 12h8" />
-      <path d="M10 16l-2 6M14 16l2 6" />
-      <circle cx="10" cy="6.5" r="0.5" fill="currentColor" stroke="none" />
-      <circle cx="14" cy="6.5" r="0.5" fill="currentColor" stroke="none" />
+      <path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3z" />
+      <path d="M19 13l.75 2.25L22 16l-2.25.75L19 19l-.75-2.25L16 16l2.25-.75L19 13z" />
+      <path d="M6 16l.5 1.5L8 18l-1.5.5L6 20l-.5-1.5L4 18l1.5-.5L6 16z" />
     </svg>
   );
 }
