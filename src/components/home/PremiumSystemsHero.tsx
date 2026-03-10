@@ -183,18 +183,6 @@ export default function PremiumSystemsHero() {
               Explore Solutions
             </Link>
           </div>
-
-          <div className="mt-8 flex flex-wrap gap-3 text-xs text-white/65 sm:text-sm">
-            <span className="rounded-full border border-white/10 bg-white/5 px-3 py-2">
-              Operational systems
-            </span>
-            <span className="rounded-full border border-white/10 bg-white/5 px-3 py-2">
-              Approvals &amp; workflows
-            </span>
-            <span className="rounded-full border border-white/10 bg-white/5 px-3 py-2">
-              Portals &amp; dashboards
-            </span>
-          </div>
         </div>
 
         <div className="relative hidden lg:block">
