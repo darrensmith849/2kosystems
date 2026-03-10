@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import BookAuditForm from "@/components/BookAuditForm";
 
 export const metadata: Metadata = {
   title: "Get Started",
@@ -70,96 +70,7 @@ export default function GetStartedPage() {
               <h2 className="mb-6 text-xl font-semibold text-text">
                 Request a Systems Audit
               </h2>
-              <form
-                action="https://formspree.io/f/placeholder"
-                method="POST"
-                className="flex flex-col gap-5"
-              >
-                <div>
-                  <label
-                    htmlFor="name"
-                    className="mb-1.5 block text-xs font-semibold uppercase tracking-widest text-muted2"
-                  >
-                    Full name
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    required
-                    className="w-full rounded-lg border border-border bg-background px-4 py-3 text-sm text-text placeholder-muted2 outline-none transition-colors focus:border-accent"
-                    placeholder="Your full name"
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="email"
-                    className="mb-1.5 block text-xs font-semibold uppercase tracking-widest text-muted2"
-                  >
-                    Email address
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    required
-                    className="w-full rounded-lg border border-border bg-background px-4 py-3 text-sm text-text placeholder-muted2 outline-none transition-colors focus:border-accent"
-                    placeholder="you@company.com"
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="company"
-                    className="mb-1.5 block text-xs font-semibold uppercase tracking-widest text-muted2"
-                  >
-                    Company
-                  </label>
-                  <input
-                    type="text"
-                    id="company"
-                    name="company"
-                    required
-                    className="w-full rounded-lg border border-border bg-background px-4 py-3 text-sm text-text placeholder-muted2 outline-none transition-colors focus:border-accent"
-                    placeholder="Company name"
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="role"
-                    className="mb-1.5 block text-xs font-semibold uppercase tracking-widest text-muted2"
-                  >
-                    Role / Title
-                  </label>
-                  <input
-                    type="text"
-                    id="role"
-                    name="role"
-                    className="w-full rounded-lg border border-border bg-background px-4 py-3 text-sm text-text placeholder-muted2 outline-none transition-colors focus:border-accent"
-                    placeholder="e.g. Operations Manager"
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="message"
-                    className="mb-1.5 block text-xs font-semibold uppercase tracking-widest text-muted2"
-                  >
-                    Tell us about the workflow or process you want to improve
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    rows={4}
-                    className="w-full rounded-lg border border-border bg-background px-4 py-3 text-sm text-text placeholder-muted2 outline-none transition-colors focus:border-accent"
-                    placeholder="Describe the operational pain point you would like us to look at..."
-                  />
-                </div>
-                <button
-                  type="submit"
-                  className="mt-2 rounded-full bg-accent px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-accent2"
-                >
-                  Submit Enquiry
-                </button>
-              </form>
+              <BookAuditForm />
               <p className="mt-4 text-xs text-muted2">
                 We will respond within one business day. You can also email us directly at{" "}
                 <a
