@@ -9,8 +9,9 @@ const logos = [
   "Sasol",
   "Sappi",
   "Transnet",
-  "Exxaro",
-  "Implats",
+  "Vodacom",
+  "Unilever",
+  "Clientele Insurance",
 ];
 
 export default function LogoStrip() {
