@@ -94,15 +94,24 @@ export default function CaseStudiesPage() {
 
       <section className="bg-background">
         <div className="mx-auto max-w-6xl px-6 py-20">
+          <p className="mb-12 text-center text-sm leading-relaxed text-muted">
+            Many of our systems engagements are confidential. Where needed,
+            client names and identifying details are withheld, but the
+            operational challenge, solution, and outcomes shown here are real.
+          </p>
+
           <div className="flex flex-col gap-10">
             {caseStudies.map((study) => (
               <div
                 key={study.title}
                 className="rounded-2xl border border-border bg-surface p-7 md:p-10"
               >
-                <span className="mb-4 inline-block rounded-full bg-accent/10 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-accent">
+                <span className="mb-2 inline-block rounded-full bg-accent/10 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-accent">
                   {study.sector}
                 </span>
+                <p className="mb-4 text-xs text-muted2">
+                  Client details withheld
+                </p>
                 <h2 className="mb-6 text-xl font-semibold tracking-tight text-text md:text-2xl">
                   {study.title}
                 </h2>
