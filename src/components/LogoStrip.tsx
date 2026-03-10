@@ -32,7 +32,7 @@ export default function LogoStrip() {
               "linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)",
           }}
         >
-          <div className="flex animate-marquee items-center gap-12 motion-reduce:animate-none">
+          <div className="flex animate-marquee items-center gap-12 will-change-transform [backface-visibility:hidden] motion-reduce:animate-none">
             {[...logos, ...logos].map((name, i) => (
               <div
                 key={i}
