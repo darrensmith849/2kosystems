@@ -1,4 +1,4 @@
-import LogoStrip from "@/components/LogoStrip";
+import ClientCarousel from "@/components/ClientCarousel";
 import SectionHeader from "@/components/SectionHeader";
 import Card from "@/components/Card";
 import StepProcess from "@/components/StepProcess";
@@ -49,7 +49,7 @@ export default function Home() {
       <PremiumSystemsHero />
 
       {/* SECTION 2 — TRUST / LOGOS */}
-      <LogoStrip />
+      <ClientCarousel />
 
       {/* SECTION 3 — POSITIONING */}
       <section className="border-t border-border/60 bg-background">
