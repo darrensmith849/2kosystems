@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -19,9 +20,14 @@ export default function Header() {
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-border/60 bg-background/95 backdrop-blur-md">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
         <Link href="/" className="flex items-center gap-2">
-          <span className="text-lg font-semibold tracking-tight text-text">
-            2KO <span className="text-accent">Systems</span>
-          </span>
+          <Image
+            src="/2ko-logo.jpeg"
+            alt="2KO Systems"
+            width={140}
+            height={40}
+            className="h-8 w-auto"
+            priority
+          />
         </Link>
 
         {/* Desktop nav */}
