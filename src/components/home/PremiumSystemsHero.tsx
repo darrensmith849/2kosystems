@@ -171,7 +171,7 @@ export default function PremiumSystemsHero() {
           <div className="mt-8 flex flex-col gap-4 sm:flex-row">
             <Link
               href="/get-started"
-              className="inline-flex items-center justify-center rounded-full border border-accent-border bg-accent px-6 py-3 text-sm font-medium text-white transition duration-200 hover:bg-accent2 hover:scale-[1.02] active:bg-accent-pressed"
+              className="inline-flex items-center justify-center rounded-full border border-accent-border bg-accent px-6 py-3 text-sm font-medium text-white transition duration-200 hover:bg-accent2 hover:text-black hover:scale-[1.02] active:bg-accent-pressed"
             >
               Book a Systems Audit
             </Link>
@@ -237,7 +237,7 @@ export default function PremiumSystemsHero() {
 
                     <div className="flex items-center justify-between rounded-xl border border-white/6 bg-white/[0.02] px-3 py-2">
                       <div className="flex items-center gap-2">
-                        <span className="h-2 w-2 rounded-full bg-accent-highlight/80" />
+                        <span className="h-2 w-2 rounded-full bg-emerald-300/80" />
                         <span className="text-sm text-white/72">
                           Approved &amp; visible
                         </span>
