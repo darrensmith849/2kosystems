@@ -17,7 +17,7 @@ export default function GetStartedPage() {
           aria-hidden="true"
           style={{
             background:
-              "radial-gradient(ellipse 60% 50% at 50% 0%, rgba(100,127,133,0.08) 0%, transparent 70%)",
+              "radial-gradient(ellipse 60% 50% at 50% 0%, rgba(52,146,90,0.08) 0%, transparent 70%)",
           }}
         />
 
