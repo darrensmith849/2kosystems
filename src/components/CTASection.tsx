@@ -37,7 +37,7 @@ export default function CTASection({
             <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link
                 href={primaryHref}
-                className="rounded-full bg-accent px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-accent2"
+                className="rounded-full border border-accent-border bg-accent px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-accent2 active:bg-accent-pressed"
               >
                 {primaryCTA}
               </Link>

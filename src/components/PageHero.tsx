@@ -27,7 +27,7 @@ export default function PageHero({
         aria-hidden="true"
         style={{
           background:
-            "radial-gradient(ellipse 60% 50% at 50% 0%, rgba(22,163,74,0.08) 0%, transparent 70%)",
+            "radial-gradient(ellipse 60% 50% at 50% 0%, rgba(100,127,133,0.08) 0%, transparent 70%)",
         }}
       />
 
@@ -48,7 +48,7 @@ export default function PageHero({
               {primaryCTA && primaryHref && (
                 <Link
                   href={primaryHref}
-                  className="rounded-full bg-accent px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-accent2"
+                  className="rounded-full border border-accent-border bg-accent px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-accent2 active:bg-accent-pressed"
                 >
                   {primaryCTA}
                 </Link>

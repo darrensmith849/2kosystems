@@ -46,7 +46,7 @@ export default function Header() {
         <div className="hidden md:block">
           <Link
             href="/get-started"
-            className="rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-accent2"
+            className="rounded-full border border-accent-border bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-accent2 active:bg-accent-pressed"
           >
             Book a Systems Audit
           </Link>
@@ -87,7 +87,7 @@ export default function Header() {
             <Link
               href="/get-started"
               onClick={() => setMobileOpen(false)}
-              className="mt-2 inline-block rounded-full bg-accent px-5 py-2.5 text-center text-sm font-semibold text-white transition-colors hover:bg-accent2"
+              className="mt-2 inline-block rounded-full border border-accent-border bg-accent px-5 py-2.5 text-center text-sm font-semibold text-white transition-colors hover:bg-accent2 active:bg-accent-pressed"
             >
               Book a Systems Audit
             </Link>
