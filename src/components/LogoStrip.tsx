@@ -126,17 +126,17 @@ const industries: { label: string; Icon: (p: IconProps) => React.JSX.Element }[]
 type Brand = { name: string; src: string; height?: number };
 
 const brands: Brand[] = [
-  { name: "Anglo American", src: "/client-logos/anglo-american.svg" },
-  { name: "Toyota", src: "/client-logos/toyota.svg" },
+  { name: "Anglo American", src: "/client-logos/anglo-american.png" },
+  { name: "WorldNet", src: "/client-logos/worldnet.png" },
+  { name: "Transnet", src: "/client-logos/transnet.png" },
+  { name: "Toyota", src: "/client-logos/toyota.png" },
   { name: "Standard Bank", src: "/client-logos/standard-bank.png" },
+  { name: "SARS", src: "/client-logos/sars.png" },
   { name: "Nedbank", src: "/client-logos/nedbank.png" },
   { name: "John Deere", src: "/client-logos/john-deere.png" },
-  { name: "Sasol", src: "/client-logos/sasol.svg" },
-  { name: "Sappi", src: "/client-logos/sappi.svg" },
-  { name: "Transnet", src: "/client-logos/transnet.svg" },
-  { name: "Vodacom", src: "/client-logos/vodacom.svg" },
-  { name: "Unilever", src: "/client-logos/unilever.svg" },
-  { name: "Clientele Insurance", src: "/client-logos/clientele.png" },
+  { name: "Airports Company", src: "/client-logos/airports-company.png" },
+  { name: "ABSA", src: "/client-logos/absa.png" },
+  { name: "Valve", src: "/client-logos/valve.png" },
 ];
 
 function BrandLogo({ brand }: { brand: Brand }) {
@@ -154,7 +154,7 @@ function BrandLogo({ brand }: { brand: Brand }) {
       alt={brand.name}
       width={160}
       height={brand.height ?? 40}
-      className="h-12 md:h-14 w-auto max-w-[180px] object-contain brightness-0 invert opacity-70 hover:opacity-100 transition-opacity duration-300"
+      className="h-12 md:h-14 w-auto max-w-[180px] object-contain opacity-90 hover:opacity-100 transition-opacity duration-300"
       onError={() => setFailed(true)}
       unoptimized
     />
