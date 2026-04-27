@@ -17,7 +17,7 @@ export function WorkflowIcon({ size, ...props }: IconProps) {
   return (
     <svg {...defaults(size)} {...props}>
       <path d="M4 6h6M4 12h6M4 18h6M14 6h6M14 12h6M14 18h6" />
-      <path d="M10 6l4 6-4 6" opacity={0.5} />
+      <path d="M10 6l4 6-4 6" className="icon-arrow-flow" opacity={0.5} />
     </svg>
   );
 }
@@ -47,10 +47,10 @@ export function ApprovalIcon({ size, ...props }: IconProps) {
 export function DashboardIcon({ size, ...props }: IconProps) {
   return (
     <svg {...defaults(size)} {...props}>
-      <rect x="3" y="3" width="7" height="9" rx="1.5" />
-      <rect x="14" y="3" width="7" height="5" rx="1.5" />
-      <rect x="14" y="12" width="7" height="9" rx="1.5" />
-      <rect x="3" y="16" width="7" height="5" rx="1.5" />
+      <rect x="3" y="3" width="7" height="9" rx="1.5" className="icon-panel-pulse-1" />
+      <rect x="14" y="3" width="7" height="5" rx="1.5" className="icon-panel-pulse-2" />
+      <rect x="14" y="12" width="7" height="9" rx="1.5" className="icon-panel-pulse-3" />
+      <rect x="3" y="16" width="7" height="5" rx="1.5" className="icon-panel-pulse-4" />
     </svg>
   );
 }
@@ -67,7 +67,7 @@ export function KnowledgeIcon({ size, ...props }: IconProps) {
 export function AIIcon({ size, ...props }: IconProps) {
   return (
     <svg {...defaults(size)} {...props}>
-      <path d="M4 14l8-10v6h8l-8 10v-6H4z" />
+      <path d="M4 14l8-10v6h8l-8 10v-6H4z" className="icon-bolt-pulse" />
     </svg>
   );
 }
@@ -75,9 +75,11 @@ export function AIIcon({ size, ...props }: IconProps) {
 export function AuditIcon({ size, ...props }: IconProps) {
   return (
     <svg {...defaults(size)} {...props}>
-      <circle cx="11" cy="11" r="7" />
+      <g className="icon-scan-wobble">
+        <circle cx="11" cy="11" r="7" />
+        <path d="M8 11h6M11 8v6" />
+      </g>
       <path d="M21 21l-4.35-4.35" />
-      <path d="M8 11h6M11 8v6" />
     </svg>
   );
 }
@@ -85,8 +87,8 @@ export function AuditIcon({ size, ...props }: IconProps) {
 export function ScopeIcon({ size, ...props }: IconProps) {
   return (
     <svg {...defaults(size)} {...props}>
-      <circle cx="12" cy="12" r="9" />
-      <circle cx="12" cy="12" r="5" />
+      <circle cx="12" cy="12" r="9" className="icon-ring-pulse" />
+      <circle cx="12" cy="12" r="5" className="icon-ring-pulse-delayed" />
       <circle cx="12" cy="12" r="1" fill="currentColor" stroke="none" />
     </svg>
   );
@@ -222,8 +224,10 @@ export function AdminIcon({ size, ...props }: IconProps) {
 export function RetainerIcon({ size, ...props }: IconProps) {
   return (
     <svg {...defaults(size)} {...props}>
-      <path d="M21 12a9 9 0 11-6.22-8.57" />
-      <path d="M21 3v6h-6" />
+      <g className="icon-spin-slow">
+        <path d="M21 12a9 9 0 11-6.22-8.57" />
+        <path d="M21 3v6h-6" />
+      </g>
     </svg>
   );
 }
