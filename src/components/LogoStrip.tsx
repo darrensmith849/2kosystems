@@ -140,7 +140,7 @@ function IndustryTrack() {
     <div
       className="flex shrink-0 gap-8 items-center whitespace-nowrap motion-reduce:animate-none"
       style={{
-        animation: "logoScroll 32s linear infinite",
+        animation: "logoScroll 60s linear infinite",
         willChange: "transform",
         backfaceVisibility: "hidden",
       }}
@@ -166,7 +166,7 @@ function BrandTrack() {
     <div
       className="flex shrink-0 gap-16 items-center whitespace-nowrap motion-reduce:animate-none"
       style={{
-        animation: "logoScrollRight 44s linear infinite",
+        animation: "logoScrollRight 80s linear infinite",
         willChange: "transform",
         backfaceVisibility: "hidden",
       }}
@@ -188,8 +188,8 @@ function BrandTrack() {
 export default function LogoStrip() {
   return (
     <section className="relative py-12 overflow-hidden bg-background">
-      <div className="mx-auto max-w-7xl px-4 md:px-8">
-        <div className="relative overflow-hidden rounded-3xl border border-white/15 bg-white/[0.04] backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08),0_30px_60px_-30px_rgba(0,0,0,0.6)]">
+      <div className="relative w-full">
+        <div className="relative overflow-hidden border-y border-white/15 bg-white/[0.04] backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08),0_30px_60px_-30px_rgba(0,0,0,0.6)]">
           {/* Soft accent glow inside the glass panel */}
           <div
             className="absolute inset-0 pointer-events-none"
