@@ -35,25 +35,23 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 
-  --animate-logo-scroll: logoScroll 32s linear infinite;
-  --animate-logo-scroll-right: logoScrollRight 44s linear infinite;
+}
 
-  @keyframes logoScroll {
-    from {
-      transform: translate3d(0, 0, 0);
-    }
-    to {
-      transform: translate3d(-33.333%, 0, 0);
-    }
+@keyframes logoScroll {
+  from {
+    transform: translate3d(0, 0, 0);
   }
+  to {
+    transform: translate3d(-33.333%, 0, 0);
+  }
+}
 
-  @keyframes logoScrollRight {
-    from {
-      transform: translate3d(-33.333%, 0, 0);
-    }
-    to {
-      transform: translate3d(0, 0, 0);
-    }
+@keyframes logoScrollRight {
+  from {
+    transform: translate3d(-33.333%, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
   }
 }
 

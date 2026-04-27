@@ -137,7 +137,14 @@ const brands = [
 function IndustryTrack() {
   const tripled = [...industries, ...industries, ...industries];
   return (
-    <div className="flex shrink-0 gap-8 items-center whitespace-nowrap animate-logo-scroll will-change-transform [backface-visibility:hidden] motion-reduce:animate-none">
+    <div
+      className="flex shrink-0 gap-8 items-center whitespace-nowrap motion-reduce:animate-none"
+      style={{
+        animation: "logoScroll 32s linear infinite",
+        willChange: "transform",
+        backfaceVisibility: "hidden",
+      }}
+    >
       {tripled.map(({ label, Icon }, i) => (
         <span
           key={`${label}-${i}`}
@@ -158,7 +165,14 @@ function IndustryTrack() {
 function BrandTrack() {
   const tripled = [...brands, ...brands, ...brands];
   return (
-    <div className="flex shrink-0 gap-16 items-center whitespace-nowrap animate-logo-scroll-right will-change-transform [backface-visibility:hidden] motion-reduce:animate-none">
+    <div
+      className="flex shrink-0 gap-16 items-center whitespace-nowrap motion-reduce:animate-none"
+      style={{
+        animation: "logoScrollRight 44s linear infinite",
+        willChange: "transform",
+        backfaceVisibility: "hidden",
+      }}
+    >
       {tripled.map((name, i) => (
         <span
           key={`${name}-${i}`}
