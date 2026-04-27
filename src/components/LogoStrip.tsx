@@ -128,7 +128,7 @@ type Brand = { name: string; src: string; height?: number };
 const brands: Brand[] = [
   { name: "Anglo American", src: "/client-logos/anglo-american.svg" },
   { name: "Toyota", src: "/client-logos/toyota.svg" },
-  { name: "Standard Bank", src: "/client-logos/standard-bank.png" },
+  { name: "Standard Bank", src: "/client-logos/standard-bank.svg" },
   { name: "Nedbank", src: "/client-logos/nedbank.svg" },
   { name: "John Deere", src: "/client-logos/john-deere.svg" },
   { name: "Sasol", src: "/client-logos/sasol.svg" },
