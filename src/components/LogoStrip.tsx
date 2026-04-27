@@ -132,7 +132,7 @@ const brands: Brand[] = [
   { name: "Standard Bank", src: "/client-logos/standard-bank.png" },
   { name: "SARS", src: "/client-logos/sars.png" },
   { name: "Nedbank", src: "/client-logos/nedbank.png" },
-  { name: "John Deere", src: "/client-logos/john-deere.png" },
+  { name: "John Deere", src: "/client-logos/john-deere.svg" },
   { name: "Airports Company", src: "/client-logos/airports-company.png" },
   { name: "ABSA", src: "/client-logos/absa.png" },
   { name: "Valve", src: "/client-logos/valve.png" },
