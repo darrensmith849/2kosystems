@@ -1,5 +1,8 @@
 "use client";
 
+import Image from "next/image";
+import { useState } from "react";
+
 type IconProps = { className?: string };
 
 const iconStroke = {
@@ -120,19 +123,43 @@ const industries: { label: string; Icon: (p: IconProps) => React.JSX.Element }[]
   { label: "Insurance", Icon: ShieldCheckIcon },
 ];
 
-const brands = [
-  "Anglo American",
-  "Toyota",
-  "Standard Bank",
-  "Nedbank",
-  "John Deere",
-  "Sasol",
-  "Sappi",
-  "Transnet",
-  "Vodacom",
-  "Unilever",
-  "Clientele Insurance",
+type Brand = { name: string; src: string; height?: number };
+
+const brands: Brand[] = [
+  { name: "Anglo American", src: "/client-logos/anglo-american.svg" },
+  { name: "Toyota", src: "/client-logos/toyota.svg" },
+  { name: "Standard Bank", src: "/client-logos/standard-bank.svg" },
+  { name: "Nedbank", src: "/client-logos/nedbank.svg" },
+  { name: "John Deere", src: "/client-logos/john-deere.svg" },
+  { name: "Sasol", src: "/client-logos/sasol.svg" },
+  { name: "Sappi", src: "/client-logos/sappi.svg" },
+  { name: "Transnet", src: "/client-logos/transnet.svg" },
+  { name: "Vodacom", src: "/client-logos/vodacom.svg" },
+  { name: "Unilever", src: "/client-logos/unilever.svg" },
+  { name: "Clientele Insurance", src: "/client-logos/clientele.svg" },
 ];
+
+function BrandLogo({ brand }: { brand: Brand }) {
+  const [failed, setFailed] = useState(false);
+  if (failed) {
+    return (
+      <span className="text-base md:text-lg font-semibold tracking-wide text-text whitespace-nowrap">
+        {brand.name}
+      </span>
+    );
+  }
+  return (
+    <Image
+      src={brand.src}
+      alt={brand.name}
+      width={160}
+      height={brand.height ?? 40}
+      className="h-10 md:h-12 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity duration-300"
+      onError={() => setFailed(true)}
+      unoptimized
+    />
+  );
+}
 
 function IndustryTrack() {
   const tripled = [...industries, ...industries, ...industries];
@@ -171,14 +198,13 @@ function BrandTrack() {
         backfaceVisibility: "hidden",
       }}
     >
-      {tripled.map((name, i) => (
+      {tripled.map((brand, i) => (
         <span
-          key={`${name}-${i}`}
+          key={`${brand.name}-${i}`}
           className="shrink-0 flex items-center justify-center"
+          style={{ height: 60 }}
         >
-          <span className="text-base md:text-lg font-semibold tracking-wide text-text whitespace-nowrap">
-            {name}
-          </span>
+          <BrandLogo brand={brand} />
         </span>
       ))}
     </div>
