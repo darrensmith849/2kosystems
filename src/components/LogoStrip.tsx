@@ -128,7 +128,7 @@ type Brand = { name: string; src: string; height?: number };
 const brands: Brand[] = [
   { name: "Anglo American", src: "/client-logos/anglo-american.svg" },
   { name: "Toyota", src: "/client-logos/toyota.svg" },
-  { name: "Standard Bank", src: "/client-logos/standard-bank.svg" },
+  { name: "Standard Bank", src: "/client-logos/standard-bank.png" },
   { name: "Nedbank", src: "/client-logos/nedbank.svg" },
   { name: "John Deere", src: "/client-logos/john-deere.svg" },
   { name: "Sasol", src: "/client-logos/sasol.svg" },
@@ -154,7 +154,7 @@ function BrandLogo({ brand }: { brand: Brand }) {
       alt={brand.name}
       width={160}
       height={brand.height ?? 40}
-      className="h-10 md:h-12 w-auto object-contain brightness-0 invert opacity-70 hover:opacity-100 transition-opacity duration-300"
+      className="h-12 md:h-14 w-auto max-w-[180px] object-contain brightness-0 invert opacity-70 hover:opacity-100 transition-opacity duration-300"
       onError={() => setFailed(true)}
       unoptimized
     />
@@ -202,7 +202,7 @@ function BrandTrack() {
         <span
           key={`${brand.name}-${i}`}
           className="shrink-0 flex items-center justify-center"
-          style={{ height: 60 }}
+          style={{ height: 72 }}
         >
           <BrandLogo brand={brand} />
         </span>
