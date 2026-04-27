@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
 
 type IconProps = { className?: string };
@@ -149,14 +148,12 @@ function BrandLogo({ brand }: { brand: Brand }) {
     );
   }
   return (
-    <Image
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
       src={brand.src}
       alt={brand.name}
-      width={160}
-      height={brand.height ?? 40}
       className="h-16 md:h-20 w-auto max-w-[220px] object-contain brightness-0 invert opacity-80 hover:opacity-100 transition-opacity duration-300"
       onError={() => setFailed(true)}
-      unoptimized
     />
   );
 }
