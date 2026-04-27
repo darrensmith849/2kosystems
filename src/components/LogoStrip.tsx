@@ -148,11 +148,9 @@ function IndustryTrack() {
       {tripled.map(({ label, Icon }, i) => (
         <span
           key={`${label}-${i}`}
-          className="flex items-center gap-2 shrink-0 group rounded-full border border-white/15 bg-white/[0.04] px-4 py-2 backdrop-blur-md shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] hover:border-accent2/40 hover:bg-white/[0.07] transition-colors duration-300"
+          className="flex items-center gap-2 shrink-0"
         >
-          <span className="flex items-center justify-center w-6 h-6 rounded-full bg-white/[0.08] border border-white/20">
-            <Icon className="w-3.5 h-3.5 text-text" />
-          </span>
+          <Icon className="w-4 h-4 text-accent2" />
           <span className="text-sm font-semibold tracking-wide text-text">
             {label}
           </span>
@@ -176,7 +174,7 @@ function BrandTrack() {
       {tripled.map((name, i) => (
         <span
           key={`${name}-${i}`}
-          className="shrink-0 flex items-center justify-center rounded-full border border-white/15 bg-white/[0.04] px-6 py-3 backdrop-blur-md shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] hover:border-accent2/40 hover:bg-white/[0.07] transition-colors duration-300"
+          className="shrink-0 flex items-center justify-center"
         >
           <span className="text-base md:text-lg font-semibold tracking-wide text-text whitespace-nowrap">
             {name}
@@ -189,17 +187,20 @@ function BrandTrack() {
 
 export default function LogoStrip() {
   return (
-    <section className="relative py-5 border-y border-border bg-background-secondary/60 overflow-hidden">
-      <div
-        className="absolute inset-0 pointer-events-none"
-        aria-hidden="true"
-        style={{
-          backgroundImage:
-            "radial-gradient(ellipse 55% 180% at 28% 50%, var(--accent-soft) 0%, transparent 65%), radial-gradient(ellipse 55% 180% at 72% 50%, var(--accent-soft) 0%, transparent 65%)",
-        }}
-      />
+    <section className="relative py-12 overflow-hidden bg-background">
+      <div className="mx-auto max-w-7xl px-4 md:px-8">
+        <div className="relative overflow-hidden rounded-3xl border border-white/15 bg-white/[0.04] backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08),0_30px_60px_-30px_rgba(0,0,0,0.6)]">
+          {/* Soft accent glow inside the glass panel */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            aria-hidden="true"
+            style={{
+              backgroundImage:
+                "radial-gradient(ellipse 55% 180% at 28% 50%, var(--accent-soft) 0%, transparent 65%), radial-gradient(ellipse 55% 180% at 72% 50%, var(--accent-soft) 0%, transparent 65%)",
+            }}
+          />
 
-      <div className="relative z-[1] mx-auto max-w-6xl px-6 pt-8">
+          <div className="relative z-[1] mx-auto max-w-6xl px-6 pt-8">
         <p className="text-center text-xs font-semibold uppercase tracking-[0.18em] text-muted2 mb-1.5">
           Trusted by
         </p>
@@ -214,11 +215,11 @@ export default function LogoStrip() {
       {/* Industries row */}
       <div className="relative overflow-hidden">
         <div
-          className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-background-secondary to-transparent z-10"
+          className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-background to-transparent z-10"
           aria-hidden="true"
         />
         <div
-          className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-background-secondary to-transparent z-10"
+          className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-background to-transparent z-10"
           aria-hidden="true"
         />
         <div
@@ -232,11 +233,11 @@ export default function LogoStrip() {
       {/* Brand row */}
       <div className="relative overflow-hidden mt-3 pb-6">
         <div
-          className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-background-secondary to-transparent z-10"
+          className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-background to-transparent z-10"
           aria-hidden="true"
         />
         <div
-          className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-background-secondary to-transparent z-10"
+          className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-background to-transparent z-10"
           aria-hidden="true"
         />
         <div
@@ -244,6 +245,8 @@ export default function LogoStrip() {
           aria-label="Clients and reference brands"
         >
           <BrandTrack />
+        </div>
+      </div>
         </div>
       </div>
     </section>
