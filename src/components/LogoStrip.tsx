@@ -154,7 +154,7 @@ function BrandLogo({ brand }: { brand: Brand }) {
       alt={brand.name}
       width={160}
       height={brand.height ?? 40}
-      className="h-12 md:h-14 w-auto max-w-[180px] object-contain opacity-90 hover:opacity-100 transition-opacity duration-300"
+      className="h-16 md:h-20 w-auto max-w-[220px] object-contain brightness-0 invert opacity-80 hover:opacity-100 transition-opacity duration-300"
       onError={() => setFailed(true)}
       unoptimized
     />
@@ -202,7 +202,7 @@ function BrandTrack() {
         <span
           key={`${brand.name}-${i}`}
           className="shrink-0 flex items-center justify-center"
-          style={{ height: 72 }}
+          style={{ height: 96 }}
         >
           <BrandLogo brand={brand} />
         </span>
