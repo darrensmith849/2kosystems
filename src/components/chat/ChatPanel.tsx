@@ -1,0 +1,360 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useChat } from "@/lib/chat/ChatContext";
+import {
+  CHAT_TURN_CAP,
+  CONTACT_NUDGE_AFTER_BOT_ANSWERS,
+} from "@/lib/chat/constants";
+import { findScriptedReply } from "@/lib/chat/scriptedReplies";
+import { detectIntent, userRequestedHuman } from "@/lib/chat/systemPrompt";
+import { trackChatEvent } from "@/lib/chat/analytics";
+import type {
+  ChatRequestBody,
+  ChatResponseBody,
+  HandoffRequestBody,
+  HandoffResponseBody,
+  ScriptedIntent,
+} from "@/lib/chat/types";
+import MessageBubble, { TypingBubble } from "./MessageBubble";
+import QuickReplies from "./QuickReplies";
+import LeadCaptureInline from "./LeadCaptureInline";
+
+export default function ChatPanel() {
+  const pathname = usePathname();
+  const {
+    state,
+    userTurns,
+    capReached,
+    close,
+    addUserMessage,
+    addAssistantMessage,
+    setSending,
+    markContactNudgeShown,
+  } = useChat();
+
+  const [draft, setDraft] = useState("");
+  const [pendingHandoff, setPendingHandoff] = useState(false);
+  const [needsContactBeforeHandoff, setNeedsContactBeforeHandoff] = useState(false);
+  const [handoffComplete, setHandoffComplete] = useState(false);
+  const [handoffError, setHandoffError] = useState<string | null>(null);
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+
+  // Auto-scroll to bottom on new messages.
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    el.scrollTop = el.scrollHeight;
+  }, [state.messages.length, state.isSending, pendingHandoff, handoffComplete]);
+
+  // Lock body scroll on mobile when open.
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    if (!state.open) return;
+    const original = document.body.style.overflow;
+    if (window.matchMedia("(max-width: 640px)").matches) {
+      document.body.style.overflow = "hidden";
+    }
+    return () => {
+      document.body.style.overflow = original;
+    };
+  }, [state.open]);
+
+  if (!state.open) return null;
+
+  const onlyGreeting = state.messages.length <= 1;
+  const userMessageCount = userTurns;
+  const botAnswerCount = state.messages.filter(
+    (m) => m.role === "assistant" && m.id !== "greeting"
+  ).length;
+
+  const shouldShowContactNudge =
+    !state.lead &&
+    !state.contactNudgeShown &&
+    botAnswerCount >= CONTACT_NUDGE_AFTER_BOT_ANSWERS;
+
+  function handleQuickReply(intent: ScriptedIntent) {
+    trackChatEvent("quick_reply_clicked", { intent });
+
+    if (intent === "talk-to-human") {
+      requestHandoff();
+      return;
+    }
+
+    const qr = findScriptedReply(intent);
+    if (!qr?.reply) return;
+
+    addUserMessage(qr.label);
+    // Render the scripted reply immediately — no LLM call.
+    addAssistantMessage(qr.reply, intent);
+  }
+
+  async function callChatAPI(userText: string) {
+    if (capReached) {
+      trackChatEvent("turn_cap_reached");
+      addAssistantMessage(
+        "We've covered a lot of ground here. The fastest next step is to chat with someone from the team — click \"Speak to a real agent\" below and I'll send the conversation through.",
+        "free-form"
+      );
+      return;
+    }
+
+    setSending(true);
+
+    // Conversation history sent to model: only user + assistant turns, in order.
+    const apiMessages = [...state.messages, { id: "tmp", role: "user" as const, content: userText, createdAt: "" }]
+      .filter((m) => m.role === "user" || m.role === "assistant")
+      .map((m) => ({ role: m.role as "user" | "assistant", content: m.content }));
+
+    const body: ChatRequestBody = {
+      messages: apiMessages,
+      lead: state.lead ?? undefined,
+      pagePath: pathname || "/",
+    };
+
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      const data = (await res.json()) as ChatResponseBody;
+      if (!data.ok) {
+        addAssistantMessage(data.error || "Something went wrong — please try again.");
+      } else {
+        const intent = detectIntent(data.reply);
+        if (intent === "audit-intent") {
+          trackChatEvent("audit_intent_detected");
+        }
+        addAssistantMessage(data.reply, "free-form");
+      }
+    } catch {
+      addAssistantMessage(
+        "I couldn't reach the system just now. You can click \"Speak to a real agent\" and the team will pick this up."
+      );
+    } finally {
+      setSending(false);
+    }
+  }
+
+  async function handleSend() {
+    const text = draft.trim();
+    if (!text || state.isSending) return;
+    setDraft("");
+
+    addUserMessage(text);
+
+    // Detect direct human request → trigger handoff path.
+    if (userRequestedHuman(text)) {
+      requestHandoff();
+      return;
+    }
+
+    await callChatAPI(text);
+  }
+
+  function requestHandoff() {
+    trackChatEvent("human_handoff_requested");
+    if (!state.lead) {
+      setNeedsContactBeforeHandoff(true);
+      return;
+    }
+    submitHandoff();
+  }
+
+  async function submitHandoff() {
+    if (!state.lead) return;
+    setPendingHandoff(true);
+    setHandoffError(null);
+
+    const payload: HandoffRequestBody = {
+      lead: state.lead,
+      transcript: state.messages,
+      pagePath: pathname || "/",
+      requestedHuman: true,
+      detectedIntent: state.messages
+        .map((m) => detectIntent(m.content))
+        .find(Boolean),
+      timestamp: new Date().toISOString(),
+    };
+
+    try {
+      const res = await fetch("/api/chat/handoff", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = (await res.json()) as HandoffResponseBody;
+      if (!data.ok) {
+        setHandoffError(data.error || "Couldn't send that through — please try again.");
+      } else {
+        trackChatEvent("handoff_submitted");
+        setHandoffComplete(true);
+        addAssistantMessage(
+          "Got it — someone from 2KO will reach out soon with the context from this chat.",
+          "free-form"
+        );
+      }
+    } catch {
+      setHandoffError("Couldn't send that through — please try again.");
+    } finally {
+      setPendingHandoff(false);
+    }
+  }
+
+  return (
+    <div
+      className="fixed inset-0 z-[70] flex items-end justify-end p-0 sm:p-6"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Chat with 2KO Systems specialist"
+    >
+      {/* Backdrop on mobile only */}
+      <div
+        className="absolute inset-0 bg-black/40 sm:hidden"
+        onClick={close}
+        aria-hidden="true"
+      />
+
+      <div
+        className="relative flex h-full w-full flex-col overflow-hidden border border-white/10 bg-background shadow-2xl sm:h-[600px] sm:w-[380px] sm:rounded-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
+          <div className="flex items-center gap-2.5">
+            <span
+              aria-hidden
+              className="grid h-8 w-8 place-items-center rounded-full bg-accent/20 text-accent text-sm font-bold"
+            >
+              2KO
+            </span>
+            <div>
+              <p className="text-sm font-semibold text-text leading-tight">
+                Talk to our Systems Specialist
+              </p>
+              <p className="text-[11px] text-muted2 leading-tight">2KO Systems</p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={close}
+            aria-label="Close chat"
+            className="rounded-full p-1.5 text-muted hover:bg-white/5 hover:text-text"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
+              <path d="M6 6l12 12M18 6L6 18" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Messages */}
+        <div ref={scrollRef} className="flex-1 overflow-y-auto" role="list">
+          <div className="flex flex-col gap-2.5 p-4">
+            {state.messages.map((m) => (
+              <MessageBubble key={m.id} message={m} />
+            ))}
+            {state.isSending && <TypingBubble />}
+          </div>
+
+          {onlyGreeting && (
+            <QuickReplies onSelect={handleQuickReply} disabled={state.isSending} />
+          )}
+
+          {shouldShowContactNudge && !needsContactBeforeHandoff && (
+            <div onMouseEnter={markContactNudgeShown}>
+              <LeadCaptureInline onCaptured={markContactNudgeShown} />
+            </div>
+          )}
+
+          {needsContactBeforeHandoff && !state.lead && (
+            <LeadCaptureInline
+              label="Of course — what's the best name, email and number for the team to reach you on?"
+              requirePhone
+              onCaptured={() => {
+                setNeedsContactBeforeHandoff(false);
+                // Auto-trigger handoff once lead is captured.
+                setTimeout(() => submitHandoff(), 0);
+              }}
+            />
+          )}
+
+          {handoffError && (
+            <p className="mx-4 my-2 rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-xs text-red-200">
+              {handoffError}
+            </p>
+          )}
+
+          {handoffComplete && (
+            <p className="mx-4 my-2 rounded-lg border border-accent/30 bg-accent/10 px-3 py-2 text-xs text-text">
+              Thanks — someone from the 2KO team will reach out shortly.
+            </p>
+          )}
+
+          {capReached && (
+            <p className="mx-4 my-2 rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2 text-xs text-muted">
+              We&apos;ve gone deep — the fastest next step is a real conversation. Click <strong>Speak to a real agent</strong> below and I&apos;ll send everything through.
+            </p>
+          )}
+        </div>
+
+        {/* Input + actions */}
+        <div className="border-t border-white/10 bg-background/95">
+          <div className="flex items-end gap-2 p-3">
+            <textarea
+              value={draft}
+              onChange={(e) => setDraft(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSend();
+                }
+              }}
+              placeholder={capReached ? "Turn limit reached — please use the agent button." : "Ask anything…"}
+              rows={1}
+              disabled={state.isSending || capReached || pendingHandoff}
+              className="flex-1 resize-none rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2 text-sm text-text placeholder:text-muted2 focus:border-accent/60 focus:outline-none disabled:opacity-60"
+            />
+            <button
+              type="button"
+              onClick={handleSend}
+              disabled={state.isSending || !draft.trim() || capReached}
+              aria-label="Send message"
+              className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-accent text-white transition-colors hover:bg-accent2 hover:text-black disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                <path d="M22 2L11 13" />
+                <path d="M22 2l-7 20-4-9-9-4 20-7z" />
+              </svg>
+            </button>
+          </div>
+
+          <div className="flex items-center justify-between gap-2 border-t border-white/5 px-3 py-2">
+            <button
+              type="button"
+              onClick={requestHandoff}
+              disabled={pendingHandoff || handoffComplete}
+              className="rounded-full border border-white/15 px-3 py-1.5 text-xs font-semibold text-text transition-colors hover:border-accent/40 hover:bg-white/[0.06] disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {pendingHandoff ? "Sending…" : "Speak to a real agent"}
+            </button>
+            <p className="text-[10px] leading-tight text-muted2 text-right">
+              You&apos;re chatting with an AI assistant.
+              <br />
+              <Link href="/privacy" className="underline hover:text-text">
+                Privacy policy
+              </Link>
+            </p>
+          </div>
+        </div>
+
+        {/* Cap pill (UI hint) */}
+        {userMessageCount > 0 && userMessageCount < CHAT_TURN_CAP && (
+          <span className="sr-only">{`${userMessageCount} of ${CHAT_TURN_CAP} turns used`}</span>
+        )}
+      </div>
+    </div>
+  );
+}

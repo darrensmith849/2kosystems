@@ -1,9 +1,13 @@
+"use client";
+
 import Link from "next/link";
+import { useChat } from "@/lib/chat/ChatContext";
 
 interface CTASectionProps {
   title: string;
   description: string;
   primaryCTA: string;
+  /** Existing API kept for compatibility. If primaryHref is "/get-started", clicking opens the chat instead. */
   primaryHref: string;
   secondaryCTA?: string;
   secondaryHref?: string;
@@ -17,6 +21,9 @@ export default function CTASection({
   secondaryCTA,
   secondaryHref,
 }: CTASectionProps) {
+  const { open: openChat } = useChat();
+  const opensChat = primaryHref === "/get-started";
+
   return (
     <section className="border-t border-border/60 bg-background">
       <div className="mx-auto max-w-6xl px-6 py-24">
@@ -35,12 +42,22 @@ export default function CTASection({
               {description}
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <Link
-                href={primaryHref}
-                className="rounded-full border border-accent-border bg-accent px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-accent2 hover:text-black active:bg-accent-pressed"
-              >
-                {primaryCTA}
-              </Link>
+              {opensChat ? (
+                <button
+                  type="button"
+                  onClick={openChat}
+                  className="rounded-full border border-accent-border bg-accent px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-accent2 hover:text-black active:bg-accent-pressed"
+                >
+                  {primaryCTA}
+                </button>
+              ) : (
+                <Link
+                  href={primaryHref}
+                  className="rounded-full border border-accent-border bg-accent px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-accent2 hover:text-black active:bg-accent-pressed"
+                >
+                  {primaryCTA}
+                </Link>
+              )}
               {secondaryCTA && secondaryHref && (
                 <Link
                   href={secondaryHref}
