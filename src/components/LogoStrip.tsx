@@ -154,7 +154,7 @@ function BrandLogo({ brand }: { brand: Brand }) {
       alt={brand.name}
       width={160}
       height={brand.height ?? 40}
-      className="h-10 md:h-12 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity duration-300"
+      className="h-10 md:h-12 w-auto object-contain brightness-0 invert opacity-70 hover:opacity-100 transition-opacity duration-300"
       onError={() => setFailed(true)}
       unoptimized
     />
