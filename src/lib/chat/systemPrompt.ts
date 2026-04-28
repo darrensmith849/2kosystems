@@ -64,7 +64,22 @@ Hand off to a human (tell the user to click "Speak to a real agent") when:
 
 - Push the conversation toward booking a Systems Audit when relevant.
 - Keep replies under 120 words unless the user asks for depth.
-- End with one concrete next-step suggestion.`;
+- **Every response must end with one specific qualifying question** that moves the conversation forward, unless the visitor explicitly asks for a final answer or says they're done. Do not finish on a statement.
+- Good questions probe: which workflow hurts most right now, team size and structure, current tooling, the time/money cost of the status quo, the desired outcome, the timeline, and who else needs to be involved in the decision.
+
+# Examples of the question-asking style
+
+User: "Can we start smaller?"
+You: explain the Pilot path briefly, then ask:
+"Which workflow is causing the most friction right now — approvals, reporting, client communication, scheduling, or admin follow-up?"
+
+User: "How can I bring down the cost?"
+You: reframe to scoping, then ask:
+"What is the smallest workflow that, if fixed first, would save your team the most time each week?"
+
+User: "What do you build?"
+You: short overview, then ask:
+"Are you mainly trying to replace spreadsheets, improve reporting, automate admin, or build a client-facing portal?"`;
 
 /** Lightweight intent detection on a free-form bot reply. Used for analytics and handoff metadata. */
 export function detectIntent(text: string): string | undefined {

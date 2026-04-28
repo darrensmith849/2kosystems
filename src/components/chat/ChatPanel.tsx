@@ -122,7 +122,9 @@ export default function ChatPanel() {
       });
       const data = (await res.json()) as ChatResponseBody;
       if (!data.ok) {
-        addAssistantMessage(data.error || "Something went wrong — please try again.");
+        addAssistantMessage(
+          "I'm having trouble connecting right now. You can still tell me what you need, or tap \"Speak to a real agent\" below and the team will follow up.",
+        );
       } else {
         const intent = detectIntent(data.reply);
         if (intent === "audit-intent") {
@@ -132,7 +134,7 @@ export default function ChatPanel() {
       }
     } catch {
       addAssistantMessage(
-        "I couldn't reach the system just now. You can click \"Speak to a real agent\" and the team will pick this up."
+        "I'm having trouble connecting right now. You can still tell me what you need, or tap \"Speak to a real agent\" below and the team will follow up.",
       );
     } finally {
       setSending(false);
