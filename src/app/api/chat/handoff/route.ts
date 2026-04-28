@@ -208,7 +208,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<HandoffRespon
   } catch (error) {
     console.error("/api/chat/handoff failed", error);
     return NextResponse.json(
-      { ok: false, error: "Couldn't send that through — please try again or email info@2ko.co.za." },
+      { ok: false, error: "Couldn't send that through — please try again or email darren@2kosystems.com." },
       { status: 500 }
     );
   }

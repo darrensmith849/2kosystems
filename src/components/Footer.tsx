@@ -13,6 +13,7 @@ const footerLinks = {
     { href: "/case-studies", label: "Case Studies" },
     { href: "/how-we-work", label: "How We Work" },
     { href: "/industries", label: "Industries" },
+    { href: "/contact", label: "Contact" },
     { href: "/get-started", label: "Get Started" },
   ],
 };
@@ -77,9 +78,12 @@ export default function Footer() {
           <p className="text-xs text-muted2">
             &copy; {new Date().getFullYear()} 2KO Systems. All rights reserved.
           </p>
-          <p className="text-xs text-muted2">
-            info@2ko.co.za
-          </p>
+          <Link
+            href="/privacy"
+            className="text-xs text-muted2 transition-colors hover:text-text"
+          >
+            Privacy
+          </Link>
         </div>
       </div>
     </footer>

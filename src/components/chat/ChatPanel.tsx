@@ -2,28 +2,23 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useChat } from "@/lib/chat/ChatContext";
-import {
-  CHAT_TURN_CAP,
-  CONTACT_NUDGE_AFTER_BOT_ANSWERS,
-} from "@/lib/chat/constants";
+import { CHAT_TURN_CAP } from "@/lib/chat/constants";
 import { findScriptedReply } from "@/lib/chat/scriptedReplies";
 import { detectIntent, userRequestedHuman } from "@/lib/chat/systemPrompt";
 import { trackChatEvent } from "@/lib/chat/analytics";
 import type {
   ChatRequestBody,
   ChatResponseBody,
-  HandoffRequestBody,
-  HandoffResponseBody,
   ScriptedIntent,
 } from "@/lib/chat/types";
 import MessageBubble, { TypingBubble } from "./MessageBubble";
 import QuickReplies from "./QuickReplies";
-import LeadCaptureInline from "./LeadCaptureInline";
 
 export default function ChatPanel() {
   const pathname = usePathname();
+  const router = useRouter();
   const {
     state,
     userTurns,
@@ -32,14 +27,9 @@ export default function ChatPanel() {
     addUserMessage,
     addAssistantMessage,
     setSending,
-    markContactNudgeShown,
   } = useChat();
 
   const [draft, setDraft] = useState("");
-  const [pendingHandoff, setPendingHandoff] = useState(false);
-  const [needsContactBeforeHandoff, setNeedsContactBeforeHandoff] = useState(false);
-  const [handoffComplete, setHandoffComplete] = useState(false);
-  const [handoffError, setHandoffError] = useState<string | null>(null);
   // Show the starter quick-reply menu. True at the start of a session,
   // false once the visitor takes any action, and re-enabled when the
   // Back button is clicked so the visitor can pick another starter
@@ -52,7 +42,7 @@ export default function ChatPanel() {
     const el = scrollRef.current;
     if (!el) return;
     el.scrollTop = el.scrollHeight;
-  }, [state.messages.length, state.isSending, pendingHandoff, handoffComplete]);
+  }, [state.messages.length, state.isSending]);
 
   // Auto-scroll continuously while the panel is open so the typewriter
   // animation keeps the bottom of the latest reply in view as it grows.
@@ -98,14 +88,6 @@ export default function ChatPanel() {
   if (!state.open) return null;
 
   const userMessageCount = userTurns;
-  const botAnswerCount = state.messages.filter(
-    (m) => m.role === "assistant" && m.id !== "greeting"
-  ).length;
-
-  const shouldShowContactNudge =
-    !state.lead &&
-    !state.contactNudgeShown &&
-    botAnswerCount >= CONTACT_NUDGE_AFTER_BOT_ANSWERS;
 
   function handleQuickReply(intent: ScriptedIntent) {
     trackChatEvent("quick_reply_clicked", { intent });
@@ -193,51 +175,12 @@ export default function ChatPanel() {
 
   function requestHandoff() {
     trackChatEvent("human_handoff_requested");
-    if (!state.lead) {
-      setNeedsContactBeforeHandoff(true);
-      return;
-    }
-    submitHandoff();
-  }
-
-  async function submitHandoff() {
-    if (!state.lead) return;
-    setPendingHandoff(true);
-    setHandoffError(null);
-
-    const payload: HandoffRequestBody = {
-      lead: state.lead,
-      transcript: state.messages,
-      pagePath: pathname || "/",
-      requestedHuman: true,
-      detectedIntent: state.messages
-        .map((m) => detectIntent(m.content))
-        .find(Boolean),
-      timestamp: new Date().toISOString(),
-    };
-
-    try {
-      const res = await fetch("/api/chat/handoff", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      const data = (await res.json()) as HandoffResponseBody;
-      if (!data.ok) {
-        setHandoffError(data.error || "Couldn't send that through — please try again.");
-      } else {
-        trackChatEvent("handoff_submitted");
-        setHandoffComplete(true);
-        addAssistantMessage(
-          "Got it — someone from 2KO will reach out soon with the context from this chat.",
-          "free-form"
-        );
-      }
-    } catch {
-      setHandoffError("Couldn't send that through — please try again.");
-    } finally {
-      setPendingHandoff(false);
-    }
+    // The chat session (messages + lead if captured) is already persisted
+    // to sessionStorage by the ChatProvider, so the visitor doesn't lose
+    // anything by navigating away. Close the panel and route them to the
+    // dedicated contact page where they can fill in name / email / message.
+    close();
+    router.push("/contact");
   }
 
   return (
@@ -313,36 +256,6 @@ export default function ChatPanel() {
             <QuickReplies onSelect={handleQuickReply} disabled={state.isSending} />
           )}
 
-          {shouldShowContactNudge && !needsContactBeforeHandoff && (
-            <div onMouseEnter={markContactNudgeShown}>
-              <LeadCaptureInline onCaptured={markContactNudgeShown} />
-            </div>
-          )}
-
-          {needsContactBeforeHandoff && !state.lead && (
-            <LeadCaptureInline
-              label="Of course — what's the best name, email and number for the team to reach you on?"
-              requirePhone
-              onCaptured={() => {
-                setNeedsContactBeforeHandoff(false);
-                // Auto-trigger handoff once lead is captured.
-                setTimeout(() => submitHandoff(), 0);
-              }}
-            />
-          )}
-
-          {handoffError && (
-            <p className="mx-4 my-2 rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-xs text-red-200">
-              {handoffError}
-            </p>
-          )}
-
-          {handoffComplete && (
-            <p className="mx-4 my-2 rounded-lg border border-accent/30 bg-accent/10 px-3 py-2 text-xs text-text">
-              Thanks — someone from the 2KO team will reach out shortly.
-            </p>
-          )}
-
           {capReached && (
             <p className="mx-4 my-2 rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2 text-xs text-muted">
               We&apos;ve gone deep — the fastest next step is a real conversation. Click <strong>Speak to a real agent</strong> below and I&apos;ll send everything through.
@@ -364,7 +277,7 @@ export default function ChatPanel() {
               }}
               placeholder={capReached ? "Turn limit reached — please use the agent button." : "Ask anything…"}
               rows={1}
-              disabled={state.isSending || capReached || pendingHandoff}
+              disabled={state.isSending || capReached}
               className="flex-1 resize-none rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2 text-sm text-text placeholder:text-muted2 focus:border-accent/60 focus:outline-none disabled:opacity-60"
             />
             <button
@@ -385,10 +298,9 @@ export default function ChatPanel() {
             <button
               type="button"
               onClick={requestHandoff}
-              disabled={pendingHandoff || handoffComplete}
-              className="rounded-full border border-white/15 px-3 py-1.5 text-xs font-semibold text-text transition-colors hover:border-accent/40 hover:bg-white/[0.06] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="rounded-full border border-white/15 px-3 py-1.5 text-xs font-semibold text-text transition-colors hover:border-accent/40 hover:bg-white/[0.06]"
             >
-              {pendingHandoff ? "Sending…" : "Speak to a real agent"}
+              Speak to a real agent
             </button>
             <p className="text-[10px] leading-tight text-muted2 text-right">
               You&apos;re chatting with an AI assistant.

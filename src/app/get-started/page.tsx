@@ -64,10 +64,10 @@ export default function GetStartedPage() {
               <p className="mt-6 text-sm leading-relaxed text-muted">
                 Prefer email?{" "}
                 <a
-                  href="mailto:info@2ko.co.za"
+                  href="mailto:darren@2kosystems.com"
                   className="text-accent transition-colors hover:text-accent2"
                 >
-                  info@2ko.co.za
+                  darren@2kosystems.com
                 </a>
               </p>
             </div>

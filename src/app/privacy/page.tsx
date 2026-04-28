@@ -74,10 +74,10 @@ export default function PrivacyPage() {
             <p>
               You have the right to access, correct, or request deletion of any personal information we hold about you. To exercise these rights, contact{" "}
               <a
-                href="mailto:info@2ko.co.za"
+                href="mailto:darren@2kosystems.com"
                 className="text-accent transition-colors hover:text-accent2"
               >
-                info@2ko.co.za
+                darren@2kosystems.com
               </a>
               .
             </p>
