@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
-import { useChat } from "@/lib/chat/ChatContext";
 
 const clamp = (value: number, min: number, max: number) =>
   Math.min(Math.max(value, min), max);
@@ -10,7 +9,6 @@ const clamp = (value: number, min: number, max: number) =>
 export default function PremiumSystemsHero() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const frameRef = useRef<number | null>(null);
-  const { open: openChat } = useChat();
 
   const targetRef = useRef({ x: 50, y: 36 });
   const currentRef = useRef({ x: 50, y: 36 });
@@ -177,13 +175,12 @@ export default function PremiumSystemsHero() {
           </p>
 
           <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-            <button
-              type="button"
-              onClick={openChat}
+            <Link
+              href="/contact"
               className="inline-flex items-center justify-center rounded-full border border-accent-border bg-accent px-6 py-3 text-sm font-medium text-white transition duration-200 hover:bg-accent2 hover:text-black hover:scale-[1.02] active:bg-accent-pressed"
             >
               Book a Systems Audit
-            </button>
+            </Link>
 
             <Link
               href="/solutions"

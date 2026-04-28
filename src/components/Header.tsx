@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { useChat } from "@/lib/chat/ChatContext";
 
 const navLinks = [
   { href: "/solutions", label: "Solutions" },
@@ -11,11 +10,11 @@ const navLinks = [
   { href: "/how-we-work", label: "How We Work" },
   { href: "/case-studies", label: "Case Studies" },
   { href: "/about", label: "About" },
+  { href: "/contact", label: "Contact" },
 ];
 
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { open: openChat } = useChat();
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-border/60 bg-background/95 backdrop-blur-md">
@@ -45,13 +44,12 @@ export default function Header() {
         </nav>
 
         <div className="hidden md:block">
-          <button
-            type="button"
-            onClick={openChat}
+          <Link
+            href="/contact"
             className="rounded-full border border-accent-border bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-accent2 hover:text-black active:bg-accent-pressed"
           >
             Book a Systems Audit
-          </button>
+          </Link>
         </div>
 
         {/* Mobile toggle */}
@@ -86,16 +84,13 @@ export default function Header() {
                 {link.label}
               </Link>
             ))}
-            <button
-              type="button"
-              onClick={() => {
-                setMobileOpen(false);
-                openChat();
-              }}
+            <Link
+              href="/contact"
+              onClick={() => setMobileOpen(false)}
               className="mt-2 inline-block rounded-full border border-accent-border bg-accent px-5 py-2.5 text-center text-sm font-semibold text-white transition-colors hover:bg-accent2 hover:text-black active:bg-accent-pressed"
             >
               Book a Systems Audit
-            </button>
+            </Link>
           </nav>
         </div>
       )}
