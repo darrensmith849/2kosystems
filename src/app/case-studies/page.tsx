@@ -11,6 +11,7 @@ export const metadata: Metadata = {
 const caseStudies = [
   {
     sector: "Mining",
+    image: "/imagery/case-studies/mining.jpg",
     title: "Maintenance approvals and operational visibility for a multi-site mining operation",
     challenge:
       "A mining group was managing maintenance requests, approvals, and job tracking across multiple sites using a combination of email, spreadsheets, and WhatsApp. Approvals were delayed, visibility was poor, and compliance audit preparation was time-consuming.",
@@ -25,6 +26,7 @@ const caseStudies = [
   },
   {
     sector: "Agriculture",
+    image: "/imagery/case-studies/agriculture.jpg",
     title: "Stock request and seasonal workflow system for an agri-support business",
     challenge:
       "An agricultural services company was managing seasonal stock requests, allocations, and delivery coordination through a patchwork of paper forms, phone calls, and shared spreadsheets. Errors were frequent, and the admin burden during peak season was unsustainable.",
@@ -39,6 +41,7 @@ const caseStudies = [
   },
   {
     sector: "Logistics",
+    image: "/imagery/case-studies/logistics.jpg",
     title: "Reporting and handover control for a fleet-based logistics provider",
     challenge:
       "A logistics company with multiple depots was relying on manual processes for load handovers, driver check-ins, and end-of-day reporting. Head office had limited visibility and spent hours each week consolidating reports manually.",
@@ -53,6 +56,7 @@ const caseStudies = [
   },
   {
     sector: "Training & Compliance",
+    image: "/imagery/case-studies/training.jpg",
     title: "Accreditation and assessment portal for a national training provider",
     challenge:
       "A training and accreditation body was managing learner registrations, assessment submissions, moderation workflows, and certificate issuance using a combination of legacy systems, email, and shared drives. The process was slow, error-prone, and difficult to audit.",
@@ -67,6 +71,7 @@ const caseStudies = [
   },
   {
     sector: "Industrial Services",
+    image: "/imagery/case-studies/industrial.jpg",
     title: "Operations hub for a multi-discipline technical services business",
     challenge:
       "A technical services company managing electrical, mechanical, and civil projects was running operations through email chains, disconnected spreadsheets, and manual job cards. Project visibility was poor, and invoicing was delayed because job completion data was hard to consolidate.",
@@ -104,17 +109,29 @@ export default function CaseStudiesPage() {
             {caseStudies.map((study) => (
               <div
                 key={study.title}
-                className="rounded-2xl border border-border bg-surface p-7 md:p-10"
+                className="overflow-hidden rounded-2xl border border-border bg-surface"
               >
-                <span className="mb-2 inline-block rounded-full bg-accent/10 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-accent">
-                  {study.sector}
-                </span>
-                <p className="mb-4 text-xs text-muted2">
-                  Client details withheld
-                </p>
-                <h2 className="mb-6 text-xl font-semibold tracking-tight text-text md:text-2xl">
-                  {study.title}
-                </h2>
+                <div className="relative h-44 w-full overflow-hidden md:h-56">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={study.image}
+                    alt=""
+                    aria-hidden="true"
+                    loading="lazy"
+                    className="h-full w-full object-cover saturate-[0.85]"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-surface via-surface/30 to-transparent" />
+                </div>
+                <div className="p-7 md:p-10">
+                  <span className="mb-2 inline-block rounded-full bg-accent/10 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-accent">
+                    {study.sector}
+                  </span>
+                  <p className="mb-4 text-xs text-muted2">
+                    Client details withheld
+                  </p>
+                  <h2 className="mb-6 text-xl font-semibold tracking-tight text-text md:text-2xl">
+                    {study.title}
+                  </h2>
 
                 <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
                   <div>
@@ -149,6 +166,7 @@ export default function CaseStudiesPage() {
                       ))}
                     </ul>
                   </div>
+                </div>
                 </div>
               </div>
             ))}

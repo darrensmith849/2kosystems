@@ -11,6 +11,7 @@ export const metadata: Metadata = {
 const industries = [
   {
     title: "Mining & Mining-Adjacent",
+    image: "/imagery/industries/mining.jpg",
     description:
       "Digitise maintenance approvals, safety workflows, contractor management, shift handovers, and compliance reporting. Replace spreadsheet-driven tracking with live operational dashboards built for multi-site mining environments.",
     challenges: [
@@ -22,6 +23,7 @@ const industries = [
   },
   {
     title: "Agriculture & Agri-Support",
+    image: "/imagery/industries/agriculture.jpg",
     description:
       "Streamline stock requests, seasonal workflows, field reporting, and supply chain coordination. Build systems that work across distributed farm operations, co-ops, and agri-support businesses.",
     challenges: [
@@ -33,6 +35,7 @@ const industries = [
   },
   {
     title: "Logistics & Fleet-Based",
+    image: "/imagery/industries/logistics.jpg",
     description:
       "Replace manual dispatch, handover, and reporting processes with structured digital workflows. Improve load tracking, driver coordination, and operational reporting for fleet-based businesses.",
     challenges: [
@@ -44,6 +47,7 @@ const industries = [
   },
   {
     title: "Industrial & Technical Services",
+    image: "/imagery/industries/industrial.jpg",
     description:
       "Digitise job cards, service requests, quoting workflows, and project tracking. Build portals for clients to submit requests and track progress, with live reporting for management.",
     challenges: [
@@ -55,6 +59,7 @@ const industries = [
   },
   {
     title: "Compliance-Heavy Organisations",
+    image: "/imagery/industries/compliance.jpg",
     description:
       "Build structured approval chains, audit trails, and governance workflows that make compliance visible and enforceable. Replace manual checklists with systems that track every decision.",
     challenges: [
@@ -66,6 +71,7 @@ const industries = [
   },
   {
     title: "Multi-Branch Operations",
+    image: "/imagery/industries/multi-branch.jpg",
     description:
       "Create centralised operational systems for businesses running across multiple locations. Standardise processes, enable branch-level reporting, and give head office real-time visibility.",
     challenges: [
@@ -94,25 +100,38 @@ export default function IndustriesPage() {
             {industries.map((industry) => (
               <div
                 key={industry.title}
-                className="group rounded-2xl border border-border bg-surface p-7 transition-colors hover:border-accent/30"
+                className="group overflow-hidden rounded-2xl border border-border bg-surface transition-colors hover:border-accent/30"
               >
-                <h3 className="mb-3 text-xl font-semibold text-text">
-                  {industry.title}
-                </h3>
-                <p className="mb-5 text-sm leading-relaxed text-muted">
-                  {industry.description}
-                </p>
-                <h4 className="mb-3 text-xs font-semibold uppercase tracking-widest text-muted2">
-                  Common challenges
-                </h4>
-                <ul className="flex flex-col gap-2">
-                  {industry.challenges.map((challenge) => (
-                    <li key={challenge} className="flex items-start gap-2.5">
-                      <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
-                      <span className="text-sm text-muted">{challenge}</span>
-                    </li>
-                  ))}
-                </ul>
+                <div className="relative h-44 w-full overflow-hidden md:h-48">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={industry.image}
+                    alt=""
+                    aria-hidden="true"
+                    loading="lazy"
+                    className="h-full w-full object-cover saturate-[0.85] transition-transform duration-500 group-hover:scale-[1.03]"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-surface via-surface/40 to-transparent" />
+                </div>
+                <div className="p-7">
+                  <h3 className="mb-3 text-xl font-semibold text-text">
+                    {industry.title}
+                  </h3>
+                  <p className="mb-5 text-sm leading-relaxed text-muted">
+                    {industry.description}
+                  </p>
+                  <h4 className="mb-3 text-xs font-semibold uppercase tracking-widest text-muted2">
+                    Common challenges
+                  </h4>
+                  <ul className="flex flex-col gap-2">
+                    {industry.challenges.map((challenge) => (
+                      <li key={challenge} className="flex items-start gap-2.5">
+                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
+                        <span className="text-sm text-muted">{challenge}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             ))}
           </div>

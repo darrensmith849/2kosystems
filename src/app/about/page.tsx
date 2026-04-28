@@ -19,8 +19,24 @@ export default function AboutPage() {
         description="2KO Systems builds custom operational systems for established businesses. We are part of the wider 2KO ecosystem — grounded in operational improvement, not just software delivery."
       />
 
-      {/* Mission */}
+      {/* Operations imagery */}
       <section className="border-t border-border/60 bg-background">
+        <div className="mx-auto max-w-6xl px-6 pt-20">
+          <div className="relative h-72 overflow-hidden rounded-3xl border border-border md:h-96">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/imagery/about/hero.jpg"
+              alt=""
+              aria-hidden="true"
+              className="h-full w-full object-cover saturate-[0.8]"
+            />
+            <div className="absolute inset-0 bg-gradient-to-tr from-background/85 via-background/30 to-transparent" />
+          </div>
+        </div>
+      </section>
+
+      {/* Mission */}
+      <section className="bg-background">
         <div className="mx-auto max-w-6xl px-6 py-20">
           <div className="mx-auto max-w-3xl">
             <h2 className="mb-6 text-2xl font-semibold tracking-tight text-text md:text-3xl">

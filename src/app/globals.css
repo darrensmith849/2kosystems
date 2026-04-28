@@ -139,77 +139,97 @@ body {
 /* Animated icons — subtle motion graphics for feature/section icons */
 /* ---------------------------------------------------------------- */
 
-/* AI bolt: gentle pulse glow */
+/* AI bolt: pulse glow with stroke colour shift to accent green */
 @keyframes iconBoltPulse {
-  0%, 100% { opacity: 0.7; }
-  50% { opacity: 1; }
+  0%, 100% { opacity: 0.35; transform: scale(0.92); stroke: currentColor; }
+  50% { opacity: 1; transform: scale(1.08); stroke: var(--accent); }
 }
 .icon-bolt-pulse {
-  animation: iconBoltPulse 2.4s ease-in-out infinite;
-  transform-origin: center;
-  transform-box: fill-box;
-}
-
-/* Workflow arrow: shifts forward and back to suggest flow */
-@keyframes iconArrowFlow {
-  0%, 100% { transform: translateX(-1px); opacity: 0.4; }
-  50% { transform: translateX(1.5px); opacity: 1; }
-}
-.icon-arrow-flow {
-  animation: iconArrowFlow 2s ease-in-out infinite;
-  transform-origin: center;
-  transform-box: fill-box;
-}
-
-/* Scope rings: ripple outward */
-@keyframes iconRingPulse {
-  0% { transform: scale(0.94); opacity: 0.55; }
-  60% { transform: scale(1); opacity: 1; }
-  100% { transform: scale(1.08); opacity: 0; }
-}
-.icon-ring-pulse {
-  animation: iconRingPulse 2.6s ease-out infinite;
-  transform-origin: center;
-  transform-box: fill-box;
-}
-.icon-ring-pulse-delayed {
-  animation: iconRingPulse 2.6s ease-out 1.3s infinite;
-  transform-origin: center;
-  transform-box: fill-box;
-}
-
-/* Audit/scan: subtle wobble */
-@keyframes iconScanWobble {
-  0%, 100% { transform: translate(0, 0) rotate(0deg); }
-  25% { transform: translate(-0.4px, -0.4px) rotate(-3deg); }
-  75% { transform: translate(0.4px, 0.4px) rotate(3deg); }
-}
-.icon-scan-wobble {
-  animation: iconScanWobble 3.2s ease-in-out infinite;
-  transform-origin: 11px 11px;
-  transform-box: view-box;
-}
-
-/* Retainer/refresh: continuous slow rotation */
-@keyframes iconSpin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-.icon-spin-slow {
-  animation: iconSpin 9s linear infinite;
+  animation: iconBoltPulse 1.8s ease-in-out infinite;
   transform-origin: 12px 12px;
   transform-box: view-box;
 }
 
-/* Dashboard panels: staggered opacity pulse */
-@keyframes iconPanelPulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.45; }
+/* Workflow arrow: hops forward then resets to suggest flow */
+@keyframes iconArrowFlow {
+  0%   { transform: translateX(-3px); opacity: 0.2; }
+  20%  { opacity: 1; }
+  60%  { transform: translateX(4px); opacity: 1; }
+  80%  { transform: translateX(4px); opacity: 0; }
+  81%  { transform: translateX(-3px); opacity: 0; }
+  100% { transform: translateX(-3px); opacity: 0.2; }
 }
-.icon-panel-pulse-1 { animation: iconPanelPulse 3s ease-in-out 0s infinite; }
-.icon-panel-pulse-2 { animation: iconPanelPulse 3s ease-in-out 0.4s infinite; }
-.icon-panel-pulse-3 { animation: iconPanelPulse 3s ease-in-out 0.8s infinite; }
-.icon-panel-pulse-4 { animation: iconPanelPulse 3s ease-in-out 1.2s infinite; }
+.icon-arrow-flow {
+  animation: iconArrowFlow 1.6s ease-in-out infinite;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+/* Scope rings: ripple outward in accent green */
+@keyframes iconRingPulse {
+  0%   { transform: scale(0.7);  opacity: 0;   stroke: var(--accent); }
+  20%  { opacity: 0.9; }
+  100% { transform: scale(1.45); opacity: 0;   stroke: var(--accent); }
+}
+.icon-ring-pulse {
+  animation: iconRingPulse 2.2s ease-out infinite;
+  transform-origin: 12px 12px;
+  transform-box: view-box;
+}
+.icon-ring-pulse-delayed {
+  animation: iconRingPulse 2.2s ease-out 1.1s infinite;
+  transform-origin: 12px 12px;
+  transform-box: view-box;
+}
+
+/* Audit/scan: pronounced wobble around the lens */
+@keyframes iconScanWobble {
+  0%, 100% { transform: rotate(0deg); }
+  25%      { transform: rotate(-12deg); }
+  75%      { transform: rotate(12deg); }
+}
+.icon-scan-wobble {
+  animation: iconScanWobble 2.4s ease-in-out infinite;
+  transform-origin: 11px 11px;
+  transform-box: view-box;
+}
+
+/* Retainer/refresh: continuous rotation */
+@keyframes iconSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.icon-spin-slow {
+  animation: iconSpin 4s linear infinite;
+  transform-origin: 12px 12px;
+  transform-box: view-box;
+}
+
+/* Dashboard panels: staggered opacity + scale pulse */
+@keyframes iconPanelPulse {
+  0%, 100% { opacity: 1;    transform: scale(1); }
+  50%      { opacity: 0.25; transform: scale(0.86); }
+}
+.icon-panel-pulse-1 {
+  animation: iconPanelPulse 2.2s ease-in-out 0s infinite;
+  transform-origin: 6.5px 7.5px;  /* centre of rect at x=3,y=3,w=7,h=9 */
+  transform-box: view-box;
+}
+.icon-panel-pulse-2 {
+  animation: iconPanelPulse 2.2s ease-in-out 0.3s infinite;
+  transform-origin: 17.5px 5.5px; /* centre of rect at x=14,y=3,w=7,h=5 */
+  transform-box: view-box;
+}
+.icon-panel-pulse-3 {
+  animation: iconPanelPulse 2.2s ease-in-out 0.6s infinite;
+  transform-origin: 17.5px 16.5px; /* centre of rect at x=14,y=12,w=7,h=9 */
+  transform-box: view-box;
+}
+.icon-panel-pulse-4 {
+  animation: iconPanelPulse 2.2s ease-in-out 0.9s infinite;
+  transform-origin: 6.5px 18.5px;  /* centre of rect at x=3,y=16,w=7,h=5 */
+  transform-box: view-box;
+}
 
 @media (prefers-reduced-motion: reduce) {
   .icon-bolt-pulse,
@@ -222,6 +242,115 @@ body {
   .icon-panel-pulse-2,
   .icon-panel-pulse-3,
   .icon-panel-pulse-4 {
+    animation: none !important;
+  }
+}
+/* ---------------------------------------------------------------- */
+/* Ambient landing-page motion (drift, pulse, mesh)                  */
+/* ---------------------------------------------------------------- */
+
+/* Drifting accent orb — slow horizontal sweep */
+@keyframes ambientDriftOrb {
+  0%   { transform: translate(-12%, 18%) scale(0.95); opacity: 0.85; }
+  50%  { transform: translate(58%, 28%)  scale(1.08); opacity: 1; }
+  100% { transform: translate(-12%, 18%) scale(0.95); opacity: 0.85; }
+}
+.ambient-drift-orb {
+  animation: ambientDriftOrb 22s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+/* Floating particle drift — each with its own duration / direction */
+@keyframes ambientParticle1 {
+  0%   { transform: translate(0, 0); opacity: 0.55; }
+  50%  { transform: translate(40px, -22px); opacity: 1; }
+  100% { transform: translate(0, 0); opacity: 0.55; }
+}
+@keyframes ambientParticle2 {
+  0%   { transform: translate(0, 0); opacity: 0.4; }
+  50%  { transform: translate(-30px, 18px); opacity: 0.9; }
+  100% { transform: translate(0, 0); opacity: 0.4; }
+}
+@keyframes ambientParticle3 {
+  0%   { transform: translate(0, 0); opacity: 0.6; }
+  50%  { transform: translate(24px, 32px); opacity: 1; }
+  100% { transform: translate(0, 0); opacity: 0.6; }
+}
+@keyframes ambientParticle4 {
+  0%   { transform: translate(0, 0); opacity: 0.45; }
+  50%  { transform: translate(-22px, -28px); opacity: 0.85; }
+  100% { transform: translate(0, 0); opacity: 0.45; }
+}
+@keyframes ambientParticle5 {
+  0%   { transform: translate(0, 0); opacity: 0.5; }
+  50%  { transform: translate(-36px, 24px); opacity: 0.95; }
+  100% { transform: translate(0, 0); opacity: 0.5; }
+}
+@keyframes ambientParticle6 {
+  0%   { transform: translate(0, 0); opacity: 0.4; }
+  50%  { transform: translate(28px, -18px); opacity: 0.85; }
+  100% { transform: translate(0, 0); opacity: 0.4; }
+}
+.ambient-particle { transform-box: fill-box; transform-origin: center; }
+.ambient-particle-1 { animation: ambientParticle1 9s ease-in-out infinite; }
+.ambient-particle-2 { animation: ambientParticle2 11s ease-in-out 0.6s infinite; }
+.ambient-particle-3 { animation: ambientParticle3 8s ease-in-out 1.2s infinite; }
+.ambient-particle-4 { animation: ambientParticle4 12s ease-in-out 0.3s infinite; }
+.ambient-particle-5 { animation: ambientParticle5 10s ease-in-out 1.8s infinite; }
+.ambient-particle-6 { animation: ambientParticle6 13s ease-in-out 0.9s infinite; }
+
+/* Connecting lines: stroke-dash flow + opacity pulse */
+@keyframes ambientLineFlow {
+  0%   { opacity: 0.0; stroke-dashoffset: 200; }
+  40%  { opacity: 0.9; }
+  100% { opacity: 0.0; stroke-dashoffset: 0; }
+}
+.ambient-line {
+  stroke-dasharray: 60 200;
+  stroke-dashoffset: 200;
+  animation: ambientLineFlow 6s linear infinite;
+}
+.ambient-line-1 { animation-delay: 0s; }
+.ambient-line-2 { animation-delay: 2s; }
+.ambient-line-3 { animation-delay: 4s; }
+
+/* Pulse rings */
+@keyframes ambientPulseRing {
+  0%   { transform: scale(0.6);  opacity: 0; }
+  20%  { opacity: 0.5; }
+  100% { transform: scale(2.2);  opacity: 0; }
+}
+.ambient-pulse-ring {
+  animation: ambientPulseRing 4.8s ease-out infinite;
+}
+.ambient-pulse-ring-2 { animation-delay: 1.6s; }
+.ambient-pulse-ring-3 { animation-delay: 3.2s; }
+
+/* Mesh blobs: slow figure-8 drift */
+@keyframes ambientMeshBlob1 {
+  0%   { transform: translate(-15%, -10%); }
+  33%  { transform: translate(40%, 5%); }
+  66%  { transform: translate(20%, 35%); }
+  100% { transform: translate(-15%, -10%); }
+}
+@keyframes ambientMeshBlob2 {
+  0%   { transform: translate(80%, 60%); }
+  33%  { transform: translate(30%, 30%); }
+  66%  { transform: translate(60%, 5%); }
+  100% { transform: translate(80%, 60%); }
+}
+.ambient-mesh-blob-1 { animation: ambientMeshBlob1 28s ease-in-out infinite; will-change: transform; }
+.ambient-mesh-blob-2 { animation: ambientMeshBlob2 32s ease-in-out infinite; will-change: transform; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ambient-drift-orb,
+  .ambient-particle,
+  .ambient-particle-1, .ambient-particle-2, .ambient-particle-3,
+  .ambient-particle-4, .ambient-particle-5, .ambient-particle-6,
+  .ambient-line,
+  .ambient-line-1, .ambient-line-2, .ambient-line-3,
+  .ambient-pulse-ring, .ambient-pulse-ring-2, .ambient-pulse-ring-3,
+  .ambient-mesh-blob-1, .ambient-mesh-blob-2 {
     animation: none !important;
   }
 }
