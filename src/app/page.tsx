@@ -4,6 +4,7 @@ import Card from "@/components/Card";
 import StepProcess from "@/components/StepProcess";
 import CTASection from "@/components/CTASection";
 import PremiumSystemsHero from "@/components/home/PremiumSystemsHero";
+import AmbientMotion from "@/components/home/AmbientMotion";
 import {
   WorkflowIcon,
   PortalIcon,
@@ -52,8 +53,9 @@ export default function Home() {
       <ClientLogoCarousel />
 
       {/* SECTION 3 — POSITIONING */}
-      <section className="border-t border-border/60 bg-background">
-        <div className="mx-auto max-w-6xl px-6 py-20">
+      <section className="relative overflow-hidden border-t border-border/60 bg-background">
+        <AmbientMotion variant="drift" />
+        <div className="relative mx-auto max-w-6xl px-6 py-20">
           <SectionHeader
             title="Built for real operations, not tech theatre."
             description="You don't need more software. You need the right system for how your business actually runs."
@@ -165,8 +167,9 @@ export default function Home() {
       </section>
 
       {/* SECTION 6 — WHO IT'S FOR */}
-      <section className="border-t border-border/60 bg-background">
-        <div className="mx-auto max-w-6xl px-6 py-20">
+      <section className="relative overflow-hidden border-t border-border/60 bg-background">
+        <AmbientMotion variant="mesh" />
+        <div className="relative mx-auto max-w-6xl px-6 py-20">
           <SectionHeader
             title="Best suited to analogue-heavy and operations-led businesses"
           />
@@ -258,8 +261,9 @@ export default function Home() {
       </section>
 
       {/* SECTION 8 — GROUP CONNECTION */}
-      <section className="border-t border-border/60 bg-background">
-        <div className="mx-auto max-w-6xl px-6 py-20">
+      <section className="relative overflow-hidden border-t border-border/60 bg-background">
+        <AmbientMotion variant="pulse" />
+        <div className="relative mx-auto max-w-6xl px-6 py-20">
           <SectionHeader
             title="The systems arm of the 2KO group"
             description="Part of the wider 2KO ecosystem. Our systems work is grounded in real operational improvement, not just software delivery."

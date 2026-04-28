@@ -245,3 +245,112 @@ body {
     animation: none !important;
   }
 }
+/* ---------------------------------------------------------------- */
+/* Ambient landing-page motion (drift, pulse, mesh)                  */
+/* ---------------------------------------------------------------- */
+
+/* Drifting accent orb — slow horizontal sweep */
+@keyframes ambientDriftOrb {
+  0%   { transform: translate(-12%, 18%) scale(0.95); opacity: 0.85; }
+  50%  { transform: translate(58%, 28%)  scale(1.08); opacity: 1; }
+  100% { transform: translate(-12%, 18%) scale(0.95); opacity: 0.85; }
+}
+.ambient-drift-orb {
+  animation: ambientDriftOrb 22s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+/* Floating particle drift — each with its own duration / direction */
+@keyframes ambientParticle1 {
+  0%   { transform: translate(0, 0); opacity: 0.55; }
+  50%  { transform: translate(40px, -22px); opacity: 1; }
+  100% { transform: translate(0, 0); opacity: 0.55; }
+}
+@keyframes ambientParticle2 {
+  0%   { transform: translate(0, 0); opacity: 0.4; }
+  50%  { transform: translate(-30px, 18px); opacity: 0.9; }
+  100% { transform: translate(0, 0); opacity: 0.4; }
+}
+@keyframes ambientParticle3 {
+  0%   { transform: translate(0, 0); opacity: 0.6; }
+  50%  { transform: translate(24px, 32px); opacity: 1; }
+  100% { transform: translate(0, 0); opacity: 0.6; }
+}
+@keyframes ambientParticle4 {
+  0%   { transform: translate(0, 0); opacity: 0.45; }
+  50%  { transform: translate(-22px, -28px); opacity: 0.85; }
+  100% { transform: translate(0, 0); opacity: 0.45; }
+}
+@keyframes ambientParticle5 {
+  0%   { transform: translate(0, 0); opacity: 0.5; }
+  50%  { transform: translate(-36px, 24px); opacity: 0.95; }
+  100% { transform: translate(0, 0); opacity: 0.5; }
+}
+@keyframes ambientParticle6 {
+  0%   { transform: translate(0, 0); opacity: 0.4; }
+  50%  { transform: translate(28px, -18px); opacity: 0.85; }
+  100% { transform: translate(0, 0); opacity: 0.4; }
+}
+.ambient-particle { transform-box: fill-box; transform-origin: center; }
+.ambient-particle-1 { animation: ambientParticle1 9s ease-in-out infinite; }
+.ambient-particle-2 { animation: ambientParticle2 11s ease-in-out 0.6s infinite; }
+.ambient-particle-3 { animation: ambientParticle3 8s ease-in-out 1.2s infinite; }
+.ambient-particle-4 { animation: ambientParticle4 12s ease-in-out 0.3s infinite; }
+.ambient-particle-5 { animation: ambientParticle5 10s ease-in-out 1.8s infinite; }
+.ambient-particle-6 { animation: ambientParticle6 13s ease-in-out 0.9s infinite; }
+
+/* Connecting lines: stroke-dash flow + opacity pulse */
+@keyframes ambientLineFlow {
+  0%   { opacity: 0.0; stroke-dashoffset: 200; }
+  40%  { opacity: 0.9; }
+  100% { opacity: 0.0; stroke-dashoffset: 0; }
+}
+.ambient-line {
+  stroke-dasharray: 60 200;
+  stroke-dashoffset: 200;
+  animation: ambientLineFlow 6s linear infinite;
+}
+.ambient-line-1 { animation-delay: 0s; }
+.ambient-line-2 { animation-delay: 2s; }
+.ambient-line-3 { animation-delay: 4s; }
+
+/* Pulse rings */
+@keyframes ambientPulseRing {
+  0%   { transform: scale(0.6);  opacity: 0; }
+  20%  { opacity: 0.5; }
+  100% { transform: scale(2.2);  opacity: 0; }
+}
+.ambient-pulse-ring {
+  animation: ambientPulseRing 4.8s ease-out infinite;
+}
+.ambient-pulse-ring-2 { animation-delay: 1.6s; }
+.ambient-pulse-ring-3 { animation-delay: 3.2s; }
+
+/* Mesh blobs: slow figure-8 drift */
+@keyframes ambientMeshBlob1 {
+  0%   { transform: translate(-15%, -10%); }
+  33%  { transform: translate(40%, 5%); }
+  66%  { transform: translate(20%, 35%); }
+  100% { transform: translate(-15%, -10%); }
+}
+@keyframes ambientMeshBlob2 {
+  0%   { transform: translate(80%, 60%); }
+  33%  { transform: translate(30%, 30%); }
+  66%  { transform: translate(60%, 5%); }
+  100% { transform: translate(80%, 60%); }
+}
+.ambient-mesh-blob-1 { animation: ambientMeshBlob1 28s ease-in-out infinite; will-change: transform; }
+.ambient-mesh-blob-2 { animation: ambientMeshBlob2 32s ease-in-out infinite; will-change: transform; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ambient-drift-orb,
+  .ambient-particle,
+  .ambient-particle-1, .ambient-particle-2, .ambient-particle-3,
+  .ambient-particle-4, .ambient-particle-5, .ambient-particle-6,
+  .ambient-line,
+  .ambient-line-1, .ambient-line-2, .ambient-line-3,
+  .ambient-pulse-ring, .ambient-pulse-ring-2, .ambient-pulse-ring-3,
+  .ambient-mesh-blob-1, .ambient-mesh-blob-2 {
+    animation: none !important;
+  }
+}
