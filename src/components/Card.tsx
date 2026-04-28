@@ -17,7 +17,7 @@ export default function Card({
 }: CardProps) {
   return (
     <div
-      className={`group rounded-2xl border border-border bg-surface p-6 transition-colors hover:border-accent/30 ${className}`}
+      className={`card-tilt card-sweep group rounded-2xl border border-border bg-surface p-6 transition-colors hover:border-accent/30 ${className}`}
     >
       {number && (
         <span className="mb-3 inline-block text-xs font-semibold uppercase tracking-widest text-accent">

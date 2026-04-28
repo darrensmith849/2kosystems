@@ -5,6 +5,9 @@ import StepProcess from "@/components/StepProcess";
 import CTASection from "@/components/CTASection";
 import PremiumSystemsHero from "@/components/home/PremiumSystemsHero";
 import AmbientMotion from "@/components/home/AmbientMotion";
+import FlowPipeline from "@/components/home/FlowPipeline";
+import BeforeAfter from "@/components/home/BeforeAfter";
+import SystemEngine from "@/components/home/SystemEngine";
 import {
   WorkflowIcon,
   PortalIcon,
@@ -201,6 +204,15 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* SECTION 6.5 — FLOW PIPELINE */}
+      <FlowPipeline />
+
+      {/* SECTION 6.6 — BEFORE / AFTER */}
+      <BeforeAfter />
+
+      {/* SECTION 6.7 — SYSTEMS ENGINE */}
+      <SystemEngine />
 
       {/* SECTION 7 — HOW WE WORK */}
       <section className="relative overflow-hidden border-t border-border/60 bg-background">

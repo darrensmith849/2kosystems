@@ -354,3 +354,157 @@ body {
     animation: none !important;
   }
 }
+
+/* ---------------------------------------------------------------- */
+/* FlowPipeline — pulse running along the horizontal flow line       */
+/* ---------------------------------------------------------------- */
+
+@keyframes flowPipelinePulse {
+  0%   { left: -8%;  opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { left: 108%; opacity: 0; }
+}
+.flow-pipeline-pulse {
+  width: 56px;
+  height: 6px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, transparent, rgba(15,123,58,0.85), transparent);
+  filter: blur(0.5px);
+  animation: flowPipelinePulse 6s linear infinite;
+}
+
+@keyframes flowStageNodeGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(15,123,58,0); }
+  50%      { box-shadow: 0 0 0 6px rgba(15,123,58,0.25); }
+}
+.flow-stage-node {
+  animation: flowStageNodeGlow 6s ease-in-out infinite;
+}
+.flow-stage:nth-child(1) .flow-stage-node { animation-delay: 0s; }
+.flow-stage:nth-child(2) .flow-stage-node { animation-delay: 1.2s; }
+.flow-stage:nth-child(3) .flow-stage-node { animation-delay: 2.4s; }
+.flow-stage:nth-child(4) .flow-stage-node { animation-delay: 3.6s; }
+.flow-stage:nth-child(5) .flow-stage-node { animation-delay: 4.8s; }
+
+/* ---------------------------------------------------------------- */
+/* BeforeAfter — staggered line reveals + calm dot pulse             */
+/* ---------------------------------------------------------------- */
+
+@keyframes baLineFadeIn {
+  0%, 30%   { opacity: 0; transform: translateX(-6px); }
+  100%      { opacity: 1; transform: translateX(0); }
+}
+.ba-chaos-line, .ba-calm-line {
+  animation: baLineFadeIn 1.6s ease-out both;
+}
+
+@keyframes baCalmDotPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(15,123,58,0); }
+  50%      { box-shadow: 0 0 0 3px rgba(15,123,58,0.25); }
+}
+.ba-calm-dot {
+  animation: baCalmDotPulse 2.6s ease-in-out infinite;
+}
+
+/* ---------------------------------------------------------------- */
+/* SystemEngine — input/output token pulse + rotating core ring      */
+/* ---------------------------------------------------------------- */
+
+@keyframes seTokenIn {
+  0%   { transform: translateX(0)  scale(1);    box-shadow: 0 0 0 0 rgba(184,196,200,0); }
+  50%  { transform: translateX(8px) scale(1.02); box-shadow: 0 0 0 4px rgba(184,196,200,0.10); }
+  100% { transform: translateX(0)  scale(1);    box-shadow: 0 0 0 0 rgba(184,196,200,0); }
+}
+@keyframes seTokenOut {
+  0%   { transform: translateX(0)   scale(1);    box-shadow: 0 0 0 0 rgba(15,123,58,0); }
+  50%  { transform: translateX(-8px) scale(1.02); box-shadow: 0 0 0 4px rgba(15,123,58,0.18); }
+  100% { transform: translateX(0)   scale(1);    box-shadow: 0 0 0 0 rgba(15,123,58,0); }
+}
+.se-token-in  { animation: seTokenIn  3.6s ease-in-out infinite; }
+.se-token-out { animation: seTokenOut 3.6s ease-in-out infinite; }
+
+@keyframes seCoreRing {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.se-core-ring {
+  animation: seCoreRing 22s linear infinite;
+}
+
+/* ---------------------------------------------------------------- */
+/* Card hover — 3D tilt + diagonal light sweep                       */
+/* ---------------------------------------------------------------- */
+
+.card-tilt {
+  perspective: 800px;
+  transform-style: preserve-3d;
+  transition: transform 400ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.card-tilt:hover {
+  transform: translateY(-3px) rotateX(2deg) rotateY(-2deg);
+}
+
+.card-sweep {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+.card-sweep::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(
+    115deg,
+    transparent 0%,
+    transparent 38%,
+    rgba(255, 255, 255, 0.10) 50%,
+    transparent 62%,
+    transparent 100%
+  );
+  transform: translateX(-120%);
+  transition: transform 900ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  pointer-events: none;
+  z-index: 0;
+}
+.card-sweep:hover::before {
+  transform: translateX(120%);
+}
+.card-sweep > * { position: relative; z-index: 1; }
+
+/* ---------------------------------------------------------------- */
+/* Hero floating cards (decorative layer over PremiumSystemsHero)    */
+/* ---------------------------------------------------------------- */
+
+@keyframes heroFloatA { 0%, 100% { transform: translateY(0) translateX(0); } 50% { transform: translateY(-10px) translateX(4px); } }
+@keyframes heroFloatB { 0%, 100% { transform: translateY(0) translateX(0); } 50% { transform: translateY(8px)  translateX(-6px); } }
+@keyframes heroFloatC { 0%, 100% { transform: translateY(0) translateX(0); } 50% { transform: translateY(-6px) translateX(-4px); } }
+.hero-float-a { animation: heroFloatA 7s ease-in-out infinite; }
+.hero-float-b { animation: heroFloatB 9s ease-in-out 1s infinite; }
+.hero-float-c { animation: heroFloatC 8s ease-in-out 0.5s infinite; }
+
+@keyframes heroBeam {
+  0%   { stroke-dashoffset: 200; opacity: 0; }
+  20%  { opacity: 0.9; }
+  100% { stroke-dashoffset: 0; opacity: 0; }
+}
+.hero-beam {
+  stroke-dasharray: 60 200;
+  animation: heroBeam 5s linear infinite;
+}
+.hero-beam-1 { animation-delay: 0s; }
+.hero-beam-2 { animation-delay: 1.6s; }
+.hero-beam-3 { animation-delay: 3.2s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .flow-pipeline-pulse,
+  .flow-stage-node,
+  .ba-chaos-line, .ba-calm-line, .ba-calm-dot,
+  .se-token-in, .se-token-out, .se-core-ring,
+  .hero-float-a, .hero-float-b, .hero-float-c,
+  .hero-beam, .hero-beam-1, .hero-beam-2, .hero-beam-3 {
+    animation: none !important;
+  }
+  .card-tilt:hover { transform: none !important; }
+  .card-sweep::before { display: none; }
+}
