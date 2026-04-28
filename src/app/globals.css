@@ -761,3 +761,46 @@ body {
   }
   .micro-trend-line { stroke-dasharray: 0; }
 }
+
+/* ---------------------------------------------------------------- */
+/* Contact page — animated step flow + live indicator                */
+/* ---------------------------------------------------------------- */
+
+/* Vertical pulse travelling down the 3-step "What happens next" rail */
+@keyframes contactStepsPulse {
+  0%   { top: 0%;   opacity: 0; }
+  10%  { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+.contact-steps-pulse {
+  animation: contactStepsPulse 4.6s ease-in-out infinite;
+  will-change: top, opacity;
+}
+
+/* Each numbered step fades + slides in on first paint */
+@keyframes contactStepReveal {
+  0%   { opacity: 0; transform: translateX(-10px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+.contact-step {
+  animation: contactStepReveal 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+/* "Live" pill dot — soft expanding ring */
+@keyframes contactLiveDot {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(15,123,58,0.55); }
+  50%      { box-shadow: 0 0 0 5px rgba(15,123,58,0); }
+}
+.contact-live-dot {
+  animation: contactLiveDot 1.8s ease-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contact-steps-pulse,
+  .contact-step,
+  .contact-live-dot {
+    animation: none !important;
+  }
+  .contact-steps-pulse { display: none; }
+}
