@@ -200,8 +200,19 @@ export default function Home() {
       </section>
 
       {/* SECTION 7 — HOW WE WORK */}
-      <section className="border-t border-border/60 bg-background">
-        <div className="mx-auto max-w-6xl px-6 py-20">
+      <section className="relative overflow-hidden border-t border-border/60 bg-background">
+        {/* Subtle AI-generated process visual */}
+        <div className="pointer-events-none absolute inset-0 opacity-[0.18]" aria-hidden="true">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/imagery/generated/process-mesh.png"
+            alt=""
+            className="h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-background via-background/60 to-background" />
+        </div>
+
+        <div className="relative mx-auto max-w-6xl px-6 py-20">
           <SectionHeader title="How we work" />
 
           <StepProcess

@@ -22,6 +22,22 @@ export default function HowWeWorkPage() {
         primaryHref="/get-started"
       />
 
+      {/* AI-generated process visual */}
+      <section className="relative overflow-hidden border-t border-border/60 bg-background">
+        <div className="mx-auto max-w-6xl px-6 py-12 md:py-16">
+          <div className="relative h-56 overflow-hidden rounded-3xl border border-border md:h-72">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/imagery/generated/operational-overview.png"
+              alt=""
+              aria-hidden="true"
+              className="h-full w-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-tr from-background/70 via-background/20 to-transparent" />
+          </div>
+        </div>
+      </section>
+
       {/* Engagement model */}
       <section className="border-t border-border/60 bg-background">
         <div className="mx-auto max-w-6xl px-6 py-20">
