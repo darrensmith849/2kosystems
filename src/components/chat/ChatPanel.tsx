@@ -40,6 +40,11 @@ export default function ChatPanel() {
   const [needsContactBeforeHandoff, setNeedsContactBeforeHandoff] = useState(false);
   const [handoffComplete, setHandoffComplete] = useState(false);
   const [handoffError, setHandoffError] = useState<string | null>(null);
+  // Show the starter quick-reply menu. True at the start of a session,
+  // false once the visitor takes any action, and re-enabled when the
+  // Back button is clicked so the visitor can pick another starter
+  // without losing their conversation.
+  const [showStartMenu, setShowStartMenu] = useState(true);
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
   // Auto-scroll to bottom on new messages, sending toggles, and handoff state changes.
@@ -92,7 +97,6 @@ export default function ChatPanel() {
 
   if (!state.open) return null;
 
-  const onlyGreeting = state.messages.length <= 1;
   const userMessageCount = userTurns;
   const botAnswerCount = state.messages.filter(
     (m) => m.role === "assistant" && m.id !== "greeting"
@@ -117,6 +121,7 @@ export default function ChatPanel() {
     addUserMessage(qr.label);
     // Render the scripted reply immediately — no LLM call.
     addAssistantMessage(qr.reply, intent);
+    setShowStartMenu(false);
   }
 
   async function callChatAPI(userText: string) {
@@ -175,6 +180,7 @@ export default function ChatPanel() {
     setDraft("");
 
     addUserMessage(text);
+    setShowStartMenu(false);
 
     // Detect direct human request → trigger handoff path.
     if (userRequestedHuman(text)) {
@@ -256,8 +262,9 @@ export default function ChatPanel() {
         <div className="flex items-center justify-between gap-2 border-b border-white/10 px-3 py-3">
           <button
             type="button"
-            onClick={close}
-            aria-label="Back to site"
+            onClick={() => setShowStartMenu(true)}
+            aria-label="Show starter questions"
+            title="Show starter questions"
             className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:border-accent/40 hover:bg-white/[0.06] hover:text-text"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -302,7 +309,7 @@ export default function ChatPanel() {
             {state.isSending && <TypingBubble />}
           </div>
 
-          {onlyGreeting && (
+          {showStartMenu && (
             <QuickReplies onSelect={handleQuickReply} disabled={state.isSending} />
           )}
 
