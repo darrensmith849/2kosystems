@@ -12,7 +12,7 @@ export default function SectionHeader({
   centered = true,
 }: SectionHeaderProps) {
   return (
-    <div className={`mb-12 ${centered ? "text-center" : ""}`}>
+    <div className={`reveal-up mb-12 ${centered ? "text-center" : ""}`}>
       {eyebrow && (
         <span className="mb-4 inline-block rounded-full bg-accent/10 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-accent">
           {eyebrow}

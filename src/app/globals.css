@@ -508,3 +508,137 @@ body {
   .card-tilt:hover { transform: none !important; }
   .card-sweep::before { display: none; }
 }
+
+/* ---------------------------------------------------------------- */
+/* OperationsLattice — Section 3 background                          */
+/* ---------------------------------------------------------------- */
+
+@keyframes latticePulseEdge {
+  0%   { stroke-dasharray: 0 240;     stroke-dashoffset: 0;    opacity: 0; }
+  10%  { opacity: 1; }
+  60%  { opacity: 1; }
+  100% { stroke-dasharray: 60 240;   stroke-dashoffset: -240;  opacity: 0; }
+}
+.lattice-pulse-edge {
+  stroke-dasharray: 0 240;
+  animation: latticePulseEdge 5.2s linear infinite;
+}
+.lattice-pulse-edge-1 { animation-delay: 0s; }
+.lattice-pulse-edge-2 { animation-delay: 1s; }
+.lattice-pulse-edge-3 { animation-delay: 2s; }
+.lattice-pulse-edge-4 { animation-delay: 3s; }
+.lattice-pulse-edge-5 { animation-delay: 4s; }
+
+@keyframes latticeNodeHalo {
+  0%, 100% { transform: scale(0.85); opacity: 0.45; }
+  50%      { transform: scale(1.15); opacity: 0.95; }
+}
+.lattice-node-halo {
+  transform-origin: center;
+  transform-box: fill-box;
+  animation: latticeNodeHalo 3.6s ease-in-out infinite;
+}
+
+@keyframes latticeNodeCore {
+  0%, 100% { opacity: 0.65; }
+  50%      { opacity: 1; }
+}
+.lattice-node-core {
+  animation: latticeNodeCore 2.4s ease-in-out infinite;
+}
+
+@keyframes latticeScanline {
+  0%   { transform: translateX(0); opacity: 0; }
+  10%  { opacity: 0.55; }
+  90%  { opacity: 0.55; }
+  100% { transform: translateX(960px); opacity: 0; }
+}
+.lattice-scanline {
+  animation: latticeScanline 14s linear infinite;
+}
+
+/* ---------------------------------------------------------------- */
+/* WorkflowBlueprint — How We Work flagship motion graphic          */
+/* ---------------------------------------------------------------- */
+
+@keyframes blueprintEdgeFlow {
+  0%   { stroke-dashoffset: 200; }
+  100% { stroke-dashoffset: 0; }
+}
+.blueprint-edge {
+  stroke-dasharray: 8 12;
+  animation: blueprintEdgeFlow 2.8s linear infinite;
+}
+
+@keyframes blueprintTokenTravel {
+  0%   { offset-distance: 0%;   opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { offset-distance: 100%; opacity: 0; }
+}
+.blueprint-token {
+  offset-rotate: 0deg;
+  animation: blueprintTokenTravel 4.2s linear infinite;
+}
+.blueprint-token-2 { animation-delay: 1.4s; }
+.blueprint-token-3 { animation-delay: 2.8s; }
+
+@keyframes blueprintNodePulse {
+  0%, 100% { transform: scale(1);    box-shadow: 0 0 0 0 rgba(15,123,58,0); }
+  50%      { transform: scale(1.04); box-shadow: 0 0 0 6px rgba(15,123,58,0.16); }
+}
+.blueprint-node {
+  animation: blueprintNodePulse 4.8s ease-in-out infinite;
+}
+.blueprint-node:nth-child(1) { animation-delay: 0s; }
+.blueprint-node:nth-child(2) { animation-delay: 0.9s; }
+.blueprint-node:nth-child(3) { animation-delay: 1.8s; }
+.blueprint-node:nth-child(4) { animation-delay: 2.7s; }
+.blueprint-node:nth-child(5) { animation-delay: 3.6s; }
+
+@keyframes blueprintScan {
+  0%   { transform: translateY(-100%); opacity: 0; }
+  10%  { opacity: 0.45; }
+  90%  { opacity: 0.45; }
+  100% { transform: translateY(100%);  opacity: 0; }
+}
+.blueprint-scan {
+  animation: blueprintScan 9s linear infinite;
+}
+
+@keyframes blueprintGridShift {
+  0%   { background-position: 0 0; }
+  100% { background-position: 64px 64px; }
+}
+.blueprint-grid {
+  background-image:
+    linear-gradient(rgba(184,196,200,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(184,196,200,0.05) 1px, transparent 1px);
+  background-size: 64px 64px;
+  animation: blueprintGridShift 30s linear infinite;
+}
+
+/* ---------------------------------------------------------------- */
+/* Scroll-reveal section headers                                     */
+/* ---------------------------------------------------------------- */
+
+@keyframes revealUp {
+  0%   { opacity: 0; transform: translateY(14px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.reveal-up {
+  animation: revealUp 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lattice-pulse-edge,
+  .lattice-pulse-edge-1, .lattice-pulse-edge-2, .lattice-pulse-edge-3,
+  .lattice-pulse-edge-4, .lattice-pulse-edge-5,
+  .lattice-node-halo, .lattice-node-core, .lattice-scanline,
+  .blueprint-edge, .blueprint-token,
+  .blueprint-token-2, .blueprint-token-3,
+  .blueprint-node, .blueprint-scan, .blueprint-grid,
+  .reveal-up {
+    animation: none !important;
+  }
+}

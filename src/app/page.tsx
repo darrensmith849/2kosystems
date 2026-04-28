@@ -5,6 +5,7 @@ import StepProcess from "@/components/StepProcess";
 import CTASection from "@/components/CTASection";
 import PremiumSystemsHero from "@/components/home/PremiumSystemsHero";
 import AmbientMotion from "@/components/home/AmbientMotion";
+import OperationsLattice from "@/components/home/OperationsLattice";
 import FlowPipeline from "@/components/home/FlowPipeline";
 import BeforeAfter from "@/components/home/BeforeAfter";
 import SystemEngine from "@/components/home/SystemEngine";
@@ -57,8 +58,8 @@ export default function Home() {
 
       {/* SECTION 3 — POSITIONING */}
       <section className="relative overflow-hidden border-t border-border/60 bg-background">
-        <AmbientMotion variant="drift" />
-        <div className="relative mx-auto max-w-6xl px-6 py-20">
+        <OperationsLattice />
+        <div className="relative mx-auto max-w-6xl px-6 py-24">
           <SectionHeader
             title="Built for real operations, not tech theatre."
             description="You don't need more software. You need the right system for how your business actually runs."

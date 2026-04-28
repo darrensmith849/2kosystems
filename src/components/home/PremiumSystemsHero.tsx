@@ -156,7 +156,7 @@ export default function PremiumSystemsHero() {
         {/* Soft accent-green glow orb */}
         <div
           className="absolute right-[8%] top-[28%] h-64 w-64 rounded-full blur-3xl"
-          style={{ background: "rgba(15,123,58,0.18)" }}
+          style={{ background: "rgba(15,123,58,0.16)" }}
         />
 
         {/* Animated connector beams behind the headline (desktop only) */}
@@ -164,39 +164,13 @@ export default function PremiumSystemsHero() {
           className="absolute -left-10 top-1/3 hidden h-72 w-[40%] lg:block"
           viewBox="0 0 600 320"
           fill="none"
-          stroke="rgba(184,196,200,0.45)"
+          stroke="rgba(184,196,200,0.32)"
           strokeWidth="1"
         >
           <path className="hero-beam hero-beam-1" d="M0 60 Q200 20 400 80 T600 60" />
           <path className="hero-beam hero-beam-2" d="M0 160 Q220 130 420 180 T600 160" />
           <path className="hero-beam hero-beam-3" d="M0 260 Q200 220 400 280 T600 260" />
         </svg>
-
-        {/* Floating mini system cards (desktop only) */}
-        <div className="hero-float-a absolute left-[6%] top-[22%] hidden lg:block">
-          <div className="rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-[11px] text-white/80 backdrop-blur-md shadow-[0_10px_30px_-15px_rgba(0,0,0,0.6)]">
-            <div className="flex items-center gap-2">
-              <span className="h-1.5 w-1.5 rounded-full bg-accent" />
-              Approval routed → Sasha
-            </div>
-          </div>
-        </div>
-        <div className="hero-float-b absolute left-[3%] top-[55%] hidden lg:block">
-          <div className="rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-[11px] text-white/80 backdrop-blur-md shadow-[0_10px_30px_-15px_rgba(0,0,0,0.6)]">
-            <div className="flex items-center gap-2">
-              <span className="h-1.5 w-1.5 rounded-full bg-accent2" />
-              Site report ready
-            </div>
-          </div>
-        </div>
-        <div className="hero-float-c absolute right-[42%] top-[15%] hidden lg:block">
-          <div className="rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-[11px] text-white/80 backdrop-blur-md shadow-[0_10px_30px_-15px_rgba(0,0,0,0.6)]">
-            <div className="flex items-center gap-2">
-              <span className="h-1.5 w-1.5 rounded-full bg-accent" />
-              SLA on track · 23 open
-            </div>
-          </div>
-        </div>
       </div>
 
       <div className="relative z-10 mx-auto grid min-h-[78svh] max-w-7xl items-center gap-14 px-6 py-24 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:px-10 lg:py-28">
