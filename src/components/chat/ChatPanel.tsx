@@ -42,12 +42,40 @@ export default function ChatPanel() {
   const [handoffError, setHandoffError] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
-  // Auto-scroll to bottom on new messages.
+  // Auto-scroll to bottom on new messages, sending toggles, and handoff state changes.
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
     el.scrollTop = el.scrollHeight;
   }, [state.messages.length, state.isSending, pendingHandoff, handoffComplete]);
+
+  // Auto-scroll continuously while the panel is open so the typewriter
+  // animation keeps the bottom of the latest reply in view as it grows.
+  // Cheap (one DOM read + write every 120ms), and only runs while open.
+  useEffect(() => {
+    if (!state.open) return;
+    const id = window.setInterval(() => {
+      const el = scrollRef.current;
+      if (!el) return;
+      // Only stick to the bottom if the user is already near the bottom —
+      // don't yank them down if they've scrolled up to read history.
+      const distance = el.scrollHeight - el.scrollTop - el.clientHeight;
+      if (distance < 80) {
+        el.scrollTop = el.scrollHeight;
+      }
+    }, 120);
+    return () => window.clearInterval(id);
+  }, [state.open]);
+
+  // Close on Escape — common UX expectation for any modal-like overlay.
+  useEffect(() => {
+    if (!state.open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") close();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [state.open, close]);
 
   // Lock body scroll on mobile when open.
   useEffect(() => {
@@ -225,21 +253,34 @@ export default function ChatPanel() {
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
-          <div className="flex items-center gap-2.5">
+        <div className="flex items-center justify-between gap-2 border-b border-white/10 px-3 py-3">
+          <button
+            type="button"
+            onClick={close}
+            aria-label="Back to site"
+            className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:border-accent/40 hover:bg-white/[0.06] hover:text-text"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M15 18l-6-6 6-6" />
+            </svg>
+            Back
+          </button>
+
+          <div className="flex flex-1 items-center justify-center gap-2.5">
             <span
               aria-hidden
               className="grid h-8 w-8 place-items-center rounded-full bg-accent/20 text-accent text-sm font-bold"
             >
               2KO
             </span>
-            <div>
+            <div className="hidden sm:block">
               <p className="text-sm font-semibold text-text leading-tight">
-                Talk to our Systems Specialist
+                Talk to our Specialist
               </p>
               <p className="text-[11px] text-muted2 leading-tight">2KO Systems</p>
             </div>
           </div>
+
           <button
             type="button"
             onClick={close}
