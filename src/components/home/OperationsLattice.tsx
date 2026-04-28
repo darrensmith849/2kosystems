@@ -64,7 +64,17 @@ export default function OperationsLattice() {
         className="absolute inset-0"
         style={{
           background:
-            "radial-gradient(900px 460px at 50% 50%, rgba(15,123,58,0.10) 0%, transparent 65%)",
+            "radial-gradient(900px 460px at 50% 50%, rgba(15,123,58,0.06) 0%, transparent 65%)",
+        }}
+      />
+
+      {/* Strong inner mask: lattice fades out heavily where the cards sit
+          (centre band) and only shows at the top/bottom edges as ambient depth. */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(900px 360px at 50% 50%, var(--background) 0%, var(--background) 35%, transparent 80%)",
         }}
       />
 
@@ -73,12 +83,12 @@ export default function OperationsLattice() {
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(180deg, var(--background) 0%, transparent 18%, transparent 82%, var(--background) 100%)",
+            "linear-gradient(180deg, var(--background) 0%, transparent 14%, transparent 86%, var(--background) 100%)",
         }}
       />
 
       <svg
-        className="absolute inset-0 h-full w-full"
+        className="absolute inset-0 h-full w-full opacity-50"
         viewBox="0 0 1040 460"
         preserveAspectRatio="xMidYMid slice"
       >
@@ -102,8 +112,8 @@ export default function OperationsLattice() {
           </linearGradient>
         </defs>
 
-        {/* Static lattice edges (the "wiring") */}
-        <g stroke="rgba(184,196,200,0.18)" strokeWidth="1">
+        {/* Static lattice edges (the "wiring") — much fainter now */}
+        <g stroke="rgba(184,196,200,0.10)" strokeWidth="1">
           {EDGES.map((e, i) => {
             const a = NODES[e.from];
             const b = NODES[e.to];
@@ -119,8 +129,8 @@ export default function OperationsLattice() {
           })}
         </g>
 
-        {/* Pulsed edges — accent-coloured travelling dash */}
-        <g strokeWidth="1.4" fill="none">
+        {/* Pulsed edges — accent-coloured travelling dash, dimmed */}
+        <g strokeWidth="1.2" fill="none">
           {PULSED_EDGE_INDEXES.map((idx, i) => {
             const e = EDGES[idx];
             const a = NODES[e.from];
@@ -132,36 +142,34 @@ export default function OperationsLattice() {
                 y1={a.y}
                 x2={b.x}
                 y2={b.y}
-                stroke="rgba(15,123,58,0.65)"
+                stroke="rgba(15,123,58,0.45)"
                 className={`lattice-pulse-edge lattice-pulse-edge-${i + 1}`}
               />
             );
           })}
         </g>
 
-        {/* Service nodes */}
+        {/* Service nodes — small, low-contrast, no body fill so they don't read
+            as floating "buttons" alongside the cards */}
         <g>
           {NODES.map((n, i) => (
             <g key={`node-${i}`} transform={`translate(${n.x} ${n.y})`}>
-              {/* Outer halo — only for active nodes */}
               {n.active && (
                 <circle
-                  r="18"
+                  r="14"
                   fill="url(#lattice-node)"
                   className="lattice-node-halo"
-                  style={{ animationDelay: `${(i % 4) * 0.4}s` }}
+                  style={{ animationDelay: `${(i % 4) * 0.4}s`, opacity: 0.6 }}
                 />
               )}
-              {/* Glass node body */}
               <circle
-                r="6"
-                fill="rgba(20, 24, 28, 0.95)"
-                stroke={n.active ? "rgba(15,123,58,0.9)" : "rgba(184,196,200,0.35)"}
+                r="3"
+                fill="none"
+                stroke={n.active ? "rgba(15,123,58,0.5)" : "rgba(184,196,200,0.18)"}
                 strokeWidth="1"
               />
-              {/* Inner dot for active state */}
               {n.active && (
-                <circle r="2" fill="var(--accent)" className="lattice-node-core" />
+                <circle r="1.2" fill="var(--accent)" className="lattice-node-core" />
               )}
             </g>
           ))}

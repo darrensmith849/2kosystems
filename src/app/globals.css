@@ -642,3 +642,122 @@ body {
     animation: none !important;
   }
 }
+
+/* ---------------------------------------------------------------- */
+/* Hero right-side dashboard panel: gentle float / breathe           */
+/* ---------------------------------------------------------------- */
+
+@keyframes heroPanelFloat {
+  0%, 100% { transform: translateY(0)    rotate(0deg); }
+  50%      { transform: translateY(-8px) rotate(-0.25deg); }
+}
+.hero-panel-float {
+  animation: heroPanelFloat 7s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* ---------------------------------------------------------------- */
+/* FlowPipeline — card stagger reveal on first paint                 */
+/* ---------------------------------------------------------------- */
+
+@keyframes flowStageReveal {
+  0%   { opacity: 0; transform: translateY(18px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.flow-stage {
+  animation: flowStageReveal 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+/* ---------------------------------------------------------------- */
+/* FlowPipeline micro-graphics                                       */
+/* ---------------------------------------------------------------- */
+
+/* Target rings pulse outward */
+@keyframes microTargetRing {
+  0%, 100% { transform: scale(0.92); opacity: 0.6; }
+  50%      { transform: scale(1.08); opacity: 1; }
+}
+.micro-target-ring {
+  transform-origin: 30px 15px;
+  transform-box: view-box;
+  animation: microTargetRing 3s ease-in-out infinite;
+}
+.micro-target-ring-inner {
+  transform-origin: 30px 15px;
+  transform-box: view-box;
+  animation: microTargetRing 3s ease-in-out 1.2s infinite;
+}
+@keyframes microTargetDot {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.6); }
+}
+.micro-target-dot {
+  transform-origin: 30px 15px;
+  transform-box: view-box;
+  animation: microTargetDot 2.4s ease-in-out infinite;
+}
+
+/* Queue bars: each bar fills to its target width, then resets */
+@keyframes microQueueBar {
+  0%   { transform: scaleX(0.0); }
+  10%  { transform: scaleX(0.25); }
+  60%  { transform: scaleX(1); }
+  90%  { transform: scaleX(1); }
+  100% { transform: scaleX(0.0); }
+}
+.micro-queue-bar {
+  transform-origin: 6px center;
+  transform-box: view-box;
+  animation: microQueueBar 4s ease-in-out infinite;
+}
+.micro-queue-bar-1 { animation-delay: 0s; }
+.micro-queue-bar-2 { animation-delay: 0.5s; }
+.micro-queue-bar-3 { animation-delay: 1s; }
+
+/* Gear continuous rotation */
+@keyframes microGearSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.micro-gear-spin {
+  animation: microGearSpin 6s linear infinite;
+}
+
+/* Chart bars: wave grow */
+@keyframes microChartBar {
+  0%, 100% { transform: scaleY(0.55); }
+  50%      { transform: scaleY(1); }
+}
+.micro-chart-bar {
+  transform-origin: center bottom;
+  transform-box: fill-box;
+  animation: microChartBar 2.4s ease-in-out infinite;
+}
+.micro-chart-bar-1 { animation-delay: 0s; }
+.micro-chart-bar-2 { animation-delay: 0.18s; }
+.micro-chart-bar-3 { animation-delay: 0.36s; }
+.micro-chart-bar-4 { animation-delay: 0.54s; }
+
+/* Trend line: dash-flow draw */
+@keyframes microTrendLine {
+  0%   { stroke-dasharray: 0 200; }
+  60%  { stroke-dasharray: 200 0; }
+  100% { stroke-dasharray: 200 0; opacity: 0.95; }
+}
+.micro-trend-line {
+  stroke-dasharray: 0 200;
+  animation: microTrendLine 3.6s ease-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-panel-float,
+  .flow-stage,
+  .micro-target-ring, .micro-target-ring-inner, .micro-target-dot,
+  .micro-queue-bar, .micro-queue-bar-1, .micro-queue-bar-2, .micro-queue-bar-3,
+  .micro-gear-spin,
+  .micro-chart-bar, .micro-chart-bar-1, .micro-chart-bar-2, .micro-chart-bar-3, .micro-chart-bar-4,
+  .micro-trend-line {
+    animation: none !important;
+  }
+  .micro-trend-line { stroke-dasharray: 0; }
+}

@@ -156,21 +156,8 @@ export default function PremiumSystemsHero() {
         {/* Soft accent-green glow orb */}
         <div
           className="absolute right-[8%] top-[28%] h-64 w-64 rounded-full blur-3xl"
-          style={{ background: "rgba(15,123,58,0.16)" }}
+          style={{ background: "rgba(15,123,58,0.13)" }}
         />
-
-        {/* Animated connector beams behind the headline (desktop only) */}
-        <svg
-          className="absolute -left-10 top-1/3 hidden h-72 w-[40%] lg:block"
-          viewBox="0 0 600 320"
-          fill="none"
-          stroke="rgba(184,196,200,0.32)"
-          strokeWidth="1"
-        >
-          <path className="hero-beam hero-beam-1" d="M0 60 Q200 20 400 80 T600 60" />
-          <path className="hero-beam hero-beam-2" d="M0 160 Q220 130 420 180 T600 160" />
-          <path className="hero-beam hero-beam-3" d="M0 260 Q200 220 400 280 T600 260" />
-        </svg>
       </div>
 
       <div className="relative z-10 mx-auto grid min-h-[78svh] max-w-7xl items-center gap-14 px-6 py-24 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:px-10 lg:py-28">
@@ -208,7 +195,7 @@ export default function PremiumSystemsHero() {
         </div>
 
         <div className="relative hidden lg:block">
-          <div className="rounded-[30px] border border-white/10 bg-white/[0.04] p-5 backdrop-blur-xl">
+          <div className="hero-panel-float rounded-[30px] border border-white/10 bg-white/[0.04] p-5 backdrop-blur-xl">
             <div className="rounded-[24px] border border-white/10 bg-[#081120]/88 p-5 shadow-2xl shadow-black/25">
               <div className="mb-5 flex items-start justify-between gap-4">
                 <div>
