@@ -88,7 +88,7 @@ export default function BeforeAfter() {
         <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-2">
           {/* CHAOS panel */}
           <div
-            className={`relative overflow-hidden rounded-3xl border bg-surface p-8 transition-all duration-700 lg:p-10 ${
+            className={`card-tilt card-sweep relative overflow-hidden rounded-3xl border bg-surface p-8 transition-all duration-700 lg:p-10 ${
               side === "before"
                 ? "border-white/15 opacity-100"
                 : "border-border opacity-50 lg:scale-[0.98]"
@@ -135,7 +135,7 @@ export default function BeforeAfter() {
 
           {/* CALM panel */}
           <div
-            className={`relative overflow-hidden rounded-3xl border bg-surface p-8 transition-all duration-700 lg:p-10 ${
+            className={`card-tilt card-sweep relative overflow-hidden rounded-3xl border bg-surface p-8 transition-all duration-700 lg:p-10 ${
               side === "after"
                 ? "border-accent/40 opacity-100 shadow-[0_30px_60px_-30px_rgba(15,123,58,0.5)]"
                 : "border-border opacity-60 lg:scale-[0.98]"

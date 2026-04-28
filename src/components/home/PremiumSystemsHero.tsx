@@ -195,7 +195,7 @@ export default function PremiumSystemsHero() {
         </div>
 
         <div className="relative hidden lg:block">
-          <div className="hero-panel-float rounded-[30px] border border-white/10 bg-white/[0.04] p-5 backdrop-blur-xl">
+          <div className="rounded-[30px] border border-white/10 bg-white/[0.04] p-5 backdrop-blur-xl">
             <div className="rounded-[24px] border border-white/10 bg-[#081120]/88 p-5 shadow-2xl shadow-black/25">
               <div className="mb-5 flex items-start justify-between gap-4">
                 <div>
