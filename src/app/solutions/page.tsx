@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import PageHero from "@/components/PageHero";
 import CTASection from "@/components/CTASection";
+import TypewriterText from "@/components/TypewriterText";
 
 export const metadata: Metadata = {
   title: "Solutions",
@@ -165,9 +166,9 @@ export default function SolutionsPage() {
                   <h3 className="mb-1.5 text-xs font-semibold uppercase tracking-widest text-accent">
                     Example workflow
                   </h3>
-                  <p className="rounded-lg border border-white/10 bg-white/[0.03] p-4 font-mono text-[13px] leading-relaxed text-text">
-                    {solution.exampleFlow}
-                  </p>
+                  <div className="min-h-[6.5rem] rounded-lg border border-white/10 bg-white/[0.03] p-4 font-mono text-[13px] leading-relaxed text-text">
+                    <TypewriterText text={solution.exampleFlow} />
+                  </div>
 
                   <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div>
