@@ -3,7 +3,12 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description:
-    "How 2KO Systems collects, uses, and protects your information when you interact with our website and chat assistant.",
+    "How 2KO Systems collects, uses, and protects your information when you interact with our website and chat assistant. POPIA-aligned.",
+  openGraph: {
+    title: "Privacy Policy | 2KO Systems",
+    description:
+      "How 2KO Systems handles personal information, in line with POPIA.",
+  },
 };
 
 export default function PrivacyPage() {

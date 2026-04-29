@@ -6,6 +6,11 @@ export const metadata: Metadata = {
   title: "Contact",
   description:
     "Speak to a real agent at 2KO Systems. Send a message and the team will be in touch within one business day.",
+  openGraph: {
+    title: "Contact | 2KO Systems",
+    description:
+      "Speak to the 2KO Systems team. One business day response.",
+  },
 };
 
 const NEXT_STEPS = [
@@ -53,7 +58,7 @@ export default function ContactPage() {
                   What happens next
                 </h2>
 
-                <ol className="contact-steps relative pl-2">
+                <ul className="contact-steps relative list-none pl-2">
                   {/* Vertical flow rail (only visible on the steps area) */}
                   <span
                     aria-hidden="true"
@@ -79,7 +84,7 @@ export default function ContactPage() {
                       </span>
                     </li>
                   ))}
-                </ol>
+                </ul>
               </div>
 
               <div className="mt-10">
