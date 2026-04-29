@@ -3,6 +3,7 @@ import PageHero from "@/components/PageHero";
 import SectionHeader from "@/components/SectionHeader";
 import Card from "@/components/Card";
 import CTASection from "@/components/CTASection";
+import AboutHeroMotion from "@/components/about/AboutHeroMotion";
 
 export const metadata: Metadata = {
   title: "About",
@@ -24,19 +25,10 @@ export default function AboutPage() {
         description="2KO Systems builds custom operational systems for established businesses. We are part of the wider 2KO ecosystem — grounded in operational improvement, not just software delivery."
       />
 
-      {/* Operations imagery */}
+      {/* Operations imagery — animated dashboards over the AI base image */}
       <section className="border-t border-border/60 bg-background">
         <div className="mx-auto max-w-6xl px-6 pt-20">
-          <div className="relative h-72 overflow-hidden rounded-3xl border border-border md:h-96">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/imagery/about/hero.png"
-              alt=""
-              aria-hidden="true"
-              className="h-full w-full object-cover saturate-[0.8]"
-            />
-            <div className="absolute inset-0 bg-gradient-to-tr from-background/85 via-background/30 to-transparent" />
-          </div>
+          <AboutHeroMotion />
         </div>
       </section>
 
