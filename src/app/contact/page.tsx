@@ -58,7 +58,7 @@ export default function ContactPage() {
                   What happens next
                 </h2>
 
-                <ul className="contact-steps relative list-none pl-2">
+                <ul className="contact-steps relative list-none pl-0">
                   {/* Vertical flow rail (only visible on the steps area) */}
                   <span
                     aria-hidden="true"
