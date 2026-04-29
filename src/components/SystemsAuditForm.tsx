@@ -16,10 +16,10 @@ const INDUSTRIES = [
 ];
 
 const URGENCY = [
-  { value: "exploring", label: "Exploring — no specific deadline" },
+  { value: "exploring", label: "Exploring (no deadline)" },
   { value: "this-quarter", label: "This quarter" },
   { value: "this-month", label: "This month" },
-  { value: "asap", label: "Urgent — needs to start soon" },
+  { value: "asap", label: "Urgent (asap)" },
 ];
 
 const NEXT_STEP = [
@@ -136,7 +136,7 @@ export default function SystemsAuditForm() {
   }
 
   const inputClass =
-    "w-full rounded-lg border border-white/10 bg-white/[0.03] px-3 py-2.5 text-sm text-text placeholder:text-muted2 focus:border-accent/60 focus:outline-none";
+    "w-full truncate rounded-lg border border-white/10 bg-white/[0.03] px-3 py-2.5 text-sm text-text placeholder:text-muted2 focus:border-accent/60 focus:outline-none";
   const labelClass = "mb-1.5 block text-xs font-semibold uppercase tracking-widest text-muted2";
 
   return (
