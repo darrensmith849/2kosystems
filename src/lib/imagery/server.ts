@@ -66,10 +66,10 @@ const STATIC_FALLBACK: Record<ImageryIntent, string> = {
   "automation-workflows": "/imagery/generated/process-mesh.png",
   "software-dashboards": "/imagery/generated/operational-overview.png",
   "neural-architecture": "/imagery/generated/process-mesh.png",
-  "command-centre": "/imagery/about/hero.jpg",
+  "command-centre": "/imagery/about/hero.png",
   "digital-infrastructure": "/imagery/generated/process-mesh.png",
   "premium-dark-tech": "/imagery/generated/operational-overview.png",
-  "south-african-business": "/imagery/about/hero.jpg",
+  "south-african-business": "/imagery/about/hero.png",
   "process-automation": "/imagery/generated/process-mesh.png",
   "ai-operations": "/imagery/generated/operational-overview.png",
 };

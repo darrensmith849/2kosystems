@@ -30,7 +30,7 @@ export default function AboutPage() {
           <div className="relative h-72 overflow-hidden rounded-3xl border border-border md:h-96">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/imagery/about/hero.jpg"
+              src="/imagery/about/hero.png"
               alt=""
               aria-hidden="true"
               className="h-full w-full object-cover saturate-[0.8]"
