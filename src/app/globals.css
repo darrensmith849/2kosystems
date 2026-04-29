@@ -806,68 +806,47 @@ body {
 }
 
 /* =====================================================
-   About-page hero motion — animated graphs / dashboards
-   ===================================================== */
+   About-page hero motion — narrative live-workflow panel
+   =====================================================
+   The overlay tells one story: requests moving through
+   Submitted → In review → Approved, with cycle time falling.
+   No vanity SaaS metrics, no random orbs — every animation
+   maps to the actual product narrative.
+*/
 
-/* Slow ken-burns drift on the base image */
+/* Very subtle ken-burns on the base image so it isn't frozen */
 @keyframes aboutHeroDrift {
-  0%   { transform: scale(1) translate3d(0, 0, 0); }
-  50%  { transform: scale(1.05) translate3d(-1.2%, -0.8%, 0); }
-  100% { transform: scale(1) translate3d(0, 0, 0); }
+  0%   { transform: scale(1.02) translate3d(0.4%, 0, 0); }
+  50%  { transform: scale(1.05) translate3d(-0.4%, -0.4%, 0); }
+  100% { transform: scale(1.02) translate3d(0.4%, 0, 0); }
 }
 .aboutHero-img {
-  animation: aboutHeroDrift 28s ease-in-out infinite;
+  animation: aboutHeroDrift 36s ease-in-out infinite;
   will-change: transform;
 }
 
-/* Horizontal scan line that sweeps top → bottom */
+/* Soft scan sweep top → bottom — slower than before so it reads as ambience */
 @keyframes aboutHeroSweep {
-  0%   { top: -10%; opacity: 0; }
-  10%  { opacity: 0.55; }
-  85%  { opacity: 0.45; }
-  100% { top: 110%; opacity: 0; }
+  0%   { top: -12%; opacity: 0; }
+  20%  { opacity: 0.4; }
+  90%  { opacity: 0.3; }
+  100% { top: 112%; opacity: 0; }
 }
 .aboutHero-sweep {
   background: linear-gradient(
     180deg,
     transparent 0%,
-    rgba(15, 123, 58, 0.25) 45%,
-    rgba(120, 200, 150, 0.35) 50%,
-    rgba(15, 123, 58, 0.25) 55%,
+    rgba(15, 123, 58, 0.18) 48%,
+    rgba(120, 200, 150, 0.28) 50%,
+    rgba(15, 123, 58, 0.18) 52%,
     transparent 100%
   );
   filter: blur(2px);
-  animation: aboutHeroSweep 9s ease-in-out infinite;
+  animation: aboutHeroSweep 14s ease-in-out infinite;
   will-change: top, opacity;
 }
 
-/* Drifting accent orbs */
-@keyframes aboutHeroOrbA {
-  0%, 100% { transform: translate3d(0, 0, 0); opacity: 0.55; }
-  50%      { transform: translate3d(20px, -16px, 0); opacity: 0.85; }
-}
-@keyframes aboutHeroOrbB {
-  0%, 100% { transform: translate3d(0, 0, 0); opacity: 0.4; }
-  50%      { transform: translate3d(-22px, 14px, 0); opacity: 0.7; }
-}
-.aboutHero-orb {
-  filter: blur(40px);
-  will-change: transform, opacity;
-}
-.aboutHero-orb-a {
-  top: 18%;
-  left: 12%;
-  background: rgba(15, 123, 58, 0.35);
-  animation: aboutHeroOrbA 14s ease-in-out infinite;
-}
-.aboutHero-orb-b {
-  bottom: 14%;
-  left: 38%;
-  background: rgba(91, 123, 255, 0.22);
-  animation: aboutHeroOrbB 18s ease-in-out infinite;
-}
-
-/* Live dot — emerald pulse ring */
+/* Live status dot — soft pulse-out ring, brand emerald */
 @keyframes aboutHeroLiveDot {
   0%, 100% { box-shadow: 0 0 0 0 rgba(15, 123, 58, 0.7); }
   50%      { box-shadow: 0 0 0 5px rgba(15, 123, 58, 0); }
@@ -876,98 +855,60 @@ body {
   animation: aboutHeroLiveDot 1.6s ease-out infinite;
 }
 
-/* Mini bar chart — 7 bars rising and falling with stagger */
-@keyframes aboutHeroBar {
-  0%, 100% { height: 22%; opacity: 0.55; }
-  20%      { height: 64%; opacity: 0.85; }
-  45%      { height: 36%; opacity: 0.7; }
-  70%      { height: 84%; opacity: 1; }
+/* Stage dots — each blinks on its own offset, reading L → R as a flow */
+@keyframes aboutHeroStageBlink {
+  0%, 90%, 100% { opacity: 1; transform: scale(1); }
+  45%           { opacity: 0.4; transform: scale(0.7); }
+  50%           { opacity: 1; transform: scale(1.4); }
 }
-.aboutHero-bar {
-  background: linear-gradient(
-    180deg,
-    rgba(15, 123, 58, 1) 0%,
-    rgba(15, 123, 58, 0.45) 100%
-  );
-  height: 30%;
-  animation: aboutHeroBar 3.6s cubic-bezier(0.45, 0.05, 0.5, 1) infinite;
-  transform-origin: bottom;
-  will-change: height, opacity;
+.aboutHero-stage-dot {
+  animation: aboutHeroStageBlink 4s ease-in-out infinite;
+  will-change: transform, opacity;
 }
-.aboutHero-bar-0 { animation-delay: 0s;    }
-.aboutHero-bar-1 { animation-delay: 0.18s; }
-.aboutHero-bar-2 { animation-delay: 0.36s; }
-.aboutHero-bar-3 { animation-delay: 0.54s; }
-.aboutHero-bar-4 { animation-delay: 0.72s; }
-.aboutHero-bar-5 { animation-delay: 0.9s;  }
-.aboutHero-bar-6 { animation-delay: 1.08s; }
+.aboutHero-stage-dot-a { animation-delay: 0s;   }
+.aboutHero-stage-dot-b { animation-delay: 0.6s; }
+.aboutHero-stage-dot-c { animation-delay: 1.2s; }
 
-/* Sparkline — line draws across, then loops */
+/* Counters — subtle bump every cycle so the numbers feel alive */
+@keyframes aboutHeroNumBump {
+  0%, 88%, 100% { transform: translateY(0); opacity: 1; }
+  92%           { transform: translateY(-2px); opacity: 0.85; }
+  96%           { transform: translateY(0);   opacity: 1; }
+}
+.aboutHero-num-a,
+.aboutHero-num-b,
+.aboutHero-num-c {
+  display: inline-block;
+  animation: aboutHeroNumBump 4s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+.aboutHero-num-a { animation-delay: 0.4s; }
+.aboutHero-num-b { animation-delay: 1.0s; }
+.aboutHero-num-c { animation-delay: 1.6s; }
+
+/* Cycle-time sparkline — line redraws each cycle, looping the trend */
 @keyframes aboutHeroSpark {
   0%   { stroke-dashoffset: 460; }
-  60%  { stroke-dashoffset: 0;   }
-  100% { stroke-dashoffset: 0;   }
+  55%  { stroke-dashoffset: 0;   }
+  92%  { stroke-dashoffset: 0;   }
+  100% { stroke-dashoffset: 460; }
 }
 .aboutHero-spark {
   stroke-dasharray: 460;
   stroke-dashoffset: 460;
-  animation: aboutHeroSpark 5.5s ease-in-out infinite;
-  filter: drop-shadow(0 0 4px rgba(15, 123, 58, 0.7));
-}
-
-/* Sparkline head dot — fades in once line draws past */
-@keyframes aboutHeroSparkHead {
-  0%, 55%  { opacity: 0; }
-  60%      { opacity: 1; transform: scale(1); }
-  72%      { transform: scale(1.6); opacity: 1; }
-  85%      { transform: scale(1); opacity: 0.85; }
-  100%     { opacity: 0.85; }
-}
-.aboutHero-spark-head {
-  transform-origin: 200px 10px;
-  animation: aboutHeroSparkHead 5.5s ease-in-out infinite;
-}
-
-/* Mini bars (top-right uptime widget) — quick rise on load + idle pulse */
-@keyframes aboutHeroMini {
-  0%   { height: 10%; opacity: 0.4; }
-  60%  { height: var(--peak, 70%); opacity: 0.9; }
-  100% { height: var(--peak, 70%); opacity: 0.85; }
-}
-.aboutHero-mini {
-  height: 10%;
-  animation: aboutHeroMini 1.4s cubic-bezier(0.2, 0.8, 0.2, 1) both;
-  will-change: height, opacity;
-}
-.aboutHero-mini-0 { --peak: 38%; animation-delay: 0.05s; }
-.aboutHero-mini-1 { --peak: 55%; animation-delay: 0.15s; }
-.aboutHero-mini-2 { --peak: 48%; animation-delay: 0.25s; }
-.aboutHero-mini-3 { --peak: 72%; animation-delay: 0.35s; }
-.aboutHero-mini-4 { --peak: 60%; animation-delay: 0.45s; }
-.aboutHero-mini-5 { --peak: 84%; animation-delay: 0.55s; }
-.aboutHero-mini-6 { --peak: 70%; animation-delay: 0.65s; }
-.aboutHero-mini-7 { --peak: 92%; animation-delay: 0.75s; }
-.aboutHero-mini-8 { --peak: 88%; animation-delay: 0.85s; }
-
-/* Count-up — soft pulse on the uptime number */
-@keyframes aboutHeroCount {
-  0%, 100% { opacity: 0.85; }
-  50%      { opacity: 1;    }
-}
-.aboutHero-count {
-  animation: aboutHeroCount 2.4s ease-in-out infinite;
+  animation: aboutHeroSpark 6s ease-in-out infinite;
+  filter: drop-shadow(0 0 4px rgba(15, 123, 58, 0.6));
 }
 
 @media (prefers-reduced-motion: reduce) {
   .aboutHero-img,
   .aboutHero-sweep,
-  .aboutHero-orb,
   .aboutHero-livedot,
-  .aboutHero-bar,
-  .aboutHero-spark,
-  .aboutHero-spark-head,
-  .aboutHero-mini,
-  .aboutHero-count {
+  .aboutHero-stage-dot,
+  .aboutHero-num-a,
+  .aboutHero-num-b,
+  .aboutHero-num-c,
+  .aboutHero-spark {
     animation: none !important;
   }
   .aboutHero-spark { stroke-dashoffset: 0; }

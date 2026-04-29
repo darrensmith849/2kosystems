@@ -3,23 +3,19 @@
 import React from "react";
 
 /**
- * About-page hero with animated overlay dashboards.
+ * About-page hero with a single, meaningful overlay panel.
  *
- * Layers:
- *   1. Base AI-generated image (slow ken-burns drift)
- *   2. Soft horizontal scan-line sweep
- *   3. Floating live "OPS · LIVE" mini-widget bottom-right with an
- *      animated bar chart, a drawing sparkline, and a pulsing data tick
- *   4. Floating "AVG · UPTIME" mini-widget top-right with a rising bar
- *      chart counting up
- *   5. Brand-emerald drifting orbs to tie it to the rest of the site
- *   6. Foreground gradient veil so text below stays readable
+ * Instead of generic SaaS-deck chrome (Throughput, Uptime), the overlay
+ * narrates what 2KO Systems actually delivers: requests moving through
+ * Submitted → In review → Approved stages, with the counters ticking and
+ * a "cycle time" sparkline showing the real value (time-to-approval
+ * dropping after the system replaces spreadsheets / WhatsApp).
  *
- * All animations are CSS-driven and respect prefers-reduced-motion.
+ * Pure CSS animation — no JS loop. Respects prefers-reduced-motion.
  */
 export default function AboutHeroMotion() {
   return (
-    <div className="relative h-72 overflow-hidden rounded-3xl border border-border md:h-[26rem]">
+    <div className="relative h-[22rem] overflow-hidden rounded-3xl border border-border md:h-[28rem]">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src="/imagery/about/hero.png"
@@ -28,131 +24,112 @@ export default function AboutHeroMotion() {
         className="aboutHero-img h-full w-full object-cover saturate-[0.85]"
       />
 
-      {/* Soft sweep scan line */}
-      <div
-        className="aboutHero-sweep pointer-events-none absolute inset-x-0 h-24"
-        aria-hidden="true"
-      />
+      {/* Subtle scan sweep across the image */}
+      <div className="aboutHero-sweep pointer-events-none absolute inset-x-0 h-24" aria-hidden="true" />
 
-      {/* Drifting accent orbs */}
-      <div
-        className="aboutHero-orb aboutHero-orb-a pointer-events-none absolute h-40 w-40 rounded-full"
-        aria-hidden="true"
-      />
-      <div
-        className="aboutHero-orb aboutHero-orb-b pointer-events-none absolute h-32 w-32 rounded-full"
-        aria-hidden="true"
-      />
+      {/* Soft darkening for legibility — bottom-up */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/90 via-background/30 to-transparent" />
 
-      {/* Live mini-widget — bottom right */}
+      {/* The narrative panel — full-width across the bottom */}
       <div
-        className="pointer-events-none absolute bottom-4 right-4 hidden w-[240px] rounded-xl border border-white/10 bg-[#050913]/85 p-3 backdrop-blur-md sm:block md:bottom-6 md:right-6"
+        className="pointer-events-none absolute inset-x-4 bottom-4 rounded-2xl border border-white/10 bg-[#050913]/80 p-4 backdrop-blur-md md:inset-x-6 md:bottom-6 md:p-5"
         aria-hidden="true"
       >
-        <div className="mb-2 flex items-center justify-between">
-          <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/65">
-            Ops · live
-          </span>
-          <span className="flex items-center gap-1.5 text-[10px] font-medium text-accent">
+        {/* Header row */}
+        <div className="mb-4 flex items-center justify-between">
+          <div className="flex items-center gap-2">
             <span className="aboutHero-livedot h-1.5 w-1.5 rounded-full bg-accent" />
-            Streaming
+            <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/70">
+              Approval workflow · live
+            </span>
+          </div>
+          <span className="hidden text-[11px] font-medium text-white/50 sm:block">
+            What replaces email + WhatsApp + spreadsheets
           </span>
         </div>
 
-        {/* Bar chart row */}
-        <div className="mb-2.5 flex h-12 items-end gap-1.5">
-          {[0, 1, 2, 3, 4, 5, 6].map((i) => (
-            <span
-              key={i}
-              className={`aboutHero-bar aboutHero-bar-${i} block flex-1 rounded-sm`}
-            />
-          ))}
+        {/* Three stages with counters */}
+        <div className="grid grid-cols-3 gap-3 md:gap-4">
+          {/* Stage 1 — Submitted */}
+          <div className="rounded-xl border border-white/8 bg-white/[0.03] p-3">
+            <div className="mb-1.5 flex items-center justify-between">
+              <span className="text-[10px] font-semibold uppercase tracking-widest text-white/55">
+                Submitted
+              </span>
+              <span className="aboutHero-stage-dot aboutHero-stage-dot-a h-1.5 w-1.5 rounded-full bg-white/55" />
+            </div>
+            <div className="flex items-baseline gap-1">
+              <span className="aboutHero-num-a text-xl font-semibold text-white md:text-2xl">47</span>
+              <span className="text-[10px] text-white/45">today</span>
+            </div>
+          </div>
+
+          {/* Stage 2 — In review */}
+          <div className="rounded-xl border border-white/8 bg-white/[0.03] p-3">
+            <div className="mb-1.5 flex items-center justify-between">
+              <span className="text-[10px] font-semibold uppercase tracking-widest text-white/55">
+                In review
+              </span>
+              <span className="aboutHero-stage-dot aboutHero-stage-dot-b h-1.5 w-1.5 rounded-full bg-white/65" />
+            </div>
+            <div className="flex items-baseline gap-1">
+              <span className="aboutHero-num-b text-xl font-semibold text-white md:text-2xl">12</span>
+              <span className="text-[10px] text-white/45">open</span>
+            </div>
+          </div>
+
+          {/* Stage 3 — Approved */}
+          <div className="rounded-xl border border-accent/30 bg-accent/[0.08] p-3">
+            <div className="mb-1.5 flex items-center justify-between">
+              <span className="text-[10px] font-semibold uppercase tracking-widest text-accent">
+                Approved
+              </span>
+              <span className="aboutHero-stage-dot aboutHero-stage-dot-c h-1.5 w-1.5 rounded-full bg-accent" />
+            </div>
+            <div className="flex items-baseline gap-1">
+              <span className="aboutHero-num-c text-xl font-semibold text-white md:text-2xl">218</span>
+              <span className="text-[10px] text-white/45">+ 14 today</span>
+            </div>
+          </div>
         </div>
 
-        {/* Sparkline */}
-        <svg
-          viewBox="0 0 200 40"
-          className="block h-9 w-full"
-          preserveAspectRatio="none"
-        >
-          <defs>
-            <linearGradient id="aboutHeroSparkFill" x1="0" x2="0" y1="0" y2="1">
-              <stop offset="0%" stopColor="rgba(15,123,58,0.45)" />
-              <stop offset="100%" stopColor="rgba(15,123,58,0)" />
-            </linearGradient>
-          </defs>
-
-          {/* baseline grid */}
-          <line
-            x1="0"
-            x2="200"
-            y1="20"
-            y2="20"
-            stroke="rgba(255,255,255,0.06)"
-            strokeWidth="1"
-          />
-
-          {/* fill underlay */}
-          <path
-            d="M0 30 L20 22 L40 26 L60 18 L80 22 L100 12 L120 18 L140 8 L160 14 L180 6 L200 10 L200 40 L0 40 Z"
-            fill="url(#aboutHeroSparkFill)"
-            opacity="0.85"
-          />
-
-          {/* drawing line */}
-          <path
-            className="aboutHero-spark"
-            d="M0 30 L20 22 L40 26 L60 18 L80 22 L100 12 L120 18 L140 8 L160 14 L180 6 L200 10"
-            fill="none"
-            stroke="#0f7b3a"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-
-          {/* head dot */}
-          <circle
-            className="aboutHero-spark-head"
-            cx="200"
-            cy="10"
-            r="3"
-            fill="#0f7b3a"
-          />
-        </svg>
-
-        <div className="mt-2 flex items-center justify-between text-[10px] uppercase tracking-widest text-white/50">
-          <span>Throughput</span>
-          <span className="text-white/85">+184%</span>
-        </div>
-      </div>
-
-      {/* Uptime mini-widget — top right (desktop only) */}
-      <div
-        className="pointer-events-none absolute right-6 top-6 hidden w-[170px] rounded-xl border border-white/10 bg-[#050913]/80 p-3 backdrop-blur-md md:block"
-        aria-hidden="true"
-      >
-        <div className="mb-1.5 flex items-center justify-between">
-          <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/65">
-            Uptime
+        {/* Cycle-time row */}
+        <div className="mt-4 flex items-center gap-3">
+          <span className="text-[10px] font-semibold uppercase tracking-widest text-white/55">
+            Avg cycle time
           </span>
-          <span className="aboutHero-livedot h-1.5 w-1.5 rounded-full bg-accent" />
-        </div>
-        <div className="mb-1 text-xl font-semibold text-white">
-          <span className="aboutHero-count">99.97</span>
-          <span className="text-sm text-white/55">%</span>
-        </div>
-        <div className="flex h-6 items-end gap-1">
-          {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-            <span
-              key={i}
-              className={`aboutHero-mini aboutHero-mini-${i} block flex-1 rounded-[1px] bg-white/35`}
+
+          <svg viewBox="0 0 200 24" className="block h-5 flex-1" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="aboutHeroCycleFill" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0%" stopColor="rgba(15,123,58,0.45)" />
+                <stop offset="100%" stopColor="rgba(15,123,58,0)" />
+              </linearGradient>
+            </defs>
+
+            {/* Trend down (cycle time falling = good) */}
+            <path
+              d="M0 4 L25 6 L50 5 L75 9 L100 11 L125 14 L150 16 L175 18 L200 20 L200 24 L0 24 Z"
+              fill="url(#aboutHeroCycleFill)"
+              opacity="0.85"
             />
-          ))}
+            <path
+              className="aboutHero-spark"
+              d="M0 4 L25 6 L50 5 L75 9 L100 11 L125 14 L150 16 L175 18 L200 20"
+              fill="none"
+              stroke="#0f7b3a"
+              strokeWidth="1.75"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+
+          <div className="flex flex-col items-end">
+            <span className="text-sm font-semibold text-white">4h 12m</span>
+            <span className="text-[10px] text-accent">↓ 62% vs. before</span>
+          </div>
         </div>
       </div>
-
-      {/* Foreground gradient — keeps page text below readable */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-background/85 via-background/25 to-transparent" />
     </div>
   );
 }
