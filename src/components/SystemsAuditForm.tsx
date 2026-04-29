@@ -43,7 +43,11 @@ export default function SystemsAuditForm() {
     e.preventDefault();
     if (status === "submitting") return;
 
-    const f = new FormData(e.currentTarget);
+    // Capture the form element synchronously — React nulls out
+    // e.currentTarget after the handler returns, so any reference
+    // we want to use after the await must be cached now.
+    const formEl = e.currentTarget;
+    const f = new FormData(formEl);
 
     const firstName = String(f.get("firstName") || "").trim();
     const lastName = String(f.get("lastName") || "").trim();
@@ -108,7 +112,9 @@ export default function SystemsAuditForm() {
         setStatus("error");
       } else {
         setStatus("success");
-        e.currentTarget.reset();
+        // Reset the cached form element — e.currentTarget is null
+        // by the time this async branch runs.
+        formEl.reset();
       }
     } catch {
       setErrorMessage("Couldn't send that through — please try again.");
