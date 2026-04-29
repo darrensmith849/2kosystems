@@ -12,7 +12,8 @@ export default function ContactForm() {
     e.preventDefault();
     if (status === "submitting") return;
 
-    const formData = new FormData(e.currentTarget);
+    const form = e.currentTarget;
+    const formData = new FormData(form);
     const payload = {
       firstName: String(formData.get("firstName") || "").trim(),
       lastName: String(formData.get("lastName") || "").trim(),
@@ -39,21 +40,39 @@ export default function ContactForm() {
     setErrorMessage(null);
 
     try {
-      const res = await fetch("/api/book-audit", {
+      const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      const data = (await res.json()) as { ok: boolean; error?: string };
-      if (!data.ok) {
-        setErrorMessage(data.error || "Couldn't send that through — please try again.");
-        setStatus("error");
-      } else {
-        setStatus("success");
-        e.currentTarget.reset();
+
+      let data: { ok?: boolean; error?: string } = {};
+      const raw = await res.text();
+      try {
+        data = raw ? JSON.parse(raw) : {};
+      } catch {
+        console.error("/api/contact returned non-JSON response", {
+          status: res.status,
+          body: raw.slice(0, 500),
+        });
       }
-    } catch {
-      setErrorMessage("Couldn't send that through — please try again.");
+
+      if (!res.ok || !data.ok) {
+        setErrorMessage(
+          data.error ||
+            "Couldn't send that through — please email darren@2kosystems.com."
+        );
+        setStatus("error");
+        return;
+      }
+
+      setStatus("success");
+      form.reset();
+    } catch (err) {
+      console.error("/api/contact request failed", err);
+      setErrorMessage(
+        "Couldn't reach our server — please try again or email darren@2kosystems.com."
+      );
       setStatus("error");
     }
   }
