@@ -51,11 +51,11 @@ export default function TypewriterText({
           }
         }
       },
-      // Fire as soon as any pixel of the element is in view. The previous
-      // 15%-visible / -10% bottom-margin gating was too strict for tall
-      // cards arriving from below the fold — the observer would never
-      // trip on fast scrolls.
-      { rootMargin: "0px 0px 0px 0px", threshold: 0.01 },
+      // Wait until the element is genuinely on-screen — at least 25% of
+      // it visible and 20% past the bottom edge of the viewport. This
+      // means typewriters fire as the visitor actively scrolls to look
+      // at the card, not when it's still peeking from below the fold.
+      { rootMargin: "0px 0px -20% 0px", threshold: 0.25 },
     );
     observer.observe(el);
     return () => observer.disconnect();
