@@ -166,11 +166,7 @@ export default function PremiumSystemsHero() {
           </div>
 
           <h1 className="max-w-4xl text-4xl font-semibold tracking-tight text-white sm:text-5xl lg:text-6xl">
-            <TypewriterText
-              text="Custom systems for businesses that have outgrown outdated software."
-              speed={28}
-              startDelay={120}
-            />
+            Custom systems for businesses that have outgrown outdated software.
           </h1>
 
           <p className="mt-6 max-w-2xl text-base leading-7 text-white/72 sm:text-lg">
@@ -233,7 +229,7 @@ export default function PremiumSystemsHero() {
                           <TypewriterText
                             text="Request logged"
                             speed={22}
-                            startDelay={1600}
+                            startDelay={300}
                           />
                         </span>
                       </div>
@@ -247,7 +243,7 @@ export default function PremiumSystemsHero() {
                           <TypewriterText
                             text="Under review"
                             speed={22}
-                            startDelay={2400}
+                            startDelay={900}
                           />
                         </span>
                       </div>
@@ -261,7 +257,7 @@ export default function PremiumSystemsHero() {
                           <TypewriterText
                             text="Approved & visible"
                             speed={22}
-                            startDelay={3200}
+                            startDelay={1500}
                           />
                         </span>
                       </div>
