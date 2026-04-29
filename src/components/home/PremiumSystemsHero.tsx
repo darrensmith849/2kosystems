@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
+import TypewriterText from "@/components/TypewriterText";
 
 const clamp = (value: number, min: number, max: number) =>
   Math.min(Math.max(value, min), max);
@@ -165,7 +166,11 @@ export default function PremiumSystemsHero() {
           </div>
 
           <h1 className="max-w-4xl text-4xl font-semibold tracking-tight text-white sm:text-5xl lg:text-6xl">
-            Custom systems for businesses that have outgrown outdated software.
+            <TypewriterText
+              text="Custom systems for businesses that have outgrown outdated software."
+              speed={28}
+              startDelay={120}
+            />
           </h1>
 
           <p className="mt-6 max-w-2xl text-base leading-7 text-white/72 sm:text-lg">
@@ -225,7 +230,11 @@ export default function PremiumSystemsHero() {
                       <div className="flex items-center gap-2">
                         <span className="h-2 w-2 rounded-full bg-white/50" />
                         <span className="text-sm text-white/72">
-                          Request logged
+                          <TypewriterText
+                            text="Request logged"
+                            speed={22}
+                            startDelay={1600}
+                          />
                         </span>
                       </div>
                       <span className="text-xs text-white/45">Captured</span>
@@ -235,7 +244,11 @@ export default function PremiumSystemsHero() {
                       <div className="flex items-center gap-2">
                         <span className="h-2 w-2 rounded-full bg-white/65" />
                         <span className="text-sm text-white/72">
-                          Under review
+                          <TypewriterText
+                            text="Under review"
+                            speed={22}
+                            startDelay={2400}
+                          />
                         </span>
                       </div>
                       <span className="text-xs text-white/45">Tracked</span>
@@ -245,7 +258,11 @@ export default function PremiumSystemsHero() {
                       <div className="flex items-center gap-2">
                         <span className="h-2 w-2 rounded-full bg-emerald-300/80" />
                         <span className="text-sm text-white/72">
-                          Approved &amp; visible
+                          <TypewriterText
+                            text="Approved & visible"
+                            speed={22}
+                            startDelay={3200}
+                          />
                         </span>
                       </div>
                       <span className="text-xs text-white/45">Actioned</span>

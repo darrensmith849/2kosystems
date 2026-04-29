@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import PageHero from "@/components/PageHero";
 import CTASection from "@/components/CTASection";
+import TypewriterText from "@/components/TypewriterText";
 
 export const metadata: Metadata = {
   title: "Case Studies",
@@ -327,7 +328,7 @@ export default function CaseStudiesPage() {
                         What this proves
                       </h3>
                       <p className="text-sm leading-relaxed text-text">
-                        {study.proves}
+                        <TypewriterText text={study.proves} speed={14} />
                       </p>
                     </div>
                   </div>
