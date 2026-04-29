@@ -203,27 +203,14 @@ export default function ChatPanel() {
       >
         {/* Header */}
         <div className="flex items-center justify-between gap-2 border-b border-white/10 px-3 py-3">
-          <button
-            type="button"
-            onClick={() => setShowStartMenu(true)}
-            aria-label="Show starter questions"
-            title="Show starter questions"
-            className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:border-accent/40 hover:bg-white/[0.06] hover:text-text"
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M15 18l-6-6 6-6" />
-            </svg>
-            Back
-          </button>
-
-          <div className="flex flex-1 items-center justify-center gap-2.5">
+          <div className="flex items-center gap-2.5">
             <span
               aria-hidden
               className="grid h-8 w-8 place-items-center rounded-full bg-accent/20 text-accent text-sm font-bold"
             >
               2KO
             </span>
-            <div className="hidden sm:block">
+            <div>
               <p className="text-sm font-semibold text-text leading-tight">
                 Talk to our Specialist
               </p>

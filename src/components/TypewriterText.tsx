@@ -14,8 +14,9 @@ interface TypewriterTextProps {
 
 /**
  * Typewriter-reveal text. Stays empty until the element scrolls into the
- * viewport, then types out one character at a time with a blinking caret
- * while typing. After the message completes the caret is removed.
+ * viewport, then types out one character at a time. No caret — characters
+ * just appear in sequence so the text reads naturally without a blinking
+ * cursor leading the eye.
  *
  * Visitors with prefers-reduced-motion: reduce see the full text immediately.
  */
@@ -32,7 +33,6 @@ export default function TypewriterText({
     typeof window !== "undefined" &&
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const [shown, setShown] = useState<string>(reducedMotion ? text : "");
-  const [done, setDone] = useState<boolean>(reducedMotion);
   const [started, setStarted] = useState<boolean>(false);
 
   useEffect(() => {
@@ -68,7 +68,6 @@ export default function TypewriterText({
         setShown(text.slice(0, i));
         if (i >= text.length) {
           if (timer !== null) window.clearInterval(timer);
-          setDone(true);
         }
       }, speed);
     }, startDelay);
@@ -82,12 +81,6 @@ export default function TypewriterText({
   return (
     <span ref={ref} className={className} aria-label={text}>
       <span aria-hidden="true">{shown}</span>
-      {!done && (
-        <span
-          aria-hidden="true"
-          className="ml-0.5 inline-block h-[0.95em] w-[2px] -mb-[1px] bg-accent align-baseline animate-pulse motion-reduce:animate-none"
-        />
-      )}
     </span>
   );
 }

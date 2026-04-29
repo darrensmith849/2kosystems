@@ -58,8 +58,6 @@ export default function MessageBubble({ message }: { message: ChatMessage }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [message.id]);
 
-  const isStreaming = isFreshAssistantRef.current && shown.length < message.content.length;
-
   return (
     <div
       className={`flex w-full ${isUser ? "justify-end" : "justify-start"}`}
@@ -74,12 +72,6 @@ export default function MessageBubble({ message }: { message: ChatMessage }) {
         ].join(" ")}
       >
         {shown}
-        {isStreaming && (
-          <span
-            aria-hidden="true"
-            className="ml-0.5 inline-block h-3 w-[2px] -mb-0.5 bg-text/70 align-baseline animate-pulse motion-reduce:animate-none"
-          />
-        )}
       </div>
     </div>
   );
