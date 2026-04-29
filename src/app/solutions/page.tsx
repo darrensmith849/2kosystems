@@ -140,7 +140,7 @@ export default function SolutionsPage() {
                       {String(index + 1).padStart(2, "0")} · {solution.title}
                     </span>
                     <h2 className="mb-4 text-2xl font-semibold tracking-tight text-text md:text-3xl">
-                      <TypewriterText text={solution.title} speed={26} startDelay={120} />
+                      {solution.title}
                     </h2>
 
                     <div className="mt-6 flex flex-col gap-5">
@@ -149,7 +149,7 @@ export default function SolutionsPage() {
                           Pain it solves
                         </h3>
                         <p className="text-sm leading-relaxed text-muted">
-                          <TypewriterText text={solution.pain} speed={9} startDelay={500} />
+                          {solution.pain}
                         </p>
                       </div>
                       <div>
@@ -157,11 +157,7 @@ export default function SolutionsPage() {
                           What we build
                         </h3>
                         <p className="text-sm leading-relaxed text-muted">
-                          <TypewriterText
-                            text={solution.whatWeBuild}
-                            speed={9}
-                            startDelay={1200}
-                          />
+                          {solution.whatWeBuild}
                         </p>
                       </div>
                     </div>
