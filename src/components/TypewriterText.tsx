@@ -51,7 +51,11 @@ export default function TypewriterText({
           }
         }
       },
-      { rootMargin: "0px 0px -10% 0px", threshold: 0.15 },
+      // Fire as soon as any pixel of the element is in view. The previous
+      // 15%-visible / -10% bottom-margin gating was too strict for tall
+      // cards arriving from below the fold — the observer would never
+      // trip on fast scrolls.
+      { rootMargin: "0px 0px 0px 0px", threshold: 0.01 },
     );
     observer.observe(el);
     return () => observer.disconnect();

@@ -3,6 +3,7 @@ import Link from "next/link";
 import PageHero from "@/components/PageHero";
 import CTASection from "@/components/CTASection";
 import TypewriterText from "@/components/TypewriterText";
+import RevealOnScroll from "@/components/RevealOnScroll";
 
 export const metadata: Metadata = {
   title: "Solutions",
@@ -129,76 +130,89 @@ export default function SolutionsPage() {
         <div className="mx-auto max-w-6xl px-6 py-20">
           <div className="flex flex-col gap-20">
             {solutions.map((solution, index) => (
-              <article
-                key={solution.id}
-                id={solution.id}
-                className="grid grid-cols-1 items-start gap-10 lg:grid-cols-2"
-              >
-                <div>
-                  <span className="mb-3 inline-block text-xs font-semibold uppercase tracking-widest text-accent">
-                    {String(index + 1).padStart(2, "0")} · {solution.title}
-                  </span>
-                  <h2 className="mb-4 text-2xl font-semibold tracking-tight text-text md:text-3xl">
-                    {solution.title}
-                  </h2>
+              <RevealOnScroll key={solution.id}>
+                <article
+                  id={solution.id}
+                  className="grid grid-cols-1 items-start gap-10 lg:grid-cols-2"
+                >
+                  <div>
+                    <span className="mb-3 inline-block text-xs font-semibold uppercase tracking-widest text-accent">
+                      {String(index + 1).padStart(2, "0")} · {solution.title}
+                    </span>
+                    <h2 className="mb-4 text-2xl font-semibold tracking-tight text-text md:text-3xl">
+                      <TypewriterText text={solution.title} speed={26} startDelay={120} />
+                    </h2>
 
-                  <div className="mt-6 flex flex-col gap-5">
-                    <div>
-                      <h3 className="mb-1.5 text-xs font-semibold uppercase tracking-widest text-muted2">
-                        Pain it solves
-                      </h3>
-                      <p className="text-sm leading-relaxed text-muted">
-                        {solution.pain}
-                      </p>
-                    </div>
-                    <div>
-                      <h3 className="mb-1.5 text-xs font-semibold uppercase tracking-widest text-muted2">
-                        What we build
-                      </h3>
-                      <p className="text-sm leading-relaxed text-muted">
-                        {solution.whatWeBuild}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="card-tilt card-sweep rounded-2xl border border-border bg-surface p-6 md:p-8">
-                  <h3 className="mb-1.5 text-xs font-semibold uppercase tracking-widest text-accent">
-                    Example workflow
-                  </h3>
-                  <div className="min-h-[6.5rem] rounded-lg border border-white/10 bg-white/[0.03] p-4 font-mono text-[13px] leading-relaxed text-text">
-                    <TypewriterText text={solution.exampleFlow} />
-                  </div>
-
-                  <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <div>
-                      <h4 className="mb-1.5 text-xs font-semibold uppercase tracking-widest text-muted2">
-                        Typical users
-                      </h4>
-                      <p className="text-sm leading-relaxed text-muted">
-                        {solution.typicalUsers}
-                      </p>
-                    </div>
-                    <div>
-                      <h4 className="mb-1.5 text-xs font-semibold uppercase tracking-widest text-muted2">
-                        Outcome
-                      </h4>
-                      <p className="text-sm leading-relaxed text-muted">
-                        {solution.outcome}
-                      </p>
+                    <div className="mt-6 flex flex-col gap-5">
+                      <div>
+                        <h3 className="mb-1.5 text-xs font-semibold uppercase tracking-widest text-muted2">
+                          Pain it solves
+                        </h3>
+                        <p className="text-sm leading-relaxed text-muted">
+                          <TypewriterText text={solution.pain} speed={9} startDelay={500} />
+                        </p>
+                      </div>
+                      <div>
+                        <h3 className="mb-1.5 text-xs font-semibold uppercase tracking-widest text-muted2">
+                          What we build
+                        </h3>
+                        <p className="text-sm leading-relaxed text-muted">
+                          <TypewriterText
+                            text={solution.whatWeBuild}
+                            speed={9}
+                            startDelay={1200}
+                          />
+                        </p>
+                      </div>
                     </div>
                   </div>
 
-                  <div className="mt-6">
-                    <Link
-                      href="/get-started"
-                      className="inline-flex items-center gap-2 text-sm font-semibold text-accent transition-colors hover:text-accent2"
-                    >
-                      Discuss a system like this →
-                    </Link>
+                  <div className="card-tilt card-sweep rounded-2xl border border-border bg-surface p-6 md:p-8">
+                    <h3 className="mb-1.5 text-xs font-semibold uppercase tracking-widest text-accent">
+                      Example workflow
+                    </h3>
+                    <div className="min-h-[6.5rem] rounded-lg border border-white/10 bg-white/[0.03] p-4 font-mono text-[13px] leading-relaxed text-text">
+                      <TypewriterText text={solution.exampleFlow} speed={16} startDelay={300} />
+                    </div>
+
+                    <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                      <div>
+                        <h4 className="mb-1.5 text-xs font-semibold uppercase tracking-widest text-muted2">
+                          Typical users
+                        </h4>
+                        <p className="text-sm leading-relaxed text-muted">
+                          <TypewriterText
+                            text={solution.typicalUsers}
+                            speed={10}
+                            startDelay={1600}
+                          />
+                        </p>
+                      </div>
+                      <div>
+                        <h4 className="mb-1.5 text-xs font-semibold uppercase tracking-widest text-muted2">
+                          Outcome
+                        </h4>
+                        <p className="text-sm leading-relaxed text-muted">
+                          <TypewriterText
+                            text={solution.outcome}
+                            speed={10}
+                            startDelay={2200}
+                          />
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="mt-6">
+                      <Link
+                        href="/get-started"
+                        className="inline-flex items-center gap-2 text-sm font-semibold text-accent transition-colors hover:text-accent2"
+                      >
+                        Discuss a system like this →
+                      </Link>
+                    </div>
                   </div>
-                </div>
-              </article>
+                </article>
+              </RevealOnScroll>
             ))}
           </div>
         </div>
