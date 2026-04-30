@@ -118,7 +118,7 @@ export default function PremiumSystemsHero() {
           src="/videos/binary-code.mp4"
           poster="/videos/binary-code-poster.jpg"
           treatment="binary"
-          overlay={0.65}
+          overlay={0.4}
         />
 
         <div

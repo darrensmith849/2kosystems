@@ -23,7 +23,7 @@ export default function GetStartedPage() {
           src="/videos/plexus-network.mp4"
           poster="/videos/plexus-network-poster.jpg"
           treatment="plexus"
-          overlay={0.72}
+          overlay={0.5}
         />
 
         <div

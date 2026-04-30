@@ -40,7 +40,7 @@ export default function PageHero({
           src={videoSrc}
           poster={videoPoster}
           treatment={videoTreatment}
-          overlay={0.7}
+          overlay={0.55}
         />
       ) : null}
 

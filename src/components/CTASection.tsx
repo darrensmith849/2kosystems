@@ -32,7 +32,7 @@ export default function CTASection({
             src="/videos/plexus-network.mp4"
             poster="/videos/plexus-network-poster.jpg"
             treatment="plexus"
-            overlay={0.78}
+            overlay={0.55}
           />
 
           {/* Decorative glow */}

@@ -142,7 +142,7 @@ export default function Home() {
               src="/videos/dashboard.mp4"
               poster="/videos/dashboard-poster.jpg"
               treatment="dashboard"
-              overlay={0.55}
+              overlay={0.35}
             />
             <div className="absolute inset-0 bg-gradient-to-r from-background/80 via-background/30 to-transparent" />
             <div className="absolute inset-y-0 left-0 flex max-w-xl flex-col justify-center p-6 md:p-12">
@@ -250,7 +250,7 @@ export default function Home() {
               src="/videos/binary-code.mp4"
               poster="/videos/binary-code-poster.jpg"
               treatment="binary"
-              overlay={0.55}
+              overlay={0.35}
             />
             <div className="absolute inset-0 bg-gradient-to-l from-background/80 via-background/30 to-transparent" />
             <div className="absolute inset-y-0 right-0 flex max-w-md flex-col justify-center p-6 text-right md:p-10">
