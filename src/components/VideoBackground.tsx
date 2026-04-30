@@ -30,27 +30,26 @@ interface VideoBackgroundProps {
 }
 
 /**
- * Color filter recipes expressed as CSS `filter` strings.  Each value is the
- * outcome of trial-and-error against the three Envato clips so the resulting
- * footage feels consistent with the site palette.
+ * Brightness/contrast tuning per source clip. Color is removed up-front
+ * (`grayscale(1)`) and the brand color is then re-introduced by a `multiply`
+ * layer of the accent green over the top — a classic duotone effect that
+ * guarantees the result lands on-palette regardless of source hue.
  *
- * Source clips are all cool-blue (~210deg hue). Rotating +80–110deg pushed
- * them through magenta/purple, so we rotate the other way (~-80deg) to land
- * on the brand green #0f7b3a (~140deg) without ever crossing red/purple.
+ * Hue-rotate alone can never produce a clean brand green from cool-blue
+ * footage because CSS hue-rotate is a luminance-preserving matrix that drifts
+ * through teal or magenta on the way; the duotone approach side-steps that
+ * entirely.
  */
 const TREATMENTS: Record<NonNullable<VideoBackgroundProps["treatment"]>, string> = {
-  // Plexus footage is cool blue → pull -75deg backwards to teal/green, drop
-  // saturation slightly so accent green orbs (added via overlay) read cleanly.
-  plexus:
-    "hue-rotate(-75deg) saturate(0.7) brightness(0.6) contrast(1.05)",
-  // Dashboard footage carries warm-ish blue UI; slightly larger backward shift
-  // keeps the panels legible while pulling overall tone toward the accent.
-  dashboard:
-    "hue-rotate(-90deg) saturate(0.55) brightness(0.55) contrast(1.05)",
-  // Binary reveal is high-contrast neon; -80deg + heavy contrast makes the
-  // falling characters look like green code on black.
-  binary:
-    "hue-rotate(-80deg) saturate(0.8) brightness(0.5) contrast(1.2)",
+  // Plexus: airy abstract, keep mid contrast and slightly lift highlights so
+  // network nodes still read after the green multiply layer.
+  plexus: "grayscale(1) brightness(0.85) contrast(1.05)",
+  // Dashboard: UI panels need a touch more contrast so chart shapes stay
+  // legible once the duotone is applied.
+  dashboard: "grayscale(1) brightness(0.8) contrast(1.15)",
+  // Binary reveal: high-contrast neon — push contrast harder so the digits
+  // pop against the deep-black background after tinting.
+  binary: "grayscale(1) brightness(0.85) contrast(1.25)",
   raw: "none",
 };
 
@@ -113,18 +112,28 @@ export default function VideoBackground({
         style={{ filter: filterStyle }}
       />
 
+      {/* Brand duotone: solid accent green multiplied over the grayscale video.
+          Highlights pick up the green; shadows stay near black, so the result
+          always reads as on-palette regardless of source footage. */}
+      {treatment !== "raw" && (
+        <div
+          className="absolute inset-0 mix-blend-multiply"
+          style={{ backgroundColor: "#0f7b3a" }}
+        />
+      )}
+
       {/* Hard tint to lock the video to the site's deep-black background */}
       <div
         className="absolute inset-0"
         style={{ backgroundColor: `rgba(0,0,0,${overlay})` }}
       />
 
-      {/* Subtle accent-green wash so video tones read as part of the brand */}
+      {/* Soft radial accent so the centre of frame catches a touch more green */}
       <div
-        className="absolute inset-0 mix-blend-overlay"
+        className="absolute inset-0 mix-blend-screen"
         style={{
           background:
-            "radial-gradient(ellipse at 50% 40%, rgba(15,123,58,0.18) 0%, rgba(15,123,58,0.05) 45%, transparent 75%)",
+            "radial-gradient(ellipse at 50% 40%, rgba(15,123,58,0.12) 0%, rgba(15,123,58,0.04) 45%, transparent 75%)",
         }}
       />
 
