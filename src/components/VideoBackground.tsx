@@ -33,20 +33,24 @@ interface VideoBackgroundProps {
  * Color filter recipes expressed as CSS `filter` strings.  Each value is the
  * outcome of trial-and-error against the three Envato clips so the resulting
  * footage feels consistent with the site palette.
+ *
+ * Source clips are all cool-blue (~210deg hue). Rotating +80–110deg pushed
+ * them through magenta/purple, so we rotate the other way (~-80deg) to land
+ * on the brand green #0f7b3a (~140deg) without ever crossing red/purple.
  */
 const TREATMENTS: Record<NonNullable<VideoBackgroundProps["treatment"]>, string> = {
-  // Plexus footage is mostly cool blue → push hue ~110deg towards green-cyan,
-  // de-saturate slightly, then dim brightness so accent green orbs read cleanly.
+  // Plexus footage is cool blue → pull -75deg backwards to teal/green, drop
+  // saturation slightly so accent green orbs (added via overlay) read cleanly.
   plexus:
-    "hue-rotate(110deg) saturate(0.75) brightness(0.6) contrast(1.05)",
-  // Dashboard footage is already warm-ish blue with white UI; gentler shift
-  // keeps the UI legible while pulling overall tone toward the accent.
+    "hue-rotate(-75deg) saturate(0.7) brightness(0.6) contrast(1.05)",
+  // Dashboard footage carries warm-ish blue UI; slightly larger backward shift
+  // keeps the panels legible while pulling overall tone toward the accent.
   dashboard:
-    "hue-rotate(80deg) saturate(0.6) brightness(0.55) contrast(1.05)",
-  // Binary reveal is high-contrast neon; slight rotation + heavy contrast
-  // makes the falling characters look like green code on black.
+    "hue-rotate(-90deg) saturate(0.55) brightness(0.55) contrast(1.05)",
+  // Binary reveal is high-contrast neon; -80deg + heavy contrast makes the
+  // falling characters look like green code on black.
   binary:
-    "hue-rotate(95deg) saturate(0.85) brightness(0.5) contrast(1.2)",
+    "hue-rotate(-80deg) saturate(0.8) brightness(0.5) contrast(1.2)",
   raw: "none",
 };
 
