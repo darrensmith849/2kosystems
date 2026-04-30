@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import AutoOpenChat from "./auto-open";
+import VideoBackground from "@/components/VideoBackground";
 
 export const metadata: Metadata = {
   title: "Get Started",
@@ -13,6 +14,14 @@ export default function GetStartedPage() {
       <AutoOpenChat />
 
       <section className="relative overflow-hidden border-b border-border/60 bg-background">
+        {/* Color-matched plexus video — keeps the conversion-focused hero visually alive */}
+        <VideoBackground
+          src="/videos/plexus-network.mp4"
+          poster="/videos/plexus-network-poster.jpg"
+          treatment="plexus"
+          overlay={0.72}
+        />
+
         <div
           className="pointer-events-none absolute inset-0"
           aria-hidden="true"

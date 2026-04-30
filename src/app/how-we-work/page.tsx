@@ -21,6 +21,9 @@ export default function HowWeWorkPage() {
         description="We do not force clients into giant software projects on day one. We start narrow, prove value quickly, and scale from there."
         primaryCTA="Book a Systems Audit"
         primaryHref="/get-started"
+        videoSrc="/videos/dashboard.mp4"
+        videoPoster="/videos/dashboard-poster.jpg"
+        videoTreatment="dashboard"
       />
 
       {/* Animated engagement blueprint (replaces the static hero image) */}

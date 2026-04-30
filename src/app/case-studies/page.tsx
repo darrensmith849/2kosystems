@@ -95,6 +95,9 @@ export default function CaseStudiesPage() {
         description="Illustrative examples of the kind of work we do — drawn from real operational pain across mining, agriculture, logistics, training, and services."
         primaryCTA="Book a Systems Audit"
         primaryHref="/get-started"
+        videoSrc="/videos/binary-code.mp4"
+        videoPoster="/videos/binary-code-poster.jpg"
+        videoTreatment="binary"
       />
 
       <section className="bg-background">

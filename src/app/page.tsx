@@ -9,6 +9,7 @@ import OperationsLattice from "@/components/home/OperationsLattice";
 import FlowPipeline from "@/components/home/FlowPipeline";
 import BeforeAfter from "@/components/home/BeforeAfter";
 import SystemEngine from "@/components/home/SystemEngine";
+import VideoBackground from "@/components/VideoBackground";
 import {
   WorkflowIcon,
   PortalIcon,
@@ -133,6 +134,32 @@ export default function Home() {
         </div>
       </section>
 
+      {/* SECTION 4.5 — VIDEO ACCENT (dashboard) */}
+      <section className="relative overflow-hidden border-t border-border/60 bg-background">
+        <div className="mx-auto max-w-6xl px-6 py-12 md:py-16">
+          <div className="relative h-64 overflow-hidden rounded-3xl border border-border md:h-80">
+            <VideoBackground
+              src="/videos/dashboard.mp4"
+              poster="/videos/dashboard-poster.jpg"
+              treatment="dashboard"
+              overlay={0.55}
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-background/80 via-background/30 to-transparent" />
+            <div className="absolute inset-y-0 left-0 flex max-w-xl flex-col justify-center p-6 md:p-12">
+              <p className="text-xs font-semibold uppercase tracking-widest text-accent">
+                Live operational visibility
+              </p>
+              <p className="mt-3 text-xl font-semibold leading-tight text-white md:text-2xl">
+                One operational layer. Less chasing, faster decisions, clearer reporting.
+              </p>
+              <p className="mt-3 max-w-md text-sm leading-relaxed text-white/70 md:text-base">
+                Dashboards, approvals, and workflows that show what is actually happening — not what people remember to update.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* SECTION 5 — HOW CLIENTS START */}
       <section className="border-t border-border/60 bg-background">
         <div className="mx-auto max-w-6xl px-6 py-20">
@@ -214,6 +241,29 @@ export default function Home() {
 
       {/* SECTION 6.7 — SYSTEMS ENGINE */}
       <SystemEngine />
+
+      {/* SECTION 6.8 — VIDEO ACCENT (binary code reveal) */}
+      <section className="relative overflow-hidden border-t border-border/60 bg-background">
+        <div className="mx-auto max-w-6xl px-6 py-12 md:py-16">
+          <div className="relative h-56 overflow-hidden rounded-3xl border border-border md:h-72">
+            <VideoBackground
+              src="/videos/binary-code.mp4"
+              poster="/videos/binary-code-poster.jpg"
+              treatment="binary"
+              overlay={0.55}
+            />
+            <div className="absolute inset-0 bg-gradient-to-l from-background/80 via-background/30 to-transparent" />
+            <div className="absolute inset-y-0 right-0 flex max-w-md flex-col justify-center p-6 text-right md:p-10">
+              <p className="text-xs font-semibold uppercase tracking-widest text-accent">
+                Custom-built, not assembled
+              </p>
+              <p className="mt-2 text-lg font-semibold text-white md:text-xl">
+                Production-ready code shaped by your operational reality.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* SECTION 7 — HOW WE WORK */}
       <section className="relative overflow-hidden border-t border-border/60 bg-background">

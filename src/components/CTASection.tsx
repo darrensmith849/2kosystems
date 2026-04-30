@@ -1,4 +1,5 @@
 import Link from "next/link";
+import VideoBackground from "@/components/VideoBackground";
 
 interface CTASectionProps {
   title: string;
@@ -26,6 +27,14 @@ export default function CTASection({
     <section className="border-t border-border/60 bg-background">
       <div className="mx-auto max-w-6xl px-6 py-24">
         <div className="relative overflow-hidden rounded-3xl border border-border bg-surface p-10 text-center md:p-16">
+          {/* Subtle plexus video sits at the bottom of the stack so the CTA card always feels alive */}
+          <VideoBackground
+            src="/videos/plexus-network.mp4"
+            poster="/videos/plexus-network-poster.jpg"
+            treatment="plexus"
+            overlay={0.78}
+          />
+
           {/* Decorative glow */}
           <div
             className="pointer-events-none absolute -top-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-accent/10 blur-3xl"

@@ -3,6 +3,7 @@ import PageHero from "@/components/PageHero";
 import SectionHeader from "@/components/SectionHeader";
 import Card from "@/components/Card";
 import CTASection from "@/components/CTASection";
+import VideoBackground from "@/components/VideoBackground";
 
 export const metadata: Metadata = {
   title: "About",
@@ -17,20 +18,30 @@ export default function AboutPage() {
         eyebrow="About 2KO Systems"
         title="The systems and automation arm of the 2KO group."
         description="2KO Systems builds custom operational systems for established businesses. We are part of the wider 2KO ecosystem — grounded in operational improvement, not just software delivery."
+        videoSrc="/videos/plexus-network.mp4"
+        videoPoster="/videos/plexus-network-poster.jpg"
+        videoTreatment="plexus"
       />
 
-      {/* Operations imagery */}
+      {/* Operations video — color-matched binary reveal */}
       <section className="border-t border-border/60 bg-background">
         <div className="mx-auto max-w-6xl px-6 pt-20">
           <div className="relative h-72 overflow-hidden rounded-3xl border border-border md:h-96">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/imagery/about/hero.jpg"
-              alt=""
-              aria-hidden="true"
-              className="h-full w-full object-cover saturate-[0.8]"
+            <VideoBackground
+              src="/videos/binary-code.mp4"
+              poster="/videos/binary-code-poster.jpg"
+              treatment="binary"
+              overlay={0.45}
             />
-            <div className="absolute inset-0 bg-gradient-to-tr from-background/85 via-background/30 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-tr from-background/80 via-background/30 to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 p-6 md:p-8">
+              <p className="text-xs font-semibold uppercase tracking-widest text-accent">
+                Built with intent
+              </p>
+              <p className="mt-2 max-w-xl text-base text-white/90 md:text-lg">
+                Every line of code, every approval rule, every dashboard tile is shaped around how your operation actually runs.
+              </p>
+            </div>
           </div>
         </div>
       </section>

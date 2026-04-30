@@ -1,4 +1,5 @@
 import Link from "next/link";
+import VideoBackground from "@/components/VideoBackground";
 
 interface PageHeroProps {
   eyebrow: string;
@@ -8,6 +9,15 @@ interface PageHeroProps {
   primaryHref?: string;
   secondaryCTA?: string;
   secondaryHref?: string;
+  /** Optional video src in /public to render behind the hero (color-matched). */
+  videoSrc?: string;
+  /** Optional poster image to pair with the video. */
+  videoPoster?: string;
+  /**
+   * Color treatment for the optional video background.  Matches the recipes in
+   * VideoBackground.tsx — keeps each page on-brand without manual tweaking.
+   */
+  videoTreatment?: "plexus" | "dashboard" | "binary" | "raw";
 }
 
 export default function PageHero({
@@ -18,10 +28,23 @@ export default function PageHero({
   primaryHref,
   secondaryCTA,
   secondaryHref,
+  videoSrc,
+  videoPoster,
+  videoTreatment = "plexus",
 }: PageHeroProps) {
   return (
     <section className="relative overflow-hidden border-b border-border/60 bg-background">
-      {/* Background gradient */}
+      {/* Optional color-matched video background, rendered below the gradient wash. */}
+      {videoSrc ? (
+        <VideoBackground
+          src={videoSrc}
+          poster={videoPoster}
+          treatment={videoTreatment}
+          overlay={0.7}
+        />
+      ) : null}
+
+      {/* Background gradient — sits above the video and softens it toward the brand */}
       <div
         className="pointer-events-none absolute inset-0"
         aria-hidden="true"

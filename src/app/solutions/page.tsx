@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import PageHero from "@/components/PageHero";
 import CTASection from "@/components/CTASection";
+import VideoBackground from "@/components/VideoBackground";
 
 export const metadata: Metadata = {
   title: "Solutions",
@@ -92,7 +93,33 @@ export default function SolutionsPage() {
         description="We build custom web-based systems that digitise the workflows, approvals, reporting, and coordination your business depends on."
         primaryCTA="Book a Systems Audit"
         primaryHref="/get-started"
+        videoSrc="/videos/dashboard.mp4"
+        videoPoster="/videos/dashboard-poster.jpg"
+        videoTreatment="dashboard"
       />
+
+      {/* Animated showcase strip — dashboard video accent between hero and detail list */}
+      <section className="border-t border-border/60 bg-background">
+        <div className="mx-auto max-w-6xl px-6 pt-16">
+          <div className="relative h-56 overflow-hidden rounded-3xl border border-border md:h-72">
+            <VideoBackground
+              src="/videos/dashboard.mp4"
+              poster="/videos/dashboard-poster.jpg"
+              treatment="dashboard"
+              overlay={0.5}
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-background/80 via-background/20 to-transparent" />
+            <div className="absolute inset-y-0 left-0 flex max-w-md flex-col justify-center p-6 md:p-10">
+              <p className="text-xs font-semibold uppercase tracking-widest text-accent">
+                Live operational visibility
+              </p>
+              <p className="mt-2 text-lg font-semibold text-white md:text-xl">
+                Dashboards that show what is actually happening — not what people remember to update.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <section className="bg-background">
         <div className="mx-auto max-w-6xl px-6 py-20">

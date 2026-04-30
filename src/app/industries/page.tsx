@@ -92,6 +92,9 @@ export default function IndustriesPage() {
         description="We work especially well with analogue-heavy, operations-led businesses that need practical systems — not more generic software."
         primaryCTA="Book a Systems Audit"
         primaryHref="/get-started"
+        videoSrc="/videos/plexus-network.mp4"
+        videoPoster="/videos/plexus-network-poster.jpg"
+        videoTreatment="plexus"
       />
 
       <section className="bg-background">

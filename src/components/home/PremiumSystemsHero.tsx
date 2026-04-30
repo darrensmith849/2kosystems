@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
+import VideoBackground from "@/components/VideoBackground";
 
 const clamp = (value: number, min: number, max: number) =>
   Math.min(Math.max(value, min), max);
@@ -111,11 +112,19 @@ export default function PremiumSystemsHero() {
       }
     >
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+        {/* Brand-tinted plexus / network video sits at the very bottom of the stack */}
+        <VideoBackground
+          src="/videos/plexus-network.mp4"
+          poster="/videos/plexus-network-poster.jpg"
+          treatment="plexus"
+          overlay={0.65}
+        />
+
         <div
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(180deg, #07101c 0%, #050913 48%, #03060d 100%)",
+              "linear-gradient(180deg, rgba(7,16,28,0.45) 0%, rgba(5,9,19,0.55) 48%, rgba(3,6,13,0.7) 100%)",
           }}
         />
 
