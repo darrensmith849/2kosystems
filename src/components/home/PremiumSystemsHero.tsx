@@ -113,11 +113,11 @@ export default function PremiumSystemsHero() {
       }
     >
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-        {/* Brand-tinted plexus / network video sits at the very bottom of the stack */}
+        {/* Brand-tinted binary-reveal video sits at the very bottom of the stack */}
         <VideoBackground
-          src="/videos/plexus-network.mp4"
-          poster="/videos/plexus-network-poster.jpg"
-          treatment="plexus"
+          src="/videos/binary-code.mp4"
+          poster="/videos/binary-code-poster.jpg"
+          treatment="binary"
           overlay={0.65}
         />
 

@@ -209,9 +209,9 @@ export default function CaseStudiesPage() {
         description="Representative engagements drawn from real operational pain across mining, agriculture, logistics, training and industrial services. Client names and identifying details are anonymised; the operational challenges, the systems built, and the outcome targets are real."
         primaryCTA="Request a Systems Audit"
         primaryHref="/get-started"
-        videoSrc="/videos/binary-code.mp4"
-        videoPoster="/videos/binary-code-poster.jpg"
-        videoTreatment="binary"
+        videoSrc="/videos/plexus-network.mp4"
+        videoPoster="/videos/plexus-network-poster.jpg"
+        videoTreatment="plexus"
       />
 
       <section className="bg-background">
