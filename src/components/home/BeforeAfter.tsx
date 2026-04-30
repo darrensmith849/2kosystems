@@ -88,10 +88,10 @@ export default function BeforeAfter() {
         <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-2">
           {/* CHAOS panel */}
           <div
-            className={`card-tilt card-sweep relative overflow-hidden rounded-3xl border bg-surface p-8 transition-all duration-700 lg:p-10 ${
+            className={`card-tilt card-sweep relative overflow-hidden rounded-3xl border bg-surface p-8 transition-colors duration-500 lg:p-10 ${
               side === "before"
-                ? "border-white/15 opacity-100"
-                : "border-border opacity-50 lg:scale-[0.98]"
+                ? "border-white/20 shadow-[0_30px_60px_-30px_rgba(0,0,0,0.6)]"
+                : "border-border"
             }`}
           >
             <span className="mb-5 inline-block rounded-full bg-white/[0.06] px-3 py-1 text-[10px] font-semibold uppercase tracking-widest text-muted">
@@ -116,29 +116,14 @@ export default function BeforeAfter() {
                 </li>
               ))}
             </ul>
-
-            {/* Decorative scribble */}
-            <svg
-              aria-hidden="true"
-              className="pointer-events-none absolute -bottom-4 -right-6 h-40 w-40 opacity-20"
-              viewBox="0 0 100 100"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1"
-            >
-              <path
-                d="M5 50 Q15 30 30 45 T55 50 T80 40 T95 60 M10 70 Q25 55 40 65 T70 60 T95 75"
-                className="text-rose-200/60"
-              />
-            </svg>
           </div>
 
           {/* CALM panel */}
           <div
-            className={`card-tilt card-sweep relative overflow-hidden rounded-3xl border bg-surface p-8 transition-all duration-700 lg:p-10 ${
+            className={`card-tilt card-sweep relative overflow-hidden rounded-3xl border bg-surface p-8 transition-colors duration-500 lg:p-10 ${
               side === "after"
-                ? "border-accent/40 opacity-100 shadow-[0_30px_60px_-30px_rgba(15,123,58,0.5)]"
-                : "border-border opacity-60 lg:scale-[0.98]"
+                ? "border-accent/40 shadow-[0_30px_60px_-30px_rgba(15,123,58,0.5)]"
+                : "border-border"
             }`}
           >
             <span className="mb-5 inline-block rounded-full bg-accent/15 px-3 py-1 text-[10px] font-semibold uppercase tracking-widest text-accent">
@@ -163,31 +148,6 @@ export default function BeforeAfter() {
                 </li>
               ))}
             </ul>
-
-            {/* Decorative connection lattice */}
-            <svg
-              aria-hidden="true"
-              className="pointer-events-none absolute -bottom-4 -right-6 h-40 w-40 opacity-30"
-              viewBox="0 0 100 100"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1"
-            >
-              <g className="text-accent/60">
-                <line x1="20" y1="20" x2="80" y2="20" />
-                <line x1="20" y1="50" x2="80" y2="50" />
-                <line x1="20" y1="80" x2="80" y2="80" />
-                <line x1="20" y1="20" x2="50" y2="50" />
-                <line x1="50" y1="50" x2="80" y2="80" />
-                <line x1="80" y1="20" x2="50" y2="50" />
-                <line x1="50" y1="50" x2="20" y2="80" />
-                <circle cx="20" cy="20" r="2.5" fill="currentColor" />
-                <circle cx="80" cy="20" r="2.5" fill="currentColor" />
-                <circle cx="50" cy="50" r="2.5" fill="currentColor" />
-                <circle cx="20" cy="80" r="2.5" fill="currentColor" />
-                <circle cx="80" cy="80" r="2.5" fill="currentColor" />
-              </g>
-            </svg>
           </div>
         </div>
       </div>

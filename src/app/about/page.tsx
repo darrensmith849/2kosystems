@@ -3,12 +3,17 @@ import PageHero from "@/components/PageHero";
 import SectionHeader from "@/components/SectionHeader";
 import Card from "@/components/Card";
 import CTASection from "@/components/CTASection";
-import VideoBackground from "@/components/VideoBackground";
+import AboutHeroMotion from "@/components/about/AboutHeroMotion";
 
 export const metadata: Metadata = {
   title: "About",
   description:
-    "2KO Systems is the technology and custom systems division of the 2KO group — building operational systems for established businesses across Africa.",
+    "2KO Systems is the technology and custom systems division of the 2KO group. Process-led, operations-first, AI where useful — building practical systems for established South African businesses.",
+  openGraph: {
+    title: "About | 2KO Systems",
+    description:
+      "Process-led, operations-first, AI where useful. The systems arm of the 2KO group.",
+  },
 };
 
 export default function AboutPage() {
@@ -23,26 +28,10 @@ export default function AboutPage() {
         videoTreatment="plexus"
       />
 
-      {/* Operations video — color-matched binary reveal */}
+      {/* Operations imagery — animated dashboards over the AI base image */}
       <section className="border-t border-border/60 bg-background">
         <div className="mx-auto max-w-6xl px-6 pt-20">
-          <div className="relative h-72 overflow-hidden rounded-3xl border border-border md:h-96">
-            <VideoBackground
-              src="/videos/binary-code.mp4"
-              poster="/videos/binary-code-poster.jpg"
-              treatment="binary"
-              overlay={0.45}
-            />
-            <div className="absolute inset-0 bg-gradient-to-tr from-background/80 via-background/30 to-transparent" />
-            <div className="absolute inset-x-0 bottom-0 p-6 md:p-8">
-              <p className="text-xs font-semibold uppercase tracking-widest text-accent">
-                Built with intent
-              </p>
-              <p className="mt-2 max-w-xl text-base text-white/90 md:text-lg">
-                Every line of code, every approval rule, every dashboard tile is shaped around how your operation actually runs.
-              </p>
-            </div>
-          </div>
+          <AboutHeroMotion />
         </div>
       </section>
 
@@ -62,6 +51,61 @@ export default function AboutPage() {
               </p>
               <p>
                 We are not a generic software house. We focus specifically on operational systems for established, process-heavy businesses. Our work is shaped by the operational improvement expertise of the wider 2KO group, which means we understand the underlying processes — not just the technology.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Trust strip — compact pill row of guarantees */}
+      <section className="border-t border-border/60 bg-background">
+        <div className="mx-auto max-w-6xl px-6 py-12">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
+            {[
+              "Process-led",
+              "Operations-first",
+              "AI where it's useful",
+              "Custom systems, not SaaS",
+              "Long-term support",
+            ].map((label) => (
+              <div
+                key={label}
+                className="flex items-center justify-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-4 py-2.5 text-center text-xs font-semibold uppercase tracking-widest text-text"
+              >
+                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
+                {label}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Why we are not a generic software house */}
+      <section className="border-t border-border/60 bg-background">
+        <div className="mx-auto max-w-6xl px-6 py-20">
+          <div className="mx-auto max-w-3xl">
+            <h2 className="mb-6 text-2xl font-semibold tracking-tight text-text md:text-3xl">
+              Why we are not a generic software house
+            </h2>
+            <div className="flex flex-col gap-5 text-base leading-relaxed text-muted">
+              <p>
+                Generic software houses ship features. We ship operational
+                improvement that happens to come in the form of software. The
+                difference shows up in scoping, in delivery, and in what the
+                business actually feels six months later.
+              </p>
+              <p>
+                We start with the bottleneck, not the brief. Our first job on
+                every engagement is to understand the workflow, the people in
+                it, and the outcome the business needs — long before we propose
+                a single screen.
+              </p>
+              <p>
+                The wider 2KO group brings deep operational improvement,
+                training and accreditation credibility across Southern Africa.
+                That foundation shapes how we design systems — they have to
+                work for the operator on shift, the supervisor reviewing the
+                day, and the executive reading the dashboard at midnight.
               </p>
             </div>
           </div>
@@ -149,9 +193,9 @@ export default function AboutPage() {
       </section>
 
       <CTASection
-        title="Want to learn more about working with us?"
-        description="Start with a conversation about your operational challenges and we will show you what is possible."
-        primaryCTA="Book a Systems Audit"
+        title="Want to see what this looks like in your operation?"
+        description="Start with a Systems Audit and we will map the highest-value place to begin."
+        primaryCTA="Request a Systems Audit"
         primaryHref="/get-started"
         secondaryCTA="View Case Studies"
         secondaryHref="/case-studies"

@@ -804,3 +804,113 @@ body {
   }
   .contact-steps-pulse { display: none; }
 }
+
+/* =====================================================
+   About-page hero motion — narrative live-workflow panel
+   =====================================================
+   The overlay tells one story: requests moving through
+   Submitted → In review → Approved, with cycle time falling.
+   No vanity SaaS metrics, no random orbs — every animation
+   maps to the actual product narrative.
+*/
+
+/* Very subtle ken-burns on the base image so it isn't frozen */
+@keyframes aboutHeroDrift {
+  0%   { transform: scale(1.02) translate3d(0.4%, 0, 0); }
+  50%  { transform: scale(1.05) translate3d(-0.4%, -0.4%, 0); }
+  100% { transform: scale(1.02) translate3d(0.4%, 0, 0); }
+}
+.aboutHero-img {
+  animation: aboutHeroDrift 36s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* Soft scan sweep top → bottom — slower than before so it reads as ambience */
+@keyframes aboutHeroSweep {
+  0%   { top: -12%; opacity: 0; }
+  20%  { opacity: 0.4; }
+  90%  { opacity: 0.3; }
+  100% { top: 112%; opacity: 0; }
+}
+.aboutHero-sweep {
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(15, 123, 58, 0.18) 48%,
+    rgba(120, 200, 150, 0.28) 50%,
+    rgba(15, 123, 58, 0.18) 52%,
+    transparent 100%
+  );
+  filter: blur(2px);
+  animation: aboutHeroSweep 14s ease-in-out infinite;
+  will-change: top, opacity;
+}
+
+/* Live status dot — soft pulse-out ring, brand emerald */
+@keyframes aboutHeroLiveDot {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(15, 123, 58, 0.7); }
+  50%      { box-shadow: 0 0 0 5px rgba(15, 123, 58, 0); }
+}
+.aboutHero-livedot {
+  animation: aboutHeroLiveDot 1.6s ease-out infinite;
+}
+
+/* Stage dots — each blinks on its own offset, reading L → R as a flow */
+@keyframes aboutHeroStageBlink {
+  0%, 90%, 100% { opacity: 1; transform: scale(1); }
+  45%           { opacity: 0.4; transform: scale(0.7); }
+  50%           { opacity: 1; transform: scale(1.4); }
+}
+.aboutHero-stage-dot {
+  animation: aboutHeroStageBlink 4s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+.aboutHero-stage-dot-a { animation-delay: 0s;   }
+.aboutHero-stage-dot-b { animation-delay: 0.6s; }
+.aboutHero-stage-dot-c { animation-delay: 1.2s; }
+
+/* Counters — subtle bump every cycle so the numbers feel alive */
+@keyframes aboutHeroNumBump {
+  0%, 88%, 100% { transform: translateY(0); opacity: 1; }
+  92%           { transform: translateY(-2px); opacity: 0.85; }
+  96%           { transform: translateY(0);   opacity: 1; }
+}
+.aboutHero-num-a,
+.aboutHero-num-b,
+.aboutHero-num-c {
+  display: inline-block;
+  animation: aboutHeroNumBump 4s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+.aboutHero-num-a { animation-delay: 0.4s; }
+.aboutHero-num-b { animation-delay: 1.0s; }
+.aboutHero-num-c { animation-delay: 1.6s; }
+
+/* Cycle-time sparkline — line redraws each cycle, looping the trend */
+@keyframes aboutHeroSpark {
+  0%   { stroke-dashoffset: 460; }
+  55%  { stroke-dashoffset: 0;   }
+  92%  { stroke-dashoffset: 0;   }
+  100% { stroke-dashoffset: 460; }
+}
+.aboutHero-spark {
+  stroke-dasharray: 460;
+  stroke-dashoffset: 460;
+  animation: aboutHeroSpark 6s ease-in-out infinite;
+  filter: drop-shadow(0 0 4px rgba(15, 123, 58, 0.6));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aboutHero-img,
+  .aboutHero-sweep,
+  .aboutHero-livedot,
+  .aboutHero-stage-dot,
+  .aboutHero-num-a,
+  .aboutHero-num-b,
+  .aboutHero-num-c,
+  .aboutHero-spark {
+    animation: none !important;
+  }
+  .aboutHero-spark { stroke-dashoffset: 0; }
+  .aboutHero-sweep { display: none; }
+}

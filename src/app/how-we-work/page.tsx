@@ -9,7 +9,12 @@ import WorkflowBlueprint from "@/components/home/WorkflowBlueprint";
 export const metadata: Metadata = {
   title: "How We Work",
   description:
-    "Our 4-offer engagement model and 5-step delivery process. Start with a Systems Audit, prove value quickly, and scale from there.",
+    "Our four-offer engagement model and five-step delivery process. Start with a Systems Audit, prove value with a focused Pilot, scale with a Core Build, and keep improving with a Managed Retainer.",
+  openGraph: {
+    title: "How We Work | 2KO Systems",
+    description:
+      "Audit → Pilot → Build → Retain. A structured, low-risk path from operational pain to production system.",
+  },
 };
 
 export default function HowWeWorkPage() {
@@ -19,7 +24,7 @@ export default function HowWeWorkPage() {
         eyebrow="How We Work"
         title="A structured path from operational pain to production system."
         description="We do not force clients into giant software projects on day one. We start narrow, prove value quickly, and scale from there."
-        primaryCTA="Book a Systems Audit"
+        primaryCTA="Request a Systems Audit"
         primaryHref="/get-started"
         videoSrc="/videos/dashboard.mp4"
         videoPoster="/videos/dashboard-poster.jpg"
@@ -190,6 +195,61 @@ export default function HowWeWorkPage() {
         </div>
       </section>
 
+      {/* What to expect at each stage — reassurance copy */}
+      <section className="border-t border-border/60 bg-background">
+        <div className="mx-auto max-w-6xl px-6 py-20">
+          <SectionHeader
+            title="What to expect at each stage"
+            description="The most common questions we get from leadership teams before they engage. Short, specific answers."
+          />
+
+          <div className="mt-2 grid grid-cols-1 gap-6 lg:grid-cols-2">
+            {[
+              {
+                title: "What happens during the Audit",
+                body:
+                  "Two to three structured working sessions with the people closest to the workflow. We map the current state end-to-end, identify the bottleneck, and quantify the operational cost of leaving it as-is. You walk away with a written workflow map, the recommended first system, and an ROI case — whether or not you go ahead with us.",
+              },
+              {
+                title: "Who should attend",
+                body:
+                  "The operations or line owner who feels the pain daily, one or two people who actually do the work, and the executive sponsor. We run the sessions; you bring context. Three to five people in total is usually right — too many and the conversation drifts.",
+              },
+              {
+                title: "What you receive",
+                body:
+                  "Workflow map of the current state, prioritised list of bottlenecks, recommended first system with a one-page scope, ROI case with assumptions stated, and a phased roadmap. Delivered as a written document, not just a deck.",
+              },
+              {
+                title: "How the Pilot is scoped",
+                body:
+                  "Always one workflow. Always a fixed scope and timeline. We define the success criteria with you before we start so there's no debate at the end. The pilot is designed to roll forward into the larger Build — nothing is throwaway.",
+              },
+              {
+                title: "How risk is contained",
+                body:
+                  "Fixed-scope Pilot. Weekly demos. Working software you can use from week one or two. We use stable, mainstream technology and avoid lock-in to obscure tools. Source code and documentation are yours from day one.",
+              },
+              {
+                title: "What happens after launch",
+                body:
+                  "We hand over the running system with documentation, training and an SLA. Most clients move onto a Managed Retainer for ongoing improvements, AI enhancements and new feature work — but it's not required. The system is built to be operated independently if you choose.",
+              },
+            ].map((q) => (
+              <div
+                key={q.title}
+                className="card-tilt card-sweep rounded-2xl border border-border bg-surface p-7"
+              >
+                <h3 className="mb-3 text-base font-semibold text-text">
+                  {q.title}
+                </h3>
+                <p className="text-sm leading-relaxed text-muted">{q.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Principles */}
       <section className="border-t border-border/60 bg-background">
         <div className="mx-auto max-w-6xl px-6 py-20">
@@ -229,7 +289,7 @@ export default function HowWeWorkPage() {
       <CTASection
         title="Ready to start with a Systems Audit?"
         description="Identify the highest-value workflow to digitise and get a clear roadmap for operational improvement."
-        primaryCTA="Book a Systems Audit"
+        primaryCTA="Request a Systems Audit"
         primaryHref="/get-started"
         secondaryCTA="View Case Studies"
         secondaryHref="/case-studies"
