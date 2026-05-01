@@ -33,7 +33,7 @@ export default function PageHero({
   videoTreatment = "plexus",
 }: PageHeroProps) {
   return (
-    <section className="relative overflow-hidden border-b border-border/60 bg-background">
+    <section className="relative flex min-h-[calc(100svh-4rem)] items-center overflow-hidden border-b border-border/60 bg-background">
       {/* Optional color-matched video background, rendered below the gradient wash. */}
       {videoSrc ? (
         <VideoBackground
