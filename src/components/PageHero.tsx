@@ -59,10 +59,16 @@ export default function PageHero({
           <span className="mb-6 inline-block rounded-full bg-accent/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-accent">
             {eyebrow}
           </span>
-          <h1 className="text-3xl font-semibold leading-tight tracking-tight text-text sm:text-4xl md:text-5xl">
+          <h1
+            className="text-3xl font-semibold leading-tight tracking-tight text-text sm:text-4xl md:text-5xl"
+            style={{ textShadow: "0 2px 18px rgba(0,0,0,0.55)" }}
+          >
             {title}
           </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-muted md:text-lg">
+          <p
+            className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-text/90 md:text-lg"
+            style={{ textShadow: "0 1px 10px rgba(0,0,0,0.6)" }}
+          >
             {description}
           </p>
 
