@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import PageHero from "@/components/PageHero";
 import SystemsAuditForm from "@/components/SystemsAuditForm";
 import AmbientMotion from "@/components/home/AmbientMotion";
 
@@ -22,6 +23,15 @@ const NEXT_STEPS = [
 export default function ContactPage() {
   return (
     <>
+      <PageHero
+        eyebrow="Contact"
+        title="Speak to a real agent."
+        description="Tell us a bit about the workflow or system you want to improve, and a member of the 2KO Systems team will reach out within one business day."
+        videoSrc="/videos/plexus-network.mp4"
+        videoPoster="/videos/plexus-network-poster.jpg"
+        videoTreatment="plexus"
+      />
+
       <section className="relative overflow-hidden border-b border-border/60 bg-background">
         {/* Ambient mesh — same atmosphere we use on the home page */}
         <AmbientMotion variant="mesh" />
@@ -36,24 +46,12 @@ export default function ContactPage() {
           }}
         />
 
-        <div className="relative mx-auto max-w-5xl px-6 pb-24 pt-32 md:pt-40">
+        <div className="relative mx-auto max-w-5xl px-6 py-20 md:py-24">
           <div className="grid grid-cols-1 items-start gap-14 lg:grid-cols-[1fr_1.1fr]">
-            {/* Left – context */}
+            {/* Left – next-steps + direct line */}
             <div className="reveal-up">
-              <span className="mb-6 inline-block rounded-full bg-accent/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-accent">
-                Contact
-              </span>
-              <h1 className="text-3xl font-semibold leading-tight tracking-tight text-text sm:text-4xl md:text-5xl">
-                Speak to a real agent.
-              </h1>
-              <p className="mt-6 max-w-lg text-base leading-relaxed text-muted md:text-lg">
-                Tell us a bit about the workflow or system you want to improve,
-                and a member of the 2KO Systems team will reach out within one
-                business day.
-              </p>
-
               {/* Animated three-step flow */}
-              <div className="mt-10">
+              <div>
                 <h2 className="mb-5 text-xs font-semibold uppercase tracking-widest text-muted2">
                   What happens next
                 </h2>

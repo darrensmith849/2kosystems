@@ -33,7 +33,10 @@ export default function PageHero({
   videoTreatment = "plexus",
 }: PageHeroProps) {
   return (
-    <section className="relative flex min-h-[calc(100svh-4rem)] items-center overflow-hidden border-b border-border/60 bg-background">
+    <section
+      data-page-hero="true"
+      className="page-hero border-b border-border/60 bg-background"
+    >
       {/* Optional color-matched video background, rendered below the gradient wash. */}
       {videoSrc ? (
         <VideoBackground
@@ -54,7 +57,10 @@ export default function PageHero({
         }}
       />
 
-      <div className="relative mx-auto max-w-6xl px-6 pb-16 pt-32 md:pb-24 md:pt-40">
+      {/* Inner content wrapper — centred by the .page-hero flex rule.       */}
+      {/* Symmetric vertical padding (pt = pb) so CTA presence cannot shift   */}
+      {/* the content baseline; pt-16 on top accounts for the fixed header.   */}
+      <div className="relative mx-auto w-full max-w-6xl px-6 pt-16 pb-8 md:pt-20 md:pb-12">
         <div className="mx-auto max-w-3xl text-center">
           <span className="mb-6 inline-block rounded-full bg-accent/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-accent">
             {eyebrow}

@@ -37,6 +37,37 @@
 
 }
 
+/* ---------------------------------------------------------------- */
+/* Internal page hero — single fixed-height contract for every       */
+/* heading section (about, solutions, industries, how-we-work,       */
+/* case-studies, contact).  Centralised so per-page tweaks can't      */
+/* reintroduce the height drift between pages.                        */
+/* ---------------------------------------------------------------- */
+.page-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  min-height: 620px;
+}
+
+@media (min-width: 768px) {
+  .page-hero {
+    height: 680px;
+    min-height: 680px;
+    max-height: 680px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .page-hero {
+    height: 700px;
+    min-height: 700px;
+    max-height: 700px;
+  }
+}
+
 @keyframes logoScroll {
   from {
     transform: translate3d(0, 0, 0);
