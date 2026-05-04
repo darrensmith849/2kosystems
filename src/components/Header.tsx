@@ -17,8 +17,15 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 border-b border-border/60 bg-background/95 backdrop-blur-md">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+    <header
+      className="fixed top-0 left-0 right-0 z-50 border-b border-[var(--color-border-subtle)] bg-[var(--color-topbar-bg)]"
+      style={{
+        WebkitBackdropFilter: "saturate(180%) blur(20px)",
+        backdropFilter: "saturate(180%) blur(20px)",
+        height: "var(--topbar-h)",
+      }}
+    >
+      <div className="mx-auto flex h-full max-w-6xl items-center justify-between px-6">
         <Link href="/" className="flex items-center gap-2">
           <Image
             src="/2ko-logo.png"
@@ -36,7 +43,7 @@ export default function Header() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm text-muted transition-colors hover:text-text"
+              className="text-[13px] tracking-[-0.005em] text-[var(--color-fg-muted)] transition-colors hover:text-[var(--color-fg)]"
             >
               {link.label}
             </Link>
@@ -46,7 +53,7 @@ export default function Header() {
         <div className="hidden md:block">
           <Link
             href="/contact"
-            className="rounded-full border border-accent-border bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-accent2 hover:text-black active:bg-accent-pressed"
+            className="rounded-full border border-accent-border bg-accent px-5 py-2.5 text-[13px] font-semibold tracking-[-0.005em] text-white shadow-[var(--shadow-card)] transition-all duration-200 hover:bg-accent2 hover:text-black active:bg-accent-pressed"
           >
             Book a Systems Audit
           </Link>
@@ -72,14 +79,20 @@ export default function Header() {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="border-t border-border/60 bg-background/98 px-6 pb-6 md:hidden">
+        <div
+          className="border-t border-[var(--color-border-subtle)] bg-[var(--color-topbar-bg)] px-6 pb-6 md:hidden"
+          style={{
+            WebkitBackdropFilter: "saturate(180%) blur(20px)",
+            backdropFilter: "saturate(180%) blur(20px)",
+          }}
+        >
           <nav className="flex flex-col gap-4 pt-4">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 onClick={() => setMobileOpen(false)}
-                className="text-sm text-muted transition-colors hover:text-text"
+                className="text-[14px] tracking-[-0.005em] text-[var(--color-fg-muted)] transition-colors hover:text-[var(--color-fg)]"
               >
                 {link.label}
               </Link>
@@ -87,7 +100,7 @@ export default function Header() {
             <Link
               href="/contact"
               onClick={() => setMobileOpen(false)}
-              className="mt-2 inline-block rounded-full border border-accent-border bg-accent px-5 py-2.5 text-center text-sm font-semibold text-white transition-colors hover:bg-accent2 hover:text-black active:bg-accent-pressed"
+              className="mt-2 inline-block rounded-full border border-accent-border bg-accent px-5 py-2.5 text-center text-[13px] font-semibold tracking-[-0.005em] text-white shadow-[var(--shadow-card)] transition-colors hover:bg-accent2 hover:text-black active:bg-accent-pressed"
             >
               Book a Systems Audit
             </Link>

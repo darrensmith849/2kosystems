@@ -17,15 +17,17 @@ export default function Card({
 }: CardProps) {
   return (
     <div
-      className={`card-tilt card-sweep group rounded-2xl border border-border bg-surface p-6 transition-colors hover:border-accent/30 ${className}`}
+      className={`card-tilt card-sweep group rounded-2xl border border-border bg-surface p-6 shadow-[var(--shadow-card)] transition-colors hover:border-accent/30 hover:bg-[var(--color-surface-2)] ${className}`}
     >
       {number && (
-        <span className="mb-3 inline-block text-xs font-semibold uppercase tracking-widest text-accent">
+        <span className="mb-3 inline-block text-[11px] font-semibold uppercase tracking-[var(--tracking-eyebrow)] text-accent tabular-nums">
           {number}
         </span>
       )}
       {icon && <div className="mb-3 text-accent">{icon}</div>}
-      <h3 className="mb-2 text-base font-semibold text-text">{title}</h3>
+      <h3 className="mb-2 text-[17px] font-semibold tracking-[var(--tracking-tight)] text-text">
+        {title}
+      </h3>
       <p className="text-sm leading-relaxed text-muted">{description}</p>
     </div>
   );

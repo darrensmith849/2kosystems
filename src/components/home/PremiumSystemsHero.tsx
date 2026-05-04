@@ -103,7 +103,7 @@ export default function PremiumSystemsHero() {
       onPointerMove={handlePointerMove}
       onPointerEnter={handlePointerEnter}
       onPointerLeave={handlePointerLeave}
-      className="relative isolate overflow-hidden border-b border-white/10 bg-[#050913] text-white"
+      className="relative isolate overflow-hidden border-b border-white/10 bg-[var(--color-hero-bg)] text-white"
       style={
         {
           "--mx": "50%",
@@ -174,11 +174,24 @@ export default function PremiumSystemsHero() {
             2KO Systems
           </div>
 
-          <h1 className="max-w-4xl text-4xl font-semibold tracking-tight text-white sm:text-5xl lg:text-[3.25rem] lg:leading-[1.05]">
+          <h1
+            className="max-w-4xl font-semibold text-white"
+            style={{
+              fontSize: "var(--text-display-xl)",
+              letterSpacing: "var(--tracking-display)",
+              lineHeight: 1.04,
+            }}
+          >
             Custom systems for businesses that have outgrown outdated software.
           </h1>
 
-          <p className="mt-5 max-w-2xl text-base leading-7 text-white/72 sm:text-lg">
+          <p
+            className="mt-5 max-w-2xl leading-7 text-white/72"
+            style={{
+              fontSize: "var(--text-headline)",
+              letterSpacing: "var(--tracking-tight)",
+            }}
+          >
             We build operational systems, approvals flows, client portals, and
             reporting dashboards that cut admin, improve visibility, and help
             teams move faster.
@@ -187,14 +200,14 @@ export default function PremiumSystemsHero() {
           <div className="mt-7 flex flex-col gap-4 sm:flex-row">
             <Link
               href="/contact"
-              className="inline-flex items-center justify-center rounded-full border border-accent-border bg-accent px-6 py-3 text-sm font-medium text-white transition duration-200 hover:bg-accent2 hover:text-black hover:scale-[1.02] active:bg-accent-pressed"
+              className="inline-flex items-center justify-center rounded-full border border-accent-border bg-accent px-6 py-3 text-sm font-medium tracking-[-0.005em] text-white shadow-[var(--shadow-card)] transition duration-200 hover:bg-accent2 hover:text-black hover:scale-[1.02] active:bg-accent-pressed"
             >
               Book a Systems Audit
             </Link>
 
             <Link
               href="/solutions"
-              className="inline-flex items-center justify-center rounded-full border border-white/12 bg-white/5 px-6 py-3 text-sm font-medium text-white transition duration-200 hover:bg-white/10"
+              className="inline-flex items-center justify-center rounded-full border border-white/12 bg-white/5 px-6 py-3 text-sm font-medium tracking-[-0.005em] text-white backdrop-blur transition duration-200 hover:bg-white/10"
             >
               Explore Solutions
             </Link>
@@ -202,8 +215,8 @@ export default function PremiumSystemsHero() {
         </div>
 
         <div className="relative hidden lg:block">
-          <div className="rounded-[28px] border border-white/10 bg-white/[0.04] p-3 backdrop-blur-xl">
-            <div className="rounded-[22px] border border-white/10 bg-[#081120]/88 p-4 shadow-2xl shadow-black/25">
+          <div className="rounded-[28px] border border-white/10 bg-white/[0.04] p-3 backdrop-blur-xl shadow-[var(--shadow-popover)]">
+            <div className="rounded-[22px] border border-white/10 bg-[var(--color-hero-card)]/88 p-4 shadow-[var(--shadow-card)]">
               <div className="mb-3 flex items-start justify-between gap-4">
                 <div>
                   <p className="text-[10px] uppercase tracking-[0.18em] text-white/40">

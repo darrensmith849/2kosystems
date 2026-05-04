@@ -32,7 +32,7 @@ export default function AboutHeroMotion() {
 
       {/* The narrative panel — full-width across the bottom */}
       <div
-        className="pointer-events-none absolute inset-x-4 bottom-4 rounded-2xl border border-white/10 bg-[#050913]/80 p-4 backdrop-blur-md md:inset-x-6 md:bottom-6 md:p-5"
+        className="pointer-events-none absolute inset-x-4 bottom-4 rounded-2xl border border-white/10 bg-[var(--color-hero-bg)]/80 p-4 shadow-[var(--shadow-popover)] backdrop-blur-md md:inset-x-6 md:bottom-6 md:p-5"
         aria-hidden="true"
       >
         {/* Header row */}

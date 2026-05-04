@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 :root {
+  /* ----- Existing surface / text / accent / border tokens (unchanged) ----- */
   --background: #000000;
   --background-secondary: #0d0d0f;
   --surface: #111113;
@@ -16,6 +17,64 @@
   --border: #27272a;
   --font-geist-sans: var(--font-geist-sans);
   --font-geist-mono: var(--font-geist-mono);
+
+  /* ----- Apple-style token aliases (additive, same colors as above) -----
+     A small, named contract every component can read directly via
+     bg-[var(--color-bg)] / text-[var(--color-fg)] etc.  Keeping the
+     legacy tokens above so nothing breaks; new work should prefer
+     these names. */
+  --color-bg: var(--background);
+  --color-bg-2: var(--background-secondary);
+  --color-surface: var(--surface);
+  --color-surface-2: #15151a;
+  --color-surface-3: #1a1a20;
+
+  /* Glass chrome — translucent + backdrop-blur targets.  Same dark
+     base as --background but with alpha so a video/gradient behind
+     can bleed through. */
+  --color-topbar-bg: rgba(8, 8, 12, 0.72);
+  --color-sidebar-bg: rgba(8, 8, 12, 0.72);
+
+  /* Two stray hex values we used inline before, now lifted into the
+     token system so future edits land in one place. */
+  --color-hero-bg: #050913;
+  --color-hero-card: #081120;
+
+  /* Lines */
+  --color-border-subtle: rgba(255, 255, 255, 0.06);
+  --color-border-faint: rgba(255, 255, 255, 0.04);
+
+  /* Text */
+  --color-fg: var(--text);
+  --color-fg-muted: var(--muted);
+  --color-fg-meta: var(--muted2);
+
+  /* Hover wash */
+  --color-hover: rgba(255, 255, 255, 0.05);
+
+  /* Elevation — soft, Apple-ish, no heavy drop shadows */
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.35), 0 8px 24px -12px rgba(0, 0, 0, 0.55);
+  --shadow-popover: 0 12px 32px -8px rgba(0, 0, 0, 0.6), 0 2px 6px rgba(0, 0, 0, 0.3);
+  --shadow-glow-accent: 0 0 0 1px var(--accent-border), 0 8px 28px -10px rgba(15, 123, 58, 0.45);
+
+  /* Layout */
+  --topbar-h: 65px;
+  --content-max: 1200px;
+
+  /* Type scale — fluid clamp() so headlines don't need breakpoints */
+  --text-display-xl: clamp(40px, 5.2vw, 64px);
+  --text-display-lg: clamp(32px, 4vw, 48px);
+  --text-display-md: clamp(28px, 3.4vw, 38px);
+  --text-headline:   clamp(22px, 2.4vw, 28px);
+  --text-title:      clamp(17px, 1.4vw, 19px);
+  --text-body:       15px;
+  --text-meta:       13px;
+  --text-caption:    11px;
+
+  /* Tracking — tight on display, looser on body */
+  --tracking-display: -0.022em;
+  --tracking-tight:   -0.012em;
+  --tracking-eyebrow: 0.18em;
 }
 
 @theme inline {
@@ -34,8 +93,19 @@
   --color-border: var(--border);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-
 }
+
+/* ----- Global typographic polish (Apple-ish) -----
+   Apply tabular numbers everywhere (so ticking metrics don't jitter)
+   and a tighter default tracking on h1/h2/h3.  Per-component overrides
+   still win because they use the more specific clamp() utilities. */
+h1, h2, h3 {
+  letter-spacing: var(--tracking-display);
+}
+h4, h5, h6 {
+  letter-spacing: var(--tracking-tight);
+}
+.tabular { font-variant-numeric: tabular-nums; }
 
 /* ---------------------------------------------------------------- */
 /* Internal page hero — single fixed-height contract for every       */

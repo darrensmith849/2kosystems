@@ -62,18 +62,26 @@ export default function PageHero({
       {/* the content baseline; pt-16 on top accounts for the fixed header.   */}
       <div className="relative mx-auto w-full max-w-6xl px-6 pt-16 pb-8 md:pt-20 md:pb-12">
         <div className="mx-auto max-w-3xl text-center">
-          <span className="mb-6 inline-block rounded-full bg-accent/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-accent">
+          <span className="mb-6 inline-block rounded-full border border-accent-border bg-[color-mix(in_srgb,var(--accent)_12%,transparent)] px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[var(--tracking-eyebrow)] text-accent">
             {eyebrow}
           </span>
           <h1
-            className="text-3xl font-semibold leading-tight tracking-tight text-text sm:text-4xl md:text-5xl"
-            style={{ textShadow: "0 2px 18px rgba(0,0,0,0.55)" }}
+            className="font-semibold leading-[1.05] text-text"
+            style={{
+              fontSize: "var(--text-display-lg)",
+              letterSpacing: "var(--tracking-display)",
+              textShadow: "0 2px 18px rgba(0,0,0,0.55)",
+            }}
           >
             {title}
           </h1>
           <p
-            className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-text/90 md:text-lg"
-            style={{ textShadow: "0 1px 10px rgba(0,0,0,0.6)" }}
+            className="mx-auto mt-6 max-w-2xl leading-relaxed text-text/90"
+            style={{
+              fontSize: "var(--text-headline)",
+              letterSpacing: "var(--tracking-tight)",
+              textShadow: "0 1px 10px rgba(0,0,0,0.6)",
+            }}
           >
             {description}
           </p>
@@ -83,7 +91,7 @@ export default function PageHero({
               {primaryCTA && primaryHref && (
                 <Link
                   href={primaryHref}
-                  className="rounded-full border border-accent-border bg-accent px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-accent2 hover:text-black active:bg-accent-pressed"
+                  className="rounded-full border border-accent-border bg-accent px-7 py-3.5 text-sm font-semibold tracking-[-0.005em] text-white shadow-[var(--shadow-card)] transition-all duration-200 hover:bg-accent2 hover:text-black active:bg-accent-pressed"
                 >
                   {primaryCTA}
                 </Link>
@@ -91,7 +99,7 @@ export default function PageHero({
               {secondaryCTA && secondaryHref && (
                 <Link
                   href={secondaryHref}
-                  className="rounded-full border border-border px-7 py-3.5 text-sm font-semibold text-text transition-colors hover:border-accent/40 hover:bg-white/5"
+                  className="rounded-full border border-[var(--color-border-subtle)] bg-[var(--color-hover)] px-7 py-3.5 text-sm font-semibold tracking-[-0.005em] text-text backdrop-blur transition-colors hover:border-accent/40 hover:bg-white/10"
                 >
                   {secondaryCTA}
                 </Link>
