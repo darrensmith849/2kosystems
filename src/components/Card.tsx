@@ -31,7 +31,7 @@ export default function Card({
     <div
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className={`card-sweep group relative overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 transition-all duration-300 ease-out hover:-translate-y-1 hover:border-[var(--accent-border)] ${className}`}
+      className={`card-sweep group relative flex h-full flex-col overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 transition-all duration-300 ease-out hover:-translate-y-1 hover:border-[var(--accent-border)] ${className}`}
       style={{
         boxShadow: hovered
           ? "var(--shadow-glow-accent)"
@@ -50,7 +50,7 @@ export default function Card({
         }}
       />
 
-      <div className="relative">
+      <div className="relative flex flex-1 flex-col">
         {number && (
           <span
             className="mb-3 inline-block text-[11px] font-semibold uppercase text-[var(--accent)] tabular-nums"
@@ -61,7 +61,7 @@ export default function Card({
         )}
         {icon && (
           <div
-            className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl text-[var(--accent)] transition-transform duration-300 group-hover:scale-105"
+            className="mb-3 inline-flex h-10 w-10 shrink-0 items-center justify-center self-start rounded-xl text-[var(--accent)] transition-transform duration-300 group-hover:scale-105"
             style={{
               background:
                 "color-mix(in srgb, var(--accent) 10%, transparent)",

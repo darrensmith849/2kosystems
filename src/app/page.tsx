@@ -67,28 +67,28 @@ export default function Home() {
           />
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            <RevealOnScroll delay={0}>
+            <RevealOnScroll delay={0} className="h-full">
               <Card
                 icon={<ProcessIcon size={22} />}
                 title="Process-first thinking"
                 description="We start with the bottleneck, not the trend."
               />
             </RevealOnScroll>
-            <RevealOnScroll delay={90}>
+            <RevealOnScroll delay={90} className="h-full">
               <Card
                 icon={<CustomIcon size={22} />}
                 title="Custom-built for your operation"
                 description="Shaped around your workflows, approvals, and reporting reality."
               />
             </RevealOnScroll>
-            <RevealOnScroll delay={180}>
+            <RevealOnScroll delay={180} className="h-full">
               <Card
                 icon={<AIIcon size={22} />}
                 title="AI where it adds real value"
                 description="Drafting, routing, summarising, and decision support — not for show."
               />
             </RevealOnScroll>
-            <RevealOnScroll delay={270}>
+            <RevealOnScroll delay={270} className="h-full">
               <Card
                 icon={<AdminIcon size={22} />}
                 title="Less admin, faster decisions"
@@ -108,42 +108,42 @@ export default function Home() {
           />
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
-            <RevealOnScroll delay={0}>
+            <RevealOnScroll delay={0} className="h-full">
               <Card
                 icon={<WorkflowIcon size={22} />}
                 title="Workflow Automation"
                 description="Digitise operational flows from request to approval to completion."
               />
             </RevealOnScroll>
-            <RevealOnScroll delay={80}>
+            <RevealOnScroll delay={80} className="h-full">
               <Card
                 icon={<PortalIcon size={22} />}
                 title="Client & Staff Portals"
                 description="Role-based portals for onboarding, requests, status visibility, and document access."
               />
             </RevealOnScroll>
-            <RevealOnScroll delay={160}>
+            <RevealOnScroll delay={160} className="h-full">
               <Card
                 icon={<ApprovalIcon size={22} />}
                 title="Approvals & Governance"
                 description="Approval chains, audit trails, escalation logic, and compliance visibility."
               />
             </RevealOnScroll>
-            <RevealOnScroll delay={240}>
+            <RevealOnScroll delay={240} className="h-full">
               <Card
                 icon={<DashboardIcon size={22} />}
                 title="Dashboards & Reporting"
                 description="Live operational dashboards and automated reporting that remove status chasing."
               />
             </RevealOnScroll>
-            <RevealOnScroll delay={320}>
+            <RevealOnScroll delay={320} className="h-full">
               <Card
                 icon={<KnowledgeIcon size={22} />}
                 title="SOP & Knowledge Copilots"
                 description="Procedures, standards, and answers accessible at the point of work."
               />
             </RevealOnScroll>
-            <RevealOnScroll delay={400}>
+            <RevealOnScroll delay={400} className="h-full">
               <Card
                 icon={<AIIcon size={22} />}
                 title="AI-Assisted Operations"
@@ -205,7 +205,7 @@ export default function Home() {
           />
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            <RevealOnScroll delay={0}>
+            <RevealOnScroll delay={0} className="h-full">
               <Card
                 number="01"
                 icon={<AuditIcon size={22} />}
@@ -213,7 +213,7 @@ export default function Home() {
                 description="Paid diagnostic to identify the best workflow to digitise first and define the ROI case."
               />
             </RevealOnScroll>
-            <RevealOnScroll delay={90}>
+            <RevealOnScroll delay={90} className="h-full">
               <Card
                 number="02"
                 icon={<PilotIcon size={22} />}
@@ -221,7 +221,7 @@ export default function Home() {
                 description="A tightly scoped system that solves one painful process quickly and visibly."
               />
             </RevealOnScroll>
-            <RevealOnScroll delay={180}>
+            <RevealOnScroll delay={180} className="h-full">
               <Card
                 number="03"
                 icon={<BuildIcon size={22} />}
@@ -229,7 +229,7 @@ export default function Home() {
                 description="Custom platform built around your workflows, approvals, reporting, and user roles."
               />
             </RevealOnScroll>
-            <RevealOnScroll delay={270}>
+            <RevealOnScroll delay={270} className="h-full">
               <Card
                 number="04"
                 icon={<RetainerIcon size={22} />}
@@ -262,8 +262,8 @@ export default function Home() {
             ].map((item, i) => {
               const Icon = industryIcons[i];
               return (
-                <RevealOnScroll key={item} delay={i * 60}>
-                  <div className="flex items-center gap-3 bg-[var(--color-surface)] p-5 transition-colors hover:bg-[var(--color-bg-tinted)]">
+                <RevealOnScroll key={item} delay={i * 60} className="h-full">
+                  <div className="flex h-full items-center gap-3 bg-[var(--color-surface)] p-5 transition-colors hover:bg-[var(--color-bg-tinted)]">
                     <span className="text-[var(--accent)]">
                       <Icon size={18} />
                     </span>
@@ -391,7 +391,7 @@ export default function Home() {
           />
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-            <RevealOnScroll delay={0}>
+            <RevealOnScroll delay={0} className="h-full">
               <div
                 className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-7"
                 style={{ boxShadow: "var(--shadow-card)" }}
@@ -404,7 +404,7 @@ export default function Home() {
                 </p>
               </div>
             </RevealOnScroll>
-            <RevealOnScroll delay={120}>
+            <RevealOnScroll delay={120} className="h-full">
               <div
                 className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-7"
                 style={{ boxShadow: "var(--shadow-card)" }}
@@ -417,7 +417,7 @@ export default function Home() {
                 </p>
               </div>
             </RevealOnScroll>
-            <RevealOnScroll delay={240}>
+            <RevealOnScroll delay={240} className="h-full">
               <div
                 className="rounded-2xl border border-[var(--accent-border)] bg-[var(--color-surface)] p-7"
                 style={{ boxShadow: "var(--shadow-glow-accent)" }}
