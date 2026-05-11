@@ -221,8 +221,8 @@ export default function PremiumSystemsHero() {
 
           {/* ---- Right-hand "iPhone notification" mockup (kept dark so it pops on the white site, autotax-style) ---- */}
           <div className="relative flex justify-center lg:justify-end">
-            {/* Floating "Last sync" chip, autotax-style */}
-            <div className="absolute -top-3 right-2 z-10 hidden items-center gap-2 rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2 shadow-[var(--shadow-card)] sm:flex">
+            {/* Floating "Last sync" chip, autotax-style — drifts on a longer offset for variety */}
+            <div className="hero-float-b absolute -top-3 right-2 z-10 hidden items-center gap-2 rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2 shadow-[var(--shadow-card)] sm:flex">
               <span className="h-2 w-2 rounded-full bg-accent contact-live-dot" />
               <div className="text-left">
                 <p className="text-[11px] font-medium text-[var(--color-fg)]">
@@ -233,7 +233,7 @@ export default function PremiumSystemsHero() {
             </div>
 
             <div
-              className="relative w-full max-w-[320px] rounded-[44px] border border-black/10 p-2"
+              className="hero-panel-float relative w-full max-w-[320px] rounded-[44px] border border-black/10 p-2"
               style={{
                 background: "var(--color-canvas-dark)",
                 boxShadow:
