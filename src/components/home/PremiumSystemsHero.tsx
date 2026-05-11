@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import TypewriterText from "@/components/TypewriterText";
+import RevealOnScroll from "@/components/RevealOnScroll";
 
 /**
  * Autotax-style hero composition:
@@ -18,27 +19,36 @@ import TypewriterText from "@/components/TypewriterText";
 export default function PremiumSystemsHero() {
   return (
     <section className="relative isolate overflow-hidden bg-[var(--color-bg)] text-[var(--color-fg)]">
-      {/* Quiet radial wash so the hero has a focal point without breaking the white look */}
+      {/* Quiet green radial wash so the hero has a focal point */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 h-[520px]"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[620px]"
         style={{
           background:
-            "radial-gradient(120% 60% at 50% 0%, color-mix(in srgb, var(--accent) 8%, transparent), transparent 65%)",
+            "radial-gradient(120% 70% at 50% 0%, var(--tint-accent-medium), transparent 65%)",
+        }}
+      />
+      {/* Faint horizon line gradient anchoring the bottom of the hero space */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-[420px] h-[300px]"
+        style={{
+          background:
+            "radial-gradient(60% 100% at 50% 100%, var(--tint-accent-soft), transparent 70%)",
         }}
       />
 
       {/* ---------- Centred hero ---------- */}
       <div className="relative z-10 mx-auto max-w-5xl px-6 pt-20 pb-10 text-center sm:pt-24 lg:px-10 lg:pt-28">
         <p
-          className="text-[12px] font-medium uppercase text-[var(--color-fg-muted)]"
+          className="reveal-up text-[12px] font-medium uppercase text-[var(--color-fg-muted)]"
           style={{ letterSpacing: "var(--tracking-eyebrow)" }}
         >
           Custom Operational Systems · South Africa
         </p>
 
         <h1
-          className="mx-auto mt-6 max-w-4xl font-semibold text-[var(--color-fg)]"
+          className="reveal-up reveal-stagger-1 mx-auto mt-6 max-w-4xl font-semibold text-[var(--color-fg)]"
           style={{
             fontSize: "var(--text-display-xl)",
             letterSpacing: "var(--tracking-display)",
@@ -49,7 +59,7 @@ export default function PremiumSystemsHero() {
         </h1>
 
         <p
-          className="mx-auto mt-6 max-w-2xl text-[var(--color-fg-muted)]"
+          className="reveal-up reveal-stagger-2 mx-auto mt-6 max-w-2xl text-[var(--color-fg-muted)]"
           style={{
             fontSize: "var(--text-headline)",
             letterSpacing: "var(--tracking-tight)",
@@ -61,7 +71,7 @@ export default function PremiumSystemsHero() {
           teams move faster.
         </p>
 
-        <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+        <div className="reveal-up reveal-stagger-3 mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <Link
             href="/contact"
             className="inline-flex items-center justify-center rounded-full bg-[var(--color-canvas-dark)] px-7 py-3 text-[14px] font-medium tracking-[-0.005em] text-white transition-all duration-200 hover:bg-[var(--color-canvas-dark-2)] active:scale-[0.98]"
@@ -77,13 +87,13 @@ export default function PremiumSystemsHero() {
           </Link>
         </div>
 
-        <p className="mt-6 text-[13px] text-[var(--color-fg-meta)]">
+        <p className="reveal-up reveal-stagger-4 mt-6 text-[13px] text-[var(--color-fg-meta)]">
           No off-the-shelf SaaS. No long onboarding. No vendor lock-in.
         </p>
       </div>
 
       {/* ---------- Mockup composition ---------- */}
-      <div className="relative z-10 mx-auto max-w-6xl px-6 pb-24 lg:px-10 lg:pb-28">
+      <RevealOnScroll className="relative z-10 mx-auto max-w-6xl px-6 pb-24 lg:px-10 lg:pb-28">
         <div className="relative grid gap-8 lg:grid-cols-[1.4fr_1fr] lg:items-start lg:gap-12">
           {/* ---- Operating-system card (light) ---- */}
           <div
@@ -316,7 +326,7 @@ export default function PremiumSystemsHero() {
             </div>
           </div>
         </div>
-      </div>
+      </RevealOnScroll>
     </section>
   );
 }

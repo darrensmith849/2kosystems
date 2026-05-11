@@ -33,11 +33,16 @@
      A small, named contract every component reads directly via
      bg-[var(--color-bg)] / text-[var(--color-fg)] etc. */
   --color-bg: #ffffff;
-  --color-bg-2: #fafafa;         /* off-white wash for alt sections */
-  --color-bg-3: #f4f5f7;         /* slightly cooler off-white */
-  --color-surface: #ffffff;       /* card surface */
-  --color-surface-2: #fbfbfd;     /* subtle alt card */
-  --color-surface-3: #f4f5f7;     /* third tier */
+  --color-bg-2: #f5f9f6;         /* alt sections — subtle green-tinted off-white */
+  --color-bg-3: #eef4f0;         /* deeper green-tinted wash */
+  --color-bg-tinted: #f0f7f2;    /* explicit "tinted" wash for hero/CTA backdrops */
+  --color-surface: #ffffff;       /* card surface (kept pure white for contrast) */
+  --color-surface-2: #fafdfb;     /* subtle green-tinted card */
+  --color-surface-3: #f4f8f5;     /* third tier */
+  /* Accent tint colour-mix targets — used for radial washes and chips */
+  --tint-accent-soft: color-mix(in srgb, var(--accent) 4%, transparent);
+  --tint-accent-medium: color-mix(in srgb, var(--accent) 8%, transparent);
+  --tint-accent-strong: color-mix(in srgb, var(--accent) 14%, transparent);
 
   /* Glass chrome — translucent white + backdrop-blur */
   --color-topbar-bg: rgba(255, 255, 255, 0.72);
@@ -724,12 +729,21 @@ body {
 /* ---------------------------------------------------------------- */
 
 @keyframes revealUp {
-  0%   { opacity: 0; transform: translateY(14px); }
-  100% { opacity: 1; transform: translateY(0); }
+  0%   { opacity: 0; transform: translateY(18px); filter: blur(2px); }
+  60%  { filter: blur(0); }
+  100% { opacity: 1; transform: translateY(0); filter: blur(0); }
 }
 .reveal-up {
-  animation: revealUp 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation: revealUp 1.1s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
+
+/* Stagger helpers — apply to children of a parent that already uses
+   .reveal-up so the cascade enters in sequence. */
+.reveal-stagger-1 { animation-delay: 0.10s; }
+.reveal-stagger-2 { animation-delay: 0.22s; }
+.reveal-stagger-3 { animation-delay: 0.34s; }
+.reveal-stagger-4 { animation-delay: 0.46s; }
+.reveal-stagger-5 { animation-delay: 0.58s; }
 
 @media (prefers-reduced-motion: reduce) {
   .lattice-pulse-edge,

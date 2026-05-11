@@ -3,6 +3,7 @@ import SectionHeader from "@/components/SectionHeader";
 import Card from "@/components/Card";
 import StepProcess from "@/components/StepProcess";
 import CTASection from "@/components/CTASection";
+import RevealOnScroll from "@/components/RevealOnScroll";
 import PremiumSystemsHero from "@/components/home/PremiumSystemsHero";
 import AmbientMotion from "@/components/home/AmbientMotion";
 import OperationsLattice from "@/components/home/OperationsLattice";
@@ -66,69 +67,89 @@ export default function Home() {
           />
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            <Card
-              icon={<ProcessIcon size={22} />}
-              title="Process-first thinking"
-              description="We start with the bottleneck, not the trend."
-            />
-            <Card
-              icon={<CustomIcon size={22} />}
-              title="Custom-built for your operation"
-              description="Shaped around your workflows, approvals, and reporting reality."
-            />
-            <Card
-              icon={<AIIcon size={22} />}
-              title="AI where it adds real value"
-              description="Drafting, routing, summarising, and decision support — not for show."
-            />
-            <Card
-              icon={<AdminIcon size={22} />}
-              title="Less admin, faster decisions"
-              description="Reduced follow-up. Better movement. Clearer visibility."
-            />
+            <RevealOnScroll delay={0}>
+              <Card
+                icon={<ProcessIcon size={22} />}
+                title="Process-first thinking"
+                description="We start with the bottleneck, not the trend."
+              />
+            </RevealOnScroll>
+            <RevealOnScroll delay={90}>
+              <Card
+                icon={<CustomIcon size={22} />}
+                title="Custom-built for your operation"
+                description="Shaped around your workflows, approvals, and reporting reality."
+              />
+            </RevealOnScroll>
+            <RevealOnScroll delay={180}>
+              <Card
+                icon={<AIIcon size={22} />}
+                title="AI where it adds real value"
+                description="Drafting, routing, summarising, and decision support — not for show."
+              />
+            </RevealOnScroll>
+            <RevealOnScroll delay={270}>
+              <Card
+                icon={<AdminIcon size={22} />}
+                title="Less admin, faster decisions"
+                description="Reduced follow-up. Better movement. Clearer visibility."
+              />
+            </RevealOnScroll>
           </div>
         </div>
       </section>
 
       {/* SECTION 4 — WHAT WE BUILD */}
-      <section className="border-t border-border/60 bg-background">
-        <div className="mx-auto max-w-6xl px-6 py-20">
+      <section className="border-t border-[var(--color-border-subtle)] bg-[var(--color-bg-2)]">
+        <div className="mx-auto max-w-6xl px-6 py-20 lg:px-10">
           <SectionHeader
             title="What we build"
             description="Custom systems that replace fragmented workflows with one clear operational layer."
           />
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
-            <Card
-              icon={<WorkflowIcon size={22} />}
-              title="Workflow Automation"
-              description="Digitise operational flows from request to approval to completion."
-            />
-            <Card
-              icon={<PortalIcon size={22} />}
-              title="Client & Staff Portals"
-              description="Role-based portals for onboarding, requests, status visibility, and document access."
-            />
-            <Card
-              icon={<ApprovalIcon size={22} />}
-              title="Approvals & Governance"
-              description="Approval chains, audit trails, escalation logic, and compliance visibility."
-            />
-            <Card
-              icon={<DashboardIcon size={22} />}
-              title="Dashboards & Reporting"
-              description="Live operational dashboards and automated reporting that remove status chasing."
-            />
-            <Card
-              icon={<KnowledgeIcon size={22} />}
-              title="SOP & Knowledge Copilots"
-              description="Procedures, standards, and answers accessible at the point of work."
-            />
-            <Card
-              icon={<AIIcon size={22} />}
-              title="AI-Assisted Operations"
-              description="Classification, summaries, draft generation, triage, and search where it improves speed."
-            />
+            <RevealOnScroll delay={0}>
+              <Card
+                icon={<WorkflowIcon size={22} />}
+                title="Workflow Automation"
+                description="Digitise operational flows from request to approval to completion."
+              />
+            </RevealOnScroll>
+            <RevealOnScroll delay={80}>
+              <Card
+                icon={<PortalIcon size={22} />}
+                title="Client & Staff Portals"
+                description="Role-based portals for onboarding, requests, status visibility, and document access."
+              />
+            </RevealOnScroll>
+            <RevealOnScroll delay={160}>
+              <Card
+                icon={<ApprovalIcon size={22} />}
+                title="Approvals & Governance"
+                description="Approval chains, audit trails, escalation logic, and compliance visibility."
+              />
+            </RevealOnScroll>
+            <RevealOnScroll delay={240}>
+              <Card
+                icon={<DashboardIcon size={22} />}
+                title="Dashboards & Reporting"
+                description="Live operational dashboards and automated reporting that remove status chasing."
+              />
+            </RevealOnScroll>
+            <RevealOnScroll delay={320}>
+              <Card
+                icon={<KnowledgeIcon size={22} />}
+                title="SOP & Knowledge Copilots"
+                description="Procedures, standards, and answers accessible at the point of work."
+              />
+            </RevealOnScroll>
+            <RevealOnScroll delay={400}>
+              <Card
+                icon={<AIIcon size={22} />}
+                title="AI-Assisted Operations"
+                description="Classification, summaries, draft generation, triage, and search where it improves speed."
+              />
+            </RevealOnScroll>
           </div>
         </div>
       </section>
@@ -176,44 +197,52 @@ export default function Home() {
       </section>
 
       {/* SECTION 5 — HOW CLIENTS START */}
-      <section className="border-t border-border/60 bg-background">
-        <div className="mx-auto max-w-6xl px-6 py-20">
+      <section className="border-t border-[var(--color-border-subtle)] bg-[var(--color-bg)]">
+        <div className="mx-auto max-w-6xl px-6 py-20 lg:px-10">
           <SectionHeader
             title="A low-risk path into custom systems"
             description="Start narrow, prove value, scale from there."
           />
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            <Card
-              number="01"
-              icon={<AuditIcon size={22} />}
-              title="Systems Opportunity Audit"
-              description="Paid diagnostic to identify the best workflow to digitise first and define the ROI case."
-            />
-            <Card
-              number="02"
-              icon={<PilotIcon size={22} />}
-              title="Proof-of-Value Pilot"
-              description="A tightly scoped system that solves one painful process quickly and visibly."
-            />
-            <Card
-              number="03"
-              icon={<BuildIcon size={22} />}
-              title="Core System Build"
-              description="Custom platform built around your workflows, approvals, reporting, and user roles."
-            />
-            <Card
-              number="04"
-              icon={<RetainerIcon size={22} />}
-              title="Managed Intelligence Retainer"
-              description="Ongoing optimisation, AI enhancements, reporting improvements, and system evolution."
-            />
+            <RevealOnScroll delay={0}>
+              <Card
+                number="01"
+                icon={<AuditIcon size={22} />}
+                title="Systems Opportunity Audit"
+                description="Paid diagnostic to identify the best workflow to digitise first and define the ROI case."
+              />
+            </RevealOnScroll>
+            <RevealOnScroll delay={90}>
+              <Card
+                number="02"
+                icon={<PilotIcon size={22} />}
+                title="Proof-of-Value Pilot"
+                description="A tightly scoped system that solves one painful process quickly and visibly."
+              />
+            </RevealOnScroll>
+            <RevealOnScroll delay={180}>
+              <Card
+                number="03"
+                icon={<BuildIcon size={22} />}
+                title="Core System Build"
+                description="Custom platform built around your workflows, approvals, reporting, and user roles."
+              />
+            </RevealOnScroll>
+            <RevealOnScroll delay={270}>
+              <Card
+                number="04"
+                icon={<RetainerIcon size={22} />}
+                title="Managed Intelligence Retainer"
+                description="Ongoing optimisation, AI enhancements, reporting improvements, and system evolution."
+              />
+            </RevealOnScroll>
           </div>
         </div>
       </section>
 
       {/* SECTION 6 — WHO IT'S FOR */}
-      <section className="relative overflow-hidden border-t border-border/60 bg-background">
+      <section className="relative overflow-hidden border-t border-[var(--color-border-subtle)] bg-[var(--color-bg-2)]">
         <AmbientMotion variant="mesh" />
         <div className="relative mx-auto max-w-6xl px-6 py-20">
           <SectionHeader
@@ -233,15 +262,14 @@ export default function Home() {
             ].map((item, i) => {
               const Icon = industryIcons[i];
               return (
-                <div
-                  key={item}
-                  className="flex items-center gap-3 bg-[var(--color-surface)] p-5 transition-colors hover:bg-[var(--color-bg-2)]"
-                >
-                  <span className="text-[var(--accent)]">
-                    <Icon size={18} />
-                  </span>
-                  <span className="text-[14px] text-[var(--color-fg)]">{item}</span>
-                </div>
+                <RevealOnScroll key={item} delay={i * 60}>
+                  <div className="flex items-center gap-3 bg-[var(--color-surface)] p-5 transition-colors hover:bg-[var(--color-bg-tinted)]">
+                    <span className="text-[var(--accent)]">
+                      <Icon size={18} />
+                    </span>
+                    <span className="text-[14px] text-[var(--color-fg)]">{item}</span>
+                  </div>
+                </RevealOnScroll>
               );
             })}
           </div>
@@ -295,7 +323,7 @@ export default function Home() {
       </section>
 
       {/* SECTION 7 — HOW WE WORK */}
-      <section className="relative overflow-hidden border-t border-border/60 bg-background">
+      <section className="relative overflow-hidden border-t border-[var(--color-border-subtle)] bg-[var(--color-bg-2)]">
         {/* Subtle accent wash behind the process steps */}
         <div
           className="pointer-events-none absolute inset-0"
@@ -309,50 +337,52 @@ export default function Home() {
         <div className="relative mx-auto max-w-6xl px-6 py-20">
           <SectionHeader title="How we work" />
 
-          <StepProcess
-            steps={[
-              {
-                number: "01",
-                title: "Audit",
-                icon: <AuditIcon size={18} />,
-                description:
-                  "Identify the bottleneck, map the workflow, define the improvement target.",
-              },
-              {
-                number: "02",
-                title: "Scope",
-                icon: <ScopeIcon size={18} />,
-                description:
-                  "Narrow to the highest-value use case with the clearest ROI path.",
-              },
-              {
-                number: "03",
-                title: "Prototype",
-                icon: <PrototypeIcon size={18} />,
-                description:
-                  "Shape the flow, interface, and logic so stakeholders see the future state.",
-              },
-              {
-                number: "04",
-                title: "Build",
-                icon: <BuildIcon size={18} />,
-                description:
-                  "Deploy production-ready with permissions, workflows, and reporting layers.",
-              },
-              {
-                number: "05",
-                title: "Optimise",
-                icon: <OptimiseIcon size={18} />,
-                description:
-                  "Refine and extend over time with support, analytics, and AI enhancements.",
-              },
-            ]}
-          />
+          <RevealOnScroll>
+            <StepProcess
+              steps={[
+                {
+                  number: "01",
+                  title: "Audit",
+                  icon: <AuditIcon size={18} />,
+                  description:
+                    "Identify the bottleneck, map the workflow, define the improvement target.",
+                },
+                {
+                  number: "02",
+                  title: "Scope",
+                  icon: <ScopeIcon size={18} />,
+                  description:
+                    "Narrow to the highest-value use case with the clearest ROI path.",
+                },
+                {
+                  number: "03",
+                  title: "Prototype",
+                  icon: <PrototypeIcon size={18} />,
+                  description:
+                    "Shape the flow, interface, and logic so stakeholders see the future state.",
+                },
+                {
+                  number: "04",
+                  title: "Build",
+                  icon: <BuildIcon size={18} />,
+                  description:
+                    "Deploy production-ready with permissions, workflows, and reporting layers.",
+                },
+                {
+                  number: "05",
+                  title: "Optimise",
+                  icon: <OptimiseIcon size={18} />,
+                  description:
+                    "Refine and extend over time with support, analytics, and AI enhancements.",
+                },
+              ]}
+            />
+          </RevealOnScroll>
         </div>
       </section>
 
       {/* SECTION 8 — GROUP CONNECTION */}
-      <section className="relative overflow-hidden border-t border-border/60 bg-background">
+      <section className="relative overflow-hidden border-t border-[var(--color-border-subtle)] bg-[var(--color-bg)]">
         <AmbientMotion variant="pulse" />
         <div className="relative mx-auto max-w-6xl px-6 py-20">
           <SectionHeader
@@ -361,39 +391,45 @@ export default function Home() {
           />
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-            <div
-              className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-7"
-              style={{ boxShadow: "var(--shadow-card)" }}
-            >
-              <h3 className="mb-1 text-[17px] font-semibold tracking-[var(--tracking-tight)] text-[var(--color-fg)]">
-                2KO Africa
-              </h3>
-              <p className="text-[14px] leading-relaxed text-[var(--color-fg-muted)]">
-                Training and improvement delivery across Southern Africa.
-              </p>
-            </div>
-            <div
-              className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-7"
-              style={{ boxShadow: "var(--shadow-card)" }}
-            >
-              <h3 className="mb-1 text-[17px] font-semibold tracking-[var(--tracking-tight)] text-[var(--color-fg)]">
-                Six Sigma South Africa
-              </h3>
-              <p className="text-[14px] leading-relaxed text-[var(--color-fg-muted)]">
-                Accreditation and consulting credibility for operational excellence.
-              </p>
-            </div>
-            <div
-              className="rounded-2xl border border-[var(--accent-border)] bg-[var(--color-surface)] p-7"
-              style={{ boxShadow: "var(--shadow-glow-accent)" }}
-            >
-              <h3 className="mb-1 text-[17px] font-semibold tracking-[var(--tracking-tight)] text-[var(--accent)]">
-                2KO Systems
-              </h3>
-              <p className="text-[14px] leading-relaxed text-[var(--color-fg-muted)]">
-                Custom systems and intelligent automation for established businesses.
-              </p>
-            </div>
+            <RevealOnScroll delay={0}>
+              <div
+                className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-7"
+                style={{ boxShadow: "var(--shadow-card)" }}
+              >
+                <h3 className="mb-1 text-[17px] font-semibold tracking-[var(--tracking-tight)] text-[var(--color-fg)]">
+                  2KO Africa
+                </h3>
+                <p className="text-[14px] leading-relaxed text-[var(--color-fg-muted)]">
+                  Training and improvement delivery across Southern Africa.
+                </p>
+              </div>
+            </RevealOnScroll>
+            <RevealOnScroll delay={120}>
+              <div
+                className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-7"
+                style={{ boxShadow: "var(--shadow-card)" }}
+              >
+                <h3 className="mb-1 text-[17px] font-semibold tracking-[var(--tracking-tight)] text-[var(--color-fg)]">
+                  Six Sigma South Africa
+                </h3>
+                <p className="text-[14px] leading-relaxed text-[var(--color-fg-muted)]">
+                  Accreditation and consulting credibility for operational excellence.
+                </p>
+              </div>
+            </RevealOnScroll>
+            <RevealOnScroll delay={240}>
+              <div
+                className="rounded-2xl border border-[var(--accent-border)] bg-[var(--color-surface)] p-7"
+                style={{ boxShadow: "var(--shadow-glow-accent)" }}
+              >
+                <h3 className="mb-1 text-[17px] font-semibold tracking-[var(--tracking-tight)] text-[var(--accent)]">
+                  2KO Systems
+                </h3>
+                <p className="text-[14px] leading-relaxed text-[var(--color-fg-muted)]">
+                  Custom systems and intelligent automation for established businesses.
+                </p>
+              </div>
+            </RevealOnScroll>
           </div>
         </div>
       </section>

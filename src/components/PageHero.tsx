@@ -34,26 +34,34 @@ export default function PageHero({
       data-page-hero="true"
       className="relative isolate overflow-hidden bg-[var(--color-bg)]"
     >
-      {/* Quiet radial wash at top, autotax-style focal point */}
+      {/* Tinted green radial wash anchoring the top of the hero */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 h-[420px]"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[520px]"
         style={{
           background:
-            "radial-gradient(120% 60% at 50% 0%, color-mix(in srgb, var(--accent) 8%, transparent), transparent 65%)",
+            "radial-gradient(120% 65% at 50% 0%, var(--tint-accent-medium), transparent 65%)",
+        }}
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-[340px] h-[260px]"
+        style={{
+          background:
+            "radial-gradient(60% 100% at 50% 100%, var(--tint-accent-soft), transparent 70%)",
         }}
       />
 
       <div className="relative mx-auto max-w-5xl px-6 pt-24 pb-20 text-center sm:pt-28 lg:px-10 lg:pt-32 lg:pb-24">
         <p
-          className="text-[12px] font-medium uppercase text-[var(--color-fg-muted)]"
+          className="reveal-up text-[12px] font-medium uppercase text-[var(--color-fg-muted)]"
           style={{ letterSpacing: "var(--tracking-eyebrow)" }}
         >
           {eyebrow}
         </p>
 
         <h1
-          className="mx-auto mt-6 max-w-4xl font-semibold text-[var(--color-fg)]"
+          className="reveal-up reveal-stagger-1 mx-auto mt-6 max-w-4xl font-semibold text-[var(--color-fg)]"
           style={{
             fontSize: "var(--text-display-lg)",
             letterSpacing: "var(--tracking-display)",
@@ -64,7 +72,7 @@ export default function PageHero({
         </h1>
 
         <p
-          className="mx-auto mt-6 max-w-2xl text-[var(--color-fg-muted)]"
+          className="reveal-up reveal-stagger-2 mx-auto mt-6 max-w-2xl text-[var(--color-fg-muted)]"
           style={{
             fontSize: "var(--text-headline)",
             letterSpacing: "var(--tracking-tight)",
@@ -75,7 +83,7 @@ export default function PageHero({
         </p>
 
         {(primaryCTA || secondaryCTA) && (
-          <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <div className="reveal-up reveal-stagger-3 mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
             {primaryCTA && primaryHref && (
               <Link
                 href={primaryHref}
