@@ -1,5 +1,4 @@
 import Link from "next/link";
-import VideoBackground from "@/components/VideoBackground";
 
 interface CTASectionProps {
   title: string;
@@ -21,44 +20,58 @@ export default function CTASection({
   // Existing pages still pass primaryHref="/get-started"; route those CTAs to
   // /contact so every "Book a Systems Audit" button on the site lands the
   // visitor on the contact form.
-  const resolvedPrimaryHref = primaryHref === "/get-started" ? "/contact" : primaryHref;
+  const resolvedPrimaryHref =
+    primaryHref === "/get-started" ? "/contact" : primaryHref;
 
   return (
-    <section className="border-t border-border/60 bg-background">
-      <div className="mx-auto max-w-6xl px-6 py-24">
-        <div className="relative overflow-hidden rounded-3xl border border-border bg-surface p-10 text-center md:p-16">
-          {/* Subtle plexus video sits at the bottom of the stack so the CTA card always feels alive */}
-          <VideoBackground
-            src="/videos/plexus-network.mp4"
-            poster="/videos/plexus-network-poster.jpg"
-            treatment="plexus"
-            overlay={0.55}
-          />
-
-          {/* Decorative glow */}
+    <section className="border-t border-[var(--color-border-subtle)] bg-[var(--color-bg)]">
+      <div className="mx-auto max-w-6xl px-6 py-24 lg:px-10">
+        <div
+          className="relative overflow-hidden rounded-3xl border border-[var(--color-border)] bg-[var(--color-surface)] p-10 text-center md:p-16"
+          style={{ boxShadow: "var(--shadow-popover)" }}
+        >
+          {/* Quiet accent wash, autotax-style focal point */}
           <div
-            className="pointer-events-none absolute -top-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-accent/10 blur-3xl"
+            className="pointer-events-none absolute inset-0"
             aria-hidden="true"
+            style={{
+              background:
+                "radial-gradient(120% 60% at 50% 0%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 65%)",
+            }}
           />
 
           <div className="relative z-10">
-            <h2 className="text-3xl font-semibold tracking-tight text-text md:text-4xl">
+            <h2
+              className="font-semibold text-[var(--color-fg)]"
+              style={{
+                fontSize: "var(--text-display-md)",
+                letterSpacing: "var(--tracking-display)",
+                lineHeight: 1.1,
+              }}
+            >
               {title}
             </h2>
-            <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-muted md:text-lg">
+            <p
+              className="mx-auto mt-5 max-w-xl text-[var(--color-fg-muted)]"
+              style={{
+                fontSize: "var(--text-headline)",
+                letterSpacing: "var(--tracking-tight)",
+                lineHeight: 1.5,
+              }}
+            >
               {description}
             </p>
-            <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Link
                 href={resolvedPrimaryHref}
-                className="rounded-full border border-accent-border bg-accent px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-accent2 hover:text-black active:bg-accent-pressed"
+                className="inline-flex items-center justify-center rounded-full bg-[var(--color-canvas-dark)] px-7 py-3 text-[14px] font-medium tracking-[-0.005em] text-white transition-all duration-200 hover:bg-[var(--color-canvas-dark-2)] active:scale-[0.98]"
               >
                 {primaryCTA}
               </Link>
               {secondaryCTA && secondaryHref && (
                 <Link
                   href={secondaryHref}
-                  className="rounded-full border border-border px-7 py-3.5 text-sm font-semibold text-text transition-colors hover:border-accent/40 hover:bg-white/5"
+                  className="inline-flex items-center justify-center rounded-full border border-[var(--color-border)] bg-white px-7 py-3 text-[14px] font-medium tracking-[-0.005em] text-[var(--color-fg)] transition-all duration-200 hover:bg-[var(--color-bg-2)] active:scale-[0.98]"
                 >
                   {secondaryCTA}
                 </Link>

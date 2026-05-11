@@ -133,7 +133,7 @@ export default function RootLayout({
       >
         <ChatWidget>
           <Header />
-          <main className="pt-[65px]">{children}</main>
+          <main style={{ paddingTop: "var(--topbar-h)" }}>{children}</main>
           <Footer />
         </ChatWidget>
       </body>

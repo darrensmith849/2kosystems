@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import SystemsAuditForm from "@/components/SystemsAuditForm";
-import VideoBackground from "@/components/VideoBackground";
 
 export const metadata: Metadata = {
   title: "Request a Systems Audit",
@@ -17,35 +16,44 @@ export const metadata: Metadata = {
 export default function GetStartedPage() {
   return (
     <>
-      <section className="relative overflow-hidden border-b border-border/60 bg-background">
-        {/* Color-matched plexus video — keeps the conversion-focused hero visually alive */}
-        <VideoBackground
-          src="/videos/plexus-network.mp4"
-          poster="/videos/plexus-network-poster.jpg"
-          treatment="plexus"
-          overlay={0.5}
-        />
-
+      <section className="relative overflow-hidden border-b border-[var(--color-border-subtle)] bg-[var(--color-bg)]">
         <div
-          className="pointer-events-none absolute inset-0"
+          className="pointer-events-none absolute inset-x-0 top-0 h-[420px]"
           aria-hidden="true"
           style={{
             background:
-              "radial-gradient(ellipse 60% 50% at 50% 0%, rgba(15,123,58,0.08) 0%, transparent 70%)",
+              "radial-gradient(120% 60% at 50% 0%, color-mix(in srgb, var(--accent) 8%, transparent), transparent 65%)",
           }}
         />
 
-        <div className="relative mx-auto max-w-6xl px-6 pb-24 pt-32 md:pt-40">
+        <div className="relative mx-auto max-w-6xl px-6 pb-24 pt-28 md:pt-32 lg:px-10">
           <div className="grid grid-cols-1 items-start gap-14 lg:grid-cols-[1fr_1.1fr]">
             {/* Left – context */}
             <div className="reveal-up">
-              <span className="mb-6 inline-block rounded-full bg-accent/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-accent">
+              <p
+                className="text-[12px] font-medium uppercase text-[var(--color-fg-muted)]"
+                style={{ letterSpacing: "var(--tracking-eyebrow)" }}
+              >
                 Get Started
-              </span>
-              <h1 className="text-3xl font-semibold leading-tight tracking-tight text-text sm:text-4xl md:text-5xl">
+              </p>
+              <h1
+                className="mt-5 font-semibold text-[var(--color-fg)]"
+                style={{
+                  fontSize: "var(--text-display-lg)",
+                  letterSpacing: "var(--tracking-display)",
+                  lineHeight: 1.05,
+                }}
+              >
                 Request a Systems Audit.
               </h1>
-              <p className="mt-6 max-w-lg text-base leading-relaxed text-muted md:text-lg">
+              <p
+                className="mt-5 max-w-lg text-[var(--color-fg-muted)]"
+                style={{
+                  fontSize: "var(--text-headline)",
+                  letterSpacing: "var(--tracking-tight)",
+                  lineHeight: 1.5,
+                }}
+              >
                 A short, focused diagnostic that maps your highest-pain workflow,
                 identifies the first system to build, and defines the ROI case
                 for a custom solution.
@@ -107,13 +115,16 @@ export default function GetStartedPage() {
             </div>
 
             {/* Right – form */}
-            <div className="card-tilt card-sweep reveal-up rounded-2xl border border-border bg-surface p-6 md:p-8">
+            <div
+              className="reveal-up rounded-3xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 md:p-8"
+              style={{ boxShadow: "var(--shadow-popover)" }}
+            >
               <div className="mb-6 flex items-center justify-between gap-4">
-                <h2 className="text-xl font-semibold text-text">
+                <h2 className="text-[20px] font-semibold tracking-[var(--tracking-tight)] text-[var(--color-fg)]">
                   Tell us about your operation
                 </h2>
-                <span className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent/[0.06] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest text-accent">
-                  <span className="contact-live-dot relative inline-block h-1.5 w-1.5 rounded-full bg-accent" />
+                <span className="inline-flex items-center gap-2 rounded-full border border-[var(--accent-border)] bg-[color-mix(in_srgb,var(--accent)_8%,transparent)] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[var(--tracking-eyebrow)] text-[var(--accent)]">
+                  <span className="contact-live-dot relative inline-block h-1.5 w-1.5 rounded-full bg-[var(--accent)]" />
                   1 business day
                 </span>
               </div>
@@ -123,19 +134,21 @@ export default function GetStartedPage() {
         </div>
       </section>
 
-      <section className="border-t border-border/60 bg-background">
-        <div className="mx-auto max-w-6xl px-6 py-16">
-          <div className="mx-auto grid max-w-3xl grid-cols-1 gap-px overflow-hidden rounded-2xl border border-border bg-border/80 sm:grid-cols-3">
+      <section className="border-t border-[var(--color-border-subtle)] bg-[var(--color-bg-2)]">
+        <div className="mx-auto max-w-6xl px-6 py-16 lg:px-10">
+          <div className="mx-auto grid max-w-3xl grid-cols-1 gap-px overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-border-subtle)] sm:grid-cols-3">
             {[
               { stat: "5,000+", label: "Businesses served across the 2KO group" },
               { stat: "Cross-sector", label: "Mining, agriculture, logistics, services" },
               { stat: "Process-led", label: "Grounded in operational improvement" },
             ].map((item) => (
-              <div key={item.label} className="bg-surface p-6 text-center">
-                <div className="text-2xl font-semibold text-accent">
+              <div key={item.label} className="bg-[var(--color-surface)] p-6 text-center">
+                <div className="text-[24px] font-semibold tracking-[var(--tracking-display)] text-[var(--accent)] tabular-nums">
                   {item.stat}
                 </div>
-                <div className="mt-1 text-xs text-muted">{item.label}</div>
+                <div className="mt-1 text-[12px] text-[var(--color-fg-muted)]">
+                  {item.label}
+                </div>
               </div>
             ))}
           </div>

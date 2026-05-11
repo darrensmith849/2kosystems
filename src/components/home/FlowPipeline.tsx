@@ -144,43 +144,67 @@ function MicroGraphic({ kind }: { kind: StageMicro }) {
 
 export default function FlowPipeline() {
   return (
-    <section className="relative overflow-hidden border-t border-border/60 bg-background">
-      <div className="pointer-events-none absolute inset-0 opacity-[0.18]" aria-hidden="true">
+    <section className="relative overflow-hidden border-t border-[var(--color-border-subtle)] bg-[var(--color-bg)]">
+      <div className="pointer-events-none absolute inset-0" aria-hidden="true">
         <div
           className="absolute inset-0"
           style={{
             background:
-              "radial-gradient(1100px 380px at 50% 50%, rgba(15,123,58,0.18) 0%, transparent 65%)",
+              "radial-gradient(1100px 380px at 50% 0%, color-mix(in srgb, var(--accent) 8%, transparent) 0%, transparent 65%)",
           }}
         />
       </div>
 
-      <div className="relative mx-auto max-w-6xl px-6 py-24">
+      <div className="relative mx-auto max-w-6xl px-6 py-24 lg:px-10">
         <div className="mx-auto max-w-2xl text-center">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-accent">
+          <p
+            className="mb-3 text-[12px] font-medium uppercase text-[var(--accent)]"
+            style={{ letterSpacing: "var(--tracking-eyebrow)" }}
+          >
             How systems take shape
           </p>
-          <h2 className="text-3xl font-semibold tracking-tight text-text md:text-4xl">
+          <h2
+            className="font-semibold text-[var(--color-fg)]"
+            style={{
+              fontSize: "var(--text-display-md)",
+              letterSpacing: "var(--tracking-display)",
+              lineHeight: 1.1,
+            }}
+          >
             Systems that move businesses forward.
           </h2>
-          <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-muted">
-            Every engagement runs the same five-stage rhythm — narrow at the start, scaled by the end.
+          <p
+            className="mx-auto mt-5 max-w-xl text-[var(--color-fg-muted)]"
+            style={{
+              fontSize: "var(--text-headline)",
+              letterSpacing: "var(--tracking-tight)",
+              lineHeight: 1.5,
+            }}
+          >
+            Every engagement runs the same five-stage rhythm — narrow at the
+            start, scaled by the end.
           </p>
         </div>
 
         {/* Pipeline */}
         <div className="relative mt-16">
           {/* Horizontal flow line — desktop only */}
-          <div className="pointer-events-none absolute left-0 right-0 top-[34px] hidden h-px lg:block" aria-hidden="true">
+          <div
+            className="pointer-events-none absolute left-0 right-0 top-[34px] hidden h-px lg:block"
+            aria-hidden="true"
+          >
             <div className="relative h-full w-full overflow-hidden">
               <div
                 className="absolute inset-0"
                 style={{
                   background:
-                    "linear-gradient(90deg, transparent 0%, rgba(15,123,58,0.45) 12%, rgba(15,123,58,0.55) 50%, rgba(15,123,58,0.45) 88%, transparent 100%)",
+                    "linear-gradient(90deg, transparent 0%, rgba(15,123,58,0.30) 12%, rgba(15,123,58,0.45) 50%, rgba(15,123,58,0.30) 88%, transparent 100%)",
                 }}
               />
-              <span className="flow-pipeline-pulse absolute top-1/2 -translate-y-1/2" aria-hidden="true" />
+              <span
+                className="flow-pipeline-pulse absolute top-1/2 -translate-y-1/2"
+                aria-hidden="true"
+              />
             </div>
           </div>
 
@@ -195,20 +219,29 @@ export default function FlowPipeline() {
                   } as React.CSSProperties
                 }
               >
-                <div className="flow-stage-node relative z-10 grid h-16 w-16 place-items-center rounded-full border border-white/15 bg-surface backdrop-blur-md">
-                  <span className="text-xs font-semibold tracking-widest text-text/90">
+                <div
+                  className="flow-stage-node relative z-10 grid h-16 w-16 place-items-center rounded-full border border-[var(--color-border)] bg-[var(--color-surface)]"
+                  style={{ boxShadow: "var(--shadow-card)" }}
+                >
+                  <span
+                    className="text-[12px] font-semibold text-[var(--color-fg)]/90 tabular-nums"
+                    style={{ letterSpacing: "var(--tracking-eyebrow)" }}
+                  >
                     {String(i + 1).padStart(2, "0")}
                   </span>
                 </div>
 
-                <div className="mt-5 w-full overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)]">
+                <div
+                  className="mt-5 w-full overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5"
+                  style={{ boxShadow: "var(--shadow-card)" }}
+                >
                   <div className="mb-4">
                     <MicroGraphic kind={stage.micro} />
                   </div>
-                  <h3 className="text-base font-semibold text-text">
+                  <h3 className="text-[16px] font-semibold tracking-[var(--tracking-tight)] text-[var(--color-fg)]">
                     {stage.label}
                   </h3>
-                  <p className="mt-2 text-xs leading-relaxed text-muted">
+                  <p className="mt-2 text-[12px] leading-relaxed text-[var(--color-fg-muted)]">
                     {stage.note}
                   </p>
                 </div>

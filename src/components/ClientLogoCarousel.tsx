@@ -193,7 +193,8 @@ function BrandTrack() {
             alt={brand.name}
             loading="lazy"
             draggable={false}
-            className="h-16 md:h-20 w-auto max-w-[220px] object-contain brightness-0 invert opacity-80 hover:opacity-100 transition-opacity duration-300 select-none"
+            className="h-12 w-auto max-w-[180px] select-none object-contain opacity-60 transition-opacity duration-300 hover:opacity-90 md:h-14"
+            style={{ filter: "brightness(0)" }}
           />
         </span>
       ))}
@@ -203,65 +204,53 @@ function BrandTrack() {
 
 export default function ClientLogoCarousel() {
   return (
-    <section className="relative py-12 overflow-hidden bg-background">
+    <section className="relative overflow-hidden border-y border-[var(--color-border-subtle)] bg-[var(--color-bg-2)] py-14">
       <div className="relative w-full">
-        <div className="relative overflow-hidden border-y border-white/15 bg-white/[0.04] backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08),0_30px_60px_-30px_rgba(0,0,0,0.6)]">
-          {/* Soft accent glow inside the glass panel */}
+        <div className="relative z-[1] mx-auto max-w-6xl px-6 pt-2">
+          <p
+            className="mb-1.5 text-center text-[12px] font-medium uppercase text-[var(--color-fg-meta)]"
+            style={{ letterSpacing: "var(--tracking-eyebrow)" }}
+          >
+            Trusted by
+          </p>
+          <p className="mb-8 text-center text-[18px] font-semibold tracking-[var(--tracking-tight)] text-[var(--color-fg)] lg:text-[20px]">
+            Leading organisations across the 2KO group
+          </p>
+        </div>
+
+        {/* Industries row */}
+        <div className="relative overflow-hidden">
           <div
-            className="absolute inset-0 pointer-events-none"
+            className="pointer-events-none absolute left-0 top-0 bottom-0 z-10 w-24 bg-gradient-to-r from-[var(--color-bg-2)] to-transparent"
             aria-hidden="true"
-            style={{
-              backgroundImage:
-                "radial-gradient(ellipse 55% 180% at 28% 50%, var(--accent-soft) 0%, transparent 65%), radial-gradient(ellipse 55% 180% at 72% 50%, var(--accent-soft) 0%, transparent 65%)",
-            }}
           />
-
-          <div className="relative z-[1] mx-auto max-w-6xl px-6 pt-8">
-            <p className="text-center text-xs font-semibold uppercase tracking-[0.18em] text-muted2 mb-1.5">
-              Trusted by
-            </p>
-            <p className="text-center font-bold text-xl lg:text-2xl text-text mb-6">
-              <span className="bg-gradient-to-r from-accent to-accent2 bg-clip-text text-transparent">
-                Leading Organisations
-              </span>{" "}
-              <span>Across the 2KO Group</span>
-            </p>
+          <div
+            className="pointer-events-none absolute right-0 top-0 bottom-0 z-10 w-24 bg-gradient-to-l from-[var(--color-bg-2)] to-transparent"
+            aria-hidden="true"
+          />
+          <div
+            className="flex items-center gap-8 overflow-hidden"
+            aria-label="Industries served"
+          >
+            <IndustryTrack />
           </div>
+        </div>
 
-          {/* Industries row */}
-          <div className="relative overflow-hidden">
-            <div
-              className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-background to-transparent z-10"
-              aria-hidden="true"
-            />
-            <div
-              className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-background to-transparent z-10"
-              aria-hidden="true"
-            />
-            <div
-              className="flex gap-8 items-center overflow-hidden"
-              aria-label="Industries served"
-            >
-              <IndustryTrack />
-            </div>
-          </div>
-
-          {/* Brand row */}
-          <div className="relative overflow-hidden mt-3 pb-6">
-            <div
-              className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-background to-transparent z-10"
-              aria-hidden="true"
-            />
-            <div
-              className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-background to-transparent z-10"
-              aria-hidden="true"
-            />
-            <div
-              className="flex gap-16 items-center overflow-hidden"
-              aria-label="Clients and reference brands"
-            >
-              <BrandTrack />
-            </div>
+        {/* Brand row */}
+        <div className="relative mt-3 overflow-hidden pb-2">
+          <div
+            className="pointer-events-none absolute left-0 top-0 bottom-0 z-10 w-24 bg-gradient-to-r from-[var(--color-bg-2)] to-transparent"
+            aria-hidden="true"
+          />
+          <div
+            className="pointer-events-none absolute right-0 top-0 bottom-0 z-10 w-24 bg-gradient-to-l from-[var(--color-bg-2)] to-transparent"
+            aria-hidden="true"
+          />
+          <div
+            className="flex items-center gap-16 overflow-hidden"
+            aria-label="Clients and reference brands"
+          >
+            <BrandTrack />
           </div>
         </div>
       </div>

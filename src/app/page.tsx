@@ -9,7 +9,6 @@ import OperationsLattice from "@/components/home/OperationsLattice";
 import FlowPipeline from "@/components/home/FlowPipeline";
 import BeforeAfter from "@/components/home/BeforeAfter";
 import SystemEngine from "@/components/home/SystemEngine";
-import VideoBackground from "@/components/VideoBackground";
 import {
   WorkflowIcon,
   PortalIcon,
@@ -134,26 +133,42 @@ export default function Home() {
         </div>
       </section>
 
-      {/* SECTION 4.5 — VIDEO ACCENT (dashboard) */}
-      <section className="relative overflow-hidden border-t border-border/60 bg-background">
-        <div className="mx-auto max-w-6xl px-6 py-12 md:py-16">
-          <div className="relative h-64 overflow-hidden rounded-3xl border border-border md:h-80">
-            <VideoBackground
-              src="/videos/dashboard.mp4"
-              poster="/videos/dashboard-poster.jpg"
-              treatment="dashboard"
-              overlay={0.35}
+      {/* SECTION 4.5 — VISUAL ACCENT (light callout) */}
+      <section className="relative overflow-hidden border-t border-[var(--color-border-subtle)] bg-[var(--color-bg-2)]">
+        <div className="mx-auto max-w-6xl px-6 py-16 md:py-20 lg:px-10">
+          <div
+            className="relative overflow-hidden rounded-3xl border border-[var(--color-border)] bg-[var(--color-surface)] p-8 md:p-12"
+            style={{ boxShadow: "var(--shadow-card)" }}
+          >
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0"
+              style={{
+                background:
+                  "radial-gradient(90% 60% at 100% 0%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 60%)",
+              }}
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-background/80 via-background/30 to-transparent" />
-            <div className="absolute inset-y-0 left-0 flex max-w-xl flex-col justify-center p-6 md:p-12">
-              <p className="text-xs font-semibold uppercase tracking-widest text-accent">
+            <div className="relative max-w-2xl">
+              <p
+                className="text-[12px] font-medium uppercase text-[var(--accent)]"
+                style={{ letterSpacing: "var(--tracking-eyebrow)" }}
+              >
                 Live operational visibility
               </p>
-              <p className="mt-3 text-xl font-semibold leading-tight text-white md:text-2xl">
-                One operational layer. Less chasing, faster decisions, clearer reporting.
+              <p
+                className="mt-3 font-semibold text-[var(--color-fg)]"
+                style={{
+                  fontSize: "var(--text-display-md)",
+                  letterSpacing: "var(--tracking-display)",
+                  lineHeight: 1.1,
+                }}
+              >
+                One operational layer. Less chasing, faster decisions, clearer
+                reporting.
               </p>
-              <p className="mt-3 max-w-md text-sm leading-relaxed text-white/70 md:text-base">
-                Dashboards, approvals, and workflows that show what is actually happening — not what people remember to update.
+              <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-[var(--color-fg-muted)]">
+                Dashboards, approvals, and workflows that show what is actually
+                happening — not what people remember to update.
               </p>
             </div>
           </div>
@@ -205,7 +220,7 @@ export default function Home() {
             title="Best suited to analogue-heavy and operations-led businesses"
           />
 
-          <div className="mx-auto grid max-w-4xl grid-cols-1 gap-px overflow-hidden rounded-2xl border border-border bg-border/80 sm:grid-cols-2">
+          <div className="mx-auto grid max-w-4xl grid-cols-1 gap-px overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-border-subtle)] sm:grid-cols-2">
             {[
               "Mining and mining-adjacent operations",
               "Agriculture and agri-support businesses",
@@ -220,12 +235,12 @@ export default function Home() {
               return (
                 <div
                   key={item}
-                  className="flex items-center gap-3 bg-surface p-5"
+                  className="flex items-center gap-3 bg-[var(--color-surface)] p-5 transition-colors hover:bg-[var(--color-bg-2)]"
                 >
-                  <span className="text-accent/70">
+                  <span className="text-[var(--accent)]">
                     <Icon size={18} />
                   </span>
-                  <span className="text-sm text-text">{item}</span>
+                  <span className="text-[14px] text-[var(--color-fg)]">{item}</span>
                 </div>
               );
             })}
@@ -242,22 +257,36 @@ export default function Home() {
       {/* SECTION 6.7 — SYSTEMS ENGINE */}
       <SystemEngine />
 
-      {/* SECTION 6.8 — VIDEO ACCENT (binary code reveal) */}
-      <section className="relative overflow-hidden border-t border-border/60 bg-background">
-        <div className="mx-auto max-w-6xl px-6 py-12 md:py-16">
-          <div className="relative h-56 overflow-hidden rounded-3xl border border-border md:h-72">
-            <VideoBackground
-              src="/videos/binary-code.mp4"
-              poster="/videos/binary-code-poster.jpg"
-              treatment="binary"
-              overlay={0.35}
+      {/* SECTION 6.8 — VISUAL ACCENT (light) */}
+      <section className="relative overflow-hidden border-t border-[var(--color-border-subtle)] bg-[var(--color-bg)]">
+        <div className="mx-auto max-w-6xl px-6 py-16 md:py-20 lg:px-10">
+          <div
+            className="relative overflow-hidden rounded-3xl border border-[var(--color-border)] bg-[var(--color-bg-2)] p-8 text-right md:p-12"
+            style={{ boxShadow: "var(--shadow-card)" }}
+          >
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0"
+              style={{
+                background:
+                  "radial-gradient(90% 60% at 0% 100%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 60%)",
+              }}
             />
-            <div className="absolute inset-0 bg-gradient-to-l from-background/80 via-background/30 to-transparent" />
-            <div className="absolute inset-y-0 right-0 flex max-w-md flex-col justify-center p-6 text-right md:p-10">
-              <p className="text-xs font-semibold uppercase tracking-widest text-accent">
+            <div className="relative ml-auto max-w-md">
+              <p
+                className="text-[12px] font-medium uppercase text-[var(--accent)]"
+                style={{ letterSpacing: "var(--tracking-eyebrow)" }}
+              >
                 Custom-built, not assembled
               </p>
-              <p className="mt-2 text-lg font-semibold text-white md:text-xl">
+              <p
+                className="mt-2 font-semibold text-[var(--color-fg)]"
+                style={{
+                  fontSize: "var(--text-headline)",
+                  letterSpacing: "var(--tracking-tight)",
+                  lineHeight: 1.2,
+                }}
+              >
                 Production-ready code shaped by your operational reality.
               </p>
             </div>
@@ -267,16 +296,15 @@ export default function Home() {
 
       {/* SECTION 7 — HOW WE WORK */}
       <section className="relative overflow-hidden border-t border-border/60 bg-background">
-        {/* Subtle AI-generated process visual */}
-        <div className="pointer-events-none absolute inset-0 opacity-[0.18]" aria-hidden="true">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/imagery/generated/process-mesh.png"
-            alt=""
-            className="h-full w-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-background via-background/60 to-background" />
-        </div>
+        {/* Subtle accent wash behind the process steps */}
+        <div
+          className="pointer-events-none absolute inset-0"
+          aria-hidden="true"
+          style={{
+            background:
+              "radial-gradient(60% 50% at 50% 0%, color-mix(in srgb, var(--accent) 5%, transparent), transparent 70%)",
+          }}
+        />
 
         <div className="relative mx-auto max-w-6xl px-6 py-20">
           <SectionHeader title="How we work" />
@@ -333,27 +361,36 @@ export default function Home() {
           />
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-            <div className="rounded-2xl border border-border bg-surface p-7">
-              <h3 className="mb-1 text-base font-semibold text-text">
+            <div
+              className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-7"
+              style={{ boxShadow: "var(--shadow-card)" }}
+            >
+              <h3 className="mb-1 text-[17px] font-semibold tracking-[var(--tracking-tight)] text-[var(--color-fg)]">
                 2KO Africa
               </h3>
-              <p className="text-sm leading-relaxed text-muted">
+              <p className="text-[14px] leading-relaxed text-[var(--color-fg-muted)]">
                 Training and improvement delivery across Southern Africa.
               </p>
             </div>
-            <div className="rounded-2xl border border-border bg-surface p-7">
-              <h3 className="mb-1 text-base font-semibold text-text">
+            <div
+              className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-7"
+              style={{ boxShadow: "var(--shadow-card)" }}
+            >
+              <h3 className="mb-1 text-[17px] font-semibold tracking-[var(--tracking-tight)] text-[var(--color-fg)]">
                 Six Sigma South Africa
               </h3>
-              <p className="text-sm leading-relaxed text-muted">
+              <p className="text-[14px] leading-relaxed text-[var(--color-fg-muted)]">
                 Accreditation and consulting credibility for operational excellence.
               </p>
             </div>
-            <div className="rounded-2xl border border-accent/30 bg-surface p-7">
-              <h3 className="mb-1 text-base font-semibold text-accent">
+            <div
+              className="rounded-2xl border border-[var(--accent-border)] bg-[var(--color-surface)] p-7"
+              style={{ boxShadow: "var(--shadow-glow-accent)" }}
+            >
+              <h3 className="mb-1 text-[17px] font-semibold tracking-[var(--tracking-tight)] text-[var(--accent)]">
                 2KO Systems
               </h3>
-              <p className="text-sm leading-relaxed text-muted">
+              <p className="text-[14px] leading-relaxed text-[var(--color-fg-muted)]">
                 Custom systems and intelligent automation for established businesses.
               </p>
             </div>

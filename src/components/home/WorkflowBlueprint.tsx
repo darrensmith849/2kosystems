@@ -55,7 +55,10 @@ const FLOW_PATH =
 
 export default function WorkflowBlueprint() {
   return (
-    <div className="relative overflow-hidden rounded-3xl border border-border bg-surface">
+    <div
+      className="relative overflow-hidden rounded-3xl border border-[var(--color-border)] bg-[var(--color-surface)]"
+      style={{ boxShadow: "var(--shadow-popover)" }}
+    >
       {/* Drifting blueprint grid */}
       <div className="blueprint-grid pointer-events-none absolute inset-0" aria-hidden="true" />
 
@@ -81,14 +84,25 @@ export default function WorkflowBlueprint() {
 
       <div className="relative px-6 py-10 md:px-10 md:py-12">
         <div className="mb-8 max-w-2xl">
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-accent">
+          <p
+            className="text-[12px] font-medium uppercase text-[var(--accent)]"
+            style={{ letterSpacing: "var(--tracking-eyebrow)" }}
+          >
             Engagement blueprint
           </p>
-          <h3 className="mt-2 text-2xl font-semibold tracking-tight text-text md:text-3xl">
+          <h3
+            className="mt-2 font-semibold text-[var(--color-fg)]"
+            style={{
+              fontSize: "var(--text-display-md)",
+              letterSpacing: "var(--tracking-display)",
+              lineHeight: 1.1,
+            }}
+          >
             Audit → Scope → Prototype → Build → Optimise
           </h3>
-          <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted md:text-base">
-            Each engagement runs the same five-stage rhythm. Narrow at the start, validated quickly, scaled deliberately.
+          <p className="mt-3 max-w-xl text-[14px] leading-relaxed text-[var(--color-fg-muted)] md:text-[16px]">
+            Each engagement runs the same five-stage rhythm. Narrow at the
+            start, validated quickly, scaled deliberately.
           </p>
         </div>
 
@@ -116,7 +130,7 @@ export default function WorkflowBlueprint() {
             {/* Underlying flow path (faded) */}
             <path
               d={FLOW_PATH}
-              stroke="rgba(184,196,200,0.18)"
+              stroke="rgba(15,123,58,0.18)"
               strokeWidth="1.4"
               fill="none"
             />
@@ -170,14 +184,22 @@ export default function WorkflowBlueprint() {
                 top: `${(s.cy / 360) * 100}%`,
               }}
             >
-              <div className="grid h-12 w-12 place-items-center rounded-full border border-accent/40 bg-surface/95 backdrop-blur-md shadow-[0_8px_24px_-12px_rgba(15,123,58,0.6)]">
-                <span className="text-[11px] font-semibold tracking-widest text-text">
+              <div
+                className="grid h-12 w-12 place-items-center rounded-full border border-[var(--accent-border)] bg-[var(--color-surface)]"
+                style={{ boxShadow: "var(--shadow-glow-accent)" }}
+              >
+                <span
+                  className="text-[11px] font-semibold text-[var(--color-fg)] tabular-nums"
+                  style={{ letterSpacing: "var(--tracking-eyebrow)" }}
+                >
                   {String(i + 1).padStart(2, "0")}
                 </span>
               </div>
               <div className="mt-3 hidden text-center md:block">
-                <p className="text-sm font-semibold text-text">{s.label}</p>
-                <p className="mt-0.5 text-[11px] text-muted2">{s.note}</p>
+                <p className="text-[14px] font-semibold tracking-[var(--tracking-tight)] text-[var(--color-fg)]">
+                  {s.label}
+                </p>
+                <p className="mt-0.5 text-[11px] text-[var(--color-fg-meta)]">{s.note}</p>
               </div>
             </div>
           ))}
@@ -188,12 +210,12 @@ export default function WorkflowBlueprint() {
           {STAGES.map((s, i) => (
             <li
               key={`m-${s.label}`}
-              className="rounded-lg border border-white/10 bg-white/[0.03] px-3 py-2"
+              className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-2)] px-3 py-2"
             >
-              <span className="mr-2 font-mono text-[10px] text-accent">
+              <span className="mr-2 font-mono text-[10px] text-[var(--accent)] tabular-nums">
                 {String(i + 1).padStart(2, "0")}
               </span>
-              <span className="text-text">{s.label}</span>
+              <span className="text-[var(--color-fg)]">{s.label}</span>
             </li>
           ))}
         </ul>

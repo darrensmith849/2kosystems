@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import PageHero from "@/components/PageHero";
 import CTASection from "@/components/CTASection";
-import VideoBackground from "@/components/VideoBackground";
 import TypewriterText from "@/components/TypewriterText";
 import RevealOnScroll from "@/components/RevealOnScroll";
 
@@ -130,23 +129,38 @@ export default function SolutionsPage() {
         videoTreatment="dashboard"
       />
 
-      {/* Animated showcase strip — dashboard video accent between hero and detail list */}
-      <section className="border-t border-border/60 bg-background">
-        <div className="mx-auto max-w-6xl px-6 pt-16">
-          <div className="relative h-56 overflow-hidden rounded-3xl border border-border md:h-72">
-            <VideoBackground
-              src="/videos/dashboard.mp4"
-              poster="/videos/dashboard-poster.jpg"
-              treatment="dashboard"
-              overlay={0.35}
+      {/* Light callout strip between hero and the detailed solution list */}
+      <section className="border-t border-[var(--color-border-subtle)] bg-[var(--color-bg)]">
+        <div className="mx-auto max-w-6xl px-6 pt-16 lg:px-10">
+          <div
+            className="relative overflow-hidden rounded-3xl border border-[var(--color-border)] bg-[var(--color-surface)] p-8 md:p-12"
+            style={{ boxShadow: "var(--shadow-card)" }}
+          >
+            <div
+              className="pointer-events-none absolute inset-0"
+              aria-hidden="true"
+              style={{
+                background:
+                  "radial-gradient(90% 60% at 100% 0%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 65%)",
+              }}
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-background/80 via-background/20 to-transparent" />
-            <div className="absolute inset-y-0 left-0 flex max-w-md flex-col justify-center p-6 md:p-10">
-              <p className="text-xs font-semibold uppercase tracking-widest text-accent">
+            <div className="relative max-w-2xl">
+              <p
+                className="text-[12px] font-medium uppercase text-[var(--accent)]"
+                style={{ letterSpacing: "var(--tracking-eyebrow)" }}
+              >
                 Live operational visibility
               </p>
-              <p className="mt-2 text-lg font-semibold text-white md:text-xl">
-                Dashboards that show what is actually happening — not what people remember to update.
+              <p
+                className="mt-2 font-semibold text-[var(--color-fg)]"
+                style={{
+                  fontSize: "var(--text-headline)",
+                  letterSpacing: "var(--tracking-tight)",
+                  lineHeight: 1.2,
+                }}
+              >
+                Dashboards that show what is actually happening — not what people
+                remember to update.
               </p>
             </div>
           </div>
@@ -194,7 +208,7 @@ export default function SolutionsPage() {
                     <h3 className="mb-1.5 text-xs font-semibold uppercase tracking-widest text-accent">
                       Example workflow
                     </h3>
-                    <div className="min-h-[6.5rem] rounded-lg border border-white/10 bg-white/[0.03] p-4 font-mono text-[13px] leading-relaxed text-text">
+                    <div className="min-h-[6.5rem] rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-2)] p-4 font-mono text-[13px] leading-relaxed text-[var(--color-fg)]">
                       <TypewriterText text={solution.exampleFlow} speed={16} startDelay={300} />
                     </div>
 

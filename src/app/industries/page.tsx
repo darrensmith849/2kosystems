@@ -259,12 +259,12 @@ export default function IndustriesPage() {
                     ))}
                   </ul>
 
-                  <div className="flex flex-wrap gap-2 border-t border-white/10 pt-4">
+                  <div className="flex flex-wrap gap-2 border-t border-[var(--color-border-subtle)] pt-4">
                     {industry.relatedSolutions.map((rs) => (
                       <Link
                         key={rs.href}
                         href={rs.href}
-                        className="inline-block rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[11px] font-medium text-muted transition-colors hover:border-accent/40 hover:bg-white/[0.06] hover:text-text"
+                        className="inline-block rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-1 text-[11px] font-medium text-[var(--color-fg-muted)] transition-colors hover:border-[var(--accent-border)] hover:bg-[var(--color-bg-2)] hover:text-[var(--color-fg)]"
                       >
                         {rs.label}
                       </Link>

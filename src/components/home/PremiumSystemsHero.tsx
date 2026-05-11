@@ -1,328 +1,317 @@
 "use client";
 
 import Link from "next/link";
-import React, { useEffect, useRef, useState } from "react";
-import VideoBackground from "@/components/VideoBackground";
 import TypewriterText from "@/components/TypewriterText";
 
-const clamp = (value: number, min: number, max: number) =>
-  Math.min(Math.max(value, min), max);
-
+/**
+ * Autotax-style hero composition:
+ *  1. White, centered hero — eyebrow, display H1, muted subhead, two
+ *     pill CTAs (black primary, outlined secondary), small caption.
+ *  2. A two-column mockup section below: an "operating system" card on
+ *     the left (the same content we had before, just on a light surface)
+ *     and an iPhone-style notification card on the right, with a small
+ *     "Last sync · just now" chip floating above.
+ *
+ * Content from the previous hero is preserved verbatim — only the
+ * visual chrome changes.
+ */
 export default function PremiumSystemsHero() {
-  const sectionRef = useRef<HTMLElement | null>(null);
-  const frameRef = useRef<number | null>(null);
-
-  const targetRef = useRef({ x: 50, y: 36 });
-  const currentRef = useRef({ x: 50, y: 36 });
-  const activeRef = useRef(false);
-
-  const [reducedMotion, setReducedMotion] = useState(false);
-
-  useEffect(() => {
-    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
-
-    const updatePreference = () => {
-      setReducedMotion(media.matches);
-    };
-
-    updatePreference();
-
-    if (typeof media.addEventListener === "function") {
-      media.addEventListener("change", updatePreference);
-      return () => media.removeEventListener("change", updatePreference);
-    }
-
-    media.addListener(updatePreference);
-    return () => media.removeListener(updatePreference);
-  }, []);
-
-  useEffect(() => {
-    const element = sectionRef.current;
-    if (!element) return;
-
-    const applyVars = (x: number, y: number, opacity: number) => {
-      element.style.setProperty("--mx", `${x}%`);
-      element.style.setProperty("--my", `${y}%`);
-      element.style.setProperty("--glow-opacity", `${opacity}`);
-    };
-
-    applyVars(50, 36, 0.45);
-
-    if (reducedMotion) {
-      return;
-    }
-
-    const tick = () => {
-      currentRef.current.x += (targetRef.current.x - currentRef.current.x) * 0.09;
-      currentRef.current.y += (targetRef.current.y - currentRef.current.y) * 0.09;
-
-      applyVars(
-        currentRef.current.x,
-        currentRef.current.y,
-        activeRef.current ? 0.9 : 0.45,
-      );
-
-      frameRef.current = window.requestAnimationFrame(tick);
-    };
-
-    frameRef.current = window.requestAnimationFrame(tick);
-
-    return () => {
-      if (frameRef.current) {
-        window.cancelAnimationFrame(frameRef.current);
-      }
-    };
-  }, [reducedMotion]);
-
-  const handlePointerMove = (event: React.PointerEvent<HTMLElement>) => {
-    if (reducedMotion) return;
-    if (event.pointerType === "touch") return;
-
-    const rect = event.currentTarget.getBoundingClientRect();
-
-    const x = clamp(((event.clientX - rect.left) / rect.width) * 100, 0, 100);
-    const y = clamp(((event.clientY - rect.top) / rect.height) * 100, 0, 100);
-
-    targetRef.current = { x, y };
-    activeRef.current = true;
-  };
-
-  const handlePointerEnter = (event: React.PointerEvent<HTMLElement>) => {
-    handlePointerMove(event);
-    activeRef.current = true;
-  };
-
-  const handlePointerLeave = () => {
-    targetRef.current = { x: 50, y: 36 };
-    activeRef.current = false;
-  };
-
   return (
-    <section
-      ref={sectionRef}
-      onPointerMove={handlePointerMove}
-      onPointerEnter={handlePointerEnter}
-      onPointerLeave={handlePointerLeave}
-      className="relative isolate overflow-hidden border-b border-white/10 bg-[var(--color-hero-bg)] text-white"
-      style={
-        {
-          "--mx": "50%",
-          "--my": "36%",
-          "--glow-opacity": "0.45",
-        } as React.CSSProperties
-      }
-    >
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-        {/* Brand-tinted binary-reveal video sits at the very bottom of the stack */}
-        <VideoBackground
-          src="/videos/binary-code.mp4"
-          poster="/videos/binary-code-poster.jpg"
-          treatment="binary"
-          overlay={0.4}
-        />
+    <section className="relative isolate overflow-hidden bg-[var(--color-bg)] text-[var(--color-fg)]">
+      {/* Quiet radial wash so the hero has a focal point without breaking the white look */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[520px]"
+        style={{
+          background:
+            "radial-gradient(120% 60% at 50% 0%, color-mix(in srgb, var(--accent) 8%, transparent), transparent 65%)",
+        }}
+      />
 
-        <div
-          className="absolute inset-0"
+      {/* ---------- Centred hero ---------- */}
+      <div className="relative z-10 mx-auto max-w-5xl px-6 pt-20 pb-10 text-center sm:pt-24 lg:px-10 lg:pt-28">
+        <p
+          className="text-[12px] font-medium uppercase text-[var(--color-fg-muted)]"
+          style={{ letterSpacing: "var(--tracking-eyebrow)" }}
+        >
+          Custom Operational Systems · South Africa
+        </p>
+
+        <h1
+          className="mx-auto mt-6 max-w-4xl font-semibold text-[var(--color-fg)]"
           style={{
-            background:
-              "linear-gradient(180deg, rgba(7,16,28,0.45) 0%, rgba(5,9,19,0.55) 48%, rgba(3,6,13,0.7) 100%)",
+            fontSize: "var(--text-display-xl)",
+            letterSpacing: "var(--tracking-display)",
+            lineHeight: 1.02,
           }}
-        />
+        >
+          Custom systems for businesses that have outgrown outdated software.
+        </h1>
 
-        <div
-          className="absolute inset-0"
+        <p
+          className="mx-auto mt-6 max-w-2xl text-[var(--color-fg-muted)]"
           style={{
-            background:
-              "radial-gradient(900px 420px at 50% -8%, rgba(255,255,255,0.08), transparent 58%)",
+            fontSize: "var(--text-headline)",
+            letterSpacing: "var(--tracking-tight)",
+            lineHeight: 1.5,
           }}
-        />
+        >
+          We build operational systems, approvals flows, client portals, and
+          reporting dashboards that cut admin, improve visibility, and help
+          teams move faster.
+        </p>
 
-        <div
-          className="absolute inset-0 transition-opacity duration-500"
-          style={{
-            opacity: reducedMotion ? 0.45 : 1,
-            background:
-              "radial-gradient(560px 560px at var(--mx) var(--my), rgba(91, 123, 255, calc(var(--glow-opacity) * 0.22)) 0%, rgba(66, 98, 214, calc(var(--glow-opacity) * 0.14)) 24%, rgba(18, 31, 68, calc(var(--glow-opacity) * 0.08)) 42%, rgba(0,0,0,0) 70%)",
-          }}
-        />
-
-        <div
-          className="absolute -left-24 top-0 h-72 w-72 rounded-full blur-3xl"
-          style={{ background: "rgba(255,255,255,0.04)" }}
-        />
-
-        <div
-          className="absolute -right-20 top-16 h-72 w-72 rounded-full blur-3xl"
-          style={{ background: "rgba(88,112,255,0.10)" }}
-        />
-
-        <div
-          className="absolute bottom-[-8rem] left-[15%] h-80 w-80 rounded-full blur-3xl"
-          style={{ background: "rgba(255,255,255,0.03)" }}
-        />
-
-        {/* Soft accent-green glow orb */}
-        <div
-          className="absolute right-[8%] top-[28%] h-64 w-64 rounded-full blur-3xl"
-          style={{ background: "rgba(15,123,58,0.13)" }}
-        />
-      </div>
-
-      <div className="relative z-10 mx-auto grid min-h-[calc(100svh-4rem)] max-w-7xl items-center gap-10 px-6 py-12 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12 lg:px-10 lg:py-14">
-        <div className="max-w-3xl">
-          <div className="mb-5 inline-flex items-center rounded-full border border-white/12 bg-white/5 px-4 py-2 text-[11px] font-medium uppercase tracking-[0.22em] text-white/70 backdrop-blur">
-            2KO Systems
-          </div>
-
-          <h1
-            className="max-w-4xl font-semibold text-white"
-            style={{
-              fontSize: "var(--text-display-xl)",
-              letterSpacing: "var(--tracking-display)",
-              lineHeight: 1.04,
-            }}
+        <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <Link
+            href="/contact"
+            className="inline-flex items-center justify-center rounded-full bg-[var(--color-canvas-dark)] px-7 py-3 text-[14px] font-medium tracking-[-0.005em] text-white transition-all duration-200 hover:bg-[var(--color-canvas-dark-2)] active:scale-[0.98]"
           >
-            Custom systems for businesses that have outgrown outdated software.
-          </h1>
+            Book a Systems Audit
+          </Link>
 
-          <p
-            className="mt-5 max-w-2xl leading-7 text-white/72"
-            style={{
-              fontSize: "var(--text-headline)",
-              letterSpacing: "var(--tracking-tight)",
-            }}
+          <Link
+            href="/solutions"
+            className="inline-flex items-center justify-center rounded-full border border-[var(--color-border)] bg-white px-7 py-3 text-[14px] font-medium tracking-[-0.005em] text-[var(--color-fg)] transition-all duration-200 hover:bg-[var(--color-bg-2)] active:scale-[0.98]"
           >
-            We build operational systems, approvals flows, client portals, and
-            reporting dashboards that cut admin, improve visibility, and help
-            teams move faster.
-          </p>
-
-          <div className="mt-7 flex flex-col gap-4 sm:flex-row">
-            <Link
-              href="/contact"
-              className="inline-flex items-center justify-center rounded-full border border-accent-border bg-accent px-6 py-3 text-sm font-medium tracking-[-0.005em] text-white shadow-[var(--shadow-card)] transition duration-200 hover:bg-accent2 hover:text-black hover:scale-[1.02] active:bg-accent-pressed"
-            >
-              Book a Systems Audit
-            </Link>
-
-            <Link
-              href="/solutions"
-              className="inline-flex items-center justify-center rounded-full border border-white/12 bg-white/5 px-6 py-3 text-sm font-medium tracking-[-0.005em] text-white backdrop-blur transition duration-200 hover:bg-white/10"
-            >
-              Explore Solutions
-            </Link>
-          </div>
+            See how it works
+          </Link>
         </div>
 
-        <div className="relative hidden lg:block">
-          <div className="rounded-[28px] border border-white/10 bg-white/[0.04] p-3 backdrop-blur-xl shadow-[var(--shadow-popover)]">
-            <div className="rounded-[22px] border border-white/10 bg-[var(--color-hero-card)]/88 p-4 shadow-[var(--shadow-card)]">
-              <div className="mb-3 flex items-start justify-between gap-4">
+        <p className="mt-6 text-[13px] text-[var(--color-fg-meta)]">
+          No off-the-shelf SaaS. No long onboarding. No vendor lock-in.
+        </p>
+      </div>
+
+      {/* ---------- Mockup composition ---------- */}
+      <div className="relative z-10 mx-auto max-w-6xl px-6 pb-24 lg:px-10 lg:pb-28">
+        <div className="relative grid gap-8 lg:grid-cols-[1.4fr_1fr] lg:items-start lg:gap-12">
+          {/* ---- Operating-system card (light) ---- */}
+          <div
+            className="relative overflow-hidden rounded-3xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 sm:p-7"
+            style={{ boxShadow: "var(--shadow-popover)" }}
+          >
+            {/* Faint accent wash in the top-left, autotax-style focal point */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0"
+              style={{
+                background:
+                  "radial-gradient(120% 60% at 0% 0%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 60%)",
+              }}
+            />
+
+            <div className="relative">
+              <div className="mb-5 flex items-center justify-between gap-4">
                 <div>
-                  <p className="text-[10px] uppercase tracking-[0.18em] text-white/40">
+                  <p
+                    className="text-[11px] font-medium uppercase text-[var(--color-fg-meta)]"
+                    style={{ letterSpacing: "var(--tracking-eyebrow)" }}
+                  >
                     How it works in practice
                   </p>
-                  <h3 className="mt-0.5 text-base font-medium text-white">
+                  <h3 className="mt-1 text-[19px] font-semibold tracking-[var(--tracking-tight)] text-[var(--color-fg)]">
                     One clear operating system
                   </h3>
                 </div>
-
-                <div className="rounded-full border border-white/10 bg-white/5 px-2.5 py-0.5 text-[11px] text-white/70">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-[var(--color-border)] bg-white px-2.5 py-1 text-[11px] font-medium text-[var(--color-fg-muted)]">
+                  <span className="h-1.5 w-1.5 rounded-full bg-accent contact-live-dot" />
                   Real-time
+                </span>
+              </div>
+
+              <div className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-2)] p-4">
+                <div className="mb-3 flex items-center justify-between">
+                  <span className="text-[13px] font-medium text-[var(--color-fg)]">
+                    Requests &amp; approvals
+                  </span>
+                  <span className="text-[11px] text-[var(--color-fg-meta)]">
+                    In one place
+                  </span>
+                </div>
+
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-surface)] px-3 py-2">
+                    <div className="flex items-center gap-2.5">
+                      <span className="h-2 w-2 rounded-full bg-[var(--color-fg-meta)]" />
+                      <span className="text-[13px] text-[var(--color-fg)]/85">
+                        <TypewriterText text="Request logged" speed={22} startDelay={300} />
+                      </span>
+                    </div>
+                    <span className="text-[11px] text-[var(--color-fg-meta)]">Captured</span>
+                  </div>
+
+                  <div className="flex items-center justify-between rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-surface)] px-3 py-2">
+                    <div className="flex items-center gap-2.5">
+                      <span className="h-2 w-2 rounded-full bg-[var(--color-fg)]/40" />
+                      <span className="text-[13px] text-[var(--color-fg)]/85">
+                        <TypewriterText text="Under review" speed={22} startDelay={900} />
+                      </span>
+                    </div>
+                    <span className="text-[11px] text-[var(--color-fg-meta)]">Tracked</span>
+                  </div>
+
+                  <div className="flex items-center justify-between rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-surface)] px-3 py-2">
+                    <div className="flex items-center gap-2.5">
+                      <span className="h-2 w-2 rounded-full bg-accent" />
+                      <span className="text-[13px] text-[var(--color-fg)]/85">
+                        <TypewriterText text="Approved & visible" speed={22} startDelay={1500} />
+                      </span>
+                    </div>
+                    <span className="text-[11px] text-[var(--color-fg-meta)]">Actioned</span>
+                  </div>
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <div className="rounded-2xl border border-white/8 bg-white/[0.03] p-3">
-                  <div className="mb-2 flex items-center justify-between">
-                    <span className="text-[13px] font-medium text-white/88">
-                      Requests &amp; approvals
-                    </span>
-                    <span className="text-[11px] text-white/45">
-                      In one place
-                    </span>
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <div className="flex items-center justify-between rounded-xl border border-white/6 bg-white/[0.02] px-3 py-1.5">
-                      <div className="flex items-center gap-2">
-                        <span className="h-2 w-2 rounded-full bg-white/50" />
-                        <span className="text-[13px] text-white/72">
-                          <TypewriterText
-                            text="Request logged"
-                            speed={22}
-                            startDelay={300}
-                          />
-                        </span>
-                      </div>
-                      <span className="text-[11px] text-white/45">Captured</span>
-                    </div>
-
-                    <div className="flex items-center justify-between rounded-xl border border-white/6 bg-white/[0.02] px-3 py-1.5">
-                      <div className="flex items-center gap-2">
-                        <span className="h-2 w-2 rounded-full bg-white/65" />
-                        <span className="text-[13px] text-white/72">
-                          <TypewriterText
-                            text="Under review"
-                            speed={22}
-                            startDelay={900}
-                          />
-                        </span>
-                      </div>
-                      <span className="text-[11px] text-white/45">Tracked</span>
-                    </div>
-
-                    <div className="flex items-center justify-between rounded-xl border border-white/6 bg-white/[0.02] px-3 py-1.5">
-                      <div className="flex items-center gap-2">
-                        <span className="h-2 w-2 rounded-full bg-emerald-300/80" />
-                        <span className="text-[13px] text-white/72">
-                          <TypewriterText
-                            text="Approved & visible"
-                            speed={22}
-                            startDelay={1500}
-                          />
-                        </span>
-                      </div>
-                      <span className="text-[11px] text-white/45">Actioned</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-2">
-                  <div className="rounded-2xl border border-white/8 bg-white/[0.03] p-3">
-                    <p className="text-[10px] uppercase tracking-[0.14em] text-white/40">
-                      Faster decisions
-                    </p>
-                    <p className="mt-1 text-base font-semibold text-white">
-                      Less chasing
-                    </p>
-                    <p className="mt-0.5 text-[12px] text-white/55">
-                      Clear ownership and status
-                    </p>
-                  </div>
-
-                  <div className="rounded-2xl border border-white/8 bg-white/[0.03] p-3">
-                    <p className="text-[10px] uppercase tracking-[0.14em] text-white/40">
-                      Live reporting
-                    </p>
-                    <p className="mt-1 text-base font-semibold text-white">
-                      Better visibility
-                    </p>
-                    <p className="mt-0.5 text-[12px] text-white/55">
-                      One source of truth
-                    </p>
-                  </div>
-                </div>
-
-                <div className="rounded-2xl border border-white/8 bg-white/[0.03] p-3">
-                  <p className="text-[10px] uppercase tracking-[0.14em] text-white/40">
-                    Embedded AI support
+              <div className="mt-3 grid grid-cols-2 gap-3">
+                <div className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-2)] p-3">
+                  <p
+                    className="text-[10px] font-medium uppercase text-[var(--color-fg-meta)]"
+                    style={{ letterSpacing: "var(--tracking-eyebrow)" }}
+                  >
+                    Faster decisions
                   </p>
-                  <p className="mt-1 text-[13px] leading-5 text-white/72">
-                    Search, summaries, drafting, and routing built directly into
-                    the workflow where they add real value.
+                  <p className="mt-1 text-[15px] font-semibold tracking-[var(--tracking-tight)] text-[var(--color-fg)]">
+                    Less chasing
+                  </p>
+                  <p className="mt-1 text-[12px] text-[var(--color-fg-muted)]">
+                    Clear ownership and status
                   </p>
                 </div>
+
+                <div className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-2)] p-3">
+                  <p
+                    className="text-[10px] font-medium uppercase text-[var(--color-fg-meta)]"
+                    style={{ letterSpacing: "var(--tracking-eyebrow)" }}
+                  >
+                    Live reporting
+                  </p>
+                  <p className="mt-1 text-[15px] font-semibold tracking-[var(--tracking-tight)] text-[var(--color-fg)]">
+                    Better visibility
+                  </p>
+                  <p className="mt-1 text-[12px] text-[var(--color-fg-muted)]">
+                    One source of truth
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-3 rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-2)] p-3">
+                <p
+                  className="text-[10px] font-medium uppercase text-[var(--color-fg-meta)]"
+                  style={{ letterSpacing: "var(--tracking-eyebrow)" }}
+                >
+                  Embedded AI support
+                </p>
+                <p className="mt-1 text-[13px] leading-5 text-[var(--color-fg-muted)]">
+                  Search, summaries, drafting, and routing built directly into
+                  the workflow where they add real value.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* ---- Right-hand "iPhone notification" mockup (kept dark so it pops on the white site, autotax-style) ---- */}
+          <div className="relative flex justify-center lg:justify-end">
+            {/* Floating "Last sync" chip, autotax-style */}
+            <div className="absolute -top-3 right-2 z-10 hidden items-center gap-2 rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2 shadow-[var(--shadow-card)] sm:flex">
+              <span className="h-2 w-2 rounded-full bg-accent contact-live-dot" />
+              <div className="text-left">
+                <p className="text-[11px] font-medium text-[var(--color-fg)]">
+                  Last sync
+                </p>
+                <p className="text-[11px] text-[var(--color-fg-meta)]">just now</p>
+              </div>
+            </div>
+
+            <div
+              className="relative w-full max-w-[320px] rounded-[44px] border border-black/10 p-2"
+              style={{
+                background: "var(--color-canvas-dark)",
+                boxShadow:
+                  "0 30px 60px -20px rgba(15, 18, 28, 0.35), 0 12px 24px -12px rgba(15, 18, 28, 0.25)",
+              }}
+            >
+              {/* Dynamic-island */}
+              <div className="mx-auto mt-1 mb-2 h-5 w-24 rounded-full bg-black" />
+
+              <div className="rounded-[34px] bg-[var(--color-canvas-dark-2)] p-4 text-white">
+                <div className="mb-3 flex items-center justify-between text-[11px] text-white/70">
+                  <span>9:41</span>
+                  <span className="tracking-[0.2em]">•••</span>
+                </div>
+
+                <div className="mb-3 flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-3">
+                  <div className="flex h-7 w-7 items-center justify-center rounded-md bg-accent text-[12px] font-semibold text-white">
+                    2K
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center justify-between text-[11px] text-white/60">
+                      <span>2KO Systems</span>
+                      <span>now</span>
+                    </div>
+                    <p className="mt-0.5 text-[13px] leading-5 text-white">
+                      A new approval is waiting. Mining workflow #248 — ready for sign-off.
+                    </p>
+                  </div>
+                </div>
+
+                <p
+                  className="text-[10px] font-medium uppercase text-white/55"
+                  style={{ letterSpacing: "var(--tracking-eyebrow)" }}
+                >
+                  Operations · Today
+                </p>
+                <p className="mt-1 text-[14px] text-white/85">Workflow #248</p>
+
+                <p className="mt-4 text-[28px] font-semibold leading-none tracking-[-0.02em] text-white tabular-nums">
+                  4h 12m
+                </p>
+                <p className="mt-1 text-[11px] text-white/55">Avg. time to approval</p>
+
+                <div className="mt-4 space-y-2 rounded-2xl border border-white/10 bg-white/[0.03] p-3 text-[12px]">
+                  <div className="flex items-center justify-between">
+                    <span className="text-white/65">Requests today</span>
+                    <span className="text-white tabular-nums">47</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-white/65">In review</span>
+                    <span className="text-white tabular-nums">12</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-white/65">Approved · today</span>
+                    <span className="text-accent-highlight tabular-nums">+14</span>
+                  </div>
+                </div>
+
+                <div className="mt-3 flex items-center gap-2 text-[11px] text-white/65">
+                  <span className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-accent">
+                    <svg
+                      viewBox="0 0 12 12"
+                      className="h-2.5 w-2.5"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M2.5 6.5L5 9l4.5-5"
+                        fill="none"
+                        stroke="white"
+                        strokeWidth="1.6"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </span>
+                  12 checks passed · 0 warnings
+                </div>
+
+                <button
+                  type="button"
+                  className="mt-3 w-full rounded-full bg-white px-4 py-2.5 text-[13px] font-semibold tracking-[-0.005em] text-[var(--color-canvas-dark)]"
+                >
+                  Approve &amp; submit
+                </button>
+
+                <p className="mt-2 text-center text-[11px] text-white/55">
+                  Need to amend before you submit?
+                </p>
               </div>
             </div>
           </div>

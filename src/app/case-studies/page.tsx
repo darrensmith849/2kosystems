@@ -191,8 +191,8 @@ function Pill({ tone, label }: { tone: "before" | "after"; label: string }) {
       className={[
         "inline-block rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-widest",
         tone === "before"
-          ? "bg-white/[0.06] text-muted"
-          : "bg-accent/15 text-accent",
+          ? "border border-[var(--color-border)] bg-[var(--color-bg-2)] text-[var(--color-fg-muted)]"
+          : "border border-[var(--accent-border)] bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] text-[var(--accent)]",
       ].join(" ")}
     >
       {label}
@@ -248,7 +248,7 @@ export default function CaseStudiesPage() {
                     <span className="inline-block rounded-full bg-accent/10 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-accent">
                       {study.sector}
                     </span>
-                    <span className="inline-block rounded-full border border-white/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-widest text-muted2">
+                    <span className="inline-block rounded-full border border-[var(--color-border)] bg-[var(--color-bg-2)] px-3 py-1 text-[10px] font-semibold uppercase tracking-[var(--tracking-eyebrow)] text-[var(--color-fg-meta)]">
                       Representative example
                     </span>
                   </div>
@@ -287,7 +287,7 @@ export default function CaseStudiesPage() {
 
                   {/* Before / After cards */}
                   <div className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-2">
-                    <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-5">
+                    <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-2)] p-5">
                       <Pill tone="before" label="Workflow before" />
                       <ul className="mt-4 flex flex-col gap-2.5">
                         {study.before.map((line) => (
@@ -298,7 +298,7 @@ export default function CaseStudiesPage() {
                         ))}
                       </ul>
                     </div>
-                    <div className="rounded-2xl border border-accent/30 bg-accent/[0.04] p-5">
+                    <div className="rounded-2xl border border-[var(--accent-border)] bg-[color-mix(in_srgb,var(--accent)_6%,transparent)] p-5">
                       <Pill tone="after" label="Workflow after" />
                       <ul className="mt-4 flex flex-col gap-2.5">
                         {study.after.map((line) => (
@@ -326,8 +326,8 @@ export default function CaseStudiesPage() {
                         ))}
                       </ul>
                     </div>
-                    <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-5">
-                      <h3 className="mb-2 text-xs font-semibold uppercase tracking-widest text-accent">
+                    <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-2)] p-5">
+                      <h3 className="mb-2 text-[11px] font-semibold uppercase tracking-[var(--tracking-eyebrow)] text-[var(--accent)]">
                         What this proves
                       </h3>
                       <p className="text-sm leading-relaxed text-text">

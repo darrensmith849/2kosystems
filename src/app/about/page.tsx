@@ -70,7 +70,7 @@ export default function AboutPage() {
             ].map((label) => (
               <div
                 key={label}
-                className="flex items-center justify-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-4 py-2.5 text-center text-xs font-semibold uppercase tracking-widest text-text"
+                className="flex items-center justify-center gap-2 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-2.5 text-center text-[11px] font-semibold uppercase tracking-[var(--tracking-eyebrow)] text-[var(--color-fg)] shadow-[var(--shadow-card)]"
               >
                 <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
                 {label}

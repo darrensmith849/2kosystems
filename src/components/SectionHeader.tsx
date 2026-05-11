@@ -14,12 +14,15 @@ export default function SectionHeader({
   return (
     <div className={`reveal-up mb-12 ${centered ? "text-center" : ""}`}>
       {eyebrow && (
-        <span className="mb-4 inline-block rounded-full border border-accent-border bg-[color-mix(in_srgb,var(--accent)_12%,transparent)] px-3 py-1 text-[11px] font-semibold uppercase tracking-[var(--tracking-eyebrow)] text-accent">
+        <p
+          className="mb-4 text-[12px] font-medium uppercase text-[var(--color-fg-muted)]"
+          style={{ letterSpacing: "var(--tracking-eyebrow)" }}
+        >
           {eyebrow}
-        </span>
+        </p>
       )}
       <h2
-        className="font-semibold text-text"
+        className="font-semibold text-[var(--color-fg)]"
         style={{
           fontSize: "var(--text-display-md)",
           letterSpacing: "var(--tracking-display)",
@@ -30,10 +33,11 @@ export default function SectionHeader({
       </h2>
       {description && (
         <p
-          className="mx-auto mt-5 max-w-2xl leading-relaxed text-muted"
+          className={`mt-5 text-[var(--color-fg-muted)] ${centered ? "mx-auto max-w-2xl" : "max-w-2xl"}`}
           style={{
             fontSize: "var(--text-headline)",
             letterSpacing: "var(--tracking-tight)",
+            lineHeight: 1.5,
           }}
         >
           {description}

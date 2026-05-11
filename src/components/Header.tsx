@@ -25,35 +25,43 @@ export default function Header() {
         height: "var(--topbar-h)",
       }}
     >
-      <div className="mx-auto flex h-full max-w-6xl items-center justify-between px-6">
-        <Link href="/" className="flex items-center gap-2">
+      <div className="mx-auto flex h-full max-w-7xl items-center justify-between px-6 lg:px-10">
+        {/* Brand — invert the existing white logo so it renders black on the light header */}
+        <Link href="/" className="flex items-center gap-2.5">
           <Image
             src="/2ko-logo.png"
             alt="2KO Systems"
             width={140}
             height={40}
-            className="h-8 w-auto"
+            className="h-7 w-auto"
+            style={{ filter: "brightness(0)" }}
             priority
           />
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden items-center gap-8 md:flex">
+        <nav className="hidden items-center gap-7 md:flex">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="text-[13px] tracking-[-0.005em] text-[var(--color-fg-muted)] transition-colors hover:text-[var(--color-fg)]"
+              className="text-[14px] tracking-[-0.005em] text-[var(--color-fg)]/80 transition-colors hover:text-[var(--color-fg)]"
             >
               {link.label}
             </Link>
           ))}
         </nav>
 
-        <div className="hidden md:block">
+        <div className="hidden items-center gap-3 md:flex">
+          <Link
+            href="/get-started"
+            className="text-[14px] tracking-[-0.005em] text-[var(--color-fg)]/80 transition-colors hover:text-[var(--color-fg)]"
+          >
+            Sign in
+          </Link>
           <Link
             href="/contact"
-            className="rounded-full border border-accent-border bg-accent px-5 py-2.5 text-[13px] font-semibold tracking-[-0.005em] text-white shadow-[var(--shadow-card)] transition-all duration-200 hover:bg-accent2 hover:text-black active:bg-accent-pressed"
+            className="inline-flex items-center justify-center rounded-full bg-[var(--color-canvas-dark)] px-5 py-2.5 text-[13px] font-medium tracking-[-0.005em] text-white transition-all duration-200 hover:bg-[var(--color-canvas-dark-2)] active:scale-[0.98]"
           >
             Book a Systems Audit
           </Link>
@@ -66,13 +74,13 @@ export default function Header() {
           aria-label="Toggle menu"
         >
           <span
-            className={`h-0.5 w-6 bg-text transition-all ${mobileOpen ? "translate-y-2 rotate-45" : ""}`}
+            className={`h-0.5 w-6 bg-[var(--color-fg)] transition-all ${mobileOpen ? "translate-y-2 rotate-45" : ""}`}
           />
           <span
-            className={`h-0.5 w-6 bg-text transition-all ${mobileOpen ? "opacity-0" : ""}`}
+            className={`h-0.5 w-6 bg-[var(--color-fg)] transition-all ${mobileOpen ? "opacity-0" : ""}`}
           />
           <span
-            className={`h-0.5 w-6 bg-text transition-all ${mobileOpen ? "-translate-y-2 -rotate-45" : ""}`}
+            className={`h-0.5 w-6 bg-[var(--color-fg)] transition-all ${mobileOpen ? "-translate-y-2 -rotate-45" : ""}`}
           />
         </button>
       </div>
@@ -92,7 +100,7 @@ export default function Header() {
                 key={link.href}
                 href={link.href}
                 onClick={() => setMobileOpen(false)}
-                className="text-[14px] tracking-[-0.005em] text-[var(--color-fg-muted)] transition-colors hover:text-[var(--color-fg)]"
+                className="text-[15px] tracking-[-0.005em] text-[var(--color-fg)]/85 transition-colors hover:text-[var(--color-fg)]"
               >
                 {link.label}
               </Link>
@@ -100,7 +108,7 @@ export default function Header() {
             <Link
               href="/contact"
               onClick={() => setMobileOpen(false)}
-              className="mt-2 inline-block rounded-full border border-accent-border bg-accent px-5 py-2.5 text-center text-[13px] font-semibold tracking-[-0.005em] text-white shadow-[var(--shadow-card)] transition-colors hover:bg-accent2 hover:text-black active:bg-accent-pressed"
+              className="mt-2 inline-block rounded-full bg-[var(--color-canvas-dark)] px-5 py-2.5 text-center text-[13px] font-medium tracking-[-0.005em] text-white transition-colors hover:bg-[var(--color-canvas-dark-2)]"
             >
               Book a Systems Audit
             </Link>

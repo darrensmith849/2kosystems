@@ -142,8 +142,9 @@ export default function SystemsAuditForm() {
   }
 
   const inputClass =
-    "w-full truncate rounded-lg border border-white/10 bg-white/[0.03] px-3 py-2.5 text-sm text-text placeholder:text-muted2 focus:border-accent/60 focus:outline-none";
-  const labelClass = "mb-1.5 block text-xs font-semibold uppercase tracking-widest text-muted2";
+    "w-full truncate rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2.5 text-[14px] text-[var(--color-fg)] placeholder:text-[var(--color-fg-meta)] focus:border-[var(--accent)] focus:outline-none focus:ring-2 focus:ring-[color-mix(in_srgb,var(--accent)_15%,transparent)]";
+  const labelClass =
+    "mb-1.5 block text-[11px] font-semibold uppercase tracking-[var(--tracking-eyebrow)] text-[var(--color-fg-meta)]";
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5">
@@ -241,7 +242,7 @@ export default function SystemsAuditForm() {
       <button
         type="submit"
         disabled={status === "submitting"}
-        className="mt-2 inline-flex items-center justify-center rounded-full border border-accent-border bg-accent px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-accent2 hover:text-black disabled:opacity-60"
+        className="mt-2 inline-flex items-center justify-center rounded-full bg-[var(--color-canvas-dark)] px-7 py-3 text-[14px] font-medium tracking-[-0.005em] text-white transition-all duration-200 hover:bg-[var(--color-canvas-dark-2)] active:scale-[0.98] disabled:opacity-60"
       >
         {status === "submitting" ? "Sending…" : "Request a Systems Audit"}
       </button>

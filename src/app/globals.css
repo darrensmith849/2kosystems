@@ -1,79 +1,94 @@
 @import "tailwindcss";
 
 :root {
-  /* ----- Existing surface / text / accent / border tokens (unchanged) ----- */
-  --background: #000000;
-  --background-secondary: #0d0d0f;
-  --surface: #111113;
-  --text: #f5f5f5;
-  --muted: #a1a1aa;
-  --muted2: #71717a;
-  --accent: #0f7b3a;
-  --accent2: #B8C4C8;
-  --accent-pressed: #0a6630;
-  --accent-soft: rgba(15, 123, 58, 0.14);
-  --accent-border: rgba(184, 196, 200, 0.18);
-  --accent-highlight: #B8C4C8;
-  --border: #27272a;
+  /* ============================================================
+     2KO Systems · Light theme (autotax-style)
+     ============================================================
+     Pure white surfaces, near-black text, brand-green accent used
+     sparingly. Every visual choice in the codebase reads from a
+     token in this block; nothing should hardcode a hex elsewhere.
+  */
+
+  /* ----- Backwards-compatible aliases for the legacy tokens that
+     existing components reference (bg-background, text-text,
+     text-muted, border-border, bg-surface, text-accent, etc.).
+     Flipping these flips the whole site. ----- */
+  --background: #ffffff;
+  --background-secondary: #fafafa;
+  --surface: #ffffff;
+  --text: #0a0a0a;
+  --muted: #5e6373;          /* mid gray — body subtext */
+  --muted2: #8a90a0;         /* lighter gray — meta */
+  --accent: #0f7b3a;         /* brand green, unchanged */
+  --accent2: #0a6630;        /* darker green for hover */
+  --accent-pressed: #084f24;
+  --accent-soft: rgba(15, 123, 58, 0.08);
+  --accent-border: rgba(15, 123, 58, 0.18);
+  --accent-highlight: #0f7b3a;
+  --border: rgba(0, 0, 0, 0.08);
   --font-geist-sans: var(--font-geist-sans);
   --font-geist-mono: var(--font-geist-mono);
 
-  /* ----- Apple-style token aliases (additive, same colors as above) -----
-     A small, named contract every component can read directly via
-     bg-[var(--color-bg)] / text-[var(--color-fg)] etc.  Keeping the
-     legacy tokens above so nothing breaks; new work should prefer
-     these names. */
-  --color-bg: var(--background);
-  --color-bg-2: var(--background-secondary);
-  --color-surface: var(--surface);
-  --color-surface-2: #15151a;
-  --color-surface-3: #1a1a20;
+  /* ----- Apple-style token contract -----
+     A small, named contract every component reads directly via
+     bg-[var(--color-bg)] / text-[var(--color-fg)] etc. */
+  --color-bg: #ffffff;
+  --color-bg-2: #fafafa;         /* off-white wash for alt sections */
+  --color-bg-3: #f4f5f7;         /* slightly cooler off-white */
+  --color-surface: #ffffff;       /* card surface */
+  --color-surface-2: #fbfbfd;     /* subtle alt card */
+  --color-surface-3: #f4f5f7;     /* third tier */
 
-  /* Glass chrome — translucent + backdrop-blur targets.  Same dark
-     base as --background but with alpha so a video/gradient behind
-     can bleed through. */
-  --color-topbar-bg: rgba(8, 8, 12, 0.72);
-  --color-sidebar-bg: rgba(8, 8, 12, 0.72);
+  /* Glass chrome — translucent white + backdrop-blur */
+  --color-topbar-bg: rgba(255, 255, 255, 0.72);
+  --color-sidebar-bg: rgba(255, 255, 255, 0.72);
 
-  /* Two stray hex values we used inline before, now lifted into the
-     token system so future edits land in one place. */
-  --color-hero-bg: #050913;
-  --color-hero-card: #081120;
+  /* Special "dark canvas" surfaces, used for phone mockups and
+     the like (where we keep one or two dark cards on the white
+     site to mirror autotax's iPhone composition). */
+  --color-canvas-dark: #0a0a0a;
+  --color-canvas-dark-2: #14141a;
+
+  /* Hero / section backgrounds (light) */
+  --color-hero-bg: #ffffff;
+  --color-hero-card: #ffffff;
 
   /* Lines */
-  --color-border-subtle: rgba(255, 255, 255, 0.06);
-  --color-border-faint: rgba(255, 255, 255, 0.04);
+  --color-border: rgba(0, 0, 0, 0.08);
+  --color-border-subtle: rgba(0, 0, 0, 0.06);
+  --color-border-faint: rgba(0, 0, 0, 0.04);
 
   /* Text */
-  --color-fg: var(--text);
-  --color-fg-muted: var(--muted);
-  --color-fg-meta: var(--muted2);
+  --color-fg: #0a0a0a;
+  --color-fg-muted: #5e6373;
+  --color-fg-meta: #8a90a0;
 
   /* Hover wash */
-  --color-hover: rgba(255, 255, 255, 0.05);
+  --color-hover: rgba(0, 0, 0, 0.04);
 
-  /* Elevation — soft, Apple-ish, no heavy drop shadows */
-  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.35), 0 8px 24px -12px rgba(0, 0, 0, 0.55);
-  --shadow-popover: 0 12px 32px -8px rgba(0, 0, 0, 0.6), 0 2px 6px rgba(0, 0, 0, 0.3);
-  --shadow-glow-accent: 0 0 0 1px var(--accent-border), 0 8px 28px -10px rgba(15, 123, 58, 0.45);
+  /* Elevation — feather-soft, Apple-ish */
+  --shadow-card: 0 1px 2px rgba(15, 18, 28, 0.04), 0 8px 24px -12px rgba(15, 18, 28, 0.10);
+  --shadow-popover: 0 12px 32px -8px rgba(15, 18, 28, 0.14), 0 2px 6px rgba(15, 18, 28, 0.06);
+  --shadow-glow-accent: 0 0 0 1px var(--accent-border), 0 8px 28px -10px rgba(15, 123, 58, 0.28);
 
   /* Layout */
-  --topbar-h: 65px;
+  --topbar-h: 72px;
   --content-max: 1200px;
 
-  /* Type scale — fluid clamp() so headlines don't need breakpoints */
-  --text-display-xl: clamp(40px, 5.2vw, 64px);
-  --text-display-lg: clamp(32px, 4vw, 48px);
-  --text-display-md: clamp(28px, 3.4vw, 38px);
-  --text-headline:   clamp(22px, 2.4vw, 28px);
+  /* Type scale — fluid clamp() so headlines don't need breakpoints.
+     Tuned generous to match autotax's display headlines. */
+  --text-display-xl: clamp(46px, 7.2vw, 92px);
+  --text-display-lg: clamp(36px, 5.0vw, 64px);
+  --text-display-md: clamp(28px, 3.4vw, 44px);
+  --text-headline:   clamp(20px, 1.9vw, 24px);
   --text-title:      clamp(17px, 1.4vw, 19px);
-  --text-body:       15px;
+  --text-body:       16px;
   --text-meta:       13px;
   --text-caption:    11px;
 
-  /* Tracking — tight on display, looser on body */
-  --tracking-display: -0.022em;
-  --tracking-tight:   -0.012em;
+  /* Tracking */
+  --tracking-display: -0.028em;
+  --tracking-tight:   -0.014em;
   --tracking-eyebrow: 0.18em;
 }
 
@@ -113,29 +128,13 @@ h4, h5, h6 {
 /* case-studies, contact).  Centralised so per-page tweaks can't      */
 /* reintroduce the height drift between pages.                        */
 /* ---------------------------------------------------------------- */
+/* Legacy .page-hero class — kept as a no-op so any consumer still
+   referencing it doesn't break.  The light PageHero composes its
+   own spacing directly. */
 .page-hero {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  display: flex;
-  align-items: center;
-  min-height: 620px;
-}
-
-@media (min-width: 768px) {
-  .page-hero {
-    height: 680px;
-    min-height: 680px;
-    max-height: 680px;
-  }
-}
-
-@media (min-width: 1280px) {
-  .page-hero {
-    height: 700px;
-    min-height: 700px;
-    max-height: 700px;
-  }
 }
 
 @keyframes logoScroll {
@@ -165,23 +164,24 @@ html {
 }
 
 body {
-  background: var(--background);
-  color: var(--text);
-  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-geist-sans), system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 ::selection {
-  background: rgba(15, 123, 58, 0.3);
-  color: #fff;
+  background: rgba(15, 123, 58, 0.18);
+  color: #0a0a0a;
 }
 
-/* Premium hero effects */
+/* Premium hero effects (light theme — lines are near-black low alpha) */
 .cursor-trail-grid {
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+    linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
   background-size: 68px 68px;
   mask-image: radial-gradient(
     circle at 50% 38%,
@@ -203,15 +203,15 @@ body {
   background-image:
     repeating-linear-gradient(
       120deg,
-      rgba(255, 255, 255, 0.05) 0px,
-      rgba(255, 255, 255, 0.05) 1px,
+      rgba(0, 0, 0, 0.04) 0px,
+      rgba(0, 0, 0, 0.04) 1px,
       transparent 1px,
       transparent 24px
     ),
     linear-gradient(
       90deg,
       transparent 0%,
-      rgba(255, 255, 255, 0.03) 50%,
+      rgba(0, 0, 0, 0.02) 50%,
       transparent 100%
     );
   background-size: 220px 220px, 100% 100%;
@@ -559,7 +559,7 @@ body {
     115deg,
     transparent 0%,
     transparent 38%,
-    rgba(255, 255, 255, 0.10) 50%,
+    rgba(15, 123, 58, 0.06) 50%,
     transparent 62%,
     transparent 100%
   );
@@ -713,8 +713,8 @@ body {
 }
 .blueprint-grid {
   background-image:
-    linear-gradient(rgba(184,196,200,0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(184,196,200,0.05) 1px, transparent 1px);
+    linear-gradient(rgba(15, 123, 58, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 123, 58, 0.06) 1px, transparent 1px);
   background-size: 64px 64px;
   animation: blueprintGridShift 30s linear infinite;
 }
