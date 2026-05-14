@@ -227,14 +227,14 @@ export default function PremiumSystemsHero() {
               <div className="flex items-center justify-between rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-2)] px-2.5 py-1.5 text-[12px]">
                 <span className="flex items-center gap-2 text-[var(--color-fg)]/85">
                   <span className="h-1.5 w-1.5 rounded-full bg-[var(--color-fg-meta)]" />
-                  <TypewriterText text="Request logged" speed={22} startDelay={300} />
+                  <TypewriterText text="Request logged" speed={22} startDelay={300} hideCaret />
                 </span>
                 <span className="text-[var(--color-fg-meta)]">Captured</span>
               </div>
               <div className="flex items-center justify-between rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-2)] px-2.5 py-1.5 text-[12px]">
                 <span className="flex items-center gap-2 text-[var(--color-fg)]/85">
                   <span className="h-1.5 w-1.5 rounded-full bg-[var(--color-fg)]/40" />
-                  <TypewriterText text="Under review" speed={22} startDelay={900} />
+                  <TypewriterText text="Under review" speed={22} startDelay={900} hideCaret />
                 </span>
                 <span className="text-[var(--color-fg-meta)]">Tracked</span>
               </div>
@@ -245,6 +245,7 @@ export default function PremiumSystemsHero() {
                     text="Approved & visible"
                     speed={22}
                     startDelay={1500}
+                    hideCaret
                   />
                 </span>
                 <span className="text-[var(--color-fg-meta)]">Actioned</span>
