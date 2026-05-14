@@ -26,8 +26,8 @@
   --accent2: #128a3e;                /* hover state — slightly darker */
   --accent-pressed: #0f7035;
   --accent-deep: #0a3517;            /* wordmark + dark display green */
-  --accent-hero-bg: #0e7d3a;         /* saturated hero-block green */
-  --accent-hero-bg-2: #0b5f2c;       /* hero edge / gradient stop */
+  --accent-hero-bg: #0a6e33;         /* Six Sigma SA hero green */
+  --accent-hero-bg-2: #075624;       /* gradient stop — matches the darker corners */
   --accent-soft: rgba(22, 163, 74, 0.08);
   --accent-border: rgba(22, 163, 74, 0.22);
   --accent-highlight: #16a34a;

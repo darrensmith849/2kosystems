@@ -25,30 +25,31 @@ export default function PremiumSystemsHero() {
       className="relative isolate overflow-hidden text-white"
       style={{
         background:
-          "linear-gradient(180deg, var(--color-hero-block) 0%, var(--color-hero-block-2) 100%)",
+          "radial-gradient(120% 100% at 50% 0%, #0c7a39 0%, var(--color-hero-block) 45%, var(--color-hero-block-2) 100%)",
       }}
     >
-      {/* Subtle radial highlight at top — gives the green canvas depth */}
+      {/* Six Sigma-style stippled dot pattern across the green canvas */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 opacity-[0.10]"
+        style={{
+          backgroundImage:
+            "radial-gradient(rgba(255,255,255,0.75) 1px, transparent 1px)",
+          backgroundSize: "20px 20px",
+          backgroundPosition: "0 0",
+        }}
+      />
+      {/* Soft top-centre highlight so the dotted plane has depth */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 top-0 h-[420px]"
         style={{
           background:
-            "radial-gradient(80% 60% at 50% 0%, rgba(255,255,255,0.10), transparent 70%)",
-        }}
-      />
-      {/* Subtle dotted pattern to hint at the Six Sigma stippled hero backdrop */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 opacity-[0.06]"
-        style={{
-          backgroundImage:
-            "radial-gradient(rgba(255,255,255,0.6) 1px, transparent 1px)",
-          backgroundSize: "22px 22px",
+            "radial-gradient(70% 60% at 50% 0%, rgba(255,255,255,0.08), transparent 70%)",
         }}
       />
 
-      <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-12 px-6 pt-24 pb-24 sm:pt-28 lg:grid-cols-[1.05fr_1fr] lg:gap-16 lg:px-10 lg:pt-32 lg:pb-28">
+      <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-10 px-6 pt-12 pb-12 sm:pt-14 lg:grid-cols-[1.05fr_1fr] lg:gap-12 lg:px-10 lg:pt-16 lg:pb-16">
         {/* ---------- Left column: copy ---------- */}
         <div className="max-w-2xl">
           <span className="reveal-up eyebrow-rule on-dark">
@@ -56,22 +57,22 @@ export default function PremiumSystemsHero() {
           </span>
 
           <h1
-            className="reveal-up reveal-stagger-1 mt-6 font-semibold text-white"
+            className="reveal-up reveal-stagger-1 mt-5 font-semibold text-white"
             style={{
-              fontSize: "var(--text-display-xl)",
+              fontSize: "clamp(36px, 4.4vw, 60px)",
               letterSpacing: "var(--tracking-display)",
-              lineHeight: 1.02,
+              lineHeight: 1.04,
             }}
           >
             Custom systems for businesses that have outgrown outdated software.
           </h1>
 
           <p
-            className="reveal-up reveal-stagger-2 mt-6 max-w-xl text-white/85"
+            className="reveal-up reveal-stagger-2 mt-5 max-w-xl text-white/85"
             style={{
-              fontSize: "var(--text-headline)",
+              fontSize: "clamp(15px, 1.15vw, 17px)",
               letterSpacing: "var(--tracking-tight)",
-              lineHeight: 1.5,
+              lineHeight: 1.55,
             }}
           >
             We build operational systems, approvals flows, client portals, and
@@ -79,7 +80,7 @@ export default function PremiumSystemsHero() {
             teams move faster.
           </p>
 
-          <div className="reveal-up reveal-stagger-3 mt-9 flex flex-col gap-3 sm:flex-row">
+          <div className="reveal-up reveal-stagger-3 mt-7 flex flex-col gap-3 sm:flex-row">
             <Link
               href="/contact"
               className="inline-flex items-center justify-center rounded-full bg-[var(--accent)] px-7 py-3 text-[14px] font-semibold tracking-[-0.005em] text-white shadow-[0_8px_24px_-12px_rgba(10,53,23,0.6)] transition-all duration-200 hover:bg-white hover:text-[var(--accent-deep)] active:scale-[0.98]"
@@ -94,7 +95,7 @@ export default function PremiumSystemsHero() {
             </Link>
           </div>
 
-          <p className="reveal-up reveal-stagger-4 mt-6 text-[13px] text-white/65">
+          <p className="reveal-up reveal-stagger-4 mt-5 text-[13px] text-white/65">
             No off-the-shelf SaaS. No long onboarding. No vendor lock-in.
           </p>
         </div>
