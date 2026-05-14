@@ -31,6 +31,9 @@ import { BatchInboxPanel } from './components/BatchInboxPanel';
 import { DiagnosticsPanel } from './components/DiagnosticsPanel';
 import { LiveReadinessTest } from './components/LiveReadinessTest';
 import { AdminQuickStartPanel } from './components/AdminQuickStartPanel';
+import { LocalStorageHealthPanel } from './components/LocalStorageHealthPanel';
+import { ResetLocalDataPanel } from './components/ResetLocalDataPanel';
+import { FutureDatabaseImportPreview } from './components/FutureDatabaseImportPreview';
 import { useDiagnostics } from './hooks/useAgentDiagnostics';
 
 export default function AgentConsole() {
@@ -277,12 +280,21 @@ export default function AgentConsole() {
 
         {/* ── Export tab ── */}
         {activeTab === 'export' && (
-          <div className="space-y-6">
+          <div className="space-y-4">
+            <LocalStorageHealthPanel />
             <LocalImportExport items={history.items} onImport={history.importItems} />
             <div>
               <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a] mb-4">Handover report builder</p>
               <HandoverBuilder items={history.items} />
             </div>
+            <FutureDatabaseImportPreview items={history.items} />
+            <ResetLocalDataPanel
+              onReset={() => {
+                history.clear();
+                qualityLab.clearAllTestRuns();
+                batchInbox.clear();
+              }}
+            />
           </div>
         )}
 

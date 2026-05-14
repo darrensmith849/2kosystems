@@ -4,6 +4,7 @@ import { useRef, useState } from 'react';
 import type { LocalAgentJob } from '../utils/types';
 import { validateImportPayload } from '../utils/storage';
 import { downloadFile } from '../utils/exportUtils';
+import { recordBackupTimestamp } from '../utils/localBackupMetadata';
 
 export function LocalImportExport({
   items,
@@ -24,6 +25,7 @@ export function LocalImportExport({
       `2ko-history-export-${new Date().toISOString().slice(0, 10)}.json`,
       'application/json',
     );
+    recordBackupTimestamp();
   }
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {

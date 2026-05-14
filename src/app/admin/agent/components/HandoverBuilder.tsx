@@ -4,6 +4,7 @@ import { useState } from 'react';
 import type { LocalAgentJob } from '../utils/types';
 import { buildHandoverReport } from '../utils/handoverExport';
 import { downloadFile } from '../utils/exportUtils';
+import { recordBackupTimestamp } from '../utils/localBackupMetadata';
 import { scoreColor, scoreLabel, fmtDateTime, statusLabel } from '../utils/formatters';
 import { useCopy } from '../hooks/useCopy';
 
@@ -44,6 +45,7 @@ export function HandoverBuilder({ items }: { items: LocalAgentJob[] }) {
       `2ko-handover-${new Date().toISOString().slice(0, 10)}.md`,
       'text/markdown',
     );
+    recordBackupTimestamp();
   }
 
   if (items.length === 0) {

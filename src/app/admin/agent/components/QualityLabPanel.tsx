@@ -5,6 +5,7 @@ import type { TestCase } from '../utils/testCases';
 import type { TestRun } from '../utils/qualityLabStorage';
 import { buildTestRun } from '../utils/qualityLabAssertions';
 import { downloadFile } from '../utils/exportUtils';
+import { recordBackupTimestamp } from '../utils/localBackupMetadata';
 import { TestCaseEditor } from './TestCaseEditor';
 import { TestRunResult } from './TestRunResult';
 import type { FormState } from '../utils/types';
@@ -99,6 +100,7 @@ export function QualityLabPanel({
       `2ko-test-runs-${new Date().toISOString().slice(0, 10)}.json`,
       'application/json',
     );
+    recordBackupTimestamp();
   }
 
   const passCount = testRuns.filter((r) => r.overallResult === 'pass').length;
