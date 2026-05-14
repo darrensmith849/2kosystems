@@ -16,30 +16,41 @@ export const metadata: Metadata = {
 export default function GetStartedPage() {
   return (
     <>
-      <section className="relative overflow-hidden border-b border-[var(--color-border-subtle)] bg-[var(--color-bg)]">
+      <section
+        className="relative overflow-hidden text-white"
+        style={{
+          background:
+            "radial-gradient(120% 100% at 50% 0%, #0c7a39 0%, var(--color-hero-block) 45%, var(--color-hero-block-2) 100%)",
+        }}
+      >
+        {/* Stippled dot pattern matches the home hero */}
         <div
-          className="pointer-events-none absolute inset-x-0 top-0 h-[420px]"
           aria-hidden="true"
+          className="pointer-events-none absolute inset-0 opacity-[0.10]"
+          style={{
+            backgroundImage:
+              "radial-gradient(rgba(255,255,255,0.75) 1px, transparent 1px)",
+            backgroundSize: "20px 20px",
+          }}
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 top-0 h-[420px]"
           style={{
             background:
-              "radial-gradient(120% 60% at 50% 0%, color-mix(in srgb, var(--accent) 8%, transparent), transparent 65%)",
+              "radial-gradient(70% 60% at 50% 0%, rgba(255,255,255,0.10), transparent 70%)",
           }}
         />
 
-        <div className="relative mx-auto max-w-6xl px-6 pb-24 pt-28 md:pt-32 lg:px-10">
+        <div className="relative z-10 mx-auto max-w-6xl px-6 pb-24 pt-20 md:pt-24 lg:px-10">
           <div className="grid grid-cols-1 items-start gap-14 lg:grid-cols-[1fr_1.1fr]">
             {/* Left – context */}
             <div className="reveal-up">
-              <p
-                className="text-[12px] font-medium uppercase text-[var(--color-fg-muted)]"
-                style={{ letterSpacing: "var(--tracking-eyebrow)" }}
-              >
-                Get Started
-              </p>
+              <span className="eyebrow-rule on-dark">Get Started</span>
               <h1
-                className="mt-5 font-semibold text-[var(--color-fg)]"
+                className="mt-5 font-semibold text-white"
                 style={{
-                  fontSize: "var(--text-display-lg)",
+                  fontSize: "clamp(36px, 4.4vw, 60px)",
                   letterSpacing: "var(--tracking-display)",
                   lineHeight: 1.05,
                 }}
@@ -47,9 +58,9 @@ export default function GetStartedPage() {
                 Request a Systems Audit.
               </h1>
               <p
-                className="mt-5 max-w-lg text-[var(--color-fg-muted)]"
+                className="mt-5 max-w-lg text-white/85"
                 style={{
-                  fontSize: "var(--text-headline)",
+                  fontSize: "clamp(15px, 1.15vw, 17px)",
                   letterSpacing: "var(--tracking-tight)",
                   lineHeight: 1.5,
                 }}
@@ -60,7 +71,10 @@ export default function GetStartedPage() {
               </p>
 
               <div className="mt-10">
-                <h2 className="mb-4 text-xs font-semibold uppercase tracking-widest text-muted2">
+                <h2
+                  className="mb-4 text-[11px] font-semibold uppercase text-white/75"
+                  style={{ letterSpacing: "var(--tracking-eyebrow)" }}
+                >
                   What happens after you submit
                 </h2>
                 <ul className="flex flex-col gap-4 list-none pl-0">
@@ -70,10 +84,10 @@ export default function GetStartedPage() {
                     "We schedule a focused discovery call within one business day.",
                   ].map((step, i) => (
                     <li key={step} className="flex items-start gap-4">
-                      <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full border border-accent/40 bg-accent/[0.06] text-[11px] font-bold text-accent">
+                      <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full border border-white/35 bg-white/10 text-[11px] font-bold text-white">
                         {i + 1}
                       </span>
-                      <span className="pt-0.5 text-sm leading-relaxed text-muted">
+                      <span className="pt-0.5 text-sm leading-relaxed text-white/85">
                         {step}
                       </span>
                     </li>
@@ -82,7 +96,10 @@ export default function GetStartedPage() {
               </div>
 
               <div className="mt-10">
-                <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-muted2">
+                <h2
+                  className="mb-3 text-[11px] font-semibold uppercase text-white/75"
+                  style={{ letterSpacing: "var(--tracking-eyebrow)" }}
+                >
                   What you receive
                 </h2>
                 <ul className="flex flex-col gap-2.5 list-none pl-0">
@@ -93,8 +110,8 @@ export default function GetStartedPage() {
                     "Roadmap for phased implementation",
                   ].map((item) => (
                     <li key={item} className="flex items-start gap-3">
-                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
-                      <span className="text-sm leading-relaxed text-muted">
+                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-white/70" />
+                      <span className="text-sm leading-relaxed text-white/85">
                         {item}
                       </span>
                     </li>
@@ -103,10 +120,13 @@ export default function GetStartedPage() {
               </div>
 
               <div className="mt-10">
-                <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-muted2">
+                <h2
+                  className="mb-3 text-[11px] font-semibold uppercase text-white/75"
+                  style={{ letterSpacing: "var(--tracking-eyebrow)" }}
+                >
                   Best suited to
                 </h2>
-                <p className="text-sm leading-relaxed text-muted">
+                <p className="text-sm leading-relaxed text-white/85">
                   Operations managers, COOs, MDs and business owners in mining,
                   agriculture, logistics, industrial services, compliance-heavy
                   organisations, and multi-branch operators.
