@@ -209,7 +209,7 @@ export default function SolutionsPage() {
                       Example workflow
                     </h3>
                     <div className="min-h-[6.5rem] rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-2)] p-4 font-mono text-[13px] leading-relaxed text-[var(--color-fg)]">
-                      <TypewriterText text={solution.exampleFlow} speed={16} startDelay={300} />
+                      <TypewriterText text={solution.exampleFlow} speed={32} startDelay={250} />
                     </div>
 
                     <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -218,11 +218,7 @@ export default function SolutionsPage() {
                           Typical users
                         </h4>
                         <p className="text-sm leading-relaxed text-muted">
-                          <TypewriterText
-                            text={solution.typicalUsers}
-                            speed={10}
-                            startDelay={1600}
-                          />
+                          {solution.typicalUsers}
                         </p>
                       </div>
                       <div>
@@ -230,11 +226,7 @@ export default function SolutionsPage() {
                           Outcome
                         </h4>
                         <p className="text-sm leading-relaxed text-muted">
-                          <TypewriterText
-                            text={solution.outcome}
-                            speed={10}
-                            startDelay={2200}
-                          />
+                          {solution.outcome}
                         </p>
                       </div>
                     </div>

@@ -53,17 +53,18 @@ export default function TypewriterText({
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          if (entry.isIntersecting) {
+          if (entry.intersectionRatio >= 0.5) {
             setStarted(true);
             observer.disconnect();
             return;
           }
         }
       },
-      // Fire as soon as the element peeks past the bottom of the viewport so
-      // the visitor reliably catches the typing rather than landing on a
-      // finished line.
-      { rootMargin: "0px 0px -10% 0px", threshold: 0.05 },
+      // Only fire once the element is genuinely in the reading area — at
+      // least 50% visible. This avoids the case where the wrapping
+      // RevealOnScroll is still in its translateY(16px) opacity:0 state
+      // and the typewriter would otherwise type out invisibly behind it.
+      { threshold: [0, 0.25, 0.5, 0.75, 1] },
     );
     observer.observe(el);
     return () => observer.disconnect();
