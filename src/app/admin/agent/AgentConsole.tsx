@@ -5,10 +5,13 @@ import { useRouter } from 'next/navigation';
 import { useCopy } from './hooks/useCopy';
 import { useLocalHistory } from './hooks/useLocalHistory';
 import { useAgentAnalysis } from './hooks/useAgentAnalysis';
+import { useQualityLab } from './hooks/useQualityLab';
+import { useBatchInbox } from './hooks/useBatchInbox';
 import { isSafe } from './utils/safety';
 import { scoreColor, scoreLabel, tempColor, urgencyColor } from './utils/formatters';
 import { EMPTY_FORM, type FormState } from './utils/types';
 import { Badge } from './components/ui';
+import { AdminTabs, readSavedTab, saveTab, type AdminTab } from './components/AdminTabs';
 import { AgentInputForm } from './components/AgentInputForm';
 import { SafetyPanel } from './components/SafetyPanel';
 import { ExportBar } from './components/ExportBar';
@@ -21,15 +24,22 @@ import { RawJsonCard } from './components/RawJsonCard';
 import { AboutPanel } from './components/AboutPanel';
 import { SafetyChecklistPanel } from './components/SafetyChecklistPanel';
 import { LocalHistoryPanel } from './components/LocalHistoryPanel';
+import { LocalImportExport } from './components/LocalImportExport';
+import { HandoverBuilder } from './components/HandoverBuilder';
+import { QualityLabPanel } from './components/QualityLabPanel';
+import { BatchInboxPanel } from './components/BatchInboxPanel';
 
 export default function AgentConsole() {
   const router = useRouter();
   const { copy, copiedKey } = useCopy();
   const history = useLocalHistory();
   const analysis = useAgentAnalysis();
+  const qualityLab = useQualityLab();
+  const batchInbox = useBatchInbox();
 
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
   const [jsonOpen, setJsonOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<AdminTab>(() => readSavedTab());
 
   function setField(k: keyof FormState) {
     return (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
@@ -59,8 +69,26 @@ export default function AgentConsole() {
     router.refresh();
   }
 
+  function handleTabChange(tab: AdminTab) {
+    setActiveTab(tab);
+    saveTab(tab);
+  }
+
+  function handleLoadToForm(f: FormState) {
+    setForm(f);
+    analysis.clearError();
+    handleTabChange('analyse');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
   const result = analysis.result;
   const safetyOk = result ? isSafe(result.safety) : true;
+
+  const tabCounts: Partial<Record<AdminTab, number>> = {
+    workflow: history.items.length > 0 ? history.items.length : undefined,
+    batch: batchInbox.items.filter((i) => i.status === 'queued').length || undefined,
+    quality: qualityLab.testRuns.length > 0 ? qualityLab.testRuns.length : undefined,
+  };
 
   return (
     <div className="min-h-screen overflow-y-auto">
@@ -88,170 +116,179 @@ export default function AgentConsole() {
         </button>
       </div>
 
-      {/* Content */}
+      {/* Tab navigation */}
+      <div className="sticky top-[53px] z-10 bg-[#0a0a0b]/95 backdrop-blur-sm px-6">
+        <AdminTabs
+          active={activeTab}
+          onChange={handleTabChange}
+          counts={tabCounts}
+        />
+      </div>
+
+      {/* Tab content */}
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-4">
 
-        {/* Collapsible panels */}
-        <AboutPanel />
-        <SafetyChecklistPanel />
+        {/* ── Analyse tab ── */}
+        {activeTab === 'analyse' && (
+          <>
+            <AgentInputForm
+              form={form}
+              loading={analysis.loading}
+              error={analysis.error}
+              hasResult={!!result}
+              onFieldChange={setField}
+              onPreset={(f) => {
+                setForm(f);
+                analysis.clearError();
+              }}
+              onSubmit={handleSubmit}
+              onClear={handleClear}
+            />
 
-        {/* Input form */}
-        <AgentInputForm
-          form={form}
-          loading={analysis.loading}
-          error={analysis.error}
-          hasResult={!!result}
-          onFieldChange={setField}
-          onPreset={(f) => {
-            setForm(f);
-            analysis.clearError();
-          }}
-          onSubmit={handleSubmit}
-          onClear={handleClear}
-        />
+            {!result && !analysis.loading && (
+              <p className="text-center text-xs text-[#3f3f46] py-6">
+                Results will appear here after analysis.
+              </p>
+            )}
 
-        {/* Local history */}
-        <LocalHistoryPanel
-          items={history.items}
-          onReload={(item) => {
-            setForm(item.form);
-            analysis.setResult(item.result);
-            analysis.clearError();
-            setJsonOpen(false);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }}
-          onDelete={history.remove}
-          onUpdate={history.update}
-          onClear={history.clear}
-          onImport={history.importItems}
-        />
+            {result && (
+              <div id="agent-results" className="space-y-4">
+                <SafetyPanel safety={result.safety} />
 
-        {/* Empty state */}
-        {!result && !analysis.loading && (
-          <p className="text-center text-xs text-[#3f3f46] py-6">
-            Results will appear here after analysis.
-          </p>
+                {/* Summary bar */}
+                <div className="rounded-2xl border border-[#27272a] bg-[#111113] px-5 py-4">
+                  <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+                    <div>
+                      <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-[#71717a] mb-1">Lead score</p>
+                      <p className={`text-2xl font-bold tabular-nums ${scoreColor(result.classification.leadScore)}`}>
+                        {result.classification.leadScore}
+                        <span className="text-sm font-normal ml-1 text-[#71717a]">/100</span>
+                      </p>
+                      <p className={`text-[11px] mt-0.5 ${scoreColor(result.classification.leadScore)}`}>
+                        {scoreLabel(result.classification.leadScore)}
+                      </p>
+                    </div>
+                    <div className="h-10 w-px bg-[#27272a] hidden sm:block" />
+                    <div>
+                      <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-[#71717a] mb-1.5">Route</p>
+                      <p className="text-sm text-[#f5f5f5]">{result.route.business.replace(/_/g, ' ')}</p>
+                    </div>
+                    <div className="h-10 w-px bg-[#27272a] hidden sm:block" />
+                    <div>
+                      <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-[#71717a] mb-1.5">Enquiry type</p>
+                      <p className="text-sm text-[#f5f5f5]">{result.route.enquiryType.replace(/_/g, ' ')}</p>
+                    </div>
+                    <div className="h-10 w-px bg-[#27272a] hidden sm:block" />
+                    <div className="flex gap-2 flex-wrap">
+                      <Badge text={result.classification.temperature} className={tempColor(result.classification.temperature)} />
+                      <Badge text={`urgency: ${result.classification.urgency}`} className={urgencyColor(result.classification.urgency)} />
+                      <Badge text={`confidence: ${result.route.confidence}%`} />
+                    </div>
+                  </div>
+                </div>
+
+                <ExportBar result={result} form={form} copiedKey={copiedKey} onCopy={copy} safetyOk={safetyOk} />
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                  <SuggestedReplyCard reply={result.suggestedReply} copiedKey={copiedKey} onCopy={copy} safetyOk={safetyOk} />
+                  <div className="space-y-4">
+                    <ClassificationCard classification={result.classification} />
+                    <InternalNotesCard notes={result.internalNotes} copiedKey={copiedKey} onCopy={copy} safetyOk={safetyOk} />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                  <ContextCard context={result.context} />
+                  <FollowUpCard followUp={result.followUp} copiedKey={copiedKey} onCopy={copy} safetyOk={safetyOk} />
+                </div>
+
+                <RawJsonCard result={result} copiedKey={copiedKey} onCopy={copy} safetyOk={safetyOk} open={jsonOpen} onToggle={() => setJsonOpen((o) => !o)} />
+
+                <div className="text-center pb-8">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                      document.querySelector('textarea')?.focus();
+                    }}
+                    className="text-sm text-[#71717a] hover:text-[#f5f5f5] transition-colors"
+                  >
+                    ↑ Run another analysis
+                  </button>
+                </div>
+              </div>
+            )}
+          </>
         )}
 
-        {/* Results */}
-        {result && (
-          <div id="agent-results" className="space-y-4">
+        {/* ── Workflow tab ── */}
+        {activeTab === 'workflow' && (
+          <LocalHistoryPanel
+            items={history.items}
+            onReload={(item) => {
+              setForm(item.form);
+              analysis.setResult(item.result);
+              analysis.clearError();
+              setJsonOpen(false);
+              handleTabChange('analyse');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            onDelete={history.remove}
+            onUpdate={history.update}
+            onClear={history.clear}
+            onImport={history.importItems}
+          />
+        )}
 
-            {/* Safety — always first */}
-            <SafetyPanel safety={result.safety} />
+        {/* ── Quality Lab tab ── */}
+        {activeTab === 'quality' && (
+          <QualityLabPanel
+            allCases={qualityLab.allCases}
+            testRuns={qualityLab.testRuns}
+            onAddCustomCase={qualityLab.addCustomCase}
+            onUpdateCustomCase={qualityLab.updateCustomCase}
+            onDeleteCustomCase={qualityLab.deleteCustomCase}
+            onAddTestRun={qualityLab.addTestRun}
+            onDeleteTestRun={qualityLab.deleteTestRun}
+            onUpdateTestRunNote={qualityLab.updateTestRunNote}
+            onClearTestRuns={qualityLab.clearAllTestRuns}
+          />
+        )}
 
-            {/* Summary bar */}
-            <div className="rounded-2xl border border-[#27272a] bg-[#111113] px-5 py-4">
-              <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
-                <div>
-                  <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-[#71717a] mb-1">
-                    Lead score
-                  </p>
-                  <p className={`text-2xl font-bold tabular-nums ${scoreColor(result.classification.leadScore)}`}>
-                    {result.classification.leadScore}
-                    <span className="text-sm font-normal ml-1 text-[#71717a]">/100</span>
-                  </p>
-                  <p className={`text-[11px] mt-0.5 ${scoreColor(result.classification.leadScore)}`}>
-                    {scoreLabel(result.classification.leadScore)}
-                  </p>
-                </div>
-                <div className="h-10 w-px bg-[#27272a] hidden sm:block" />
-                <div>
-                  <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-[#71717a] mb-1.5">
-                    Route
-                  </p>
-                  <p className="text-sm text-[#f5f5f5]">
-                    {result.route.business.replace(/_/g, ' ')}
-                  </p>
-                </div>
-                <div className="h-10 w-px bg-[#27272a] hidden sm:block" />
-                <div>
-                  <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-[#71717a] mb-1.5">
-                    Enquiry type
-                  </p>
-                  <p className="text-sm text-[#f5f5f5]">
-                    {result.route.enquiryType.replace(/_/g, ' ')}
-                  </p>
-                </div>
-                <div className="h-10 w-px bg-[#27272a] hidden sm:block" />
-                <div className="flex gap-2 flex-wrap">
-                  <Badge
-                    text={result.classification.temperature}
-                    className={tempColor(result.classification.temperature)}
-                  />
-                  <Badge
-                    text={`urgency: ${result.classification.urgency}`}
-                    className={urgencyColor(result.classification.urgency)}
-                  />
-                  <Badge text={`confidence: ${result.route.confidence}%`} />
-                </div>
-              </div>
-            </div>
+        {/* ── Batch Inbox tab ── */}
+        {activeTab === 'batch' && (
+          <BatchInboxPanel
+            items={batchInbox.items}
+            onAddItems={batchInbox.addItems}
+            onMarkAnalysed={batchInbox.markAnalysed}
+            onMarkError={batchInbox.markError}
+            onMarkSkipped={batchInbox.markSkipped}
+            onRemoveItem={batchInbox.removeItem}
+            onClear={batchInbox.clear}
+            onLoadToForm={handleLoadToForm}
+            onSaveToHistory={(f, output) => history.add(f, output)}
+          />
+        )}
 
-            {/* Export / copy bar */}
-            <ExportBar
-              result={result}
-              form={form}
-              copiedKey={copiedKey}
-              onCopy={copy}
-              safetyOk={safetyOk}
-            />
-
-            {/* Main grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              <SuggestedReplyCard
-                reply={result.suggestedReply}
-                copiedKey={copiedKey}
-                onCopy={copy}
-                safetyOk={safetyOk}
-              />
-              <div className="space-y-4">
-                <ClassificationCard classification={result.classification} />
-                <InternalNotesCard
-                  notes={result.internalNotes}
-                  copiedKey={copiedKey}
-                  onCopy={copy}
-                  safetyOk={safetyOk}
-                />
-              </div>
-            </div>
-
-            {/* Context + follow-up */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              <ContextCard context={result.context} />
-              <FollowUpCard
-                followUp={result.followUp}
-                copiedKey={copiedKey}
-                onCopy={copy}
-                safetyOk={safetyOk}
-              />
-            </div>
-
-            {/* Raw JSON */}
-            <RawJsonCard
-              result={result}
-              copiedKey={copiedKey}
-              onCopy={copy}
-              safetyOk={safetyOk}
-              open={jsonOpen}
-              onToggle={() => setJsonOpen((o) => !o)}
-            />
-
-            {/* Run another */}
-            <div className="text-center pb-8">
-              <button
-                type="button"
-                onClick={() => {
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                  document.querySelector('textarea')?.focus();
-                }}
-                className="text-sm text-[#71717a] hover:text-[#f5f5f5] transition-colors"
-              >
-                ↑ Run another analysis
-              </button>
+        {/* ── Export tab ── */}
+        {activeTab === 'export' && (
+          <div className="space-y-6">
+            <LocalImportExport items={history.items} onImport={history.importItems} />
+            <div>
+              <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a] mb-4">Handover report builder</p>
+              <HandoverBuilder items={history.items} />
             </div>
           </div>
         )}
+
+        {/* ── Help tab ── */}
+        {activeTab === 'help' && (
+          <div className="space-y-4">
+            <AboutPanel />
+            <SafetyChecklistPanel />
+          </div>
+        )}
+
       </div>
     </div>
   );

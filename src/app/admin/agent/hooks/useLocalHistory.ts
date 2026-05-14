@@ -18,7 +18,7 @@ export function useLocalHistory() {
     setItems(loadHistory());
   }, []);
 
-  const add = useCallback((form: FormState, result: AgentOutput) => {
+  const add = useCallback((form: FormState, result: AgentOutput): string => {
     const job: LocalAgentJob = {
       id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
       createdAt: Date.now(),
@@ -41,6 +41,7 @@ export function useLocalHistory() {
       saveHistory(updated);
       return updated;
     });
+    return job.id;
   }, []);
 
   const remove = useCallback((id: string) => {
@@ -88,5 +89,5 @@ export function useLocalHistory() {
     });
   }, []);
 
-  return { items, add, remove, update, clear, importItems };
+  return { items, add, remove, update, clear, importItems } as const;
 }
