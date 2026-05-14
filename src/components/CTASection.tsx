@@ -64,7 +64,7 @@ export default function CTASection({
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Link
                 href={resolvedPrimaryHref}
-                className="inline-flex items-center justify-center rounded-full bg-[var(--color-canvas-dark)] px-7 py-3 text-[14px] font-medium tracking-[-0.005em] text-white transition-all duration-200 hover:bg-[var(--color-canvas-dark-2)] active:scale-[0.98]"
+                className="inline-flex items-center justify-center rounded-full bg-[var(--accent)] px-7 py-3 text-[14px] font-semibold tracking-[-0.005em] text-white shadow-[0_8px_24px_-12px_rgba(22,163,74,0.55)] transition-all duration-200 hover:bg-[var(--accent2)] active:scale-[0.98]"
               >
                 {primaryCTA}
               </Link>

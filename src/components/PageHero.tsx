@@ -53,12 +53,9 @@ export default function PageHero({
       />
 
       <div className="relative mx-auto max-w-5xl px-6 pt-24 pb-20 text-center sm:pt-28 lg:px-10 lg:pt-32 lg:pb-24">
-        <p
-          className="reveal-up text-[12px] font-medium uppercase text-[var(--color-fg-muted)]"
-          style={{ letterSpacing: "var(--tracking-eyebrow)" }}
-        >
+        <span className="reveal-up eyebrow-rule mx-auto">
           {eyebrow}
-        </p>
+        </span>
 
         <h1
           className="reveal-up reveal-stagger-1 mx-auto mt-6 max-w-4xl font-semibold text-[var(--color-fg)]"
@@ -87,7 +84,7 @@ export default function PageHero({
             {primaryCTA && primaryHref && (
               <Link
                 href={primaryHref}
-                className="inline-flex items-center justify-center rounded-full bg-[var(--color-canvas-dark)] px-7 py-3 text-[14px] font-medium tracking-[-0.005em] text-white transition-all duration-200 hover:bg-[var(--color-canvas-dark-2)] active:scale-[0.98]"
+                className="inline-flex items-center justify-center rounded-full bg-[var(--accent)] px-7 py-3 text-[14px] font-semibold tracking-[-0.005em] text-white shadow-[0_8px_24px_-12px_rgba(22,163,74,0.55)] transition-all duration-200 hover:bg-[var(--accent2)] active:scale-[0.98]"
               >
                 {primaryCTA}
               </Link>

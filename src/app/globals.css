@@ -14,17 +14,23 @@
      text-muted, border-border, bg-surface, text-accent, etc.).
      Flipping these flips the whole site. ----- */
   --background: #ffffff;
-  --background-secondary: #fafafa;
+  --background-secondary: #f4f8f4;       /* pale green-tinted off-white (Six Sigma stats strip) */
   --surface: #ffffff;
   --text: #0a0a0a;
-  --muted: #5e6373;          /* mid gray — body subtext */
-  --muted2: #8a90a0;         /* lighter gray — meta */
-  --accent: #0f7b3a;         /* brand green, unchanged */
-  --accent2: #0a6630;        /* darker green for hover */
-  --accent-pressed: #084f24;
-  --accent-soft: rgba(15, 123, 58, 0.08);
-  --accent-border: rgba(15, 123, 58, 0.18);
-  --accent-highlight: #0f7b3a;
+  --muted: #4d5358;          /* mid gray — body subtext */
+  --muted2: #7d8489;         /* lighter gray — meta */
+  /* Brand green, retuned to match the Six Sigma South Africa palette:
+     a brighter vivid emerald for accents/CTAs, a deep forest for
+     wordmarks/display, plus a deep mid-green for the hero block. */
+  --accent: #16a34a;                 /* CTA / "Enquire now" emerald */
+  --accent2: #128a3e;                /* hover state — slightly darker */
+  --accent-pressed: #0f7035;
+  --accent-deep: #0a3517;            /* wordmark + dark display green */
+  --accent-hero-bg: #0e7d3a;         /* saturated hero-block green */
+  --accent-hero-bg-2: #0b5f2c;       /* hero edge / gradient stop */
+  --accent-soft: rgba(22, 163, 74, 0.08);
+  --accent-border: rgba(22, 163, 74, 0.22);
+  --accent-highlight: #16a34a;
   --border: rgba(0, 0, 0, 0.08);
   --font-geist-sans: var(--font-geist-sans);
   --font-geist-mono: var(--font-geist-mono);
@@ -33,20 +39,25 @@
      A small, named contract every component reads directly via
      bg-[var(--color-bg)] / text-[var(--color-fg)] etc. */
   --color-bg: #ffffff;
-  --color-bg-2: #f5f9f6;         /* alt sections — subtle green-tinted off-white */
-  --color-bg-3: #eef4f0;         /* deeper green-tinted wash */
-  --color-bg-tinted: #f0f7f2;    /* explicit "tinted" wash for hero/CTA backdrops */
+  --color-bg-2: #f4f8f4;         /* alt sections — Six Sigma stats strip */
+  --color-bg-3: #ebf2ec;         /* deeper green-tinted wash */
+  --color-bg-tinted: #eff5ef;    /* header glass / quiet section backdrop */
   --color-surface: #ffffff;       /* card surface (kept pure white for contrast) */
-  --color-surface-2: #fafdfb;     /* subtle green-tinted card */
-  --color-surface-3: #f4f8f5;     /* third tier */
+  --color-surface-2: #f9fcf9;     /* subtle green-tinted card */
+  --color-surface-3: #f1f6f1;     /* third tier */
+
+  /* Bold green canvas — for the hero block (Six Sigma-style) */
+  --color-hero-block: var(--accent-hero-bg);
+  --color-hero-block-2: var(--accent-hero-bg-2);
+
   /* Accent tint colour-mix targets — used for radial washes and chips */
   --tint-accent-soft: color-mix(in srgb, var(--accent) 4%, transparent);
-  --tint-accent-medium: color-mix(in srgb, var(--accent) 8%, transparent);
-  --tint-accent-strong: color-mix(in srgb, var(--accent) 14%, transparent);
+  --tint-accent-medium: color-mix(in srgb, var(--accent) 10%, transparent);
+  --tint-accent-strong: color-mix(in srgb, var(--accent) 16%, transparent);
 
-  /* Glass chrome — translucent white + backdrop-blur */
-  --color-topbar-bg: rgba(255, 255, 255, 0.72);
-  --color-sidebar-bg: rgba(255, 255, 255, 0.72);
+  /* Glass chrome — pale green-tinted translucent (Six Sigma header) */
+  --color-topbar-bg: rgba(239, 245, 239, 0.78);
+  --color-sidebar-bg: rgba(239, 245, 239, 0.78);
 
   /* Special "dark canvas" surfaces, used for phone mockups and
      the like (where we keep one or two dark cards on the white
@@ -126,6 +137,35 @@ h4, h5, h6 {
   letter-spacing: var(--tracking-tight);
 }
 .tabular { font-variant-numeric: tabular-nums; }
+
+/* Six Sigma-style eyebrow: small green horizontal line + accent label.
+   Used as the small "— OUR COURSES" / "— SOLUTIONS" badge above
+   section headlines and hero copy. */
+.eyebrow-rule {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  font-size: 12px;
+  color: var(--accent);
+}
+.eyebrow-rule::before {
+  content: "";
+  display: inline-block;
+  width: 24px;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 2px;
+}
+/* Inverted version for use on the green hero block — line is white-tinted */
+.eyebrow-rule.on-dark {
+  color: rgba(255, 255, 255, 0.75);
+}
+.eyebrow-rule.on-dark::before {
+  background: rgba(255, 255, 255, 0.55);
+}
 
 /* ---------------------------------------------------------------- */
 /* Internal page hero — single fixed-height contract for every       */

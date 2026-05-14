@@ -61,7 +61,7 @@ export default function Header() {
           </Link>
           <Link
             href="/contact"
-            className="inline-flex items-center justify-center rounded-full bg-[var(--color-canvas-dark)] px-5 py-2.5 text-[13px] font-medium tracking-[-0.005em] text-white transition-all duration-200 hover:bg-[var(--color-canvas-dark-2)] active:scale-[0.98]"
+            className="inline-flex items-center justify-center rounded-full bg-[var(--accent)] px-5 py-2.5 text-[13px] font-semibold tracking-[-0.005em] text-white shadow-[0_8px_20px_-10px_rgba(22,163,74,0.6)] transition-all duration-200 hover:bg-[var(--accent2)] active:scale-[0.98]"
           >
             Book a Systems Audit
           </Link>
@@ -108,7 +108,7 @@ export default function Header() {
             <Link
               href="/contact"
               onClick={() => setMobileOpen(false)}
-              className="mt-2 inline-block rounded-full bg-[var(--color-canvas-dark)] px-5 py-2.5 text-center text-[13px] font-medium tracking-[-0.005em] text-white transition-colors hover:bg-[var(--color-canvas-dark-2)]"
+              className="mt-2 inline-block rounded-full bg-[var(--accent)] px-5 py-2.5 text-center text-[13px] font-semibold tracking-[-0.005em] text-white transition-colors hover:bg-[var(--accent2)]"
             >
               Book a Systems Audit
             </Link>

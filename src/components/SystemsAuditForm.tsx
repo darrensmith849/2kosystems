@@ -242,7 +242,7 @@ export default function SystemsAuditForm() {
       <button
         type="submit"
         disabled={status === "submitting"}
-        className="mt-2 inline-flex items-center justify-center rounded-full bg-[var(--color-canvas-dark)] px-7 py-3 text-[14px] font-medium tracking-[-0.005em] text-white transition-all duration-200 hover:bg-[var(--color-canvas-dark-2)] active:scale-[0.98] disabled:opacity-60"
+        className="mt-2 inline-flex items-center justify-center rounded-full bg-[var(--accent)] px-7 py-3 text-[14px] font-semibold tracking-[-0.005em] text-white shadow-[0_8px_24px_-12px_rgba(22,163,74,0.55)] transition-all duration-200 hover:bg-[var(--accent2)] active:scale-[0.98] disabled:opacity-60"
       >
         {status === "submitting" ? "Sending…" : "Request a Systems Audit"}
       </button>

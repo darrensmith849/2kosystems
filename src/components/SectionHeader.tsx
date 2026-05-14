@@ -14,12 +14,9 @@ export default function SectionHeader({
   return (
     <div className={`reveal-up mb-12 ${centered ? "text-center" : ""}`}>
       {eyebrow && (
-        <p
-          className="mb-4 text-[12px] font-medium uppercase text-[var(--color-fg-muted)]"
-          style={{ letterSpacing: "var(--tracking-eyebrow)" }}
-        >
+        <span className={`eyebrow-rule mb-4 ${centered ? "mx-auto" : ""}`}>
           {eyebrow}
-        </p>
+        </span>
       )}
       <h2
         className="font-semibold text-[var(--color-fg)]"
