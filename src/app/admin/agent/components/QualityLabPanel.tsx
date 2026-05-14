@@ -299,7 +299,7 @@ export function QualityLabPanel({
         {historyOpen && (
           <div className="border-t border-[#1c1c1e]">
             {testRuns.length === 0 ? (
-              <p className="px-5 py-4 text-xs text-[#3f3f46]">No test runs yet.</p>
+              <p className="px-5 py-4 text-xs text-[#3f3f46]">No test runs yet. Select a test case above and click Run test.</p>
             ) : (
               testRuns.map((run) => (
                 <TestRunResult key={run.id} run={run} onDelete={onDeleteTestRun} onUpdateNote={onUpdateTestRunNote} />

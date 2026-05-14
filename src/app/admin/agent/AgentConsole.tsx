@@ -28,6 +28,10 @@ import { LocalImportExport } from './components/LocalImportExport';
 import { HandoverBuilder } from './components/HandoverBuilder';
 import { QualityLabPanel } from './components/QualityLabPanel';
 import { BatchInboxPanel } from './components/BatchInboxPanel';
+import { DiagnosticsPanel } from './components/DiagnosticsPanel';
+import { LiveReadinessTest } from './components/LiveReadinessTest';
+import { AdminQuickStartPanel } from './components/AdminQuickStartPanel';
+import { useDiagnostics } from './hooks/useAgentDiagnostics';
 
 export default function AgentConsole() {
   const router = useRouter();
@@ -37,6 +41,7 @@ export default function AgentConsole() {
   const qualityLab = useQualityLab();
   const batchInbox = useBatchInbox();
 
+  const diagnostics = useDiagnostics();
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
   const [jsonOpen, setJsonOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<AdminTab>(() => readSavedTab());
@@ -147,7 +152,7 @@ export default function AgentConsole() {
 
             {!result && !analysis.loading && (
               <p className="text-center text-xs text-[#3f3f46] py-6">
-                Results will appear here after analysis.
+                Paste an enquiry above and click Analyse to see results here.
               </p>
             )}
 
@@ -281,9 +286,18 @@ export default function AgentConsole() {
           </div>
         )}
 
+        {/* ── Diagnostics tab ── */}
+        {activeTab === 'diagnostics' && (
+          <div className="space-y-4">
+            <DiagnosticsPanel />
+            <LiveReadinessTest diagnostics={diagnostics.data} />
+          </div>
+        )}
+
         {/* ── Help tab ── */}
         {activeTab === 'help' && (
           <div className="space-y-4">
+            <AdminQuickStartPanel />
             <AboutPanel />
             <SafetyChecklistPanel />
           </div>

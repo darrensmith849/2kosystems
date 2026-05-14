@@ -1,6 +1,6 @@
 'use client';
 
-export type AdminTab = 'analyse' | 'workflow' | 'quality' | 'batch' | 'export' | 'help';
+export type AdminTab = 'analyse' | 'workflow' | 'quality' | 'batch' | 'export' | 'diagnostics' | 'help';
 
 interface TabDef {
   id: AdminTab;
@@ -13,6 +13,7 @@ const TABS: TabDef[] = [
   { id: 'quality', label: 'Quality Lab' },
   { id: 'batch', label: 'Batch Inbox' },
   { id: 'export', label: 'Export' },
+  { id: 'diagnostics', label: 'Diagnostics' },
   { id: 'help', label: 'Help' },
 ];
 

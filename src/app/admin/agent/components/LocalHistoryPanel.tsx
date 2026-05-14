@@ -60,11 +60,16 @@ export function LocalHistoryPanel({
 
   if (items.length === 0) {
     return (
-      <div className="rounded-2xl border border-[#1c1c1e] bg-[#0d0d0f] px-5 py-3 flex items-center gap-3">
+      <div className="rounded-2xl border border-[#1c1c1e] bg-[#0d0d0f] px-5 py-4 space-y-1">
         <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#3f3f46]">
           Local history
         </p>
-        <span className="text-xs text-[#3f3f46]">— no analyses this session</span>
+        <p className="text-xs text-[#3f3f46]">
+          No analyses yet. Paste an enquiry in the Analyse tab to get started. Results are saved here automatically.
+        </p>
+        <p className="text-[10px] text-[#27272a]">
+          Local history is stored only in this browser. Not saved to the 2KO backend. Not shared with other admins.
+        </p>
       </div>
     );
   }
@@ -93,7 +98,7 @@ export function LocalHistoryPanel({
         </button>
         <div className="flex items-center gap-3">
           <p className="text-[10px] text-[#3f3f46] hidden sm:block">
-            Browser only — not saved to backend
+            Browser only · not saved to backend · not shared · export backup before clearing
           </p>
           <button
             type="button"
@@ -211,7 +216,7 @@ export function LocalHistoryPanel({
 
           {/* Disclaimer */}
           <p className="px-5 py-2 text-[10px] text-[#3f3f46] border-b border-[#1c1c1e]">
-            Temporary browser history — cleared when browser storage is cleared.
+            Local history is stored only in this browser. Clearing browser data removes it. Not shared with other admins. Not saved to the 2KO backend. Export a backup before clearing browser data or switching devices.
           </p>
 
           {/* Items */}

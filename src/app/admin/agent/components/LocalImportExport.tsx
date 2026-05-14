@@ -59,7 +59,11 @@ export function LocalImportExport({
   }
 
   return (
-    <div className="px-5 py-3 border-t border-[#1c1c1e] flex flex-wrap items-center gap-3">
+    <div className="px-5 py-3 border-t border-[#1c1c1e] space-y-2">
+      <p className="text-[10px] text-[#3f3f46]">
+        Local history is stored only in this browser. Clearing browser data removes it. Not shared with other admins. Not saved to the 2KO backend. Export a backup before clearing browser data or switching devices.
+      </p>
+      <div className="flex flex-wrap items-center gap-3">
       <p className="text-[10px] font-mono text-[#3f3f46]">Export / Import</p>
       <button
         type="button"
@@ -115,6 +119,7 @@ export function LocalImportExport({
           </button>
         </div>
       )}
+      </div>
     </div>
   );
 }
