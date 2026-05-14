@@ -196,7 +196,7 @@ export default function AgentConsole() {
   // ── render ─────────────────────────────────────────────────────────────────
 
   return (
-    <div className="fixed inset-0 z-[99999] bg-[#0a0a0b] overflow-y-auto">
+    <div className="min-h-screen overflow-y-auto">
       {/* Top bar */}
       <div className="sticky top-0 z-10 border-b border-[#1c1c1e] bg-[#0a0a0b]/95 backdrop-blur-sm px-6 py-3.5 flex items-center justify-between">
         <div className="flex items-center gap-3">

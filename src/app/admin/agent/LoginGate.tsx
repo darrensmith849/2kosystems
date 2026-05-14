@@ -36,7 +36,7 @@ export default function LoginGate() {
   }
 
   return (
-    <div className="fixed inset-0 z-[99999] bg-[#0a0a0b] flex items-center justify-center p-6">
+    <div className="min-h-screen flex items-center justify-center p-6">
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
           <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#71717a] mb-3">
