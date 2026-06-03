@@ -75,6 +75,64 @@ the SDK (`@anthropic-ai/sdk`) is already a project dependency. After the
 next deploy, the assistant returns `mode: 'ai'` instead of
 `mode: 'search_only'`.
 
+## Categories
+
+The Ask UI presents a horizontal **category filter** above the suggested
+questions list (see `CATEGORIES` in
+`src/app/admin/ops/ask/AskClient.tsx`). The categories are:
+
+`All`, `Activation`, `Infrastructure`, `Clients`, `Assets`, `Repos`,
+`Vercel`, `Hetzner`, `Incidents`, `Renewals`, `Decisions`, `Next steps`.
+
+Each suggested question is tagged with one category (see
+`SUGGESTED_QUESTIONS`). Selecting a category narrows the suggested-question
+strip to that subset; selecting `All` shows the full set. The category
+filter is a UI affordance only — it does **not** alter the request body
+sent to `/api/admin/ops/assistant/query`. The assistant always reads from
+the full knowledge index; structural narrowing is done via the request's
+`filters.types` / `filters.blockedBy`, not the category chip.
+
+## Saved questions
+
+Below the suggested strip the UI shows a **Saved questions** rail backed
+by `localStorage` key `2ko_ops_saved_questions_v1` (see
+`SAVED_QUESTIONS_KEY` in `src/lib/ops/saved-workspace-local-state.ts`).
+
+Each saved question is:
+
+```ts
+type SavedQuestion = {
+  id: string;        // deterministic via makeIdFromName(name)
+  name: string;      // operator-supplied label
+  question: string;  // the prompt to re-run
+  category?: string; // optional, mirrors the category chips
+  createdAt: string; // ISO timestamp
+};
+```
+
+Saved questions are browser-local — they never reach the network and never
+sync between devices until the DB is connected. Clicking a saved row
+populates the question textbox; the operator submits manually so the
+request is auditable in the visible chat log.
+
+## Safety panel
+
+The Ask page renders a small **Safety panel** at the bottom of the
+session — a non-interactive amber panel that reiterates the boundaries the
+assistant enforces:
+
+- never browses the web,
+- never calls a provider API,
+- never executes anything,
+- never exposes secrets, tokens, passwords, or DB credentials,
+- never invents infrastructure state,
+- always labels snapshot vs live findings,
+- always answers from the supplied SOURCES or says "I don't know".
+
+The panel is informational. It exists so that an operator sharing their
+screen with a third party can point at the boundaries without leaving
+the page.
+
 ## Fallback mode
 
 When `ANTHROPIC_API_KEY` is unset, `isAiKeyConfigured()` returns `false` and

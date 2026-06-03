@@ -1,7 +1,9 @@
 # /admin/ops — Hetzner activation runbook
 
-> See also: [`ops-db-setup.md`](./ops-db-setup.md) (one-time setup reference)
-> and [`ops-local-dev.md`](./ops-local-dev.md) (laptop workflow).
+> See also: [`ops-db-setup.md`](./ops-db-setup.md) (one-time setup reference),
+> [`ops-local-dev.md`](./ops-local-dev.md) (laptop workflow), and
+> [`ops-activation-checklist.md`](./ops-activation-checklist.md) — the
+> concise in-app mirror of the 16-step sequence below.
 
 This is the **operator playbook for the day Hetzner Postgres comes online**.
 Today the dashboard is wired to skeleton/snapshot mode. The moment
@@ -22,6 +24,26 @@ Until that day arrives the dashboard stays in graceful no-DB mode —
 `/admin/ops` renders skeleton pages, mutation routes return 503, and sync
 runs are skipped with status `skipped`. None of that blocks the rest of the
 site.
+
+## Dashboard surfaces
+
+This runbook is mirrored by two in-app surfaces. Use them as the live
+operator view; treat the runbook as the source of truth.
+
+- **`/admin/ops/activation`** — the 16-step activation checklist with
+  per-step status badges (`Done` / `Pending` / `Blocked` / `Manual`)
+  derived from `Boolean(process.env.X)` presence checks and
+  `isDbConfigured()`. The page lists the same five runbooks under
+  "Runbook links" at the bottom. See
+  [`ops-activation-checklist.md`](./ops-activation-checklist.md) for the
+  full behaviour spec.
+- **`ActivationReadiness` panel on `/admin/ops`** — renders only when
+  `isDbConfigured()` is false, and groups the same signals into Ready /
+  Needs credential / Needs human decision / Waiting for Hetzner / Optional
+  later buckets.
+
+Both surfaces are read-only. They never mutate env vars or write to
+provider APIs.
 
 ## Prerequisites
 

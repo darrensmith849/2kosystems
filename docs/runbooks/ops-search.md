@@ -97,6 +97,45 @@ All filters are optional. Combine freely.
 | 9 | `{ types: ["audit_finding"], status: ["open"] }` | All open audit findings. |
 | 10 | `{ q: "ticket", clientId: "<id>" }` | Tickets scoped to a specific client. |
 
+## Saved searches
+
+`/admin/ops/search` exposes a **Saved searches** rail above the result
+table. State lives in `localStorage` under key `2ko_ops_saved_searches_v1`
+(`SAVED_SEARCHES_KEY` in `src/lib/ops/saved-workspace-local-state.ts`).
+Each entry is:
+
+```ts
+type SavedSearch = {
+  id: string;        // deterministic via makeIdFromName(name)
+  name: string;      // operator-supplied label
+  q: string;         // free-text query (same tokenizer)
+  types?: string[];  // optional IndexItem['type'] restriction
+  sources?: string[];// optional IndexItem['source'] restriction
+  blockedBy?: string[]; // optional structural filter
+  createdAt: string; // ISO timestamp
+};
+```
+
+Saving captures the current query plus the active structural filters.
+Loading a saved search rehydrates both — the search box and the filter
+chips — and re-runs the scorer client-side over the in-memory index. Saved
+searches are browser-local; nothing reaches the network and nothing syncs
+between devices. The `id` is derived deterministically from `name` so the
+same label always overwrites in place.
+
+## Routes table
+
+| Route | Surface | Storage |
+|---|---|---|
+| `/admin/ops/search` | In-app search box, filter chips, saved-searches rail | `2ko_ops_saved_searches_v1` (localStorage) — saved-workspace state, see `src/lib/ops/saved-workspace-local-state.ts`. |
+| `/admin/ops/ask` | Assistant Q&A, category chips, saved-questions rail | `2ko_ops_saved_questions_v1` (localStorage) — same saved-workspace module. |
+| `/admin/ops/review` | Decisions list + local review session | `2ko_ops_review_state_v1` (per-decision picks) + `2ko_ops_review_session_v1` (session shell). |
+
+All three localStorage keys live in the same module
+(`saved-workspace-local-state.ts`) so the browser-local workspace stays
+auditable in one place. None of the keys ever touch the network until
+`DATABASE_URL` is set and a per-key migration is wired explicitly.
+
 ## Without DB
 
 In graceful no-DB mode the index is built entirely from
