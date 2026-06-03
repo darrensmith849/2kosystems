@@ -1,6 +1,7 @@
 import { AdminCard, SectionHeader } from '@/components/admin-ui';
 import SnapshotBanner from '@/components/admin-ui/SnapshotBanner';
 import ImportPreviewCard from '@/components/admin-ui/ImportPreviewCard';
+import DecisionBridgeCard from '@/components/admin-ui/DecisionBridgeCard';
 import NotConnectedBanner from '../NotConnectedBanner';
 import { isSnapshotMode } from '@/lib/ops/snapshot-mode';
 import { listSnapshotDecisionItems } from '@/lib/ops/ops-snapshot-data';
@@ -31,6 +32,11 @@ export default async function ReviewPage() {
       </div>
 
       <DecisionsClient initialDecisions={decisions} />
+
+      <section className="mt-8">
+        <h3 className="text-sm font-semibold text-[#f5f5f5] mb-3">Decision-to-ticket bridge</h3>
+        <DecisionBridgeCard />
+      </section>
 
       <div className="mt-8">
         <AdminCard title="What this page is for">
