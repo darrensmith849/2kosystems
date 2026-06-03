@@ -22,6 +22,7 @@ export const OPS_NAV_GROUPS: OpsNavGroup[] = [
       { href: '/admin/ops/ask', label: 'Ask' },
       { href: '/admin/ops/clients', label: 'Clients' },
       { href: '/admin/ops/assets', label: 'Assets' },
+      { href: '/admin/ops/map', label: 'Map' },
     ],
   },
   {
@@ -43,10 +44,13 @@ export const OPS_NAV_GROUPS: OpsNavGroup[] = [
   {
     title: 'Control',
     items: [
+      { href: '/admin/ops/activation', label: 'Activation' },
       { href: '/admin/ops/reports', label: 'Reports' },
       { href: '/admin/ops/audits', label: 'Audits' },
       { href: '/admin/ops/review', label: 'Review' },
       { href: '/admin/ops/sync-log', label: 'Sync Log' },
+      { href: '/admin/ops/runbooks', label: 'Runbooks' },
+      { href: '/admin/ops/health', label: 'Health' },
       { href: '/admin/ops/settings', label: 'Settings' },
     ],
   },
