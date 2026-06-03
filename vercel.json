@@ -1,3 +1,10 @@
 {
-  "framework": "nextjs"
+  "framework": "nextjs",
+  "crons": [
+    { "path": "/api/cron/github-sync", "schedule": "0 */6 * * *" },
+    { "path": "/api/cron/vercel-sync", "schedule": "*/30 * * * *" },
+    { "path": "/api/cron/cloudflare-sync", "schedule": "0 */6 * * *" },
+    { "path": "/api/cron/hetzner-sync", "schedule": "*/15 * * * *" },
+    { "path": "/api/cron/renewals-remind", "schedule": "0 7 * * *" }
+  ]
 }
