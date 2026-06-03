@@ -81,10 +81,12 @@ export default function IncidentsClient({
   initialIncidents,
   assets,
   clients,
+  isSnapshot = false,
 }: {
   initialIncidents: IncidentWithRefs[];
   assets: { id: string; name: string }[];
   clients: { id: string; name: string }[];
+  isSnapshot?: boolean;
 }) {
   const router = useRouter();
   const [summary, setSummary] = useState('');
@@ -203,6 +205,13 @@ export default function IncidentsClient({
 
   return (
     <div className="space-y-5">
+      {isSnapshot ? (
+        <AdminCard title="Log incident — read-only in snapshot mode">
+          <p className="text-xs text-[#a1a1aa]">
+            Creating incidents activates once <code className="text-emerald-300">DATABASE_URL</code> is set. Below are real operational incidents from the discovery (dead IP, stranded zones, disk-fill, redirect gap).
+          </p>
+        </AdminCard>
+      ) : (
       <AdminCard title="Log incident">
         <form onSubmit={handleCreate} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-3">
           <input
@@ -272,6 +281,7 @@ export default function IncidentsClient({
         </form>
         {error && <p className="mt-3 text-sm text-rose-400">{error}</p>}
       </AdminCard>
+      )}
 
       <div className="flex flex-col gap-3 rounded-2xl border border-[#27272a] bg-[#111113] p-4 md:flex-row md:items-center md:justify-between">
         <div className="flex flex-col gap-2">

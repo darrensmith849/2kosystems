@@ -12,7 +12,19 @@ import { isDbConfigured } from '@/lib/db/client';
 import { AdminCard, SectionHeader, Badge } from '@/components/admin-ui';
 import ReadinessChecklist from '@/components/admin-ui/ReadinessChecklist';
 import WaitingForDb from '@/components/admin-ui/WaitingForDb';
+import SnapshotBanner from '@/components/admin-ui/SnapshotBanner';
 import NotConnectedBanner from './NotConnectedBanner';
+import { isSnapshotMode } from '@/lib/ops/snapshot-mode';
+import {
+  SNAPSHOT_CLIENTS,
+  SNAPSHOT_ASSETS,
+  SNAPSHOT_REPOS,
+  SNAPSHOT_VERCEL_PROJECTS,
+  SNAPSHOT_FINDINGS,
+  SNAPSHOT_RENEWALS,
+  SNAPSHOT_TICKETS,
+  SNAPSHOT_INCIDENTS,
+} from '@/lib/ops/ops-snapshot-data';
 
 // Lightweight defensive wrapper — even though every service is already graceful
 // when DB is null, the Overview page is the dashboard's front door so we wrap
@@ -39,17 +51,30 @@ const URGENT_WINDOWS = new Set(['overdue', 'due', 'within_7', 'within_14']);
 const OPEN_INCIDENT_STATUSES = new Set(['open', 'investigating', 'identified', 'monitoring']);
 
 export default async function OpsOverviewPage() {
-  const [clients, assets, repos, vercel, findings, recentSyncs, renewals, tickets, incidents] = await Promise.all([
-    safe(listClients(), []),
-    safe(listAssets(), []),
-    safe(listStoredGithubRepos(), []),
-    safe(listStoredVercelProjects(), []),
-    safe(listFindings({ status: 'open' }), []),
-    safe(listRecentSyncRuns(5), []),
-    safe(listRenewals(), [] as RenewalWithRefs[]),
-    safe(listTickets(), [] as TicketWithRefs[]),
-    safe(listIncidents(), [] as IncidentWithRefs[]),
-  ]);
+  const snapshot = isSnapshotMode();
+  const [clients, assets, repos, vercel, findings, recentSyncs, renewals, tickets, incidents] = snapshot
+    ? [
+        SNAPSHOT_CLIENTS,
+        SNAPSHOT_ASSETS,
+        SNAPSHOT_REPOS,
+        SNAPSHOT_VERCEL_PROJECTS,
+        SNAPSHOT_FINDINGS,
+        [] as Awaited<ReturnType<typeof listRecentSyncRuns>>,
+        SNAPSHOT_RENEWALS,
+        SNAPSHOT_TICKETS,
+        SNAPSHOT_INCIDENTS,
+      ]
+    : await Promise.all([
+        safe(listClients(), []),
+        safe(listAssets(), []),
+        safe(listStoredGithubRepos(), []),
+        safe(listStoredVercelProjects(), []),
+        safe(listFindings({ status: 'open' }), []),
+        safe(listRecentSyncRuns(5), []),
+        safe(listRenewals(), [] as RenewalWithRefs[]),
+        safe(listTickets(), [] as TicketWithRefs[]),
+        safe(listIncidents(), [] as IncidentWithRefs[]),
+      ]);
   const conn = allConnectivity();
   const dbConfigured = isDbConfigured();
   const reposActive = repos.filter((r) => r.category !== 'personal_excluded' && r.category !== 'legacy_stale').length;
@@ -78,20 +103,26 @@ export default async function OpsOverviewPage() {
   return (
     <>
       <SectionHeader title="Overview" subtitle="High-level snapshot of clients, infrastructure, and open findings." />
-      {!dbConfigured && (
-        <p className="mb-4 text-xs text-amber-200">
-          Production DB is intentionally not connected yet — Hetzner ops DB lands next week. See Settings -&gt; Phase 2A — Migration readiness for the checklist.
-        </p>
+      {snapshot ? (
+        <SnapshotBanner area="The Overview" />
+      ) : (
+        <>
+          {!dbConfigured && (
+            <p className="mb-4 text-xs text-amber-200">
+              Production DB is intentionally not connected yet — Hetzner ops DB lands next week. See Settings -&gt; Phase 2A — Migration readiness for the checklist.
+            </p>
+          )}
+          <NotConnectedBanner />
+          <WaitingForDb
+            area="Overview"
+            whatYouWillSee={[
+              'Live counts of clients, assets, open tickets, and renewals',
+              'Top urgent renewals, high-priority tickets, and open incidents',
+              'Recent sync run history across every provider',
+            ]}
+          />
+        </>
       )}
-      <NotConnectedBanner />
-      <WaitingForDb
-        area="Overview"
-        whatYouWillSee={[
-          'Live counts of clients, assets, open tickets, and renewals',
-          'Top urgent renewals, high-priority tickets, and open incidents',
-          'Recent sync run history across every provider',
-        ]}
-      />
 
       <h3 className="text-xs font-mono uppercase tracking-[0.18em] text-[#71717a] mb-3">
         What needs your attention this week
@@ -101,7 +132,7 @@ export default async function OpsOverviewPage() {
           title="Renewals due soon"
           count={renewalsDueSoon.length}
           totalLabel={dbConfigured ? `${renewalsDueSoon.length} due within 14 days` : null}
-          dbConfigured={dbConfigured}
+          dbConfigured={dbConfigured || snapshot}
           sampleRows={[
             { label: 'Domain: example.co.za', meta: 'due in 3d' },
             { label: 'SSL: api.client.com', meta: 'due in 9d' },
@@ -134,7 +165,7 @@ export default async function OpsOverviewPage() {
           title="Open high-priority tickets"
           count={openHighPriorityTickets.length}
           totalLabel={dbConfigured ? `${openHighPriorityTickets.length} surfaced` : null}
-          dbConfigured={dbConfigured}
+          dbConfigured={dbConfigured || snapshot}
           sampleRows={[
             { label: 'Login intermittently failing', meta: 'urgent · ACME' },
             { label: 'Newsletter signup 500s', meta: 'high · Sigmafy' },
@@ -164,7 +195,7 @@ export default async function OpsOverviewPage() {
           title="Open incidents"
           count={openIncidents.length}
           totalLabel={dbConfigured ? `${openIncidents.length} open` : null}
-          dbConfigured={dbConfigured}
+          dbConfigured={dbConfigured || snapshot}
           sampleRows={[
             { label: 'CF zone DNS lookup failing', meta: 'major · investigating' },
             { label: 'Vercel build timeout', meta: 'minor · monitoring' },

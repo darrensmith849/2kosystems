@@ -13,9 +13,11 @@ const ASSET_TYPES = [
 export default function AssetsClient({
   initialAssets,
   clients,
+  isSnapshot = false,
 }: {
   initialAssets: AssetWithRefs[];
   clients: { id: string; name: string }[];
+  isSnapshot?: boolean;
 }) {
   const router = useRouter();
   const [name, setName] = useState('');
@@ -54,6 +56,37 @@ export default function AssetsClient({
     } finally {
       setBusy(false);
     }
+  }
+
+  if (isSnapshot) {
+    return (
+      <div className="space-y-5">
+        <AdminCard title="Add asset — read-only in snapshot mode">
+          <p className="text-xs text-[#a1a1aa]">
+            Creating assets activates once <code className="text-emerald-300">DATABASE_URL</code> is set. The rows below are the discovery snapshot.
+          </p>
+        </AdminCard>
+        <DataTable
+          rows={initialAssets}
+          columns={[
+            { key: 'name', header: 'Name', render: (a) => (
+              <span className="font-medium text-[#f5f5f5]">{a.name}
+                <span className="ml-2 inline-block text-[9px] font-mono uppercase tracking-[0.15em] text-emerald-300/80 border border-emerald-400/30 rounded-full px-1.5 py-0.5 align-middle">snapshot</span>
+              </span>
+            ) },
+            { key: 'type', header: 'Type', render: (a) => <Badge text={a.type} /> },
+            { key: 'client', header: 'Client', render: (a) => a.client?.name ?? <span className="text-[#52525b]">—</span> },
+            { key: 'url', header: 'Live URL', render: (a) =>
+              a.liveUrl
+                ? <a href={a.liveUrl} target="_blank" rel="noreferrer" className="text-emerald-300 hover:underline">{a.liveUrl}</a>
+                : <span className="text-[#52525b]">—</span>
+            },
+            { key: 'tech', header: 'Stack', render: (a) => a.techStack && a.techStack.length > 0 ? <span className="font-mono text-[10px] text-[#a1a1aa]">{a.techStack.join(', ')}</span> : <span className="text-[#52525b]">—</span> },
+            { key: 'notes', header: 'Notes', render: (a) => a.notes ? <span className="text-[11px] text-[#a1a1aa]">{a.notes}</span> : <span className="text-[#52525b]">—</span> },
+          ]}
+        />
+      </div>
+    );
   }
 
   return (

@@ -2,27 +2,43 @@ import { listAssets } from '@/lib/ops/assets-service';
 import { listClients } from '@/lib/ops/clients-service';
 import { SectionHeader } from '@/components/admin-ui';
 import WaitingForDb from '@/components/admin-ui/WaitingForDb';
+import SnapshotBanner from '@/components/admin-ui/SnapshotBanner';
 import NotConnectedBanner from '../NotConnectedBanner';
+import { isSnapshotMode } from '@/lib/ops/snapshot-mode';
+import { SNAPSHOT_ASSETS, SNAPSHOT_CLIENTS } from '@/lib/ops/ops-snapshot-data';
 import AssetsClient from './AssetsClient';
 
 export default async function AssetsPage() {
-  const [assets, clients] = await Promise.all([listAssets(), listClients()]);
+  const snapshot = isSnapshotMode();
+  const [assets, clients] = snapshot
+    ? [SNAPSHOT_ASSETS, SNAPSHOT_CLIENTS]
+    : await Promise.all([listAssets(), listClients()]);
   return (
     <>
       <SectionHeader
         title="Assets"
         subtitle="Every managed website / app / SaaS / API / internal tool. Linking to CF, Hetzner, Vercel, repo, domain is Phase 1+ as those tables fill."
       />
-      <NotConnectedBanner />
-      <WaitingForDb
-        area="Assets"
-        whatYouWillSee={[
-          'Asset inventory across all clients',
-          'Linked GitHub repos, Vercel projects, Cloudflare zones, Hetzner servers',
-          'Domain registrations and renewal windows per asset',
-        ]}
+      {snapshot ? (
+        <SnapshotBanner area="The asset inventory" />
+      ) : (
+        <>
+          <NotConnectedBanner />
+          <WaitingForDb
+            area="Assets"
+            whatYouWillSee={[
+              'Asset inventory across all clients',
+              'Linked GitHub repos, Vercel projects, Cloudflare zones, Hetzner servers',
+              'Domain registrations and renewal windows per asset',
+            ]}
+          />
+        </>
+      )}
+      <AssetsClient
+        initialAssets={assets}
+        clients={clients.map((c) => ({ id: c.id, name: c.name }))}
+        isSnapshot={snapshot}
       />
-      <AssetsClient initialAssets={assets} clients={clients.map((c) => ({ id: c.id, name: c.name }))} />
     </>
   );
 }

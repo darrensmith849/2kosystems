@@ -12,7 +12,7 @@ const STATUS_TONES: Record<string, 'neutral' | 'green' | 'amber' | 'rose' | 'blu
   open: 'amber', acknowledged: 'blue', resolved: 'green', wontfix: 'neutral',
 };
 
-export default function AuditsClient({ findings }: { findings: AuditFinding[] }) {
+export default function AuditsClient({ findings, isSnapshot = false }: { findings: AuditFinding[]; isSnapshot?: boolean }) {
   const router = useRouter();
   const [busy, setBusy] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -65,10 +65,11 @@ export default function AuditsClient({ findings }: { findings: AuditFinding[] })
           <button
             type="button"
             onClick={seedFindings}
-            disabled={busy === 'seed'}
+            disabled={busy === 'seed' || isSnapshot}
+            title={isSnapshot ? 'Seeding activates once DATABASE_URL is set' : undefined}
             className="rounded-full border border-[#27272a] hover:border-[#3f3f46] px-3 py-1 text-[11px] font-mono text-[#f5f5f5] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
-            {busy === 'seed' ? 'Seeding…' : 'Seed known issues'}
+            {busy === 'seed' ? 'Seeding…' : isSnapshot ? 'Seed (DB required)' : 'Seed known issues'}
           </button>
         }
       >
@@ -107,7 +108,7 @@ export default function AuditsClient({ findings }: { findings: AuditFinding[] })
                     <button
                       type="button"
                       onClick={() => setStatus(f.id, 'open')}
-                      disabled={busy === f.id}
+                      disabled={busy === f.id || isSnapshot}
                       className="text-[11px] text-[#71717a] hover:text-[#f5f5f5] border border-[#27272a] hover:border-[#3f3f46] rounded-full px-3 py-1"
                     >
                       Reopen
@@ -117,7 +118,7 @@ export default function AuditsClient({ findings }: { findings: AuditFinding[] })
                     <button
                       type="button"
                       onClick={() => setStatus(f.id, 'acknowledged')}
-                      disabled={busy === f.id}
+                      disabled={busy === f.id || isSnapshot}
                       className="text-[11px] text-sky-300 hover:text-sky-200 border border-sky-400/30 hover:border-sky-400/50 rounded-full px-3 py-1"
                     >
                       Acknowledge
@@ -128,7 +129,7 @@ export default function AuditsClient({ findings }: { findings: AuditFinding[] })
                       <button
                         type="button"
                         onClick={() => setStatus(f.id, 'resolved')}
-                        disabled={busy === f.id}
+                        disabled={busy === f.id || isSnapshot}
                         className="text-[11px] text-emerald-300 hover:text-emerald-200 border border-emerald-400/30 hover:border-emerald-400/50 rounded-full px-3 py-1"
                       >
                         Resolve
@@ -136,7 +137,7 @@ export default function AuditsClient({ findings }: { findings: AuditFinding[] })
                       <button
                         type="button"
                         onClick={() => setStatus(f.id, 'wontfix')}
-                        disabled={busy === f.id}
+                        disabled={busy === f.id || isSnapshot}
                         className="text-[11px] text-[#71717a] hover:text-[#f5f5f5] border border-[#27272a] hover:border-[#3f3f46] rounded-full px-3 py-1"
                       >
                         Won&apos;t fix

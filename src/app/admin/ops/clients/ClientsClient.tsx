@@ -10,7 +10,13 @@ const STATUS_TONES: Record<string, 'neutral' | 'green' | 'amber' | 'rose' | 'blu
   active: 'green', lead: 'blue', paused: 'amber', archived: 'neutral', former: 'rose',
 };
 
-export default function ClientsClient({ initialClients }: { initialClients: ClientWithDivision[] }) {
+export default function ClientsClient({
+  initialClients,
+  isSnapshot = false,
+}: {
+  initialClients: ClientWithDivision[];
+  isSnapshot?: boolean;
+}) {
   const router = useRouter();
   const [name, setName] = useState('');
   const [status, setStatus] = useState('active');
@@ -40,6 +46,19 @@ export default function ClientsClient({ initialClients }: { initialClients: Clie
     } finally {
       setBusy(false);
     }
+  }
+
+  if (isSnapshot) {
+    return (
+      <div className="space-y-5">
+        <AdminCard title="Add client — read-only in snapshot mode">
+          <p className="text-xs text-[#a1a1aa]">
+            Creating clients activates once <code className="text-emerald-300">DATABASE_URL</code> is set. The rows below are the discovery snapshot from <code className="text-emerald-300">infra-handover</code>.
+          </p>
+        </AdminCard>
+        <SnapshotTable rows={initialClients} />
+      </div>
+    );
   }
 
   return (
@@ -101,4 +120,29 @@ export default function ClientsClient({ initialClients }: { initialClients: Clie
 function fmtDate(d: Date | null): string {
   if (!d) return '—';
   return new Date(d).toISOString().slice(0, 10);
+}
+
+function SnapshotTable({ rows }: { rows: ClientWithDivision[] }) {
+  if (rows.length === 0) {
+    return <EmptyState title="Snapshot is empty" hint="Edit src/lib/ops/ops-snapshot-data.ts to seed more discovery entries." />;
+  }
+  return (
+    <DataTable
+      rows={rows}
+      columns={[
+        { key: 'name', header: 'Name', render: (c) => (
+          <span className="font-medium text-[#f5f5f5]">
+            {c.name}
+            <span className="ml-2 inline-block text-[9px] font-mono uppercase tracking-[0.15em] text-emerald-300/80 border border-emerald-400/30 rounded-full px-1.5 py-0.5 align-middle">
+              snapshot
+            </span>
+          </span>
+        ) },
+        { key: 'division', header: 'Division', render: (c) => c.division?.name ?? <span className="text-[#52525b]">—</span> },
+        { key: 'status', header: 'Status', render: (c) => <Badge text={c.status} tone={STATUS_TONES[c.status] ?? 'neutral'} /> },
+        { key: 'tags', header: 'Tags', render: (c) => c.tags.length > 0 ? <span className="font-mono text-[10px] text-[#a1a1aa]">{c.tags.join(', ')}</span> : <span className="text-[#52525b]">—</span> },
+        { key: 'notes', header: 'Notes', render: (c) => c.notes ? <span className="text-[11px] text-[#a1a1aa]">{c.notes}</span> : <span className="text-[#52525b]">—</span> },
+      ]}
+    />
+  );
 }

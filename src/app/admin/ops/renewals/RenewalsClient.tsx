@@ -82,11 +82,13 @@ export default function RenewalsClient({
   clients,
   assets = [],
   domains = [],
+  isSnapshot = false,
 }: {
   initialRenewals: RenewalWithRefs[];
   clients: PickerOption[];
   assets?: PickerOption[];
   domains?: PickerOption[];
+  isSnapshot?: boolean;
 }) {
   const router = useRouter();
   const [name, setName] = useState('');
@@ -234,6 +236,13 @@ export default function RenewalsClient({
 
   return (
     <div className="space-y-5">
+      {isSnapshot ? (
+        <AdminCard title="Add renewal — read-only in snapshot mode">
+          <p className="text-xs text-[#a1a1aa]">
+            Creating renewals activates once <code className="text-emerald-300">DATABASE_URL</code> is set. Below are real upcoming renewals (domains, hosting, SaaS) identified from the discovery work.
+          </p>
+        </AdminCard>
+      ) : (
       <AdminCard title="Add renewal">
         <form onSubmit={handleCreate} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-3">
           <input
@@ -349,6 +358,7 @@ export default function RenewalsClient({
         </form>
         {error && <p className="mt-3 text-sm text-rose-400">{error}</p>}
       </AdminCard>
+      )}
 
       {/* Filter bar */}
       <AdminCard title="Filters">

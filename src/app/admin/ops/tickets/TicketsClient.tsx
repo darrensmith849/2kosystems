@@ -61,11 +61,13 @@ export default function TicketsClient({
   clients,
   assets,
   operators,
+  isSnapshot = false,
 }: {
   initialTickets: TicketWithRefs[];
   clients: { id: string; name: string }[];
   assets: { id: string; name: string }[];
   operators: { id: string; slug: string; displayName: string }[];
+  isSnapshot?: boolean;
 }) {
   const router = useRouter();
   const [kind, setKind] = useState<(typeof TICKET_KINDS)[number]>('support');
@@ -139,6 +141,13 @@ export default function TicketsClient({
 
   return (
     <div className="space-y-5">
+      {isSnapshot ? (
+        <AdminCard title="Add ticket — read-only in snapshot mode">
+          <p className="text-xs text-[#a1a1aa]">
+            Creating tickets activates once <code className="text-emerald-300">DATABASE_URL</code> is set. The rows below are real operational tasks identified during discovery, marked <em className="text-emerald-300/80 not-italic">snapshot</em>.
+          </p>
+        </AdminCard>
+      ) : (
       <AdminCard title="Add ticket">
         <form onSubmit={handleCreate} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-3">
           <select
@@ -228,6 +237,7 @@ export default function TicketsClient({
         </form>
         {error && <p className="mt-3 text-sm text-rose-400">{error}</p>}
       </AdminCard>
+      )}
 
       <AdminCard title="Filters">
         <div className="space-y-3">
