@@ -20,7 +20,17 @@ import {
   SectionHeader,
 } from '@/components/admin-ui';
 import WaitingForDb from '@/components/admin-ui/WaitingForDb';
+import SnapshotBanner from '@/components/admin-ui/SnapshotBanner';
 import NotConnectedBanner from '../../NotConnectedBanner';
+import {
+  isSnapshotId,
+  getSnapshotClient,
+  listSnapshotAssetsForClient,
+  listSnapshotTicketsForClient,
+  listSnapshotRenewalsForClient,
+  listSnapshotIncidentsForClient,
+  getClientConfidence,
+} from '@/lib/ops/ops-snapshot-data';
 import type { Contact } from '@/lib/db/schema/clients';
 import type { Asset } from '@/lib/db/schema/assets';
 import type { TicketWithRefs } from '@/lib/ops/tickets-service';
@@ -72,16 +82,35 @@ export default async function ClientDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const client = await getClient(id).catch(() => null);
-  if (!client) notFound();
+  const isSnap = isSnapshotId(id);
 
-  const [contacts, clientAssets, tickets, renewals, incidents] = await Promise.all([
-    safeList<Contact>(() => listContactsForClient(id)),
-    safeList<Asset>(() => listAssetsForClient(id)),
-    safeList<TicketWithRefs>(() => listTicketsForClient(id)),
-    safeList<RenewalWithRefs>(() => listRenewalsForClient(id)),
-    safeList<IncidentWithRefs>(() => listIncidentsForClient(id)),
-  ]);
+  let client: Awaited<ReturnType<typeof getClient>> | null = null;
+  let contacts: Contact[] = [];
+  let clientAssets: Asset[] = [];
+  let tickets: TicketWithRefs[] = [];
+  let renewals: RenewalWithRefs[] = [];
+  let incidents: IncidentWithRefs[] = [];
+
+  if (isSnap) {
+    const snap = getSnapshotClient(id);
+    if (!snap) notFound();
+    client = snap;
+    clientAssets = listSnapshotAssetsForClient(id) as unknown as Asset[];
+    tickets = listSnapshotTicketsForClient(id);
+    renewals = listSnapshotRenewalsForClient(id);
+    incidents = listSnapshotIncidentsForClient(id);
+  } else {
+    client = await getClient(id).catch(() => null);
+    if (!client) notFound();
+    [contacts, clientAssets, tickets, renewals, incidents] = await Promise.all([
+      safeList<Contact>(() => listContactsForClient(id)),
+      safeList<Asset>(() => listAssetsForClient(id)),
+      safeList<TicketWithRefs>(() => listTicketsForClient(id)),
+      safeList<RenewalWithRefs>(() => listRenewalsForClient(id)),
+      safeList<IncidentWithRefs>(() => listIncidentsForClient(id)),
+    ]);
+  }
+  const confidence = isSnap ? getClientConfidence(id) : null;
 
   const openTickets = tickets.filter((t) => !CLOSED_TICKET_STATUSES.has(t.status));
   const upcomingRenewals = renewals.filter(
@@ -103,14 +132,20 @@ export default async function ClientDetailPage({
           </>
         }
       />
-      <NotConnectedBanner />
-      <WaitingForDb
-        area="Client detail"
-        whatYouWillSee={[
-          'Contacts attached to this client',
-          'Related assets, tickets, renewals, and incidents',
-        ]}
-      />
+      {isSnap ? (
+        <SnapshotBanner area="This client detail" />
+      ) : (
+        <>
+          <NotConnectedBanner />
+          <WaitingForDb
+            area="Client detail"
+            whatYouWillSee={[
+              'Contacts attached to this client',
+              'Related assets, tickets, renewals, and incidents',
+            ]}
+          />
+        </>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
         <AdminCard title="Client detail">
@@ -122,6 +157,25 @@ export default async function ClientDetailPage({
           />
           <Row label="Since" value={client.since ? fmtDate(client.since) : null} />
           <Row label="Division" value={client.division?.name ?? null} />
+          {confidence && (
+            <Row
+              label="Mapping confidence"
+              value={
+                <Badge
+                  text={confidence.replace('_', ' ')}
+                  tone={
+                    confidence === 'confirmed' ? 'green'
+                    : confidence === 'likely' ? 'blue'
+                    : confidence === 'needs_review' ? 'amber'
+                    : 'neutral'
+                  }
+                />
+              }
+            />
+          )}
+          {client.tags && client.tags.length > 0 && (
+            <Row label="Tags" value={<span className="font-mono text-[10px] text-[#a1a1aa]">{client.tags.join(', ')}</span>} />
+          )}
           <Row label="Notes" value={client.notes ?? null} />
         </AdminCard>
 

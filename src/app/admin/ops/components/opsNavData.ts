@@ -42,6 +42,7 @@ export const OPS_NAV_GROUPS: OpsNavGroup[] = [
     title: 'Control',
     items: [
       { href: '/admin/ops/audits', label: 'Audits' },
+      { href: '/admin/ops/review', label: 'Review' },
       { href: '/admin/ops/sync-log', label: 'Sync Log' },
       { href: '/admin/ops/settings', label: 'Settings' },
     ],

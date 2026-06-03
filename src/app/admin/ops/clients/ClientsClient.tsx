@@ -131,12 +131,12 @@ function SnapshotTable({ rows }: { rows: ClientWithDivision[] }) {
       rows={rows}
       columns={[
         { key: 'name', header: 'Name', render: (c) => (
-          <span className="font-medium text-[#f5f5f5]">
+          <Link href={`/admin/ops/clients/${c.id}`} className="font-medium text-[#f5f5f5] hover:text-emerald-300 transition-colors">
             {c.name}
-            <span className="ml-2 inline-block text-[9px] font-mono uppercase tracking-[0.15em] text-emerald-300/80 border border-emerald-400/30 rounded-full px-1.5 py-0.5 align-middle">
+            <span className="ml-2 inline-block text-[9px] uppercase tracking-wider text-emerald-300/80 border border-emerald-400/30 rounded-full px-1.5 py-0.5 align-middle">
               snapshot
             </span>
-          </span>
+          </Link>
         ) },
         { key: 'division', header: 'Division', render: (c) => c.division?.name ?? <span className="text-[#52525b]">—</span> },
         { key: 'status', header: 'Status', render: (c) => <Badge text={c.status} tone={STATUS_TONES[c.status] ?? 'neutral'} /> },

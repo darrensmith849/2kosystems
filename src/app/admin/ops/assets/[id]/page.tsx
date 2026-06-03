@@ -5,11 +5,20 @@ import { listTicketsForAsset } from '@/lib/ops/tickets-service';
 import { listRenewalsForSubject, computeRenewalWindow } from '@/lib/ops/renewals-service';
 import { listIncidentsForAsset } from '@/lib/ops/incidents-service';
 import { AdminCard, Badge, DataTable, EmptyState, Row, SectionHeader } from '@/components/admin-ui';
+import SnapshotBanner from '@/components/admin-ui/SnapshotBanner';
 import NotConnectedBanner from '../../NotConnectedBanner';
 import AssetLinksClient from './AssetLinksClient';
 import type { TicketWithRefs } from '@/lib/ops/tickets-service';
 import type { RenewalWithRefs } from '@/lib/ops/renewals-service';
 import type { IncidentWithRefs } from '@/lib/ops/incidents-service';
+import {
+  isSnapshotId,
+  getSnapshotAsset,
+  listSnapshotTicketsForAsset,
+  listSnapshotRenewalsForAsset,
+  listSnapshotIncidentsForAsset,
+  getAssetConfidence,
+} from '@/lib/ops/ops-snapshot-data';
 
 const PRIORITY_TONES: Record<string, 'neutral' | 'green' | 'amber' | 'rose' | 'blue'> = {
   low: 'neutral',
@@ -41,15 +50,32 @@ async function safeList<T>(fn: () => Promise<T[]>): Promise<T[]> {
 
 export default async function AssetDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const asset = await getAsset(id);
-  if (!asset) notFound();
-  const links = await listLinksForAsset(id);
+  const isSnap = isSnapshotId(id);
 
-  const [relatedTickets, relatedRenewals, relatedIncidents] = await Promise.all([
-    safeList<TicketWithRefs>(() => listTicketsForAsset(id)),
-    safeList<RenewalWithRefs>(() => listRenewalsForSubject('asset', id)),
-    safeList<IncidentWithRefs>(() => listIncidentsForAsset(id)),
-  ]);
+  let asset: Awaited<ReturnType<typeof getAsset>> | null = null;
+  let links: Awaited<ReturnType<typeof listLinksForAsset>> = [];
+  let relatedTickets: TicketWithRefs[] = [];
+  let relatedRenewals: RenewalWithRefs[] = [];
+  let relatedIncidents: IncidentWithRefs[] = [];
+
+  if (isSnap) {
+    const snap = getSnapshotAsset(id);
+    if (!snap) notFound();
+    asset = snap;
+    relatedTickets = listSnapshotTicketsForAsset(id);
+    relatedRenewals = listSnapshotRenewalsForAsset(id);
+    relatedIncidents = listSnapshotIncidentsForAsset(id);
+  } else {
+    asset = await getAsset(id);
+    if (!asset) notFound();
+    links = await listLinksForAsset(id);
+    [relatedTickets, relatedRenewals, relatedIncidents] = await Promise.all([
+      safeList<TicketWithRefs>(() => listTicketsForAsset(id)),
+      safeList<RenewalWithRefs>(() => listRenewalsForSubject('asset', id)),
+      safeList<IncidentWithRefs>(() => listIncidentsForAsset(id)),
+    ]);
+  }
+  const confidence = isSnap ? getAssetConfidence(id) : null;
 
   return (
     <>
@@ -63,7 +89,7 @@ export default async function AssetDetailPage({ params }: { params: Promise<{ id
           </span>
         }
       />
-      <NotConnectedBanner />
+      {isSnap ? <SnapshotBanner area="This asset detail" /> : <NotConnectedBanner />}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-5">
         <div className="lg:col-span-2">
           <AdminCard title="Asset detail">
@@ -82,6 +108,26 @@ export default async function AssetDetailPage({ params }: { params: Promise<{ id
               }
             />
             <Row label="Staging URL" value={asset.stagingUrl ?? null} />
+            {isSnap && (asset as { client?: { name: string } | null }).client?.name && (
+              <Row label="Client" value={(asset as { client?: { name: string } | null }).client!.name} />
+            )}
+            {isSnap && (asset as { division?: { name: string } | null }).division?.name && (
+              <Row label="Division" value={(asset as { division?: { name: string } | null }).division!.name} />
+            )}
+            {asset.techStack && asset.techStack.length > 0 && (
+              <Row label="Stack" value={<span className="font-mono text-[10px] text-[#a1a1aa]">{asset.techStack.join(', ')}</span>} />
+            )}
+            {confidence && (
+              <Row
+                label="Mapping confidence"
+                value={
+                  <Badge
+                    text={confidence.replace('_', ' ')}
+                    tone={confidence === 'confirmed' ? 'green' : confidence === 'likely' ? 'blue' : confidence === 'needs_review' ? 'amber' : 'neutral'}
+                  />
+                }
+              />
+            )}
             <Row label="Notes" value={asset.notes ?? null} />
           </AdminCard>
         </div>
@@ -93,7 +139,12 @@ export default async function AssetDetailPage({ params }: { params: Promise<{ id
         </AdminCard>
       </div>
 
-      <AssetLinksClient assetId={id} initialLinks={links} />
+      {!isSnap && <AssetLinksClient assetId={id} initialLinks={links} />}
+      {isSnap && (
+        <AdminCard title="Asset linking — read-only in snapshot mode">
+          <p className="text-xs text-[#a1a1aa]">Linking to repos / projects / zones / servers / domains activates when <code className="text-emerald-300">DATABASE_URL</code> is set.</p>
+        </AdminCard>
+      )}
 
       <div className="mt-5 grid grid-cols-1 lg:grid-cols-2 gap-4">
         <AdminCard title={`Related tickets · ${relatedTickets.length}`}>

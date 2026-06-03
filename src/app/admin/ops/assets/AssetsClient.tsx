@@ -70,9 +70,10 @@ export default function AssetsClient({
           rows={initialAssets}
           columns={[
             { key: 'name', header: 'Name', render: (a) => (
-              <span className="font-medium text-[#f5f5f5]">{a.name}
-                <span className="ml-2 inline-block text-[9px] font-mono uppercase tracking-[0.15em] text-emerald-300/80 border border-emerald-400/30 rounded-full px-1.5 py-0.5 align-middle">snapshot</span>
-              </span>
+              <Link href={`/admin/ops/assets/${a.id}`} className="font-medium text-[#f5f5f5] hover:text-emerald-300 transition-colors">
+                {a.name}
+                <span className="ml-2 inline-block text-[9px] uppercase tracking-wider text-emerald-300/80 border border-emerald-400/30 rounded-full px-1.5 py-0.5 align-middle">snapshot</span>
+              </Link>
             ) },
             { key: 'type', header: 'Type', render: (a) => <Badge text={a.type} /> },
             { key: 'client', header: 'Client', render: (a) => a.client?.name ?? <span className="text-[#52525b]">—</span> },

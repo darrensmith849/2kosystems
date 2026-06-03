@@ -507,6 +507,376 @@ export const SNAPSHOT_COUNTS = {
   incidents: SNAPSHOT_INCIDENTS.length,
 };
 
+// ---------------------------------------------------------------- Lookup helpers
+// All pure, all synchronous, all DB-free. Safe to import from anywhere.
+
+export function isSnapshotId(id: string | null | undefined): boolean {
+  return typeof id === 'string' && id.startsWith('snap-');
+}
+
+export function getSnapshotClient(id: string): ClientWithDivision | null {
+  return SNAPSHOT_CLIENTS.find((c) => c.id === id) ?? null;
+}
+
+export function getSnapshotAsset(id: string): AssetWithRefs | null {
+  return SNAPSHOT_ASSETS.find((a) => a.id === id) ?? null;
+}
+
+export function getSnapshotTicket(id: string): TicketWithRefs | null {
+  return SNAPSHOT_TICKETS.find((t) => t.id === id) ?? null;
+}
+
+export function getSnapshotRenewal(id: string): RenewalWithRefs | null {
+  return SNAPSHOT_RENEWALS.find((r) => r.id === id) ?? null;
+}
+
+export function getSnapshotIncident(id: string): IncidentWithRefs | null {
+  return SNAPSHOT_INCIDENTS.find((i) => i.id === id) ?? null;
+}
+
+export function listSnapshotAssetsForClient(clientId: string): AssetWithRefs[] {
+  return SNAPSHOT_ASSETS.filter((a) => a.clientId === clientId);
+}
+
+export function listSnapshotTicketsForClient(clientId: string): TicketWithRefs[] {
+  return SNAPSHOT_TICKETS.filter((t) => t.clientId === clientId);
+}
+
+export function listSnapshotTicketsForAsset(assetId: string): TicketWithRefs[] {
+  return SNAPSHOT_TICKETS.filter((t) => t.assetId === assetId);
+}
+
+export function listSnapshotRenewalsForClient(clientId: string): RenewalWithRefs[] {
+  return SNAPSHOT_RENEWALS.filter((r) => r.clientId === clientId);
+}
+
+export function listSnapshotRenewalsForAsset(assetId: string): RenewalWithRefs[] {
+  return SNAPSHOT_RENEWALS.filter((r) => r.subjectType === 'asset' && r.subjectId === assetId);
+}
+
+export function listSnapshotIncidentsForClient(clientId: string): IncidentWithRefs[] {
+  return SNAPSHOT_INCIDENTS.filter((i) => i.clientId === clientId);
+}
+
+export function listSnapshotIncidentsForAsset(assetId: string): IncidentWithRefs[] {
+  return SNAPSHOT_INCIDENTS.filter((i) => i.assetId === assetId);
+}
+
+export function listSnapshotReposForCategory(category: GithubRepo['category']): GithubRepo[] {
+  return SNAPSHOT_REPOS.filter((r) => r.category === category);
+}
+
+export function listSnapshotVercelForTeam(teamSlug: string): VercelProject[] {
+  return SNAPSHOT_VERCEL_PROJECTS.filter((v) => v.teamSlug === teamSlug);
+}
+
+// ---------------------------------------------------------------- Mapping confidence
+// Used in detail pages to communicate how certain we are about a snapshot
+// row's classification. "confirmed" — discovered from infra-handover and
+// verified. "likely" — strong heuristic. "needs_review" — ambiguous.
+// "unknown" — placeholder pending operator decision.
+
+export type MappingConfidence = 'confirmed' | 'likely' | 'needs_review' | 'unknown';
+
+const CLIENT_CONFIDENCE: Record<string, MappingConfidence> = {
+  'snap-client-2ko-systems': 'confirmed',
+  'snap-client-2ko-africa': 'confirmed',
+  'snap-client-six-sigma-sa': 'confirmed',
+  'snap-client-sigmaphi': 'confirmed',
+  'snap-client-autotax': 'confirmed',
+  'snap-client-coastal-security': 'confirmed',
+  'snap-client-flex-and-flow': 'confirmed',
+  'snap-client-all-the-glory': 'likely',
+  'snap-client-crewter': 'confirmed',
+  'snap-client-impart-agency': 'confirmed',
+  'snap-client-sa-private-schools': 'confirmed',
+  'snap-client-smart-home-architects': 'likely',
+  'snap-client-gay-weddings': 'likely',
+  'snap-client-coupex': 'needs_review',
+  'snap-client-tax-up': 'needs_review',
+};
+
+const ASSET_CONFIDENCE: Record<string, MappingConfidence> = {
+  'snap-asset-impart-ai': 'needs_review',
+  'snap-asset-coupex-net': 'needs_review',
+  'snap-asset-taxup-app': 'needs_review',
+  'snap-asset-impart-us': 'needs_review',
+};
+
+export function getClientConfidence(id: string): MappingConfidence {
+  return CLIENT_CONFIDENCE[id] ?? 'confirmed';
+}
+
+export function getAssetConfidence(id: string): MappingConfidence {
+  return ASSET_CONFIDENCE[id] ?? 'confirmed';
+}
+
+// ---------------------------------------------------------------- Review/Decisions
+
+export type DecisionOption = { label: string; recommended?: boolean };
+
+export type SnapshotDecision = {
+  id: string;
+  cluster: 'repo_cluster' | 'unmapped_vercel' | 'cleanup' | 'incident' | 'backup';
+  title: string;
+  context: string;
+  options: DecisionOption[];
+  recommendation: string;
+  risk: 'low' | 'med' | 'high';
+  action: string;
+  blockedBy: ('db' | 'ssh' | 'github_token' | 'cloudflare_token' | 'vercel_token' | 'hetzner_token' | 'none')[];
+};
+
+export const SNAPSHOT_DECISIONS: SnapshotDecision[] = [
+  // Repo clusters
+  {
+    id: 'dec-repo-saps',
+    cluster: 'repo_cluster',
+    title: 'SAPS — pick canonical repo (3 candidates)',
+    context: 'saps, sa_private_schools, saprivateschools all exist. The Hetzner systemd unit is saps.service in /srv/node/saps, and the live site is saprivateschools.co.za.',
+    options: [
+      { label: 'Keep saps (matches systemd unit + /srv path)', recommended: true },
+      { label: 'Keep saprivateschools (matches domain)' },
+      { label: 'Keep sa_private_schools' },
+    ],
+    recommendation: 'Keep saps. Archive sa_private_schools and saprivateschools. Update infra-handover INVENTORY.md to record the decision.',
+    risk: 'low',
+    action: 'gh repo archive darrensmith849/sa_private_schools && gh repo archive darrensmith849/saprivateschools',
+    blockedBy: ['github_token'],
+  },
+  {
+    id: 'dec-repo-impart',
+    cluster: 'repo_cluster',
+    title: 'Impart Agency — pick canonical repo (3 candidates)',
+    context: 'impart_agency, impart_agency_site, impart_agency_website. The Hetzner /srv/node/impart_agency_site path matches systemd. The Vercel-still-live project is named impart_agency_site (impartagency.us).',
+    options: [
+      { label: 'Keep impart_agency (clean name, owns the .co.za primary)', recommended: true },
+      { label: 'Keep impart_agency_site (matches Hetzner systemd + Vercel project)' },
+    ],
+    recommendation: 'Keep impart_agency_site for now — it matches both systemd and Vercel. Re-rename later once redirect is in place.',
+    risk: 'low',
+    action: 'gh repo archive darrensmith849/impart_agency && gh repo archive darrensmith849/impart_agency_website',
+    blockedBy: ['github_token'],
+  },
+  {
+    id: 'dec-repo-glory',
+    cluster: 'repo_cluster',
+    title: 'All The Glory — pick canonical repo (3 candidates)',
+    context: 'allthegloryclaude, allthe_glory, alltheglory101. Vercel project allthegloryclaude is the one serving alltheglory.co.za.',
+    options: [
+      { label: 'Keep allthegloryclaude (matches Vercel project)', recommended: true },
+    ],
+    recommendation: 'Keep allthegloryclaude. Archive the other two.',
+    risk: 'low',
+    action: 'gh repo archive darrensmith849/allthe_glory && gh repo archive darrensmith849/alltheglory101',
+    blockedBy: ['github_token'],
+  },
+  {
+    id: 'dec-repo-smarthome',
+    cluster: 'repo_cluster',
+    title: 'SmartHomeArchitects — typo cluster (2 candidates)',
+    context: 'smarthomearchitects_website vs smarthomearchitects_websaite (typo in second). Hetzner WP pool is `smarthome`. No Vercel involvement.',
+    options: [
+      { label: 'Keep smarthomearchitects_website (correct spelling)', recommended: true },
+    ],
+    recommendation: 'Keep smarthomearchitects_website. Archive the typo variant.',
+    risk: 'low',
+    action: 'gh repo archive darrensmith849/smarthomearchitects_websaite',
+    blockedBy: ['github_token'],
+  },
+  {
+    id: 'dec-repo-autotax',
+    cluster: 'repo_cluster',
+    title: 'AutoTax / Taxo — repo vs systemd-name mismatch',
+    context: 'Repo names: autotax + taxo. Hetzner systemd units: taxo-web.service + taxo-api.service. The live site is autotax.co.za. Subjective: align names or keep both.',
+    options: [
+      { label: 'Keep autotax (matches domain)', recommended: true },
+      { label: 'Keep taxo (matches systemd)' },
+    ],
+    recommendation: 'Keep autotax. Rename Hetzner systemd units from taxo-* to autotax-* in a follow-up SSH session. Archive taxo repo.',
+    risk: 'med',
+    action: 'On ma130-apps: systemctl rename + reload; then gh repo archive darrensmith849/taxo',
+    blockedBy: ['ssh', 'github_token'],
+  },
+
+  // Unmapped Vercel/domains
+  {
+    id: 'dec-unmapped-coupex',
+    cluster: 'unmapped_vercel',
+    title: 'coupex.net — owner mapping needed',
+    context: 'Live on impart-global Vercel team. Project name "coupex". No reference in infra-handover. Could be Impart Agency-related (same team) or fully external.',
+    options: [
+      { label: 'Map to Impart Agency client' },
+      { label: 'Create a new "Coupex" client', recommended: true },
+      { label: 'Mark for shutdown if unowned' },
+    ],
+    recommendation: 'Create a new "Coupex" client and assign coupex.net to it. If turns out Impart owns it, reassign once confirmed.',
+    risk: 'low',
+    action: 'Manual: ask Impart Global directly, or check coupex.net for branding/contact info.',
+    blockedBy: ['none'],
+  },
+  {
+    id: 'dec-unmapped-taxup',
+    cluster: 'unmapped_vercel',
+    title: 'taxup.app — owner mapping + legacy DB risk',
+    context: 'Live on impart-global Vercel team. Project "tax-up". A legacy `taxup` Postgres DB exists on ma130-data — unaudited. Likely related.',
+    options: [
+      { label: 'Map to Impart Agency client', recommended: true },
+      { label: 'Create a separate "TaxUp" client' },
+    ],
+    recommendation: 'Map to Impart Agency. Audit the taxup Postgres DB on ma130-data to confirm it powers this site.',
+    risk: 'med',
+    action: 'SSH ma130-data → list databases → check taxup DB activity → confirm linkage',
+    blockedBy: ['ssh'],
+  },
+  {
+    id: 'dec-unmapped-impartai',
+    cluster: 'unmapped_vercel',
+    title: 'impartai.co.za — third Impart property',
+    context: 'Live on impart-global Vercel team. Project "impart-agency-site". This is a third Impart-branded property beyond impartagency.co.za and impartagency.us.',
+    options: [
+      { label: 'Map to existing Impart Agency client', recommended: true },
+      { label: 'Investigate whether it is an experiment to retire' },
+    ],
+    recommendation: 'Map to Impart Agency. Add a follow-up ticket to confirm whether all three Impart domains should remain live.',
+    risk: 'low',
+    action: 'Manual: ask Impart Agency.',
+    blockedBy: ['none'],
+  },
+  {
+    id: 'dec-unmapped-postigo',
+    cluster: 'unmapped_vercel',
+    title: 'postigo.app + postigo.co.za — not bound to a project',
+    context: 'Listed in infra-handover INVENTORY but no Vercel project mapping. May be inactive, may be on a different host.',
+    options: [
+      { label: 'Investigate where DNS points', recommended: true },
+      { label: 'Mark for retirement if no traffic' },
+    ],
+    recommendation: 'Resolve DNS and check current host before further action.',
+    risk: 'low',
+    action: 'dig postigo.app and postigo.co.za to see current A/AAAA targets.',
+    blockedBy: ['none'],
+  },
+
+  // Cleanup
+  {
+    id: 'dec-cleanup-dormant-vercel',
+    cluster: 'cleanup',
+    title: 'Delete ~25 dormant Vercel projects (pumpbots-projects team)',
+    context: 'ukama, pumpbot, lovelace-moki, strongtower, coupex (separate from impart-global), website-while-you-wait, toritradestodamoon, schools_near_me_us, base_test_2, im-kade, edenlang, anniversaryclaude, rileyscarwash, highendtravel, darreniscool×2, allthe_glory, alltheglory101, slabheadcodex, slabhead.co.za, danielpeter, smarthomearchitects_website, 2ko_website, sigmafy-funnel-public.',
+    options: [
+      { label: 'Delete one-by-one after manual review', recommended: true },
+      { label: 'Bulk-delete after first confirming no custom domains attached' },
+    ],
+    recommendation: 'Manual review per-project. Delete via vercel projects rm <name> --yes --scope pumpbots-projects.',
+    risk: 'med',
+    action: 'vercel projects rm <name> --yes --scope pumpbots-projects',
+    blockedBy: ['vercel_token'],
+  },
+  {
+    id: 'dec-cleanup-xneelo-zones',
+    cluster: 'cleanup',
+    title: '4 stranded xneelo zones — NS update or formal retirement',
+    context: 'plasticsurgerycapetown, schoolsnearme.au, leansixsigmaafrica, iammeskincare. Sites currently down. NS update at xneelo was skipped during the MA130 cancellation rush.',
+    options: [
+      { label: 'Complete NS migration to Cloudflare' },
+      { label: 'Formally retire all four', recommended: true },
+    ],
+    recommendation: 'Confirm with the original owners whether any of these should be revived. If none, formally retire and document.',
+    risk: 'low',
+    action: 'Per-zone: log into xneelo, decide, update NS or close.',
+    blockedBy: ['none'],
+  },
+  {
+    id: 'dec-cleanup-dead-ip',
+    cluster: 'cleanup',
+    title: 'dev.saprivateschools.co.za — dead MA130 A record',
+    context: 'A record points to 78.46.220.231 (dead). Not blocking but should be cleaned up.',
+    options: [
+      { label: 'Delete the dev. record', recommended: true },
+      { label: 'Repoint to a current staging host' },
+    ],
+    recommendation: 'Delete the record. SAPS already has dev/staging on ma130-apps via different hostnames.',
+    risk: 'low',
+    action: 'Via Cloudflare DNS UI or API.',
+    blockedBy: ['cloudflare_token'],
+  },
+  {
+    id: 'dec-cleanup-taxup-db',
+    cluster: 'cleanup',
+    title: 'taxup legacy DB on ma130-data — audit before deciding',
+    context: 'Legacy Postgres DB on ma130-data, not yet audited. May still be in use by taxup.app (impart-global Vercel team).',
+    options: [
+      { label: 'Audit first, then decide', recommended: true },
+    ],
+    recommendation: 'Read-only audit: check pg_stat_activity, recent writes, table sizes. Then decide.',
+    risk: 'high',
+    action: 'SSH ma130-data → sudo -u postgres psql taxup → run audit queries.',
+    blockedBy: ['ssh'],
+  },
+  {
+    id: 'dec-incident-disk',
+    cluster: 'incident',
+    title: 'ma130-apps disk fill risk — add daily check',
+    context: 'Disk hit 100% during SAPS migration. Mitigated by removing 79 GB of final-sweep tarballs. No automated monitor.',
+    options: [
+      { label: 'Add cron job that pages above 85%', recommended: true },
+    ],
+    recommendation: 'Cron on ma130-apps: df -h / | awk \'$5+0 > 85\' | mail -s "disk warning" ops@2ko.co.za. Or Better Stack monitor.',
+    risk: 'high',
+    action: 'SSH ma130-apps + add /etc/cron.d/disk-check',
+    blockedBy: ['ssh'],
+  },
+  {
+    id: 'dec-backup-offsite',
+    cluster: 'backup',
+    title: 'No automated off-site Postgres backups',
+    context: 'pg_dump only runs during manual ops work. Risk: a server fire loses everything since the last manual dump.',
+    options: [
+      { label: 'Nightly pg_dump to Hetzner Storage Box (cheap)', recommended: true },
+      { label: 'Hetzner Storage Box + GPG encryption to S3 elsewhere' },
+    ],
+    recommendation: 'Start with Hetzner Storage Box nightly. Add GPG + off-region copy in Phase 2.',
+    risk: 'high',
+    action: 'See docs/runbooks/ops-db-setup.md — "Backup steps" section.',
+    blockedBy: ['ssh'],
+  },
+];
+
+// ---------------------------------------------------------------- Import readiness
+
+export type ImportReadiness = 'ready' | 'needs_review' | 'blocked';
+
+export type ImportReadinessGroup = {
+  category: string;
+  snapshotCount: number;
+  readiness: ImportReadiness;
+  notes: string;
+};
+
+export function getSnapshotImportReadiness(): ImportReadinessGroup[] {
+  return [
+    { category: 'Divisions', snapshotCount: SNAPSHOT_DIVISIONS.length, readiness: 'ready', notes: 'Six divisions in the 2KO Africa hierarchy — clean to import directly.' },
+    { category: 'Clients', snapshotCount: SNAPSHOT_CLIENTS.length, readiness: 'needs_review', notes: '2 unmapped (coupex, taxup) need owner mapping. All-The-Glory + SmartHome at "likely" confidence.' },
+    { category: 'Assets', snapshotCount: SNAPSHOT_ASSETS.length, readiness: 'needs_review', notes: 'impart-us / coupex.net / taxup.app / impartai.co.za need owner verification before final import.' },
+    { category: 'GitHub repos', snapshotCount: SNAPSHOT_REPOS.length, readiness: 'needs_review', notes: '5 duplicate clusters need canonical picks (Review page). Personal/legacy already auto-categorised.' },
+    { category: 'Vercel projects', snapshotCount: SNAPSHOT_VERCEL_PROJECTS.length, readiness: 'needs_review', notes: 'impart-global team has 3 unmapped properties. pumpbots dormant cleanup pending.' },
+    { category: 'Hetzner servers', snapshotCount: SNAPSHOT_HETZNER_SERVERS.length, readiness: 'ready', notes: 'ma130-apps + ma130-data + ma130-tori — fully documented in infra-handover.' },
+    { category: 'Cloudflare zones', snapshotCount: SNAPSHOT_CLOUDFLARE_ZONES.length, readiness: 'blocked', notes: 'Only an illustrative subset is in snapshot. Real list is ~40 zones — needs CLOUDFLARE_API_TOKEN to enumerate before import.' },
+    { category: 'Domains', snapshotCount: SNAPSHOT_DOMAINS.length, readiness: 'blocked', notes: 'Only 4 illustrative entries in snapshot. Full list needs registrar API or manual entry per domain.' },
+    { category: 'Tickets', snapshotCount: SNAPSHOT_TICKETS.length, readiness: 'ready', notes: '5 real operational tasks — import as the starting backlog.' },
+    { category: 'Renewals', snapshotCount: SNAPSHOT_RENEWALS.length, readiness: 'needs_review', notes: '5 real upcoming renewals. Renewal dates need confirming against the registrar / provider before import.' },
+    { category: 'Incidents', snapshotCount: SNAPSHOT_INCIDENTS.length, readiness: 'ready', notes: '5 historical incidents from discovery. Safe to import as the starting incident log.' },
+    { category: 'Audit findings', snapshotCount: SNAPSHOT_FINDINGS.length, readiness: 'ready', notes: '10 known issues from infra-handover/HISTORY.md — same as the existing findings seed.' },
+  ];
+}
+
+// ---------------------------------------------------------------- Decision listing
+
+export function listSnapshotDecisionItems(): SnapshotDecision[] {
+  return SNAPSHOT_DECISIONS;
+}
+
 // Comment to suppress unused-type warnings — these are imported solely for
 // shape parity between snapshot constants and live DB types.
 export type _SnapshotTypes = TicketComment;
