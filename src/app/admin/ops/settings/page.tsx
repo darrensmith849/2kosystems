@@ -3,6 +3,7 @@ import { isDbConfigured, pingDb } from '@/lib/db/client';
 import { detectRuntime, getDeploymentEnv } from '@/lib/runtime';
 import { AdminCard, Row, SectionHeader, StatusPill } from '@/components/admin-ui';
 import ReadinessChecklist from '@/components/admin-ui/ReadinessChecklist';
+import WaitingForDb from '@/components/admin-ui/WaitingForDb';
 import NotConnectedBanner from '../NotConnectedBanner';
 import SettingsClient from './SettingsClient';
 
@@ -22,6 +23,16 @@ export default async function SettingsPage() {
       <div className="mb-6">
         <ReadinessChecklist />
       </div>
+
+      <WaitingForDb
+        area="Settings"
+        description="Several settings (operator picker, seed runners, manual sync triggers) activate once DATABASE_URL is set."
+        whatYouWillSee={[
+          'Operator picker — register and switch the active operator',
+          'Day-one seeds: divisions, Vercel teams, known findings',
+          'Per-provider manual sync triggers',
+        ]}
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <AdminCard title="Runtime">

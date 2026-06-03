@@ -1,5 +1,6 @@
 import { listRecentSyncRuns } from '@/lib/ops/sync-service';
 import { AdminCard, Badge, DataTable, EmptyState, SectionHeader } from '@/components/admin-ui';
+import WaitingForDb from '@/components/admin-ui/WaitingForDb';
 import NotConnectedBanner from '../NotConnectedBanner';
 
 const STATUS_TONES: Record<string, 'green' | 'amber' | 'rose' | 'blue' | 'neutral'> = {
@@ -12,6 +13,14 @@ export default async function SyncLogPage() {
     <>
       <SectionHeader title="Sync log" subtitle="Every cron / manual sync run, with outcome and counts." />
       <NotConnectedBanner />
+      <WaitingForDb
+        area="Sync runs"
+        whatYouWillSee={[
+          'Every cron and manual sync run across all providers',
+          'Per-run counts: seen / created / updated / skipped',
+          'Duration and triggering operator for each run',
+        ]}
+      />
       {runs.length === 0 ? (
         <AdminCard title="No sync runs yet">
           <EmptyState

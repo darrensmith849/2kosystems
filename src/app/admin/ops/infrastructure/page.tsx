@@ -3,6 +3,7 @@ import { hetznerConnectivity } from '@/lib/integrations/hetzner';
 import { listStoredCloudflareZones, listStoredCloudflarePagesProjects } from '@/lib/ops/cloudflare-service';
 import { listStoredHetznerServers } from '@/lib/ops/hetzner-service';
 import { SectionHeader } from '@/components/admin-ui';
+import WaitingForDb from '@/components/admin-ui/WaitingForDb';
 import NotConnectedBanner from '../NotConnectedBanner';
 import InfrastructureClient from './InfrastructureClient';
 
@@ -22,6 +23,14 @@ export default async function InfrastructurePage() {
         subtitle="Read-only Cloudflare zones, DNS records, Pages projects, and Hetzner servers. Sync upserts by external ID; missing rows are marked vanished, never deleted."
       />
       <NotConnectedBanner />
+      <WaitingForDb
+        area="Infrastructure"
+        whatYouWillSee={[
+          'Cloudflare zones and DNS records',
+          'Cloudflare Pages projects with deployment metadata',
+          'Hetzner servers with location, type, and status',
+        ]}
+      />
       <InfrastructureClient
         cloudflareStatus={cfConn}
         hetznerStatus={hzConn}
