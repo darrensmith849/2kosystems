@@ -18,6 +18,8 @@ export const OPS_NAV_GROUPS: OpsNavGroup[] = [
     title: 'Operations',
     items: [
       { href: '/admin/ops', label: 'Overview', exact: true },
+      { href: '/admin/ops/search', label: 'Search' },
+      { href: '/admin/ops/ask', label: 'Ask' },
       { href: '/admin/ops/clients', label: 'Clients' },
       { href: '/admin/ops/assets', label: 'Assets' },
     ],
@@ -41,6 +43,7 @@ export const OPS_NAV_GROUPS: OpsNavGroup[] = [
   {
     title: 'Control',
     items: [
+      { href: '/admin/ops/reports', label: 'Reports' },
       { href: '/admin/ops/audits', label: 'Audits' },
       { href: '/admin/ops/review', label: 'Review' },
       { href: '/admin/ops/sync-log', label: 'Sync Log' },
