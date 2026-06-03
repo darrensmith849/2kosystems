@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { AdminCard, Badge, DataTable, EmptyState } from '@/components/admin-ui';
 import type { ClientWithDivision } from '@/lib/ops/clients-service';
 
@@ -82,7 +83,11 @@ export default function ClientsClient({ initialClients }: { initialClients: Clie
         <DataTable
           rows={initialClients}
           columns={[
-            { key: 'name', header: 'Name', render: (c) => <span className="font-medium text-[#f5f5f5]">{c.name}</span> },
+            { key: 'name', header: 'Name', render: (c) => (
+              <Link href={`/admin/ops/clients/${c.id}`} className="font-medium text-[#f5f5f5] hover:text-emerald-300 transition-colors">
+                {c.name}
+              </Link>
+            ) },
             { key: 'division', header: 'Division', render: (c) => c.division?.name ?? <span className="text-[#52525b]">—</span> },
             { key: 'status', header: 'Status', render: (c) => <Badge text={c.status} tone={STATUS_TONES[c.status] ?? 'neutral'} /> },
             { key: 'updated', header: 'Updated', render: (c) => fmtDate(c.updatedAt) },
