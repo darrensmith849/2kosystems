@@ -5,6 +5,7 @@ import { listStoredVercelProjects } from '@/lib/ops/vercel-service';
 import { listFindings } from '@/lib/ops/findings-service';
 import { listRecentSyncRuns } from '@/lib/ops/sync-service';
 import { allConnectivity } from '@/lib/integrations';
+import { isDbConfigured } from '@/lib/db/client';
 import { AdminCard, SectionHeader, Badge } from '@/components/admin-ui';
 import NotConnectedBanner from './NotConnectedBanner';
 
@@ -18,6 +19,7 @@ export default async function OpsOverviewPage() {
     listRecentSyncRuns(5),
   ]);
   const conn = allConnectivity();
+  const dbConfigured = isDbConfigured();
   const reposActive = repos.filter((r) => r.category !== 'personal_excluded' && r.category !== 'legacy_stale').length;
   const vercelLive = vercel.filter((p) => p.state === 'live').length;
   const vercelDormant = vercel.filter((p) => p.state === 'dormant').length;
@@ -25,6 +27,11 @@ export default async function OpsOverviewPage() {
   return (
     <>
       <SectionHeader title="Overview" subtitle="High-level snapshot of clients, infrastructure, and open findings." />
+      {!dbConfigured && (
+        <p className="mb-4 text-xs text-amber-200">
+          Production DB is intentionally not connected yet — Hetzner ops DB lands next week. See Settings -&gt; Phase 2A — Migration readiness for the checklist.
+        </p>
+      )}
       <NotConnectedBanner />
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
         <Tile label="Active clients" value={clients.length} />

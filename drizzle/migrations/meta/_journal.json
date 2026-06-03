@@ -15,6 +15,13 @@
       "when": 1780480592113,
       "tag": "0001_phase1b_cf_hz_tables",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1780483898396,
+      "tag": "0002_phase2a_tickets_renewals_incidents",
+      "breakpoints": true
     }
   ]
 }

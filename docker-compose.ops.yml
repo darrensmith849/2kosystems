@@ -1,0 +1,24 @@
+# LOCAL DEV ONLY — credentials below are intentionally plaintext for ease of
+# setup. NEVER reuse this password in production. The production Ops Dashboard
+# DB lives on ma130-data (Hetzner) — see docs/runbooks/ops-db-setup.md.
+
+services:
+  ops-postgres:
+    image: postgres:16-alpine
+    container_name: 2ko-ops-dev-postgres
+    restart: unless-stopped
+    ports:
+      # Host port 5433 -> container 5432. 5433 chosen to avoid colliding with
+      # a system Postgres listening on the default 5432.
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: ops_dev
+      POSTGRES_PASSWORD: ops_dev_local_only_do_not_use_in_prod
+      POSTGRES_DB: ops_dev
+    volumes:
+      - ./.local-data/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ops_dev -d ops_dev"]
+      interval: 5s
+      timeout: 5s
+      retries: 10

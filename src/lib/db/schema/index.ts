@@ -4,3 +4,6 @@ export * from './assets';
 export * from './infra';
 export * from './audits';
 export * from './sync';
+export * from './tickets';
+export * from './renewals';
+export * from './incidents';

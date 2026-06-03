@@ -139,3 +139,109 @@ functions the manual sync buttons call today, so no surprise behaviour.)
   history. Use `drizzle-kit migrate`.
 - Do not commit `.env*` files. `.env.example` is the only env file under
   version control.
+
+## Rollback steps
+
+Drizzle migrations are forward-only. To undo a migration: write a NEW
+migration that reverses it (CREATE/DROP statements) and apply with
+`npx drizzle-kit migrate`. Document the rationale in the new file's header
+so future operators know why the table/column went away.
+
+Emergency drop of an entire migration (last resort, expect downtime):
+
+- SSH into `ma130-data`.
+- List the tables the migration added and `DROP TABLE IF EXISTS <name>;`
+  each one. Order matters — drop dependents before parents.
+- Remove the migration's bookkeeping row so Drizzle won't think it has
+  already been applied:
+
+  ```sql
+  DELETE FROM drizzle.__drizzle_migrations
+  WHERE hash = '<hash from drizzle/migrations/meta/_journal.json>';
+  ```
+
+For app-side rollback (revert the deployed bundle without touching the DB):
+
+```bash
+vercel rollback <previous-deployment-url>
+```
+
+## Backup steps
+
+- **Manual one-shot backup via SSH:**
+
+  ```bash
+  ssh -i ~/.ssh/ma130_migration root@167.233.50.49 \
+    "sudo -u postgres pg_dump --format=plain ops | gzip" \
+    > ops-$(date +%Y%m%d).sql.gz
+  ```
+
+  Or, run on `ma130-data` directly:
+
+  ```bash
+  pg_dump --format=plain ops | gzip > ops-$(date +%Y%m%d).sql.gz
+  ```
+
+- **Suggested nightly cron on `ma130-data` targeting Hetzner Storage Box:**
+
+  `/etc/cron.d/ops-backup`:
+
+  ```cron
+  # Nightly Ops DB backup -> Hetzner Storage Box, 30-day retention.
+  0 3 * * * postgres pg_dump --format=plain ops | gzip > /mnt/storagebox/ops-backups/ops-$(date +\%Y\%m\%d).sql.gz && find /mnt/storagebox/ops-backups -name 'ops-*.sql.gz' -mtime +30 -delete
+  ```
+
+- **Optional GPG encryption for off-site copies:**
+
+  ```bash
+  pg_dump ops | gzip | gpg --encrypt --recipient ops@2ko.co.za \
+    > ops-$(date +%Y%m%d).sql.gz.gpg
+  ```
+
+  Keep the recipient's private key off `ma130-data` — the whole point is
+  that a host compromise cannot read the backup.
+
+## Restore test steps (quarterly)
+
+Verify the backups are actually restorable. Schedule a calendar reminder
+for the first Monday of each quarter.
+
+- Create a scratch DB on a non-prod host:
+
+  ```bash
+  createdb ops_restore_test
+  ```
+
+- Restore the latest dump:
+
+  ```bash
+  gunzip < ops-LATEST.sql.gz | psql ops_restore_test
+  ```
+
+- Sanity SELECTs — these should all return non-zero on a healthy backup:
+
+  ```sql
+  SELECT COUNT(*) FROM divisions;
+  SELECT COUNT(*) FROM audit_log;
+  SELECT COUNT(*) FROM audit_findings;
+  SELECT MAX(created_at) FROM audit_log;
+  ```
+
+- Confirm the counts and `MAX(created_at)` are consistent with recent
+  activity in `/admin/ops` (e.g. `MAX(created_at)` should be within the
+  last day or two if the dashboard has been in use).
+
+- Record the result in this runbook under "Restore test log" below.
+
+- Drop the scratch DB when done:
+
+  ```bash
+  dropdb ops_restore_test
+  ```
+
+### Restore test log
+
+| Date | Operator | Dump file | Result |
+|---|---|---|---|
+| _pending_ | | | |
+

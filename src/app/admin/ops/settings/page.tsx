@@ -2,6 +2,7 @@ import { allConnectivity } from '@/lib/integrations';
 import { isDbConfigured, pingDb } from '@/lib/db/client';
 import { detectRuntime, getDeploymentEnv } from '@/lib/runtime';
 import { AdminCard, Row, SectionHeader, StatusPill } from '@/components/admin-ui';
+import ReadinessChecklist from '@/components/admin-ui/ReadinessChecklist';
 import NotConnectedBanner from '../NotConnectedBanner';
 import SettingsClient from './SettingsClient';
 
@@ -17,6 +18,10 @@ export default async function SettingsPage() {
         subtitle="Connectivity status for every integration. Manual sync runs land here in Phase 2 — use the per-section ‘Run sync now’ buttons for now."
       />
       <NotConnectedBanner />
+
+      <div className="mb-6">
+        <ReadinessChecklist />
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <AdminCard title="Runtime">
