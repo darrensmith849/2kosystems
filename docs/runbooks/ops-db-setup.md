@@ -4,6 +4,10 @@
 > step-by-step activation playbook for the day Hetzner Postgres comes online.
 > This file is the one-time setup reference; that file is the day-of
 > checklist.
+>
+> See also: [`ops-assistant.md`](./ops-assistant.md) for how the Ops
+> Assistant grounds its answers, and [`ops-search.md`](./ops-search.md) for
+> the underlying knowledge index.
 
 > Status: the dashboard ships with **graceful no-DB mode**. Until `DATABASE_URL`
 > is set on Vercel, `/admin/ops` renders skeleton pages, every mutation route

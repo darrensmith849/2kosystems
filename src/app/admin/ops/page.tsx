@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { listClients } from '@/lib/ops/clients-service';
 import { listAssets } from '@/lib/ops/assets-service';
 import { listStoredGithubRepos } from '@/lib/ops/github-service';
@@ -225,6 +226,34 @@ export default async function OpsOverviewPage() {
 
       <div className="mb-6">
         <ActivationReadiness />
+      </div>
+
+      <h3 className="text-xs font-mono uppercase tracking-[0.18em] text-[#71717a] mb-3">
+        Quick actions
+      </h3>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <AdminCard title="Ask the dashboard">
+          <p className="text-xs text-[#a1a1aa] mb-4">
+            Ground-truthed assistant. Ask in plain English; answers come only from your dashboard data.
+          </p>
+          <Link
+            href="/admin/ops/ask"
+            className="text-xs font-mono uppercase tracking-[0.18em] text-emerald-300 hover:text-emerald-200"
+          >
+            Go to Ask →
+          </Link>
+        </AdminCard>
+        <AdminCard title="Search">
+          <p className="text-xs text-[#a1a1aa] mb-4">
+            Lexical search across every snapshot record + (later) live DB rows.
+          </p>
+          <Link
+            href="/admin/ops/search"
+            className="text-xs font-mono uppercase tracking-[0.18em] text-emerald-300 hover:text-emerald-200"
+          >
+            Open search →
+          </Link>
+        </AdminCard>
       </div>
 
       {!dbConfigured && (
