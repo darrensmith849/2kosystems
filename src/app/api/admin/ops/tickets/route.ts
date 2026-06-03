@@ -16,6 +16,7 @@ const CreateTicketSchema = z.object({
   priority: z.enum(PRIORITIES).default('med'),
   clientId: z.string().uuid().optional(),
   assetId: z.string().uuid().optional(),
+  assigneeOperatorId: z.string().uuid().optional(),
   dueAt: z.string().datetime().optional(),
 });
 
@@ -42,6 +43,7 @@ export async function POST(request: NextRequest) {
     priority: parsed.data.priority,
     clientId: parsed.data.clientId ?? null,
     assetId: parsed.data.assetId ?? null,
+    assigneeOperatorId: parsed.data.assigneeOperatorId ?? null,
     dueAt: parsed.data.dueAt ? new Date(parsed.data.dueAt) : null,
   });
   if (!ticket) return NextResponse.json({ error: 'Insert failed' }, { status: 500 });

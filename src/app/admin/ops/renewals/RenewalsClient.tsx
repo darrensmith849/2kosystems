@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { AdminCard, Badge, DataTable, EmptyState } from '@/components/admin-ui';
 import type { RenewalWithRefs } from '@/lib/ops/renewals-service';
@@ -41,6 +41,10 @@ const WINDOW_TONE: Record<RenewalWindow, 'rose' | 'amber' | 'blue' | 'neutral'> 
   future: 'neutral',
 };
 
+type KindFilter = 'all' | (typeof KINDS)[number];
+type WindowFilter = 'all' | 'attention' | 'next_7' | 'next_30';
+type SubjectKind = 'none' | 'asset' | 'domain' | 'service';
+
 function formatDate(d: Date | string): string {
   const dt = d instanceof Date ? d : new Date(d);
   if (Number.isNaN(dt.getTime())) return '—';
@@ -71,12 +75,18 @@ function nextReminderState(current: string): ReminderState {
   return REMINDER_CYCLE[(idx + 1) % REMINDER_CYCLE.length];
 }
 
+type PickerOption = { id: string; name: string };
+
 export default function RenewalsClient({
   initialRenewals,
   clients,
+  assets = [],
+  domains = [],
 }: {
   initialRenewals: RenewalWithRefs[];
-  clients: { id: string; name: string }[];
+  clients: PickerOption[];
+  assets?: PickerOption[];
+  domains?: PickerOption[];
 }) {
   const router = useRouter();
   const [name, setName] = useState('');
@@ -86,9 +96,69 @@ export default function RenewalsClient({
   const [currency, setCurrency] = useState('ZAR');
   const [period, setPeriod] = useState<(typeof PERIODS)[number]>('annual');
   const [clientId, setClientId] = useState<string>('');
+  const [subjectKind, setSubjectKind] = useState<SubjectKind>('none');
+  const [subjectId, setSubjectId] = useState<string>('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [rowBusyId, setRowBusyId] = useState<string | null>(null);
+
+  // Filter state
+  const [kindFilter, setKindFilter] = useState<KindFilter>('all');
+  const [clientFilter, setClientFilter] = useState<string>('all');
+  const [windowFilter, setWindowFilter] = useState<WindowFilter>('all');
+
+  const subjectOptions: PickerOption[] = useMemo(() => {
+    if (subjectKind === 'asset') return assets;
+    if (subjectKind === 'domain') return domains;
+    return [];
+  }, [subjectKind, assets, domains]);
+
+  // Annotate every renewal with its computed window once
+  const annotated = useMemo(
+    () => initialRenewals.map((r) => ({ row: r, window: computeRenewalWindow(r.nextDueAt) })),
+    [initialRenewals],
+  );
+
+  const dueSoonCount = useMemo(
+    () =>
+      annotated.filter((a) => a.window === 'overdue' || a.window === 'due' || a.window === 'within_7')
+        .length,
+    [annotated],
+  );
+
+  const filtered = useMemo(() => {
+    return annotated.filter(({ row, window }) => {
+      if (kindFilter !== 'all' && row.kind !== kindFilter) return false;
+      if (clientFilter !== 'all') {
+        if (clientFilter === '__none__') {
+          if (row.clientId) return false;
+        } else if (row.clientId !== clientFilter) {
+          return false;
+        }
+      }
+      if (windowFilter === 'attention') {
+        if (window !== 'overdue' && window !== 'due' && window !== 'within_7') return false;
+      } else if (windowFilter === 'next_7') {
+        if (window !== 'due' && window !== 'within_7' && window !== 'overdue') return false;
+      } else if (windowFilter === 'next_30') {
+        if (
+          window !== 'overdue' &&
+          window !== 'due' &&
+          window !== 'within_7' &&
+          window !== 'within_14' &&
+          window !== 'within_30'
+        ) {
+          return false;
+        }
+      }
+      return true;
+    }).map((a) => a.row);
+  }, [annotated, kindFilter, clientFilter, windowFilter]);
+
+  function handleSubjectKindChange(next: SubjectKind) {
+    setSubjectKind(next);
+    setSubjectId('');
+  }
 
   async function handleCreate(e: React.FormEvent) {
     e.preventDefault();
@@ -108,6 +178,10 @@ export default function RenewalsClient({
         if (!Number.isNaN(n)) payload.amount = n;
       }
       if (clientId) payload.clientId = clientId;
+      if (subjectKind !== 'none' && subjectId) {
+        payload.subjectType = subjectKind;
+        payload.subjectId = subjectId;
+      }
       const res = await fetch('/api/admin/ops/renewals', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -121,6 +195,8 @@ export default function RenewalsClient({
       setName('');
       setNextDueAt('');
       setAmount('');
+      setSubjectKind('none');
+      setSubjectId('');
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Network error');
@@ -149,6 +225,12 @@ export default function RenewalsClient({
       setRowBusyId(null);
     }
   }
+
+  const subjectPickerDisabled = subjectKind === 'none' || subjectKind === 'service';
+  const subjectPickerHint =
+    subjectKind === 'service'
+      ? 'Services aren’t tracked as a separate entity yet — leave subject as none or pick an asset/domain.'
+      : null;
 
   return (
     <div className="space-y-5">
@@ -219,6 +301,44 @@ export default function RenewalsClient({
               <option key={c.id} value={c.id}>{c.name}</option>
             ))}
           </select>
+
+          {/* Subject picker */}
+          <div className="lg:col-span-6 rounded-lg border border-[#1c1c1e] bg-[#0a0a0b] p-3 space-y-2">
+            <div className="flex flex-wrap items-center gap-3">
+              <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a]">Subject</p>
+              {(['none', 'asset', 'domain', 'service'] as SubjectKind[]).map((opt) => (
+                <label key={opt} className="flex items-center gap-1.5 text-xs text-[#a1a1aa]">
+                  <input
+                    type="radio"
+                    name="subjectKind"
+                    value={opt}
+                    checked={subjectKind === opt}
+                    onChange={() => handleSubjectKindChange(opt)}
+                    disabled={busy}
+                    className="accent-[#0f7b3a]"
+                  />
+                  {opt}
+                </label>
+              ))}
+            </div>
+            {!subjectPickerDisabled && (
+              <select
+                value={subjectId}
+                onChange={(e) => setSubjectId(e.target.value)}
+                className="w-full rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5]"
+                disabled={busy}
+              >
+                <option value="">— pick {subjectKind} —</option>
+                {subjectOptions.map((o) => (
+                  <option key={o.id} value={o.id}>{o.name}</option>
+                ))}
+              </select>
+            )}
+            {subjectPickerHint && (
+              <p className="text-[11px] text-[#71717a]">{subjectPickerHint}</p>
+            )}
+          </div>
+
           <button
             type="submit"
             disabled={busy || !name.trim() || !nextDueAt}
@@ -230,14 +350,100 @@ export default function RenewalsClient({
         {error && <p className="mt-3 text-sm text-rose-400">{error}</p>}
       </AdminCard>
 
+      {/* Filter bar */}
+      <AdminCard title="Filters">
+        <div className="space-y-3">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a] mr-1">
+              Kind
+            </span>
+            {(['all', ...KINDS] as KindFilter[]).map((k) => {
+              const active = kindFilter === k;
+              return (
+                <button
+                  key={k}
+                  type="button"
+                  onClick={() => setKindFilter(k)}
+                  className={`text-[10px] font-mono uppercase tracking-wider px-2.5 py-1 rounded-full border transition-colors ${
+                    active
+                      ? 'border-emerald-400/40 text-emerald-300 bg-emerald-400/10'
+                      : 'border-[#27272a] text-[#a1a1aa] hover:text-[#f5f5f5]'
+                  }`}
+                >
+                  {k.replace('_', ' ')}
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a] mr-1">
+              Window
+            </span>
+            {(
+              [
+                ['all', 'all'],
+                ['attention', 'overdue + due'],
+                ['next_7', 'next 7 days'],
+                ['next_30', 'next 30 days'],
+              ] as Array<[WindowFilter, string]>
+            ).map(([key, label]) => {
+              const active = windowFilter === key;
+              return (
+                <button
+                  key={key}
+                  type="button"
+                  onClick={() => setWindowFilter(key)}
+                  className={`text-[10px] font-mono uppercase tracking-wider px-2.5 py-1 rounded-full border transition-colors ${
+                    active
+                      ? 'border-amber-400/40 text-amber-300 bg-amber-400/10'
+                      : 'border-[#27272a] text-[#a1a1aa] hover:text-[#f5f5f5]'
+                  }`}
+                >
+                  {label}
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a] mr-1">
+              Client
+            </span>
+            <select
+              value={clientFilter}
+              onChange={(e) => setClientFilter(e.target.value)}
+              className="rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3 py-1.5 text-xs text-[#f5f5f5]"
+            >
+              <option value="all">all clients</option>
+              <option value="__none__">no client</option>
+              {clients.map((c) => (
+                <option key={c.id} value={c.id}>{c.name}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+      </AdminCard>
+
+      {dueSoonCount > 0 && (
+        <div className="rounded-2xl border border-amber-400/30 bg-amber-400/5 px-4 py-3 text-sm text-amber-200">
+          {dueSoonCount} renewal{dueSoonCount === 1 ? '' : 's'} need attention this week
+        </div>
+      )}
+
       {initialRenewals.length === 0 ? (
         <EmptyState
           title="No renewals yet"
           hint="Add a renewal to start tracking domain, hosting, SSL, SaaS, retainer and subscription deadlines."
         />
+      ) : filtered.length === 0 ? (
+        <EmptyState
+          title="No renewals match the current filters"
+          hint="Try resetting filters or widening the window."
+        />
       ) : (
         <DataTable
-          rows={initialRenewals}
+          rows={filtered}
           columns={[
             {
               key: 'name',

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { AdminCard, Badge, DataTable, EmptyState } from '@/components/admin-ui';
@@ -8,6 +8,11 @@ import type { TicketWithRefs } from '@/lib/ops/tickets-service';
 
 const TICKET_KINDS = ['support', 'bug', 'change_request', 'content_update', 'emergency', 'billing'] as const;
 const PRIORITIES = ['low', 'med', 'high', 'urgent'] as const;
+const STATUS_OPTIONS = [
+  'new', 'triage', 'in_progress', 'waiting_client', 'blocked', 'review', 'completed', 'archived',
+] as const;
+const PRIORITY_FILTERS = ['urgent', 'high', 'med', 'low'] as const;
+const CLOSED_STATUSES = new Set(['completed', 'archived']);
 
 const STATUS_TONES: Record<string, 'green' | 'amber' | 'rose' | 'blue' | 'neutral'> = {
   completed: 'green',
@@ -27,14 +32,40 @@ const PRIORITY_TONES: Record<string, 'green' | 'amber' | 'rose' | 'blue' | 'neut
   low: 'blue',
 };
 
+function Chip({
+  active,
+  onClick,
+  children,
+}: {
+  active: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={
+        active
+          ? 'rounded-full border border-emerald-400/40 bg-emerald-400/10 px-3 py-1 text-[11px] font-mono uppercase tracking-wider text-emerald-300 transition-colors'
+          : 'rounded-full border border-[#27272a] bg-transparent px-3 py-1 text-[11px] font-mono uppercase tracking-wider text-[#a1a1aa] hover:border-[#3f3f46] hover:text-[#f5f5f5] transition-colors'
+      }
+    >
+      {children}
+    </button>
+  );
+}
+
 export default function TicketsClient({
   initialTickets,
   clients,
   assets,
+  operators,
 }: {
   initialTickets: TicketWithRefs[];
   clients: { id: string; name: string }[];
   assets: { id: string; name: string }[];
+  operators: { id: string; slug: string; displayName: string }[];
 }) {
   const router = useRouter();
   const [kind, setKind] = useState<(typeof TICKET_KINDS)[number]>('support');
@@ -42,9 +73,24 @@ export default function TicketsClient({
   const [priority, setPriority] = useState<(typeof PRIORITIES)[number]>('med');
   const [clientId, setClientId] = useState('');
   const [assetId, setAssetId] = useState('');
+  const [assigneeOperatorId, setAssigneeOperatorId] = useState('');
+  const [dueAt, setDueAt] = useState('');
   const [description, setDescription] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const [statusFilter, setStatusFilter] = useState<'all' | (typeof STATUS_OPTIONS)[number]>('all');
+  const [priorityFilter, setPriorityFilter] = useState<'all' | (typeof PRIORITY_FILTERS)[number]>('all');
+  const [clientFilter, setClientFilter] = useState<string>('all');
+
+  const filteredTickets = useMemo(() => {
+    return initialTickets.filter((t) => {
+      if (statusFilter !== 'all' && t.status !== statusFilter) return false;
+      if (priorityFilter !== 'all' && t.priority !== priorityFilter) return false;
+      if (clientFilter !== 'all' && (t.client?.id ?? '') !== clientFilter) return false;
+      return true;
+    });
+  }, [initialTickets, statusFilter, priorityFilter, clientFilter]);
 
   async function handleCreate(e: React.FormEvent) {
     e.preventDefault();
@@ -52,17 +98,25 @@ export default function TicketsClient({
     setBusy(true);
     setError(null);
     try {
+      const payload: Record<string, unknown> = {
+        kind,
+        title: title.trim(),
+        priority,
+        clientId: clientId || undefined,
+        assetId: assetId || undefined,
+        description: description.trim() || undefined,
+        assigneeOperatorId: assigneeOperatorId || undefined,
+      };
+      if (dueAt) {
+        // Date inputs return YYYY-MM-DD; expand to a full ISO timestamp at the
+        // present moment of the day so the API zod datetime() check passes.
+        const localMidnight = new Date(`${dueAt}T00:00:00`);
+        payload.dueAt = localMidnight.toISOString();
+      }
       const res = await fetch('/api/admin/ops/tickets', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          kind,
-          title: title.trim(),
-          priority,
-          clientId: clientId || undefined,
-          assetId: assetId || undefined,
-          description: description.trim() || undefined,
-        }),
+        body: JSON.stringify(payload),
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
@@ -71,6 +125,8 @@ export default function TicketsClient({
       }
       setTitle('');
       setDescription('');
+      setDueAt('');
+      setAssigneeOperatorId('');
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Network error');
@@ -79,10 +135,12 @@ export default function TicketsClient({
     }
   }
 
+  const nowMs = Date.now();
+
   return (
     <div className="space-y-5">
       <AdminCard title="Add ticket">
-        <form onSubmit={handleCreate} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
+        <form onSubmit={handleCreate} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-3">
           <select
             value={kind}
             onChange={(e) => setKind(e.target.value as (typeof TICKET_KINDS)[number])}
@@ -98,7 +156,7 @@ export default function TicketsClient({
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Ticket title"
-            className="rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5] placeholder:text-[#3f3f46] focus:border-[#0f7b3a]/50 focus:outline-none lg:col-span-2"
+            className="rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5] placeholder:text-[#3f3f46] focus:border-[#0f7b3a]/50 focus:outline-none lg:col-span-3"
             disabled={busy}
           />
           <select
@@ -111,10 +169,18 @@ export default function TicketsClient({
               <option key={p} value={p}>{p}</option>
             ))}
           </select>
+          <input
+            type="date"
+            value={dueAt}
+            onChange={(e) => setDueAt(e.target.value)}
+            disabled={busy}
+            className="rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5]"
+            aria-label="Due date"
+          />
           <select
             value={clientId}
             onChange={(e) => setClientId(e.target.value)}
-            className="rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5]"
+            className="rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5] lg:col-span-2"
             disabled={busy}
           >
             <option value="">no client</option>
@@ -133,18 +199,29 @@ export default function TicketsClient({
               <option key={a.id} value={a.id}>{a.name}</option>
             ))}
           </select>
+          <select
+            value={assigneeOperatorId}
+            onChange={(e) => setAssigneeOperatorId(e.target.value)}
+            className="rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5] lg:col-span-2"
+            disabled={busy}
+          >
+            <option value="">unassigned</option>
+            {operators.map((o) => (
+              <option key={o.id} value={o.id}>{o.displayName}</option>
+            ))}
+          </select>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Description (optional)"
             rows={2}
-            className="rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5] placeholder:text-[#3f3f46] focus:border-[#0f7b3a]/50 focus:outline-none lg:col-span-3"
+            className="rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5] placeholder:text-[#3f3f46] focus:border-[#0f7b3a]/50 focus:outline-none lg:col-span-4"
             disabled={busy}
           />
           <button
             type="submit"
             disabled={busy || !title.trim()}
-            className="rounded-full bg-[#0f7b3a] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#B8C4C8] hover:text-black disabled:opacity-40 disabled:cursor-not-allowed transition-colors lg:col-span-5"
+            className="rounded-full bg-[#0f7b3a] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#B8C4C8] hover:text-black disabled:opacity-40 disabled:cursor-not-allowed transition-colors lg:col-span-6"
           >
             {busy ? 'Saving…' : 'Add ticket'}
           </button>
@@ -152,11 +229,54 @@ export default function TicketsClient({
         {error && <p className="mt-3 text-sm text-rose-400">{error}</p>}
       </AdminCard>
 
-      {initialTickets.length === 0 ? (
-        <EmptyState title="No tickets yet" hint="Capture the next support request, bug, change, or content update here." />
+      <AdminCard title="Filters">
+        <div className="space-y-3">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a] mr-1">Client</span>
+            <select
+              value={clientFilter}
+              onChange={(e) => setClientFilter(e.target.value)}
+              className="rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3 py-1.5 text-xs text-[#f5f5f5]"
+            >
+              <option value="all">All clients</option>
+              {clients.map((c) => (
+                <option key={c.id} value={c.id}>{c.name}</option>
+              ))}
+            </select>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a] mr-1">Status</span>
+            <Chip active={statusFilter === 'all'} onClick={() => setStatusFilter('all')}>All</Chip>
+            {STATUS_OPTIONS.map((s) => (
+              <Chip key={s} active={statusFilter === s} onClick={() => setStatusFilter(s)}>
+                {s.replace(/_/g, ' ')}
+              </Chip>
+            ))}
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a] mr-1">Priority</span>
+            <Chip active={priorityFilter === 'all'} onClick={() => setPriorityFilter('all')}>All</Chip>
+            {PRIORITY_FILTERS.map((p) => (
+              <Chip key={p} active={priorityFilter === p} onClick={() => setPriorityFilter(p)}>
+                {p}
+              </Chip>
+            ))}
+          </div>
+        </div>
+      </AdminCard>
+
+      {filteredTickets.length === 0 ? (
+        <EmptyState
+          title={initialTickets.length === 0 ? 'No tickets yet' : 'No tickets match these filters'}
+          hint={
+            initialTickets.length === 0
+              ? 'Capture the next support request, bug, change, or content update here.'
+              : 'Try clearing a chip or switching client.'
+          }
+        />
       ) : (
         <DataTable
-          rows={initialTickets}
+          rows={filteredTickets}
           columns={[
             {
               key: 'title',
@@ -182,6 +302,23 @@ export default function TicketsClient({
               key: 'client',
               header: 'Client',
               render: (t) => t.client?.name ?? <span className="text-[#52525b]">—</span>,
+            },
+            {
+              key: 'due',
+              header: 'Due',
+              render: (t) => {
+                if (!t.dueAt) return <span className="text-[#52525b]">—</span>;
+                const dueMs = t.dueAt.getTime();
+                const overdue = dueMs < nowMs && !CLOSED_STATUSES.has(t.status);
+                return (
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-[10px] text-[#a1a1aa]">
+                      {t.dueAt.toISOString().slice(0, 10)}
+                    </span>
+                    {overdue && <Badge text="overdue" tone="rose" />}
+                  </div>
+                );
+              },
             },
             {
               key: 'updated',

@@ -17,6 +17,7 @@ const PatchSchema = z.object({
   resolvedAt: z.string().datetime().nullable().optional(),
   endedAt: z.string().datetime().nullable().optional(),
   followupRequired: z.boolean().optional(),
+  summary: z.string().min(1).max(500).optional(),
 });
 
 export async function PATCH(request: NextRequest, ctx: { params: Promise<{ id: string }> }) {
@@ -50,6 +51,7 @@ export async function PATCH(request: NextRequest, ctx: { params: Promise<{ id: s
     patch.endedAt = parsed.data.endedAt ? new Date(parsed.data.endedAt) : null;
   }
   if (parsed.data.followupRequired !== undefined) patch.followupRequired = parsed.data.followupRequired;
+  if (parsed.data.summary !== undefined) patch.summary = parsed.data.summary.trim();
 
   // If status moves to resolved or postmortem_done and we don't have a resolvedAt yet, set it now.
   if (

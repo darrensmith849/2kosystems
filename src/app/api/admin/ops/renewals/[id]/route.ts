@@ -25,6 +25,9 @@ const PatchSchema = z.object({
   externalLink: z.string().url().nullable().optional(),
   notes: z.string().nullable().optional(),
   reminderState: ReminderStateEnum.optional(),
+  subjectType: z.enum(['asset', 'domain', 'service', 'client']).nullable().optional(),
+  subjectId: z.string().uuid().nullable().optional(),
+  clientId: z.string().uuid().nullable().optional(),
 });
 
 export async function PATCH(request: NextRequest, ctx: { params: Promise<{ id: string }> }) {
@@ -82,6 +85,9 @@ export async function PATCH(request: NextRequest, ctx: { params: Promise<{ id: s
     patch.reminderState = data.reminderState;
     patch.lastRemindedAt = new Date();
   }
+  if (data.subjectType !== undefined) patch.subjectType = data.subjectType;
+  if (data.subjectId !== undefined) patch.subjectId = data.subjectId;
+  if (data.clientId !== undefined) patch.clientId = data.clientId;
 
   const row = await updateRenewal(id, patch);
   if (!row) return NextResponse.json({ error: 'Not found' }, { status: 404 });

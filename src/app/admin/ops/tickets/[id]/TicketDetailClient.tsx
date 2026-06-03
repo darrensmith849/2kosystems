@@ -48,9 +48,11 @@ function relativeTime(date: Date | null | undefined): string {
 export default function TicketDetailClient({
   ticket,
   comments,
+  operators,
 }: {
   ticket: TicketWithRefs;
   comments: TicketComment[];
+  operators: { id: string; slug: string; displayName: string }[];
 }) {
   const router = useRouter();
   const [busy, setBusy] = useState<string | null>(null);
@@ -91,6 +93,11 @@ export default function TicketDetailClient({
 
   async function handleBilling(e: React.ChangeEvent<HTMLSelectElement>) {
     await patch('billingStatus', { billingStatus: e.target.value });
+  }
+
+  async function handleAssignee(e: React.ChangeEvent<HTMLSelectElement>) {
+    const v = e.target.value;
+    await patch('assigneeOperatorId', { assigneeOperatorId: v === '' ? null : v });
   }
 
   async function handleTimeSave(e: React.FormEvent) {
@@ -205,6 +212,20 @@ export default function TicketDetailClient({
               </select>
             </label>
             <label className="block">
+              <span className="block text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a] mb-1">Assignee</span>
+              <select
+                value={ticket.assigneeOperatorId ?? ''}
+                onChange={handleAssignee}
+                disabled={busy !== null}
+                className="w-full rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3 py-2 text-xs text-[#f5f5f5]"
+              >
+                <option value="">unassigned</option>
+                {operators.map((o) => (
+                  <option key={o.id} value={o.id}>{o.displayName}</option>
+                ))}
+              </select>
+            </label>
+            <label className="block">
               <span className="block text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a] mb-1">Billing</span>
               <select
                 value={ticket.billingStatus}
@@ -242,6 +263,32 @@ export default function TicketDetailClient({
           {error && <p className="mt-3 text-xs text-rose-400">{error}</p>}
         </AdminCard>
       </div>
+
+      {(ticket.client || ticket.asset) && (
+        <div className="mb-5">
+          <h3 className="text-xs font-mono uppercase tracking-[0.18em] text-[#71717a] mb-2">Related</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {ticket.client && (
+              <Link
+                href={`/admin/ops/clients/${ticket.client.id}`}
+                className="block rounded-2xl border border-[#27272a] bg-[#111113] p-4 hover:border-[#3f3f46] transition-colors"
+              >
+                <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a] mb-1">Client</p>
+                <p className="text-sm text-[#f5f5f5]">{ticket.client.name}</p>
+              </Link>
+            )}
+            {ticket.asset && (
+              <Link
+                href={`/admin/ops/assets/${ticket.asset.id}`}
+                className="block rounded-2xl border border-[#27272a] bg-[#111113] p-4 hover:border-[#3f3f46] transition-colors"
+              >
+                <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a] mb-1">Asset</p>
+                <p className="text-sm text-[#f5f5f5]">{ticket.asset.name}</p>
+              </Link>
+            )}
+          </div>
+        </div>
+      )}
 
       <div className="space-y-3 mb-5">
         <h3 className="text-xs font-mono uppercase tracking-[0.18em] text-[#71717a]">

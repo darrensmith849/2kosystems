@@ -10,7 +10,7 @@ import {
 } from '@/lib/db/schema/tickets';
 import { clients, type Client } from '@/lib/db/schema/clients';
 import { assets, type Asset } from '@/lib/db/schema/assets';
-import { and, asc, desc, eq } from 'drizzle-orm';
+import { and, asc, desc, eq, notInArray } from 'drizzle-orm';
 
 export type TicketWithRefs = Ticket & { client: Client | null; asset: Asset | null };
 
@@ -76,4 +76,48 @@ export async function addComment(input: NewTicketComment): Promise<TicketComment
   if (!db) return null;
   const rows = await db.insert(ticketComments).values(input).returning();
   return rows[0] ?? null;
+}
+
+export async function listTicketsForClient(clientId: string): Promise<TicketWithRefs[]> {
+  const db = getDb();
+  if (!db) return [];
+  const rows = await db
+    .select({ ticket: tickets, client: clients, asset: assets })
+    .from(tickets)
+    .leftJoin(clients, eq(clients.id, tickets.clientId))
+    .leftJoin(assets, eq(assets.id, tickets.assetId))
+    .where(eq(tickets.clientId, clientId))
+    .orderBy(desc(tickets.updatedAt));
+  return rows.map((r) => ({ ...r.ticket, client: r.client, asset: r.asset }));
+}
+
+export async function listTicketsForAsset(assetId: string): Promise<TicketWithRefs[]> {
+  const db = getDb();
+  if (!db) return [];
+  const rows = await db
+    .select({ ticket: tickets, client: clients, asset: assets })
+    .from(tickets)
+    .leftJoin(clients, eq(clients.id, tickets.clientId))
+    .leftJoin(assets, eq(assets.id, tickets.assetId))
+    .where(eq(tickets.assetId, assetId))
+    .orderBy(desc(tickets.updatedAt));
+  return rows.map((r) => ({ ...r.ticket, client: r.client, asset: r.asset }));
+}
+
+const CLOSED_STATUSES = ['completed', 'archived'];
+
+export async function countOpenTickets(): Promise<{ total: number; byPriority: Record<string, number> }> {
+  const db = getDb();
+  const byPriority: Record<string, number> = { urgent: 0, high: 0, med: 0, low: 0 };
+  if (!db) return { total: 0, byPriority };
+  const rows = await db
+    .select({ priority: tickets.priority })
+    .from(tickets)
+    .where(notInArray(tickets.status, CLOSED_STATUSES));
+  let total = 0;
+  for (const r of rows) {
+    total += 1;
+    byPriority[r.priority] = (byPriority[r.priority] ?? 0) + 1;
+  }
+  return { total, byPriority };
 }

@@ -9,6 +9,8 @@ const SEVERITIES = ['info', 'minor', 'major', 'critical'] as const;
 const SOURCES = ['manual', 'betterstack', 'cloudflare', 'hetzner', 'vercel'] as const;
 const STATUSES = ['open', 'investigating', 'resolved', 'postmortem_done'] as const;
 
+type Severity = (typeof SEVERITIES)[number];
+type Status = (typeof STATUSES)[number];
 type Tone = 'neutral' | 'green' | 'amber' | 'rose' | 'blue';
 
 const SEVERITY_TONES: Record<string, Tone> = {
@@ -54,6 +56,27 @@ function formatStarted(startedAt: Date | string): string {
   });
 }
 
+function chipClass(active: boolean, tone: Tone): string {
+  const palette: Record<Tone, string> = {
+    neutral: active
+      ? 'border-[#52525b] bg-[#1c1c1e] text-[#f5f5f5]'
+      : 'border-[#27272a] bg-transparent text-[#a1a1aa] hover:text-[#e4e4e7]',
+    green: active
+      ? 'border-emerald-400/60 bg-emerald-400/10 text-emerald-200'
+      : 'border-[#27272a] bg-transparent text-[#a1a1aa] hover:text-emerald-200',
+    amber: active
+      ? 'border-amber-400/60 bg-amber-400/10 text-amber-200'
+      : 'border-[#27272a] bg-transparent text-[#a1a1aa] hover:text-amber-200',
+    rose: active
+      ? 'border-rose-400/60 bg-rose-400/10 text-rose-200'
+      : 'border-[#27272a] bg-transparent text-[#a1a1aa] hover:text-rose-200',
+    blue: active
+      ? 'border-sky-400/60 bg-sky-400/10 text-sky-200'
+      : 'border-[#27272a] bg-transparent text-[#a1a1aa] hover:text-sky-200',
+  };
+  return `inline-flex items-center text-[10px] font-mono uppercase tracking-wider px-2.5 py-1 rounded-full border transition-colors ${palette[tone]}`;
+}
+
 export default function IncidentsClient({
   initialIncidents,
   assets,
@@ -65,7 +88,7 @@ export default function IncidentsClient({
 }) {
   const router = useRouter();
   const [summary, setSummary] = useState('');
-  const [severity, setSeverity] = useState<(typeof SEVERITIES)[number]>('minor');
+  const [severity, setSeverity] = useState<Severity>('minor');
   const [source, setSource] = useState<(typeof SOURCES)[number]>('manual');
   const [assetId, setAssetId] = useState('');
   const [clientId, setClientId] = useState('');
@@ -74,7 +97,21 @@ export default function IncidentsClient({
   const [rowBusy, setRowBusy] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const rows = useMemo(() => initialIncidents, [initialIncidents]);
+  // Filters
+  const [severityFilter, setSeverityFilter] = useState<Severity | 'all'>('all');
+  const [statusFilter, setStatusFilter] = useState<Status | 'all'>('all');
+
+  // Inline root-cause editor state
+  const [editingRootCause, setEditingRootCause] = useState<string | null>(null);
+  const [rootCauseDraft, setRootCauseDraft] = useState<string>('');
+
+  const rows = useMemo(() => {
+    return initialIncidents.filter((i) => {
+      if (severityFilter !== 'all' && i.severity !== severityFilter) return false;
+      if (statusFilter !== 'all' && i.status !== statusFilter) return false;
+      return true;
+    });
+  }, [initialIncidents, severityFilter, statusFilter]);
 
   async function handleCreate(e: React.FormEvent) {
     e.preventDefault();
@@ -114,25 +151,53 @@ export default function IncidentsClient({
     }
   }
 
-  async function setStatus(id: string, status: (typeof STATUSES)[number]) {
+  async function patchIncident(id: string, patch: Record<string, unknown>) {
     setRowBusy(id);
     setError(null);
     try {
       const res = await fetch(`/api/admin/ops/incidents/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status }),
+        body: JSON.stringify(patch),
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
         setError((data as { error?: string }).error ?? `HTTP ${res.status}`);
-        return;
+        return false;
       }
       router.refresh();
+      return true;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Network error');
+      return false;
     } finally {
       setRowBusy(null);
+    }
+  }
+
+  async function setStatus(id: string, status: Status) {
+    await patchIncident(id, { status });
+  }
+
+  async function toggleFollowup(id: string, current: boolean) {
+    await patchIncident(id, { followupRequired: !current });
+  }
+
+  function beginEditRootCause(i: IncidentWithRefs) {
+    setEditingRootCause(i.id);
+    setRootCauseDraft(i.rootCause ?? '');
+  }
+
+  function cancelEditRootCause() {
+    setEditingRootCause(null);
+    setRootCauseDraft('');
+  }
+
+  async function saveRootCause(id: string) {
+    const ok = await patchIncident(id, { rootCause: rootCauseDraft.trim() || null });
+    if (ok) {
+      setEditingRootCause(null);
+      setRootCauseDraft('');
     }
   }
 
@@ -150,7 +215,7 @@ export default function IncidentsClient({
           />
           <select
             value={severity}
-            onChange={(e) => setSeverity(e.target.value as (typeof SEVERITIES)[number])}
+            onChange={(e) => setSeverity(e.target.value as Severity)}
             className="rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5]"
             disabled={busy}
           >
@@ -208,6 +273,53 @@ export default function IncidentsClient({
         {error && <p className="mt-3 text-sm text-rose-400">{error}</p>}
       </AdminCard>
 
+      <div className="flex flex-col gap-3 rounded-2xl border border-[#27272a] bg-[#111113] p-4 md:flex-row md:items-center md:justify-between">
+        <div className="flex flex-col gap-2">
+          <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a]">Severity</p>
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => setSeverityFilter('all')}
+              className={chipClass(severityFilter === 'all', 'neutral')}
+            >
+              all
+            </button>
+            {SEVERITIES.map((s) => (
+              <button
+                key={s}
+                type="button"
+                onClick={() => setSeverityFilter(s)}
+                className={chipClass(severityFilter === s, SEVERITY_TONES[s] ?? 'neutral')}
+              >
+                {s}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="flex flex-col gap-2">
+          <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a]">Status</p>
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => setStatusFilter('all')}
+              className={chipClass(statusFilter === 'all', 'neutral')}
+            >
+              all
+            </button>
+            {STATUSES.map((s) => (
+              <button
+                key={s}
+                type="button"
+                onClick={() => setStatusFilter(s)}
+                className={chipClass(statusFilter === s, STATUS_TONES[s] ?? 'neutral')}
+              >
+                {s.replace('_', ' ')}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
       <DataTable
         rows={rows}
         columns={[
@@ -221,6 +333,58 @@ export default function IncidentsClient({
                   <p className="mt-0.5 text-[10px] font-mono uppercase tracking-[0.12em] text-[#52525b]">
                     {i.client.name}
                   </p>
+                )}
+                {(i.status === 'resolved' || i.status === 'postmortem_done') && (
+                  <div className="mt-2">
+                    {editingRootCause === i.id ? (
+                      <div className="flex flex-col gap-1.5">
+                        <input
+                          type="text"
+                          value={rootCauseDraft}
+                          onChange={(e) => setRootCauseDraft(e.target.value)}
+                          placeholder="Root cause…"
+                          className="w-full rounded-md border border-[#27272a] bg-[#0a0a0b] px-2 py-1 text-[11px] text-[#f5f5f5] placeholder:text-[#3f3f46] focus:border-[#0f7b3a]/50 focus:outline-none"
+                          disabled={rowBusy === i.id}
+                          autoFocus
+                        />
+                        <div className="flex gap-2">
+                          <button
+                            type="button"
+                            onClick={() => saveRootCause(i.id)}
+                            disabled={rowBusy === i.id}
+                            className="rounded-md bg-[#0f7b3a] px-2.5 py-0.5 text-[10px] font-mono uppercase tracking-wider text-white hover:bg-[#B8C4C8] hover:text-black disabled:opacity-40 transition-colors"
+                          >
+                            save
+                          </button>
+                          <button
+                            type="button"
+                            onClick={cancelEditRootCause}
+                            disabled={rowBusy === i.id}
+                            className="rounded-md border border-[#27272a] px-2.5 py-0.5 text-[10px] font-mono uppercase tracking-wider text-[#a1a1aa] hover:text-[#e4e4e7] disabled:opacity-40"
+                          >
+                            cancel
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="flex flex-wrap items-center gap-2">
+                        {i.rootCause ? (
+                          <span className="text-[11px] text-[#a1a1aa] italic">{i.rootCause}</span>
+                        ) : (
+                          <span className="text-[10px] font-mono uppercase tracking-wider text-[#52525b]">
+                            no root cause
+                          </span>
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => beginEditRootCause(i)}
+                          className="text-[10px] font-mono uppercase tracking-wider text-[#71717a] hover:text-[#e4e4e7] underline-offset-2 hover:underline"
+                        >
+                          {i.rootCause ? 'edit' : 'add'} root cause
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 )}
               </div>
             ),
@@ -238,7 +402,7 @@ export default function IncidentsClient({
                 <Badge text={i.status} tone={STATUS_TONES[i.status] ?? 'neutral'} />
                 <select
                   value={i.status}
-                  onChange={(e) => setStatus(i.id, e.target.value as (typeof STATUSES)[number])}
+                  onChange={(e) => setStatus(i.id, e.target.value as Status)}
                   disabled={rowBusy === i.id}
                   className="rounded-md border border-[#27272a] bg-[#0a0a0b] px-2 py-1 text-[10px] font-mono text-[#a1a1aa] focus:border-[#0f7b3a]/50 focus:outline-none disabled:opacity-50"
                 >
@@ -247,6 +411,21 @@ export default function IncidentsClient({
                   ))}
                 </select>
               </div>
+            ),
+          },
+          {
+            key: 'followup',
+            header: 'Follow-up',
+            render: (i) => (
+              <button
+                type="button"
+                onClick={() => toggleFollowup(i.id, i.followupRequired)}
+                disabled={rowBusy === i.id}
+                className={chipClass(i.followupRequired, i.followupRequired ? 'amber' : 'neutral')}
+                title="Toggle follow-up required"
+              >
+                {i.followupRequired ? 'required' : 'none'}
+              </button>
             ),
           },
           {
@@ -275,9 +454,15 @@ export default function IncidentsClient({
         ]}
         empty={
           <div className="rounded-2xl border border-dashed border-[#27272a] bg-[#0a0a0b] p-10 text-center">
-            <p className="text-sm text-[#a1a1aa]">No incidents logged.</p>
+            <p className="text-sm text-[#a1a1aa]">
+              {initialIncidents.length === 0
+                ? 'No incidents logged.'
+                : 'No incidents match the current filters.'}
+            </p>
             <p className="mt-2 text-xs text-[#52525b] max-w-md mx-auto">
-              Log incidents manually for now. BetterStack auto-ingestion lands in Phase 2B.
+              {initialIncidents.length === 0
+                ? 'Log incidents manually for now. BetterStack auto-ingestion lands in Phase 2B.'
+                : 'Clear or adjust the severity/status chips to widen the view.'}
             </p>
           </div>
         }

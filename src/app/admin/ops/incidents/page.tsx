@@ -1,4 +1,5 @@
 import { SectionHeader } from '@/components/admin-ui';
+import WaitingForDb from '@/components/admin-ui/WaitingForDb';
 import { listIncidents } from '@/lib/ops/incidents-service';
 import { listAssets } from '@/lib/ops/assets-service';
 import { listClients } from '@/lib/ops/clients-service';
@@ -18,6 +19,14 @@ export default async function IncidentsPage() {
         subtitle="Track uptime / deployment / customer-impacting events. BetterStack auto-ingestion is Phase 2B."
       />
       <NotConnectedBanner />
+      <WaitingForDb
+        area="Incidents"
+        whatYouWillSee={[
+          'Uptime, deployment, and customer-impacting events',
+          'Severity classification (info / minor / major / critical)',
+          'Status timeline per incident with assignee notes',
+        ]}
+      />
       <IncidentsClient
         initialIncidents={incidents}
         assets={assets.map((a) => ({ id: a.id, name: a.name }))}
