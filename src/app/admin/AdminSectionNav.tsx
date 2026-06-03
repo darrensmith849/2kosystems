@@ -3,15 +3,17 @@
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 
-// Slim section switcher between the two admin consoles. Shown only when
-// authenticated (the gate runs inside each console's page). When neither
-// section path is active we render nothing so login screens stay clean.
+// Slim section switcher between the two admin consoles. Shown only on
+// /admin/agent — the /admin/ops sidebar now owns its own section switcher,
+// so this component returns null there to avoid a duplicate top bar.
+// Login screens (no /admin/* prefix match) also render nothing.
 
 export default function AdminSectionNav() {
   const pathname = usePathname() ?? '';
   const onAgent = pathname.startsWith('/admin/agent');
   const onOps = pathname.startsWith('/admin/ops');
   if (!onAgent && !onOps) return null;
+  if (onOps) return null;
 
   return (
     <div className="border-b border-[#1c1c1e] bg-[#0a0a0b]/95 backdrop-blur-sm">
