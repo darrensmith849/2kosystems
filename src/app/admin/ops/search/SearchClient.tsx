@@ -4,6 +4,13 @@ import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { AdminCard, Badge, EmptyState } from '@/components/admin-ui';
 import type { IndexItem, IndexItemType, IndexItemSource } from '@/lib/ops/ops-knowledge-index';
+import {
+  SAVED_SEARCHES_KEY,
+  loadSaved,
+  persistSaved,
+  makeIdFromName,
+  type SavedSearch,
+} from '@/lib/ops/saved-workspace-local-state';
 
 // ---------------------------------------------------------------- Tokenizer
 // Mirrors src/lib/ops/ops-search.ts so client and server behaviour match.
@@ -210,11 +217,86 @@ export default function SearchClient({ initialItems }: { initialItems: IndexItem
     blockedBy: [],
   });
   const [debouncedQ, setDebouncedQ] = useState('');
+  const [saved, setSaved] = useState<SavedSearch[]>([]);
+  const [showSaveDialog, setShowSaveDialog] = useState(false);
+  const [saveName, setSaveName] = useState('');
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    try {
+      setSaved(loadSaved<SavedSearch>(SAVED_SEARCHES_KEY));
+    } catch {
+      // silent
+    }
+  }, []);
 
   useEffect(() => {
     const id = setTimeout(() => setDebouncedQ(filters.q), 150);
     return () => clearTimeout(id);
   }, [filters.q]);
+
+  const hasActiveFilters =
+    filters.q.trim().length > 0 ||
+    filters.types.length > 0 ||
+    filters.sources.length > 0 ||
+    filters.blockedBy.length > 0;
+
+  function commitSavedSearches(next: SavedSearch[]) {
+    setSaved(next);
+    try {
+      persistSaved<SavedSearch>(SAVED_SEARCHES_KEY, next);
+    } catch {
+      // silent
+    }
+  }
+
+  function handleSaveCurrent() {
+    const name = saveName.trim();
+    if (!name) return;
+    const entry: SavedSearch = {
+      id: makeIdFromName(name),
+      name,
+      q: filters.q,
+      types: filters.types.length > 0 ? filters.types : undefined,
+      sources: filters.sources.length > 0 ? filters.sources : undefined,
+      blockedBy: filters.blockedBy.length > 0 ? filters.blockedBy : undefined,
+      createdAt: new Date().toISOString(),
+    };
+    const next = [...saved.filter((s) => s.id !== entry.id), entry];
+    commitSavedSearches(next);
+    setSaveName('');
+    setShowSaveDialog(false);
+  }
+
+  function handleDeleteSaved(id: string) {
+    commitSavedSearches(saved.filter((s) => s.id !== id));
+  }
+
+  function handleClearAllSaved() {
+    if (saved.length === 0) return;
+    if (typeof window !== 'undefined' && !window.confirm('Clear all saved searches?')) return;
+    commitSavedSearches([]);
+  }
+
+  function handleRestoreSaved(s: SavedSearch) {
+    const restored: FilterState = {
+      q: s.q ?? '',
+      types: (s.types ?? []) as IndexItemType[],
+      sources: (s.sources ?? []) as IndexItemSource[],
+      blockedBy: s.blockedBy ?? [],
+    };
+    setFilters(restored);
+    setDebouncedQ(restored.q);
+  }
+
+  function summarizeSaved(s: SavedSearch): string {
+    const parts: string[] = [];
+    if (s.q && s.q.trim().length > 0) parts.push(`q:"${s.q.trim()}"`);
+    if (s.types && s.types.length > 0) parts.push(`type:${s.types.join(',')}`);
+    if (s.sources && s.sources.length > 0) parts.push(`source:${s.sources.join(',')}`);
+    if (s.blockedBy && s.blockedBy.length > 0) parts.push(`blockedBy:${s.blockedBy.join(',')}`);
+    return parts.length > 0 ? parts.join(' · ') : '(no filters)';
+  }
 
   const tokens = useMemo(() => tokenize(debouncedQ), [debouncedQ]);
 
@@ -318,7 +400,57 @@ export default function SearchClient({ initialItems }: { initialItems: IndexItem
                 Reset
               </button>
             )}
+            <button
+              type="button"
+              disabled={!hasActiveFilters}
+              onClick={() => setShowSaveDialog(true)}
+              className="rounded-full border border-[#27272a] hover:border-emerald-400/40 disabled:opacity-40 disabled:hover:border-[#27272a] disabled:cursor-not-allowed px-3 py-1 text-[11px] font-mono text-[#a1a1aa] hover:text-emerald-300 transition-colors"
+            >
+              Save current search
+            </button>
           </div>
+          {showSaveDialog && (
+            <div className="rounded-lg border border-[#27272a] bg-[#0a0a0b] p-3">
+              <p className="text-[10px] font-mono uppercase tracking-wider text-[#71717a] mb-2">
+                Save search
+              </p>
+              <div className="flex flex-wrap items-center gap-2">
+                <input
+                  type="text"
+                  value={saveName}
+                  onChange={(e) => setSaveName(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') handleSaveCurrent();
+                    else if (e.key === 'Escape') {
+                      setShowSaveDialog(false);
+                      setSaveName('');
+                    }
+                  }}
+                  autoFocus
+                  placeholder="Name this search…"
+                  className="flex-1 min-w-[200px] rounded-lg border border-[#27272a] bg-[#111113] px-3 py-1.5 text-xs text-[#f5f5f5] placeholder:text-[#3f3f46] focus:border-[#0f7b3a]/50 focus:outline-none transition-colors"
+                />
+                <button
+                  type="button"
+                  onClick={handleSaveCurrent}
+                  disabled={saveName.trim().length === 0}
+                  className="rounded-full border border-emerald-400/30 bg-emerald-400/5 px-3 py-1 text-[11px] font-mono text-emerald-300 hover:border-emerald-400/60 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                >
+                  Save
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowSaveDialog(false);
+                    setSaveName('');
+                  }}
+                  className="rounded-full border border-[#27272a] hover:border-[#3f3f46] px-3 py-1 text-[11px] font-mono text-[#71717a] hover:text-[#f5f5f5] transition-colors"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
           <div className="flex flex-wrap items-center gap-2 pt-1">
             <span className="text-[10px] font-mono uppercase tracking-wider text-[#52525b]">
               examples:
@@ -334,6 +466,62 @@ export default function SearchClient({ initialItems }: { initialItems: IndexItem
               </button>
             ))}
           </div>
+        </div>
+      </AdminCard>
+
+      <AdminCard
+        title="Saved searches"
+        action={
+          saved.length > 0 ? (
+            <button
+              type="button"
+              onClick={handleClearAllSaved}
+              className="rounded-full border border-[#27272a] hover:border-rose-400/40 px-2.5 py-0.5 text-[10px] font-mono text-[#71717a] hover:text-rose-300 transition-colors"
+            >
+              Clear all saved
+            </button>
+          ) : undefined
+        }
+      >
+        <div className="space-y-2">
+          <p className="text-[10px] font-mono uppercase tracking-wider text-[#52525b]">
+            Saved locally in this browser
+          </p>
+          {saved.length === 0 ? (
+            <p className="text-xs text-[#71717a]">
+              No saved searches yet. Save useful queries from the button above.
+            </p>
+          ) : (
+            <ul className="space-y-1.5">
+              {saved.map((s) => (
+                <li
+                  key={s.id}
+                  className="flex items-center gap-2 rounded-lg border border-[#27272a] bg-[#0a0a0b] px-2.5 py-1.5"
+                >
+                  <button
+                    type="button"
+                    onClick={() => handleRestoreSaved(s)}
+                    className="flex-1 min-w-0 text-left group"
+                  >
+                    <p className="text-xs text-[#f5f5f5] group-hover:text-emerald-300 transition-colors truncate">
+                      {s.name}
+                    </p>
+                    <p className="text-[10px] font-mono text-[#52525b] truncate">
+                      {summarizeSaved(s)}
+                    </p>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteSaved(s.id)}
+                    aria-label={`Delete ${s.name}`}
+                    className="shrink-0 rounded-full border border-[#27272a] hover:border-rose-400/40 px-2 py-0.5 text-[11px] font-mono text-[#71717a] hover:text-rose-300 transition-colors"
+                  >
+                    ×
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </AdminCard>
 

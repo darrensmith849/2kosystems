@@ -3,6 +3,7 @@ import { AdminCard, Badge, DataTable, SectionHeader } from '@/components/admin-u
 import SnapshotBanner from '@/components/admin-ui/SnapshotBanner';
 import { isSnapshotMode } from '@/lib/ops/snapshot-mode';
 import { buildReportsSummary, type ReportsSummary } from '@/lib/ops/ops-reports';
+import { buildIndex, type IndexItem } from '@/lib/ops/ops-knowledge-index';
 
 // /admin/ops/reports — read-only summary view. Every counter is derived from
 // buildIndex() via ops-reports so the same surface auto-upgrades to live DB
@@ -41,7 +42,7 @@ const BLOCKED_BY_ORDER = [
 ] as const;
 
 export default async function ReportsPage() {
-  const summary = await buildReportsSummary();
+  const [summary, items] = await Promise.all([buildReportsSummary(), buildIndex()]);
   const snapshot = isSnapshotMode();
 
   return (
@@ -58,12 +59,18 @@ export default async function ReportsPage() {
       </p>
 
       <AtAGlance summary={summary} />
+      <ClientPortfolio items={items} />
+      <InfrastructureFootprint summary={summary} items={items} />
+      <RiskRegister items={items} />
       <RenewalsByWindow summary={summary} />
+      <RenewalPressure items={items} />
       <IncidentsSection summary={summary} />
       <DecisionsSection summary={summary} />
+      <DecisionBacklog summary={summary} />
       <BlockedBySection summary={summary} />
       <ActivationSummary summary={summary} />
       <ImportSummary summary={summary} />
+      <SuggestedNextActions summary={summary} />
     </>
   );
 }
@@ -282,6 +289,442 @@ function ImportSummary({ summary }: { summary: ReportsSummary }) {
       </AdminCard>
     </div>
   );
+}
+
+// ---------------------------------------------------------------- New sections
+
+function ClientPortfolio({ items }: { items: IndexItem[] }) {
+  const clients = items.filter((it) => it.type === 'client');
+  const assets = items.filter((it) => it.type === 'asset');
+
+  const internal = clients.filter((c) => c.tags.includes('internal'));
+  const external = clients.filter(
+    (c) => !c.tags.includes('internal') && (c.tags.includes('client') || c.tags.includes('external')),
+  );
+  const unmapped = clients.filter(
+    (c) => c.status === 'lead' || c.tags.includes('unmapped'),
+  );
+
+  // assets-per-client tally
+  const assetsByClient = new Map<string, number>();
+  for (const a of assets) {
+    const cid = a.relations?.clientId;
+    if (!cid) continue;
+    assetsByClient.set(cid, (assetsByClient.get(cid) ?? 0) + 1);
+  }
+  const topClients = clients
+    .map((c) => ({
+      id: c.id,
+      title: c.title,
+      subtitle: c.subtitle,
+      url: c.url,
+      assetCount: assetsByClient.get(c.id) ?? 0,
+    }))
+    .filter((r) => r.assetCount > 0)
+    .sort((a, b) => b.assetCount - a.assetCount)
+    .slice(0, 10);
+
+  return (
+    <div className="mb-6">
+      <AdminCard title="Client / entity portfolio">
+        <div className="mb-4 grid grid-cols-1 gap-3 md:grid-cols-3">
+          <PortfolioTile label="Internal products" value={internal.length} tone="green" />
+          <PortfolioTile label="External clients" value={external.length} tone="blue" />
+          <PortfolioTile label="Unmapped" value={unmapped.length} tone={unmapped.length > 0 ? 'amber' : 'neutral'} />
+        </div>
+        <DataTable
+          rows={topClients}
+          columns={[
+            {
+              key: 'client',
+              header: 'Client',
+              render: (r) =>
+                r.url ? (
+                  <Link href={r.url} className="text-xs text-emerald-300 hover:underline">
+                    {r.title}
+                  </Link>
+                ) : (
+                  <span className="text-xs text-[#e4e4e7]">{r.title}</span>
+                ),
+            },
+            {
+              key: 'division',
+              header: 'Division',
+              render: (r) => <span className="text-xs text-[#a1a1aa]">{r.subtitle ?? '—'}</span>,
+            },
+            {
+              key: 'assets',
+              header: 'Assets',
+              render: (r) => <span className="font-mono">{r.assetCount}</span>,
+              className: 'text-right',
+            },
+          ]}
+          empty={<p className="text-xs text-[#71717a]">No assets linked to clients.</p>}
+        />
+      </AdminCard>
+    </div>
+  );
+}
+
+function InfrastructureFootprint({ summary, items }: { summary: ReportsSummary; items: IndexItem[] }) {
+  const v = summary.totals.vercelProjects;
+
+  const vercelByTeam = Object.entries(v.byTeam)
+    .map(([team, count]) => ({ id: team, label: team, count }))
+    .sort((a, b) => b.count - a.count);
+
+  const vercelStateOrder = ['live', 'migrated_to_hetzner', 'dormant', 'unknown'];
+  const vercelByState = vercelStateOrder.map((state) => ({
+    id: state,
+    label: state,
+    count: v.byState[state] ?? 0,
+  }));
+
+  // Hetzner: derive role from labels — we stored role tag during indexing
+  const hetznerItems = items.filter((it) => it.type === 'hetzner_server');
+  const hetznerByRole: Record<string, number> = {};
+  for (const h of hetznerItems) {
+    // labels were spread into tags after the location + serverType tags
+    const role =
+      h.tags.find((t) => t === 'web' || t === 'data' || t === 'trading-bot') ?? 'other';
+    hetznerByRole[role] = (hetznerByRole[role] ?? 0) + 1;
+  }
+  const hetznerRoleRows = Object.entries(hetznerByRole)
+    .map(([role, count]) => ({ id: role, label: role, count }))
+    .sort((a, b) => b.count - a.count);
+
+  return (
+    <div className="mb-6">
+      <AdminCard title="Infrastructure footprint">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div>
+            <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.18em] text-[#71717a]">Vercel by team</p>
+            <DataTable
+              rows={vercelByTeam}
+              columns={[
+                { key: 'team', header: 'Team', render: (r) => <span className="text-xs text-[#e4e4e7]">{r.label}</span> },
+                { key: 'count', header: 'Projects', render: (r) => <span className="font-mono">{r.count}</span>, className: 'text-right' },
+              ]}
+              empty={<p className="text-xs text-[#71717a]">No Vercel teams indexed.</p>}
+            />
+          </div>
+          <div>
+            <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.18em] text-[#71717a]">Vercel by state</p>
+            <DataTable
+              rows={vercelByState.filter((r) => r.count > 0)}
+              columns={[
+                { key: 'state', header: 'State', render: (r) => <Badge text={r.label.replace(/_/g, ' ')} tone={vercelStateTone(r.label)} /> },
+                { key: 'count', header: 'Count', render: (r) => <span className="font-mono">{r.count}</span>, className: 'text-right' },
+              ]}
+              empty={<p className="text-xs text-[#71717a]">No Vercel state data.</p>}
+            />
+          </div>
+          <div>
+            <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.18em] text-[#71717a]">Hetzner by role</p>
+            <DataTable
+              rows={hetznerRoleRows}
+              columns={[
+                { key: 'role', header: 'Role', render: (r) => <span className="text-xs text-[#e4e4e7]">{r.label}</span> },
+                { key: 'count', header: 'Servers', render: (r) => <span className="font-mono">{r.count}</span>, className: 'text-right' },
+              ]}
+              empty={<p className="text-xs text-[#71717a]">No Hetzner servers indexed.</p>}
+            />
+          </div>
+          <div>
+            <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.18em] text-[#71717a]">Cloudflare</p>
+            <div className="rounded-2xl border border-[#27272a] bg-[#0e0e10] p-4">
+              <p className="mb-1 text-2xl font-semibold text-[#f5f5f5]">{summary.totals.cloudflareZones}</p>
+              <p className="text-[11px] text-[#71717a]">
+                zones indexed (illustrative subset — full list activates with CLOUDFLARE_API_TOKEN)
+              </p>
+            </div>
+          </div>
+        </div>
+      </AdminCard>
+    </div>
+  );
+}
+
+type RiskRow = {
+  id: string;
+  title: string;
+  source: string;
+  severity: string;
+  status: string;
+  blockedBy: string;
+  url?: string;
+};
+
+function RiskRegister({ items }: { items: IndexItem[] }) {
+  // audit findings: severity is tags[2] (kind, severity, status)
+  const findings: RiskRow[] = items
+    .filter((it) => it.type === 'audit_finding')
+    .map((f) => ({
+      id: f.id,
+      title: f.title,
+      source: 'audit',
+      severity: f.tags[2] ?? 'unknown',
+      status: f.status ?? 'open',
+      blockedBy: (f.blockedBy ?? []).join(', ') || '—',
+      url: f.url,
+    }));
+
+  // decisions: tags = ['review_decision', cluster, risk, ...blockedBy]
+  const decisionRisks: RiskRow[] = items
+    .filter((it) => it.type === 'review_decision')
+    .map((d) => ({
+      id: d.id,
+      title: d.title,
+      source: 'decision',
+      severity: d.tags[2] ?? 'unknown',
+      status: d.status ?? 'open',
+      blockedBy: (d.blockedBy ?? []).filter((b) => b !== 'none').join(', ') || 'human_decision',
+      url: d.url,
+    }));
+
+  const sevRank = (s: string) => (s === 'high' || s === 'critical' ? 3 : s === 'med' || s === 'major' ? 2 : s === 'low' || s === 'minor' ? 1 : 0);
+
+  const rows = [...findings, ...decisionRisks]
+    .sort((a, b) => sevRank(b.severity) - sevRank(a.severity))
+    .slice(0, 10);
+
+  return (
+    <div className="mb-6">
+      <AdminCard title="Risk register (top 10)">
+        <DataTable
+          rows={rows}
+          columns={[
+            {
+              key: 'title',
+              header: 'Title',
+              render: (r) =>
+                r.url ? (
+                  <Link href={r.url} className="text-xs text-emerald-300 hover:underline">
+                    {r.title}
+                  </Link>
+                ) : (
+                  <span className="text-xs text-[#e4e4e7]">{r.title}</span>
+                ),
+            },
+            {
+              key: 'source',
+              header: 'Source',
+              render: (r) => <Badge text={r.source} tone={r.source === 'audit' ? 'amber' : 'blue'} />,
+            },
+            {
+              key: 'severity',
+              header: 'Severity / risk',
+              render: (r) => <Badge text={r.severity} tone={riskTone(r.severity === 'critical' || r.severity === 'major' ? 'high' : r.severity === 'minor' ? 'low' : r.severity)} />,
+            },
+            {
+              key: 'status',
+              header: 'Status',
+              render: (r) => <span className="text-xs text-[#a1a1aa]">{r.status}</span>,
+            },
+            {
+              key: 'blockedBy',
+              header: 'Blocked by',
+              render: (r) => <span className="font-mono text-[10px] text-[#a1a1aa]">{r.blockedBy}</span>,
+            },
+          ]}
+          empty={<p className="text-xs text-[#71717a]">No risks indexed.</p>}
+        />
+      </AdminCard>
+    </div>
+  );
+}
+
+function RenewalPressure({ items }: { items: IndexItem[] }) {
+  const renewals = items.filter((it) => it.type === 'renewal');
+
+  const withDate = renewals
+    .map((r) => {
+      const m = r.body.match(/due (\d{4}-\d{2}-\d{2})/);
+      return { item: r, dueIso: m?.[1] ?? null };
+    })
+    .filter((r) => r.dueIso !== null) as { item: IndexItem; dueIso: string }[];
+
+  const today = new Date().toISOString().slice(0, 10);
+  const dueOrOverdue = withDate.filter((r) => r.dueIso <= today).length;
+  const topUrgent = [...withDate].sort((a, b) => a.dueIso.localeCompare(b.dueIso)).slice(0, 5);
+  const needsConfirm = renewals.filter((r) => /confirm/i.test(r.body)).length;
+
+  return (
+    <div className="mb-6">
+      <AdminCard title="Renewal pressure">
+        <div className="mb-4 flex flex-wrap items-baseline gap-4">
+          <Stat label="Due / overdue" value={dueOrOverdue} tone={dueOrOverdue > 0 ? 'rose' : 'neutral'} />
+          <Stat label="Needs date confirm" value={needsConfirm} tone={needsConfirm > 0 ? 'amber' : 'neutral'} />
+          <p className="font-mono text-xs text-[#71717a]">{renewals.length} tracked</p>
+        </div>
+        <DataTable
+          rows={topUrgent.map((r) => ({
+            id: r.item.id,
+            title: r.item.title,
+            subtitle: r.item.subtitle ?? '—',
+            due: r.dueIso,
+            url: r.item.url,
+          }))}
+          columns={[
+            {
+              key: 'title',
+              header: 'Renewal',
+              render: (r) =>
+                r.url ? (
+                  <Link href={r.url} className="text-xs text-emerald-300 hover:underline">
+                    {r.title}
+                  </Link>
+                ) : (
+                  <span className="text-xs text-[#e4e4e7]">{r.title}</span>
+                ),
+            },
+            { key: 'subtitle', header: 'Subject', render: (r) => <span className="text-xs text-[#a1a1aa]">{r.subtitle}</span> },
+            {
+              key: 'due',
+              header: 'Next due',
+              render: (r) => <span className="font-mono text-[11px]">{r.due}</span>,
+              className: 'text-right',
+            },
+          ]}
+          empty={<p className="text-xs text-[#71717a]">No renewals with dates.</p>}
+        />
+      </AdminCard>
+    </div>
+  );
+}
+
+function DecisionBacklog({ summary }: { summary: ReportsSummary }) {
+  const risks = summary.decisionsByRisk;
+  const total = Object.values(risks).reduce((a, b) => a + b, 0);
+  const high = risks.high ?? 0;
+  const med = risks.med ?? 0;
+  const low = risks.low ?? 0;
+
+  const clusters = Object.entries(summary.decisionsByCluster)
+    .filter(([, v]) => v > 0)
+    .map(([k, v]) => ({ id: k, label: k.replace(/_/g, ' '), count: v }))
+    .sort((a, b) => b.count - a.count);
+
+  return (
+    <div className="mb-6">
+      <AdminCard
+        title="Decision backlog"
+        action={<span className="font-mono text-[10px] uppercase tracking-[0.15em] text-[#71717a]">{total} pending</span>}
+      >
+        <div className="mb-4 grid grid-cols-3 gap-3">
+          <PortfolioTile label="High" value={high} tone={high > 0 ? 'rose' : 'neutral'} />
+          <PortfolioTile label="Med" value={med} tone={med > 0 ? 'amber' : 'neutral'} />
+          <PortfolioTile label="Low" value={low} tone={low > 0 ? 'blue' : 'neutral'} />
+        </div>
+        <div className="mb-3">
+          <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.18em] text-[#71717a]">By cluster</p>
+          <DataTable
+            rows={clusters}
+            columns={[
+              { key: 'cluster', header: 'Cluster', render: (r) => <span className="text-xs text-[#e4e4e7]">{r.label}</span> },
+              { key: 'count', header: 'Count', render: (r) => <span className="font-mono">{r.count}</span>, className: 'text-right' },
+            ]}
+            empty={<p className="text-xs text-[#71717a]">No decisions indexed.</p>}
+          />
+        </div>
+        <p className="mt-3 rounded-lg border border-dashed border-[#27272a] bg-[#0a0a0b] px-3 py-2 text-[11px] text-[#71717a]">
+          Local review state not visible to server — see{' '}
+          <Link href="/admin/ops/review" className="text-emerald-300 hover:underline">
+            /admin/ops/review
+          </Link>{' '}
+          for browser-local accept / reject / notes.
+        </p>
+      </AdminCard>
+    </div>
+  );
+}
+
+function SuggestedNextActions({ summary }: { summary: ReportsSummary }) {
+  const decisionsHigh = summary.decisionsByRisk.high ?? 0;
+  const decisionsTotal =
+    (summary.decisionsByRisk.high ?? 0) +
+    (summary.decisionsByRisk.med ?? 0) +
+    (summary.decisionsByRisk.low ?? 0);
+  const importBlocked = summary.importReadiness.blocked;
+  const importNeedsReview = summary.importReadiness.needs_review;
+  const openIncidents = summary.totals.openIncidents;
+  const openTickets = summary.totals.openTickets;
+
+  const beforeDb = [
+    `Walk the ${decisionsTotal} pending decisions in /admin/ops/review (${decisionsHigh} high-risk first).`,
+    `Triage the ${importNeedsReview} import groups marked needs_review so the first import is clean.`,
+    `Confirm renewal dates with xneelo / Hetzner / Vercel before reminders go live.`,
+    `Resolve ${openIncidents} open incident${openIncidents === 1 ? '' : 's'} or downgrade to monitoring.`,
+    `Close out quick-win operator tickets (${openTickets} open) so the post-DB backlog is shorter.`,
+  ];
+
+  const afterDb = [
+    'Run the snapshot import dry-run (/api/admin/ops/import/snapshot/preview) and review the diff.',
+    'Commit the snapshot import so /admin/ops surfaces switch from snapshot to DB rows.',
+    `Resolve the ${importBlocked} blocked import group${importBlocked === 1 ? '' : 's'} once provider tokens unlock the source data.`,
+    'Wire BREVO_OPS_DIGEST_TO and BETTERSTACK_WEBHOOK_SECRET so renewal / incident notifications fire.',
+    'Schedule the 07:00 SAST renewal digest cron in Vercel + verify the first run.',
+  ];
+
+  const afterProviderTokens = [
+    'GITHUB_TOKEN: archive the canonical-pick losers across the 5 repo clusters.',
+    'VERCEL_API_TOKEN: walk the ~25 dormant pumpbots-projects projects and delete confirmed unused ones.',
+    'CLOUDFLARE_API_TOKEN: re-import full zone list and clean stale records (dev.saprivateschools dead A record).',
+    'HETZNER_API_TOKEN: add a daily disk-usage check on ma130-apps; enable off-site Postgres backups for ma130-data.',
+    'Schedule the first real sync runs for all four providers to baseline drift detection.',
+  ];
+
+  return (
+    <div className="mb-6">
+      <AdminCard title="Suggested next actions">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <SuggestionColumn title="Before DB" items={beforeDb} tone="amber" />
+          <SuggestionColumn title="After DB" items={afterDb} tone="blue" />
+          <SuggestionColumn title="After provider tokens" items={afterProviderTokens} tone="green" />
+        </div>
+      </AdminCard>
+    </div>
+  );
+}
+
+function SuggestionColumn({ title, items, tone }: { title: string; items: string[]; tone: Tone }) {
+  return (
+    <div className="rounded-2xl border border-[#27272a] bg-[#0e0e10] p-4">
+      <div className="mb-3">
+        <Badge text={title} tone={tone} />
+      </div>
+      <ul className="space-y-2">
+        {items.map((item, i) => (
+          <li key={i} className="flex gap-2 text-[11px] leading-relaxed text-[#e4e4e7]">
+            <span className="text-[#52525b]">·</span>
+            <span>{item}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function PortfolioTile({ label, value, tone }: { label: string; value: number; tone: Tone }) {
+  const ring =
+    tone === 'green' ? 'border-emerald-400/30 bg-emerald-400/5'
+    : tone === 'amber' ? 'border-amber-400/30 bg-amber-400/5'
+    : tone === 'rose' ? 'border-rose-400/30 bg-rose-400/5'
+    : tone === 'blue' ? 'border-sky-400/30 bg-sky-400/5'
+    : 'border-[#27272a] bg-[#0e0e10]';
+  return (
+    <div className={`rounded-2xl border p-4 ${ring}`}>
+      <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.18em] text-[#71717a]">{label}</p>
+      <p className="text-2xl font-semibold text-[#f5f5f5]">{value}</p>
+    </div>
+  );
+}
+
+function vercelStateTone(state: string): Tone {
+  if (state === 'live') return 'green';
+  if (state === 'migrated_to_hetzner') return 'blue';
+  if (state === 'dormant') return 'amber';
+  return 'neutral';
 }
 
 // ---------------------------------------------------------------- Helpers

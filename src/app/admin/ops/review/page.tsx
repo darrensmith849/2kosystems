@@ -1,11 +1,13 @@
 import { AdminCard, SectionHeader } from '@/components/admin-ui';
 import SnapshotBanner from '@/components/admin-ui/SnapshotBanner';
 import ImportPreviewCard from '@/components/admin-ui/ImportPreviewCard';
+import ImportDependencyOrderCard from '@/components/admin-ui/ImportDependencyOrderCard';
 import DecisionBridgeCard from '@/components/admin-ui/DecisionBridgeCard';
 import NotConnectedBanner from '../NotConnectedBanner';
 import { isSnapshotMode } from '@/lib/ops/snapshot-mode';
 import { listSnapshotDecisionItems } from '@/lib/ops/ops-snapshot-data';
 import DecisionsClient from './DecisionsClient';
+import ReviewSessionClient from './ReviewSessionClient';
 
 // Server component. Fetches the snapshot decisions list and composes:
 //   1. SectionHeader + SnapshotBanner / NotConnectedBanner
@@ -30,6 +32,15 @@ export default async function ReviewPage() {
       <div className="mb-6">
         <ImportPreviewCard />
       </div>
+
+      <div className="mb-6">
+        <ImportDependencyOrderCard />
+      </div>
+
+      <section className="mb-8">
+        <h3 className="text-sm font-semibold text-[#f5f5f5] mb-3">Review session</h3>
+        <ReviewSessionClient />
+      </section>
 
       <DecisionsClient initialDecisions={decisions} />
 
