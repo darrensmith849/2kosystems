@@ -11,6 +11,7 @@ import { allConnectivity } from '@/lib/integrations';
 import { isDbConfigured } from '@/lib/db/client';
 import { AdminCard, SectionHeader, Badge } from '@/components/admin-ui';
 import ReadinessChecklist from '@/components/admin-ui/ReadinessChecklist';
+import ActivationReadiness from '@/components/admin-ui/ActivationReadiness';
 import WaitingForDb from '@/components/admin-ui/WaitingForDb';
 import SnapshotBanner from '@/components/admin-ui/SnapshotBanner';
 import NotConnectedBanner from './NotConnectedBanner';
@@ -220,6 +221,10 @@ export default async function OpsOverviewPage() {
             </ul>
           )}
         </DueSoonCard>
+      </div>
+
+      <div className="mb-6">
+        <ActivationReadiness />
       </div>
 
       {!dbConfigured && (

@@ -1,5 +1,10 @@
 # /admin/ops — Database setup
 
+> See also: [`ops-hetzner-activation.md`](./ops-hetzner-activation.md) — the
+> step-by-step activation playbook for the day Hetzner Postgres comes online.
+> This file is the one-time setup reference; that file is the day-of
+> checklist.
+
 > Status: the dashboard ships with **graceful no-DB mode**. Until `DATABASE_URL`
 > is set on Vercel, `/admin/ops` renders skeleton pages, every mutation route
 > returns 503, and sync runs are skipped with status `skipped`. None of that
@@ -111,6 +116,21 @@ Expect 18 tables.
 6. Go to **GitHub → Run sync now** (requires `GITHUB_TOKEN`).
 7. Go to **Vercel → Run sync now** (requires `VERCEL_API_TOKEN`).
 8. Go to **Infrastructure → Run sync now** for both Cloudflare and Hetzner.
+
+#### Snapshot import
+
+In place of (or before) the manual seed steps above, the snapshot import
+routes ingest the discovery snapshot in one transaction:
+
+- `GET /api/admin/ops/import/snapshot/preview` — describes what would land,
+  grouped by category. Pure read.
+- `POST /api/admin/ops/import/snapshot/run` with `{ "dryRun": true }` —
+  simulates the inserts and reports conflicts. Pure read.
+- `POST /api/admin/ops/import/snapshot/run` with `{ "dryRun": false }` —
+  commits the inserts inside a single transaction.
+
+For the full day-of walkthrough — when to run, env vars, and verification —
+see [`ops-hetzner-activation.md`](./ops-hetzner-activation.md).
 
 ### Daily / weekly cron (Phase 2 wiring)
 
