@@ -21,6 +21,16 @@ export type CloudflarePagesProjectSummary = {
   customDomains: string[];
 };
 
+export type CloudflareDnsRecordSummary = {
+  recordId: string;
+  zoneId: string;
+  type: string;
+  name: string;
+  content: string;
+  proxied: boolean;
+  ttl: number | null;
+};
+
 function getToken(): string | null {
   return process.env.CLOUDFLARE_API_TOKEN ?? null;
 }
@@ -70,6 +80,33 @@ export async function listCloudflareZones(): Promise<CloudflareZoneSummary[]> {
     if (!info || (info.page as number) >= (info.total_pages as number)) break;
     page += 1;
     if (page > 20) break;
+  }
+  return out;
+}
+
+export async function listCloudflareDnsRecords(zoneId: string): Promise<CloudflareDnsRecordSummary[]> {
+  if (!getToken()) return [];
+  const out: CloudflareDnsRecordSummary[] = [];
+  let page = 1;
+  while (true) {
+    const data = await cfFetch(`/zones/${zoneId}/dns_records?per_page=100&page=${page}`);
+    const result = data.result as Array<Record<string, unknown>> | undefined;
+    if (!result) break;
+    for (const r of result) {
+      out.push({
+        recordId: r.id as string,
+        zoneId,
+        type: r.type as string,
+        name: r.name as string,
+        content: (r.content as string) ?? '',
+        proxied: Boolean(r.proxied),
+        ttl: typeof r.ttl === 'number' ? r.ttl : null,
+      });
+    }
+    const info = data.result_info as Record<string, unknown> | undefined;
+    if (!info || (info.page as number) >= (info.total_pages as number)) break;
+    page += 1;
+    if (page > 50) break;
   }
   return out;
 }

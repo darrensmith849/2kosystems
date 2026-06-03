@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { AdminCard, Badge, DataTable, EmptyState } from '@/components/admin-ui';
 import type { AssetWithRefs } from '@/lib/ops/assets-service';
 
@@ -113,7 +114,11 @@ export default function AssetsClient({
         <DataTable
           rows={initialAssets}
           columns={[
-            { key: 'name', header: 'Name', render: (a) => <span className="font-medium text-[#f5f5f5]">{a.name}</span> },
+            { key: 'name', header: 'Name', render: (a) => (
+              <Link href={`/admin/ops/assets/${a.id}`} className="font-medium text-[#f5f5f5] hover:text-emerald-300 transition-colors">
+                {a.name}
+              </Link>
+            ) },
             { key: 'type', header: 'Type', render: (a) => <Badge text={a.type} /> },
             { key: 'client', header: 'Client', render: (a) => a.client?.name ?? <span className="text-[#52525b]">—</span> },
             { key: 'url', header: 'Live URL', render: (a) =>

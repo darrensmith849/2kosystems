@@ -4,6 +4,8 @@ import { requireOps, dbUnavailable } from '../../_helpers';
 import { isDbConfigured } from '@/lib/db/client';
 import { syncGithubRepos } from '@/lib/ops/github-service';
 import { syncVercelProjects } from '@/lib/ops/vercel-service';
+import { syncCloudflare } from '@/lib/ops/cloudflare-service';
+import { syncHetzner } from '@/lib/ops/hetzner-service';
 import { writeAudit } from '@/lib/ops/audit';
 
 const SUPPORTED = new Set(['github', 'vercel', 'cloudflare', 'hetzner']);
@@ -35,13 +37,11 @@ export async function POST(_request: NextRequest, ctx: { params: Promise<{ provi
       result = await syncVercelProjects({ operatorSlug: gate.operatorSlug, triggeredBy: 'manual' });
       break;
     case 'cloudflare':
+      result = await syncCloudflare({ operatorSlug: gate.operatorSlug, triggeredBy: 'manual' });
+      break;
     case 'hetzner':
-      // Phase 1 placeholder: connect schemas later. For now return a clear
-      // not-implemented response so the UI button shows a clean message.
-      return NextResponse.json(
-        { error: `Sync for ${provider} is scaffolded but not yet wired in MVP. Coming in Phase 1b.` },
-        { status: 501 },
-      );
+      result = await syncHetzner({ operatorSlug: gate.operatorSlug, triggeredBy: 'manual' });
+      break;
   }
 
   await writeAudit({

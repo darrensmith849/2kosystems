@@ -81,7 +81,7 @@ export function EmptyState({ title, hint, action }: { title: string; hint?: stri
   );
 }
 
-export function SectionHeader({ title, subtitle, action }: { title: string; subtitle?: string; action?: React.ReactNode }) {
+export function SectionHeader({ title, subtitle, action }: { title: string; subtitle?: React.ReactNode; action?: React.ReactNode }) {
   return (
     <div className="flex items-start justify-between gap-4 mb-5">
       <div>

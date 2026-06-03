@@ -17,11 +17,20 @@ hook is isolated behind one of two boundaries:
    gated by an `X-Cron-Secret: $CRON_SECRET` header. Vercel Cron calls them
    today; a systemd timer with `curl` calls them tomorrow.
 
-Grep-test the discipline at any time:
+Grep-test the discipline at any time. **Only RUNTIME-injected** Vercel vars
+should be caught — `VERCEL=1`, `VERCEL_ENV`, `VERCEL_REGION`, `VERCEL_URL`.
+**User-set API token names** like `VERCEL_API_TOKEN` are fine to reference
+anywhere because the token is for calling Vercel's API and that operation is
+platform-independent (you still call the same API from a Hetzner host).
 
 ```bash
-# Should return only matches inside src/lib/runtime/
-git grep -nE 'process\.env\.(VERCEL_|FLY_|HEROKU_)' src/
+# Should return only matches inside src/lib/runtime/:
+git grep -nE 'process\.env\.(VERCEL_ENV|VERCEL_REGION|VERCEL_URL|VERCEL)\b' src/
+
+# These ARE allowed anywhere — they are user-set token names, not runtime probes:
+#   process.env.VERCEL_API_TOKEN
+#   process.env.GITHUB_TOKEN
+#   process.env.NODE_ENV (standard Node)
 ```
 
 ## What the migration day looks like

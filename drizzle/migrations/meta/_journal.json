@@ -8,6 +8,13 @@
       "when": 1780478580155,
       "tag": "0000_phase1_initial",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1780480592113,
+      "tag": "0001_phase1b_cf_hz_tables",
+      "breakpoints": true
     }
   ]
 }

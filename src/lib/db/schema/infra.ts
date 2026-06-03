@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, uuid, jsonb, boolean, uniqueIndex } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp, uuid, jsonb, boolean, integer, uniqueIndex } from 'drizzle-orm/pg-core';
 import { divisions } from './divisions';
 import { clients } from './clients';
 
@@ -47,7 +47,7 @@ export const vercelProjects = pgTable('vercel_projects', {
   linkedRepo: text('linked_repo'),
   nodeVersion: text('node_version'),
   state: text('state').notNull().default('unknown'),
-  // live | migrated_to_hetzner | dormant | deleted | unknown
+  // live | migrated_to_hetzner | dormant | deleted | unknown | vanished
   notes: text('notes'),
   lastSyncedAt: timestamp('last_synced_at', { withTimezone: true }),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
@@ -84,6 +84,75 @@ export const integrationStatus = pgTable('integration_status', {
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
+// --- Cloudflare (Phase 1B additions) ---------------------------------------
+
+export const cloudflareZones = pgTable('cloudflare_zones', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  cfZoneId: text('cf_zone_id').notNull().unique(),
+  name: text('name').notNull(),
+  status: text('status'),
+  plan: text('plan'),
+  nameServers: jsonb('name_servers').$type<string[]>().notNull().default([]),
+  domainId: uuid('domain_id').references(() => domains.id),
+  state: text('state').notNull().default('seen'), // seen | vanished
+  lastSyncedAt: timestamp('last_synced_at', { withTimezone: true }),
+  lastSeenAt: timestamp('last_seen_at', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const cloudflarePagesProjects = pgTable('cloudflare_pages_projects', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  cfProjectId: text('cf_project_id').notNull().unique(),
+  name: text('name').notNull(),
+  subdomain: text('subdomain'),
+  productionBranch: text('production_branch'),
+  latestDeploymentStatus: text('latest_deployment_status'),
+  customDomains: jsonb('custom_domains').$type<string[]>().notNull().default([]),
+  state: text('state').notNull().default('seen'),
+  lastSyncedAt: timestamp('last_synced_at', { withTimezone: true }),
+  lastSeenAt: timestamp('last_seen_at', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const dnsRecords = pgTable('dns_records', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  cfRecordId: text('cf_record_id').notNull().unique(),
+  cfZoneId: text('cf_zone_id').notNull(),
+  type: text('type').notNull(),
+  name: text('name').notNull(),
+  content: text('content').notNull(),
+  proxied: boolean('proxied').notNull().default(false),
+  ttl: integer('ttl'),
+  state: text('state').notNull().default('seen'),
+  lastSyncedAt: timestamp('last_synced_at', { withTimezone: true }),
+  lastSeenAt: timestamp('last_seen_at', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+// --- Hetzner (Phase 1B additions) ------------------------------------------
+
+export const hetznerServers = pgTable('hetzner_servers', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  hzServerId: integer('hz_server_id').notNull().unique(),
+  name: text('name').notNull(),
+  status: text('status'),
+  serverType: text('server_type'),
+  location: text('location'),
+  publicIpv4: text('public_ipv4'),
+  publicIpv6: text('public_ipv6'),
+  privateIps: jsonb('private_ips').$type<string[]>().notNull().default([]),
+  labels: jsonb('labels').$type<Record<string, string>>().notNull().default({}),
+  createdAtCloud: timestamp('created_at_cloud', { withTimezone: true }),
+  state: text('state').notNull().default('seen'),
+  lastSyncedAt: timestamp('last_synced_at', { withTimezone: true }),
+  lastSeenAt: timestamp('last_seen_at', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
 export type GithubRepo = typeof githubRepos.$inferSelect;
 export type NewGithubRepo = typeof githubRepos.$inferInsert;
 export type VercelTeam = typeof vercelTeams.$inferSelect;
@@ -92,3 +161,11 @@ export type NewVercelProject = typeof vercelProjects.$inferInsert;
 export type Domain = typeof domains.$inferSelect;
 export type NewDomain = typeof domains.$inferInsert;
 export type IntegrationStatus = typeof integrationStatus.$inferSelect;
+export type CloudflareZone = typeof cloudflareZones.$inferSelect;
+export type NewCloudflareZone = typeof cloudflareZones.$inferInsert;
+export type CloudflarePagesProject = typeof cloudflarePagesProjects.$inferSelect;
+export type NewCloudflarePagesProject = typeof cloudflarePagesProjects.$inferInsert;
+export type DnsRecord = typeof dnsRecords.$inferSelect;
+export type NewDnsRecord = typeof dnsRecords.$inferInsert;
+export type HetznerServer = typeof hetznerServers.$inferSelect;
+export type NewHetznerServer = typeof hetznerServers.$inferInsert;
