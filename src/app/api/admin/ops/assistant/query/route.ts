@@ -52,11 +52,32 @@ const FiltersSchema = z
   })
   .strict();
 
+// Optional, ignored-by-default conversational context — accepted so the
+// floating chatbot widget and the Ask page can send route context (and, in
+// future, multi-turn history) without tripping the strict schema. The server
+// uses pageContext only as a single grounding line; history is accepted but
+// not yet wired into the prompt (forward-compat).
+const PageContextSchema = z
+  .object({
+    route: z.string().max(200).optional(),
+    sectionTitle: z.string().max(120).optional(),
+  })
+  .strict();
+
+const HistoryItemSchema = z
+  .object({
+    role: z.enum(['user', 'assistant']),
+    content: z.string().max(4000),
+  })
+  .strict();
+
 const BodySchema = z
   .object({
     question: z.string().min(1).max(1000),
     filters: FiltersSchema.optional(),
     mode: z.enum(['search_only', 'ai_if_available']).optional().default('ai_if_available'),
+    pageContext: PageContextSchema.optional(),
+    history: z.array(HistoryItemSchema).max(20).optional(),
   })
   .strict();
 
@@ -180,7 +201,10 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { question, filters, mode } = parsed.data;
+  const { question, filters, mode, pageContext } = parsed.data;
+  // `history` is accepted but intentionally unused this iteration — keeping the
+  // schema forward-compatible so a later commit can wire multi-turn into the
+  // Anthropic messages array without another client-side change.
 
   // 1. Run search.
   const searchFilters = { ...(filters ?? {}), q: question };
@@ -215,6 +239,10 @@ export async function POST(request: NextRequest) {
   // AI mode.
   try {
     const ctxBlock = buildAiContextBlock(results);
+    const pageHint =
+      pageContext && (pageContext.sectionTitle || pageContext.route)
+        ? `\n\nCURRENT PAGE: ${pageContext.sectionTitle ?? '—'}${pageContext.route ? ` (${pageContext.route})` : ''}`
+        : '';
     const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
     const response = await client.messages.create({
       model: 'claude-haiku-4-5-20251001',
@@ -225,7 +253,7 @@ export async function POST(request: NextRequest) {
       messages: [
         {
           role: 'user',
-          content: `SOURCES:\n${ctxBlock}\n\nQUESTION: ${question}`,
+          content: `SOURCES:\n${ctxBlock}${pageHint}\n\nQUESTION: ${question}`,
         },
       ],
     });

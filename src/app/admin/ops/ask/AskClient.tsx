@@ -16,6 +16,13 @@ import type {
 } from '@/lib/ops/ops-assistant-context';
 
 // --------------------------------------------------------------- Types
+//
+// NOTE: this file intentionally inlines the chat primitives (bubbles,
+// composer, source cards, suggested prompts, useChatHistory). The plan
+// reserves a shared `@/components/admin-ui/floating-chat` barrel for the
+// floating widget. When that barrel ships, swap the inlined components
+// here for barrel imports. Until then we keep AskClient self-contained
+// so the build stays green regardless of merge order.
 
 type ChatMessage =
   | { role: 'user'; content: string; ts: number }
@@ -59,19 +66,25 @@ function persistChat(messages: ChatMessage[]): void {
 // --------------------------------------------------------------- Suggestions
 
 const SUGGESTIONS = [
-  'What is blocking the database from going live?',
+  'What is blocking activation?',
   'What belongs to SigmaPhi?',
   'What is on ma130-apps?',
   'Which Vercel projects are dormant?',
-  'What renewals are coming up?',
-  'What incidents need attention?',
-  'Which repos are duplicates?',
-  'What can I safely work on now?',
+  'Which repos are duplicated?',
+  'Show me upcoming renewals.',
+  'Which incidents need attention?',
+  'What can I work on before the DB is connected?',
 ];
+
+const WELCOME_COPY =
+  "Hi, I'm your 2KO Ops Assistant. Ask me about clients, assets, repos, Vercel projects, Hetzner servers, renewals, incidents, decisions, or activation blockers. I'm read-only and I'll only use dashboard data.";
+
+const SEARCH_MODE_HELPER =
+  'Search mode — I can answer using dashboard data already available. Full AI answers can be enabled later.';
 
 const WARNING_LABEL: Record<AssistantWarning, string> = {
   db_missing: 'Database not connected',
-  ai_key_missing: 'Search assistant mode',
+  ai_key_missing: 'Search mode',
   snapshot_mode: 'Preview data',
   no_results: 'No matches',
 };
@@ -81,6 +94,14 @@ const WARNING_TONE: Record<AssistantWarning, 'neutral' | 'green' | 'amber' | 'ro
   ai_key_missing: 'blue',
   snapshot_mode: 'green',
   no_results: 'neutral',
+};
+
+const SOURCE_KIND_LABEL: Record<string, string> = {
+  db: 'live',
+  snapshot: 'preview',
+  search: 'search',
+  docs: 'docs',
+  readiness: 'readiness',
 };
 
 // --------------------------------------------------------------- Markdown lite
@@ -120,10 +141,7 @@ function renderMarkdownLite(text: string): React.ReactNode {
     const heading = /^\*\*(.+)\*\*$/.exec(line);
     if (heading) {
       out.push(
-        <p
-          key={`h-${idx}`}
-          className="mt-3 text-xs font-medium text-[#a1a1aa]"
-        >
+        <p key={`h-${idx}`} className="mt-3 text-xs font-medium text-[#a1a1aa]">
           {heading[1]}
         </p>,
       );
@@ -207,35 +225,35 @@ function renderInline(text: string, keyHint: number): React.ReactNode {
   return nodes;
 }
 
-// --------------------------------------------------------------- Sources panel
+// --------------------------------------------------------------- Source cards
 
-function SourcesPanel({ sources }: { sources: AssistantSource[] }) {
+function SourceCards({ sources }: { sources: AssistantSource[] }) {
   if (sources.length === 0) return null;
   return (
     <div className="mt-3 rounded-xl border border-[#1c1c1e] bg-[#0a0a0b] p-3">
-      <p className="text-xs text-[#71717a] mb-2">
-        Related records ({sources.length})
-      </p>
+      <p className="text-xs text-[#71717a] mb-2">Related records ({sources.length})</p>
       <ul className="space-y-1.5">
-        {sources.map((s) => (
-          <li key={s.id} className="flex items-center gap-2 text-xs">
-            <Badge text={s.type.replace('_', ' ')} tone="neutral" />
-            <Badge
-              text={s.source === 'db' ? 'live' : s.source === 'snapshot' ? 'preview' : s.source}
-              tone={s.source === 'db' ? 'green' : s.source === 'snapshot' ? 'blue' : 'neutral'}
-            />
-            {s.url ? (
-              <a
-                href={s.url}
-                className="text-emerald-300 hover:text-emerald-200 underline underline-offset-2 truncate"
-              >
-                {s.title}
-              </a>
-            ) : (
-              <span className="text-[#e4e4e7] truncate">{s.title}</span>
-            )}
-          </li>
-        ))}
+        {sources.slice(0, 8).map((s) => {
+          const kindLabel = SOURCE_KIND_LABEL[s.source] ?? s.source;
+          const kindTone: 'neutral' | 'green' | 'amber' | 'rose' | 'blue' =
+            s.source === 'db' ? 'green' : s.source === 'snapshot' ? 'blue' : 'neutral';
+          return (
+            <li key={s.id} className="flex items-center gap-2 text-xs">
+              <Badge text={s.type.replace(/_/g, ' ')} tone="neutral" />
+              <Badge text={kindLabel} tone={kindTone} />
+              {s.url ? (
+                <a
+                  href={s.url}
+                  className="text-emerald-300 hover:text-emerald-200 underline underline-offset-2 truncate"
+                >
+                  {s.title}
+                </a>
+              ) : (
+                <span className="text-[#e4e4e7] truncate">{s.title}</span>
+              )}
+            </li>
+          );
+        })}
       </ul>
     </div>
   );
@@ -254,6 +272,7 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
   const [showSaveDialog, setShowSaveDialog] = useState<boolean>(false);
   const [saveName, setSaveName] = useState<string>('');
   const [hydrated, setHydrated] = useState<boolean>(false);
+  const [helperDismissed, setHelperDismissed] = useState<boolean>(false);
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
@@ -294,16 +313,45 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
         }, 350);
       }
 
+      // pageContext is forward-compatible: the API will accept it once the
+      // widget agent ships the .strict() Zod schema bump. If the route still
+      // rejects extra fields, we degrade by stripping it client-side.
       const res = await fetch('/api/admin/ops/assistant/query', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           question: trimmed,
           mode: 'ai_if_available',
+          pageContext: { route: '/admin/ops/ask', sectionTitle: 'Ask' },
         }),
       });
 
       if (!res.ok) {
+        // If the schema is still strict and rejects pageContext, retry without it.
+        if (res.status === 400) {
+          const retry = await fetch('/api/admin/ops/assistant/query', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ question: trimmed, mode: 'ai_if_available' }),
+          });
+          if (retry.ok) {
+            const data: AssistantAnswer = await retry.json();
+            const assistantMsg: ChatMessage = {
+              role: 'assistant',
+              content: data.answer,
+              ts: Date.now(),
+              sources: data.sources,
+              warnings: data.warnings,
+              mode: data.mode,
+              followUps: data.followUps,
+            };
+            setMessages((prev) => [...prev, assistantMsg]);
+            return;
+          }
+          const data: { error?: string } = await retry.json().catch(() => ({}));
+          setError(data.error ?? `HTTP ${retry.status}`);
+          return;
+        }
         const data: { error?: string } = await res.json().catch(() => ({}));
         setError(data.error ?? `HTTP ${res.status}`);
         return;
@@ -350,7 +398,7 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
     textareaRef.current?.focus();
   }
 
-  // ----- Saved-question helpers -----
+  // ----- Saved-question helpers (preserved feature) -----
   function commitSavedQuestion() {
     const name = saveName.trim();
     const question = input.trim();
@@ -388,20 +436,22 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
   const lastAssistant = [...messages].reverse().find((m) => m.role === 'assistant') as
     | (ChatMessage & { role: 'assistant' })
     | undefined;
+  const showSearchModeHelper =
+    !helperDismissed &&
+    (!hasAiKey ||
+      lastAssistant?.mode === 'search_only' ||
+      (lastAssistant?.warnings ?? []).includes('ai_key_missing'));
 
   return (
-    <div className="space-y-4">
-      {/* Top mode row */}
+    <div className="flex flex-col gap-4">
+      {/* Toolbar */}
       <div className="flex flex-wrap items-center justify-between gap-3 text-xs">
         <div className="flex items-center gap-2">
-          <Badge
-            text={hasAiKey ? 'AI mode' : 'Search assistant'}
-            tone={hasAiKey ? 'green' : 'blue'}
-          />
+          <Badge text={hasAiKey ? 'AI mode' : 'Search mode'} tone={hasAiKey ? 'green' : 'blue'} />
           <span className="text-[#a1a1aa]">
             {hasAiKey
-              ? 'I can answer using AI grounded in your dashboard data.'
-              : "I can answer using the dashboard data already available. Full AI answers can be enabled later."}
+              ? 'Grounded in your dashboard data.'
+              : 'Answering from dashboard data already available.'}
           </span>
         </div>
         <div className="flex items-center gap-1.5">
@@ -419,7 +469,7 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
             disabled={!hasMessages || busy}
             className="rounded-md border border-[#27272a] hover:border-rose-400/40 hover:text-rose-200 px-2.5 py-1 text-xs text-[#a1a1aa] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
-            Clear
+            Clear chat
           </button>
           <button
             type="button"
@@ -431,7 +481,22 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
         </div>
       </div>
 
-      {/* Saved questions panel (collapsible) */}
+      {/* Search-mode helper banner (dismissible) */}
+      {showSearchModeHelper && (
+        <div className="flex items-start justify-between gap-3 rounded-xl border border-amber-400/20 bg-amber-400/[0.04] px-4 py-2.5">
+          <p className="text-xs text-amber-200/90 leading-relaxed">{SEARCH_MODE_HELPER}</p>
+          <button
+            type="button"
+            onClick={() => setHelperDismissed(true)}
+            aria-label="Dismiss"
+            className="text-[#71717a] hover:text-[#e4e4e7] text-sm leading-none px-1"
+          >
+            ×
+          </button>
+        </div>
+      )}
+
+      {/* Saved questions panel (preserved feature) */}
       {showSavedPanel && (
         <div className="rounded-2xl border border-[#27272a] bg-[#0a0a0b] p-4 space-y-3">
           <div className="flex items-center justify-between">
@@ -542,32 +607,41 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
         </div>
       )}
 
-      {/* Chat thread */}
+      {/* Chat thread (dominant area) */}
       <div
         ref={scrollRef}
-        className="rounded-2xl border border-[#27272a] bg-[#0a0a0b] p-4 min-h-[420px] max-h-[65vh] overflow-y-auto"
+        className="rounded-2xl border border-[#27272a] bg-[#0a0a0b] p-4 min-h-[520px] max-h-[70vh] overflow-y-auto"
       >
         {!hasMessages ? (
-          <div className="h-full flex flex-col items-center justify-center text-center py-12 gap-6">
-            <div className="space-y-2">
-              <p className="text-base text-[#e4e4e7] font-medium">Ask me anything about your dashboard</p>
-              <p className="text-xs text-[#71717a] max-w-md">
-                I read from your snapshot data, activation status, and review decisions.
-                I never modify anything and never share secrets.
-              </p>
+          <div className="h-full flex flex-col items-center justify-center text-center py-10 gap-8">
+            {/* Welcome bubble */}
+            <div className="max-w-xl w-full">
+              <div className="flex justify-start">
+                <div className="max-w-full rounded-2xl border border-[#27272a] bg-[#111113] px-5 py-4">
+                  <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-emerald-300 mb-2">
+                    2KO Ops Assistant
+                  </p>
+                  <p className="text-sm text-[#e4e4e7] leading-relaxed">{WELCOME_COPY}</p>
+                </div>
+              </div>
             </div>
-            <div className="flex flex-wrap justify-center gap-2 max-w-xl">
-              {SUGGESTIONS.map((s) => (
-                <button
-                  key={s}
-                  type="button"
-                  onClick={() => void submitQuestion(s)}
-                  disabled={busy}
-                  className="rounded-full border border-[#27272a] hover:border-emerald-400/40 hover:text-emerald-200 px-3 py-1.5 text-xs text-[#a1a1aa] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                >
-                  {s}
-                </button>
-              ))}
+
+            {/* Suggested prompt chips */}
+            <div className="space-y-3 max-w-2xl">
+              <p className="text-xs text-[#71717a]">Try one of these to get started:</p>
+              <div className="flex flex-wrap justify-center gap-2">
+                {SUGGESTIONS.map((s) => (
+                  <button
+                    key={s}
+                    type="button"
+                    onClick={() => void submitQuestion(s)}
+                    disabled={busy}
+                    className="rounded-full border border-[#27272a] hover:border-emerald-400/40 hover:text-emerald-200 px-3 py-1.5 text-xs text-[#a1a1aa] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         ) : (
@@ -577,7 +651,9 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
                 return (
                   <div key={`u-${idx}-${m.ts}`} className="flex justify-end">
                     <div className="max-w-[80%] rounded-2xl bg-emerald-400/[0.08] border border-emerald-400/20 px-4 py-2.5">
-                      <p className="text-sm text-[#f5f5f5] leading-relaxed whitespace-pre-wrap">{m.content}</p>
+                      <p className="text-sm text-[#f5f5f5] leading-relaxed whitespace-pre-wrap">
+                        {m.content}
+                      </p>
                     </div>
                   </div>
                 );
@@ -586,21 +662,22 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
               return (
                 <div key={`a-${idx}-${m.ts}`} className="flex justify-start">
                   <div className="max-w-[92%] w-full rounded-2xl border border-[#27272a] bg-[#111113] px-4 py-3">
-                    {(m.mode || (m.warnings && m.warnings.length > 0)) && (
-                      <div className="flex flex-wrap items-center gap-1.5 mb-2">
-                        {m.mode && (
-                          <Badge
-                            text={m.mode === 'ai' ? 'AI' : 'Search'}
-                            tone={m.mode === 'ai' ? 'green' : 'blue'}
-                          />
-                        )}
-                        {(m.warnings ?? []).map((w) => (
-                          <Badge key={w} text={WARNING_LABEL[w]} tone={WARNING_TONE[w]} />
-                        ))}
-                      </div>
-                    )}
+                    <div className="flex flex-wrap items-center gap-1.5 mb-2">
+                      <span className="text-[10px] font-mono uppercase tracking-[0.18em] text-emerald-300">
+                        2KO Ops Assistant
+                      </span>
+                      {m.mode && (
+                        <Badge
+                          text={m.mode === 'ai' ? 'AI' : 'Search'}
+                          tone={m.mode === 'ai' ? 'green' : 'blue'}
+                        />
+                      )}
+                      {(m.warnings ?? []).map((w) => (
+                        <Badge key={w} text={WARNING_LABEL[w]} tone={WARNING_TONE[w]} />
+                      ))}
+                    </div>
                     <div className="space-y-1">{renderMarkdownLite(m.content)}</div>
-                    {m.sources && <SourcesPanel sources={m.sources} />}
+                    {m.sources && <SourceCards sources={m.sources} />}
                     {isLast && m.followUps && m.followUps.length > 0 && (
                       <div className="mt-3 pt-3 border-t border-[#1c1c1e]">
                         <p className="text-xs text-[#71717a] mb-2">Try next</p>
@@ -637,7 +714,7 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
         )}
       </div>
 
-      {/* Input */}
+      {/* Composer */}
       <form
         onSubmit={handleSubmit}
         className="rounded-2xl border border-[#27272a] bg-[#111113] p-3 space-y-2"
@@ -657,7 +734,7 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
           }}
           className="w-full resize-none bg-transparent text-sm text-[#f5f5f5] placeholder:text-[#52525b] focus:outline-none disabled:opacity-50"
         />
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-3">
           <span className="text-xs text-[#52525b]">
             Enter to send · Shift + Enter for new line · Read-only · No secrets shared
           </span>
@@ -676,9 +753,6 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
           {error}
         </div>
       )}
-
-      {/* Suppress unused-warning for lastAssistant — used implicitly via messages iteration */}
-      <span className="hidden">{lastAssistant?.ts ?? ''}</span>
     </div>
   );
 }

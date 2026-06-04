@@ -19,12 +19,12 @@ export default function AdminSectionNav() {
     <div className="border-b border-[#1c1c1e] bg-[#0a0a0b]/95 backdrop-blur-sm">
       <div className="px-6 py-2 flex items-center gap-4">
         <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#71717a]">
-          2KO Systems
+          Admin consoles
         </span>
         <span className="text-[#27272a]">|</span>
         <nav className="flex items-center gap-1">
-          <SectionLink href="/admin/agent" active={onAgent} label="Agent Ops" />
           <SectionLink href="/admin/ops" active={onOps} label="Ops Dashboard" />
+          <SectionLink href="/admin/agent" active={onAgent} label="Agent Ops" />
         </nav>
       </div>
     </div>

@@ -3,6 +3,7 @@ import OpsLoginGate from './OpsLoginGate';
 import OperatorPicker from './OperatorPicker';
 import OpsSidebar from './components/OpsSidebar';
 import OpsMobileBar from './components/OpsMobileBar';
+import { FloatingChat } from '@/components/admin-ui/floating-chat';
 
 export const metadata = {
   title: 'Ops Dashboard — 2KO Systems',
@@ -18,6 +19,7 @@ export default async function OpsLayout({ children }: { children: React.ReactNod
       <OpsMobileBar operatorSlug={gate.operatorSlug} />
       <OpsSidebar operatorSlug={gate.operatorSlug} />
       <main className="flex-1 min-w-0 px-6 py-6 max-w-[1400px] w-full mx-auto lg:mx-0">{children}</main>
+      <FloatingChat />
     </div>
   );
 }

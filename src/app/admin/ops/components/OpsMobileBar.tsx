@@ -53,38 +53,53 @@ export default function OpsMobileBar({ operatorSlug }: { operatorSlug: string })
 
       {open && (
         <div className="border-t border-[#1c1c1e] max-h-[70vh] overflow-y-auto px-3 py-3 space-y-4">
-          <div className="flex items-center gap-1.5">
-            <SectionPill href="/admin/agent" label="Agent Ops" active={false} onNavigate={() => setOpen(false)} />
-            <SectionPill href="/admin/ops" label="Ops" active={true} onNavigate={() => setOpen(false)} />
-          </div>
-
-          {OPS_NAV_GROUPS.map((group) => (
-            <div key={group.title}>
-              <p className="px-1 mb-1 text-[10px] uppercase tracking-wider text-[#52525b]">
-                {group.title}
-              </p>
-              <ul className="space-y-0.5">
-                {group.items.map((item) => {
-                  const active = isItemActive(pathname, item);
-                  return (
-                    <li key={item.href}>
-                      <Link
-                        href={item.href}
-                        onClick={() => setOpen(false)}
-                        className={`flex items-center px-3 py-1.5 text-sm border-l-2 transition-colors ${
-                          active
-                            ? 'text-emerald-300 bg-emerald-400/5 border-emerald-400 font-medium'
-                            : 'text-[#a1a1aa] hover:text-[#f5f5f5] border-transparent'
-                        }`}
-                      >
-                        {item.label}
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-          ))}
+          {OPS_NAV_GROUPS.map((group, idx) => {
+            const isConsoleSwitcher = idx === 0;
+            return (
+              <div
+                key={group.title}
+                className={
+                  isConsoleSwitcher
+                    ? 'pb-3 border-b border-[#1c1c1e]'
+                    : undefined
+                }
+              >
+                <p className="px-1 mb-1 text-[10px] uppercase tracking-wider text-zinc-500">
+                  {group.title}
+                </p>
+                <ul className="space-y-0.5">
+                  {group.items.map((item) => {
+                    const active = isItemActive(pathname, item);
+                    const isExternalConsole =
+                      isConsoleSwitcher && !item.href.startsWith('/admin/ops');
+                    return (
+                      <li key={`${group.title}:${item.href}`}>
+                        <Link
+                          href={item.href}
+                          onClick={() => setOpen(false)}
+                          className={`flex items-center justify-between gap-2 px-2 py-1.5 text-sm rounded border-l-2 transition-colors ${
+                            active
+                              ? 'bg-neutral-800 text-emerald-300 border-emerald-400 font-medium'
+                              : 'text-[#a1a1aa] hover:text-[#f5f5f5] hover:bg-neutral-800 border-transparent'
+                          }`}
+                        >
+                          <span>{item.label}</span>
+                          {isExternalConsole && (
+                            <span
+                              aria-hidden="true"
+                              className="text-[10px] text-[#52525b]"
+                            >
+                              →
+                            </span>
+                          )}
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            );
+          })}
 
           <div className="pt-3 border-t border-[#1c1c1e]">
             <button
@@ -98,31 +113,5 @@ export default function OpsMobileBar({ operatorSlug }: { operatorSlug: string })
         </div>
       )}
     </div>
-  );
-}
-
-function SectionPill({
-  href,
-  label,
-  active,
-  onNavigate,
-}: {
-  href: string;
-  label: string;
-  active: boolean;
-  onNavigate: () => void;
-}) {
-  return (
-    <Link
-      href={href}
-      onClick={onNavigate}
-      className={`px-2.5 py-1 rounded-md text-xs transition-colors ${
-        active
-          ? 'bg-[#0f7b3a]/20 text-emerald-300 border border-emerald-400/30 font-medium'
-          : 'text-[#a1a1aa] hover:text-[#f5f5f5] border border-transparent'
-      }`}
-    >
-      {label}
-    </Link>
   );
 }
