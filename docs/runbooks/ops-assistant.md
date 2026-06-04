@@ -298,3 +298,39 @@ them work in preview mode (snapshot data) and live mode equally.
 
 All six short-circuit before search runs, never expose secret values, and
 never claim a step is done when the underlying env var is absent.
+
+## Email and commercial intents (extended set)
+
+The assistant adds five more email / commercial intents to the set
+documented above. Each pattern is anchored tightly enough not to overlap
+the existing `email_linking_status` / `email_category_track` matchers.
+All five run in fallback mode (no `ANTHROPIC_API_KEY` required) and short
+circuit before search runs.
+
+- **link_billing_emails** — matches phrasings like "can we link billing
+  emails", "link invoices to clients", "billing email link". Answers
+  affirmatively that billing and invoice emails will link to clients and
+  assets once the database is connected, and explains that local-only
+  references on `/admin/ops/emails` capture the same workflow today.
+- **gmail_connect_status** — matches "can gmail be connected", "is gmail
+  integration active", "connect Gmail". Answers that Gmail integration is
+  inactive and that it is a later, separately approved phase — read-only
+  OAuth, never archive / delete / label / send. Points the operator at the
+  local-reference workspace as today's path.
+- **outlook_connect_status** — same shape as the Gmail intent but for
+  Microsoft 365 / Outlook. Microsoft Graph `Mail.Read` scope only, and
+  also only as a later, separately approved phase.
+- **before_email_live** — matches "what needs to happen before email
+  linking is live", "email linking checklist". Returns the canonical
+  checklist: database connected; manual references tested locally;
+  categories agreed; team trained; `BREVO_OPS_DIGEST_TO` set; explicit
+  Gmail / Outlook decision documented as a later phase.
+- **services_check** — matches "what should I check in services" / "which
+  commercial items need review". Lists services with `status=needs_review`
+  or `blocked`, plus a soft count of services flagged as missing a
+  billing owner, and links the operator to `/admin/ops/services`.
+
+Each builder follows the same shape as the operational intents: a real
+prose lead, a tight bulleted summary, and a route link. None of them ever
+returns email body content, OAuth tokens, or anything outside the
+`SOURCES` block.

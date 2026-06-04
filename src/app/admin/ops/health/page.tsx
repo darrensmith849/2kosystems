@@ -301,13 +301,38 @@ export default async function HealthPage() {
             label="Email linking"
             value={<Badge text={dbConfigured ? 'manual notes ready' : 'preview'} tone={dbConfigured ? 'green' : 'blue'} />}
           />
+          {/* Local-only references — always available, browser-only, no DB
+              required. Preserves presence-only checks; surfaces only
+              capability, never values. */}
+          <Row
+            label="Email references — local-only"
+            value={<Badge text="ready (browser only)" tone="green" />}
+          />
+          <Row
+            label="Shared email references"
+            value={
+              <Badge
+                text={dbConfigured ? 'ready' : 'waiting for database'}
+                tone={dbConfigured ? 'green' : 'amber'}
+              />
+            }
+          />
           <Row label="Gmail integration" value={<Badge text="inactive" tone="neutral" />} />
           <Row label="Outlook integration" value={<Badge text="inactive" tone="neutral" />} />
+          <Row label="Email sending" value={<Badge text="inactive" tone="neutral" />} />
           <Row
             label="Reading your inbox guard"
             value={<Badge text="off (correct)" tone="green" />}
           />
           <Row label="BREVO_OPS_DIGEST_TO" value={<YesNo ok={renewalReminders} yes="set up" no="needs setup" />} />
+          <Row
+            label="Services catalogue"
+            value={<Badge text="ready" tone="green" />}
+          />
+          <Row
+            label="Contacts foundation"
+            value={<Badge text="ready" tone="green" />}
+          />
         </AdminCard>
 
         {/* 6. Services catalogue */}

@@ -224,3 +224,31 @@ dashboard is treated as the source of truth for commercial ops.
 
 See [`ops-activation-hardening.md`](./ops-activation-hardening.md) for the
 short read on how the Activation page tracks this step.
+
+## Local-only references (browser)
+
+Until the database is connected, `/admin/ops/emails` includes a
+**local-only references** workspace. Every entry lives in the operator's
+browser under the localStorage key `2ko_ops_local_email_refs_v1` and is
+never sent to the server.
+
+What it captures:
+
+- Subject, sender, category, optional Gmail / Outlook / xneelo URL.
+- Operator note.
+- Optional linked client / asset / renewal / incident text fields (free-text
+  in preview mode, dropdowns once the database is connected).
+- `createdAt` ISO timestamp and a `status` field (`draft`, `ready`,
+  `archived`).
+
+What it does **not** do:
+
+- Never opens an inbox.
+- Never sends, archives, deletes, or labels any email.
+- Never stores email body content.
+- Never reaches the network — JSON and Markdown export run client-side.
+
+Migration path: when the database is connected, the local entries can be
+exported as JSON, reviewed, and imported into the live email-reference
+table. See [`ops-local-email-references.md`](./ops-local-email-references.md)
+for the full lifecycle and the migration checklist.

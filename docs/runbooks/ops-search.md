@@ -179,3 +179,23 @@ Every row is `source: 'snapshot'` and clearly tagged as planned / preview.
 They participate in search, filter on `types`, and appear in Ask answers
 through dedicated intents — but no real email content or real personal
 contact details are committed to the repo.
+
+## Email + commercial example chips
+
+The Search page exposes a small **Try:** strip of example chips above the
+results. Beyond the original four (`Hetzner`, `SigmaPhi`, `renewals`,
+`unmapped`), the strip now includes six email / commercial chips that map
+to the planned `email_ref` / `service` / `contact` index items:
+
+| # | Chip | What it matches |
+|---|---|---|
+| 1 | `billing emails` | `email_ref` rows in the billing category; service rows where the title or tags mention billing. |
+| 2 | `Hetzner invoices` | Planned `email_ref` rows for Hetzner billing; also any audit finding mentioning Hetzner invoices. |
+| 3 | `services needing review` | `service` rows with `status=needs_review`. Equivalent to opening the Services page filtered on the same status. |
+| 4 | `billing owner missing` | `service` rows tagged for billing-owner review (and any `audit_finding` flagging the same). |
+| 5 | `approval contact` | The placeholder `contact` row for the approval / sign-off role; useful for "who do we route a change request to" walks. |
+| 6 | `domain renewal emails` | `email_ref` rows in the domain renewal category; cross-references the renewal rows already indexed. |
+
+Each chip is a plain text token — clicking it sets the query box and runs
+the same scorer that any other query would. The chips never bypass the
+filter or change the index; they are pure shortcuts.

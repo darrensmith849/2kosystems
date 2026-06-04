@@ -216,6 +216,11 @@ type IntentKey =
   | 'services_needing_review'
   | 'billing_owner'
   | 'contacts_needed'
+  | 'link_billing_emails'
+  | 'gmail_connect_status'
+  | 'outlook_connect_status'
+  | 'before_email_live'
+  | 'services_check'
   | 'generic';
 
 function detectIntent(question: string): IntentKey {
@@ -278,6 +283,64 @@ function detectIntent(question: string): IntentKey {
     /which\s+(dashboard\s+)?page(s)?\s+(are\s+)?(most\s+)?(useful|relevant)/.test(q)
   ) {
     return 'which_pages';
+  }
+
+  // High-precedence specific email/commercial intents — these match very
+  // narrow phrasings ("can we link billing emails", "is gmail integration
+  // active") and must run BEFORE the broader email_linking_status /
+  // email_category_track matchers below, otherwise they would be captured by
+  // the wider patterns.
+
+  // before_email_live — what needs to happen before email linking is live.
+  // Specific multi-word phrase; checked first so it can't be swallowed by
+  // the broader email_linking_status pattern.
+  if (
+    /(what|which).*(needs?|need to|has to|must|should).*(happen|be done|be in place).*(before|until).*(email|gmail|outlook|inbox).*(live|active|on|working|ready)/.test(q) ||
+    /(before|until).*(email|gmail|outlook|inbox)\s+(linking|integration|linkage)\s+(is\s+)?(live|active|on|working|ready)/.test(q) ||
+    /what.*(checklist|prereqs?|prerequisites?).*email\s+(linking|integration|linkage)/.test(q) ||
+    /^email\s+(linking|integration|linkage)\s+(checklist|prereqs?|prerequisites?)/.test(q)
+  ) {
+    return 'before_email_live';
+  }
+
+  // link_billing_emails — "can we link billing emails", "link invoices to
+  // clients", "billing email link". Narrower than email_category_track.
+  if (
+    /(can\s+(we|i)\s+)?(link|attach|tie|connect)\s+(billing|invoice)\s+emails?/.test(q) ||
+    /(link|attach|tie|connect)\s+invoices?\s+(to|with)\s+(clients?|assets?)/.test(q) ||
+    /(billing|invoice)\s+email\s+link(ing|s|ed)?\b/.test(q)
+  ) {
+    return 'link_billing_emails';
+  }
+
+  // gmail_connect_status — "can gmail be connected", "is gmail integration
+  // active".
+  if (
+    /(can|will|should)\s+gmail\s+(be\s+)?(connect|integrat|link|hook)/.test(q) ||
+    /(is\s+)?gmail\s+(integration|connection|hookup|connected|active|enabled|on|live|working|ready)/.test(q) ||
+    /connect(ing|ed)?\s+gmail/.test(q)
+  ) {
+    return 'gmail_connect_status';
+  }
+
+  // outlook_connect_status — same as Gmail but for Outlook / Microsoft 365.
+  if (
+    /(can|will|should)\s+(outlook|microsoft|m365|microsoft\s+365)\s+(be\s+)?(connect|integrat|link|hook)/.test(q) ||
+    /(is\s+)?(outlook|microsoft\s+365|m365)\s+(integration|connection|hookup|connected|active|enabled|on|live|working|ready)/.test(q) ||
+    /connect(ing|ed)?\s+(outlook|microsoft\s+365|m365)/.test(q)
+  ) {
+    return 'outlook_connect_status';
+  }
+
+  // services_check — "what should i check in services" / "which commercial
+  // items need review". Runs before services_overview / services_needing_review
+  // so the "what to check" framing isn't swallowed by them.
+  if (
+    /(what|which).*(should|do|to)\s+(i|we)\s+(check|review|look\s+at)\s+(in|on|under|across)\s+(services|commercial)/.test(q) ||
+    /(what|which)\s+commercial\s+(items?|things?|services?)\s+(need|require)\s+(review|attention|a\s+look)/.test(q) ||
+    /(services?|commercial)\s+(needing|that\s+need)\s+(a\s+)?(check|review|second\s+look)/.test(q)
+  ) {
+    return 'services_check';
   }
 
   // Email-linking specific intents come first so phrases like "Where are
@@ -652,6 +715,122 @@ function answerBillingOwner(items: IndexItem[], question: string): string {
   }
   lines.push('');
   lines.push('Open [Services](/admin/ops/services) to see who owns each billing relationship.');
+  return lines.join('\n');
+}
+
+function answerLinkBillingEmails(items: IndexItem[]): string {
+  const lines: string[] = [];
+  lines.push(
+    "Yes — billing and invoice emails will link to clients and assets once the database is connected. Today you can capture them as local-only references on the Emails page so the workflow is ready when the database is connected.",
+  );
+  lines.push('');
+  lines.push('**How it will work**');
+  lines.push('- Each reference points at a client and (optionally) an asset, so Hetzner / Vercel / Cloudflare invoices land against the right project.');
+  lines.push('- Categories include billing, hosting renewal, domain renewal, and supplier notice.');
+  lines.push('- The dashboard never opens an inbox — references are typed in by an operator with a paste-able URL.');
+  const emails = items.filter((i) => i.type === 'email_ref');
+  if (emails.length > 0) {
+    const billing = emails.filter((e) => /billing|invoice/i.test(e.title + ' ' + (e.subtitle ?? '')));
+    if (billing.length > 0) {
+      lines.push(`- Planned billing references already in the snapshot: ${billing.length}.`);
+    }
+  }
+  lines.push('');
+  lines.push('Open [Emails](/admin/ops/emails) to start capturing local-only references today.');
+  return lines.join('\n');
+}
+
+function answerGmailConnectStatus(_items: IndexItem[]): string {
+  const lines: string[] = [];
+  lines.push(
+    "Gmail integration is not active. It is a later, separately approved phase — read-only OAuth, never archive / delete / label / send. Today, paste a Gmail message URL into a local reference on the Emails page.",
+  );
+  lines.push('');
+  lines.push('**What is and is not on the table**');
+  lines.push('- Today: manual references only — typed subject, sender, and a Gmail link.');
+  lines.push('- Later phase: read-only Gmail OAuth (`gmail.readonly`) behind explicit opt-in.');
+  lines.push('- Never: archiving, deleting, labelling, sending, or bulk header pulls without per-category approval.');
+  lines.push('');
+  lines.push('Open [Emails](/admin/ops/emails) to file a Gmail link as a manual reference now.');
+  return lines.join('\n');
+}
+
+function answerOutlookConnectStatus(_items: IndexItem[]): string {
+  const lines: string[] = [];
+  lines.push(
+    "Outlook / Microsoft 365 integration is not active. Like Gmail, it is a later, separately approved phase — Microsoft Graph `Mail.Read` scope only, never archive / delete / label / send. Today, paste an Outlook message URL into a local reference on the Emails page.",
+  );
+  lines.push('');
+  lines.push('**What is and is not on the table**');
+  lines.push('- Today: manual references only — typed subject, sender, and an Outlook web link.');
+  lines.push('- Later phase: read-only Microsoft Graph access behind explicit opt-in.');
+  lines.push('- Never: archiving, deleting, labelling, sending, or full body ingestion without per-category approval.');
+  lines.push('');
+  lines.push('Open [Emails](/admin/ops/emails) to file an Outlook link as a manual reference now.');
+  return lines.join('\n');
+}
+
+function answerBeforeEmailLive(_items: IndexItem[]): string {
+  const brevoRecipientSet = Boolean(process.env.BREVO_OPS_DIGEST_TO);
+  const lines: string[] = [];
+  lines.push(
+    "A short checklist makes email linking live and useful — none of it requires connecting an inbox. Run these in order:",
+  );
+  lines.push('');
+  lines.push('**Checklist**');
+  lines.push('- Database connected — `DATABASE_URL` and `DATABASE_URL_DIRECT` set, migrations applied.');
+  lines.push('- Manual references tested locally on the Emails page (one per category as a smoke test).');
+  lines.push('- Email categories agreed with the team (billing, renewal, support, approval, incident comms, etc.).');
+  lines.push('- Team trained — one paragraph, screenshots, examples per category.');
+  lines.push(`- \`BREVO_OPS_DIGEST_TO\` set so the daily renewal digest has a recipient${brevoRecipientSet ? ' — already in place' : ' — still to do'}.`);
+  lines.push('- Explicit Gmail / Outlook decision documented as a separately approved phase (default answer: no).');
+  lines.push('');
+  lines.push('See [Activation](/admin/ops/activation) for the wider sequence and [Emails](/admin/ops/emails) for the local-reference workspace.');
+  return lines.join('\n');
+}
+
+function answerServicesCheck(items: IndexItem[]): string {
+  const services = items.filter((i) => i.type === 'service');
+  const needsReview = services.filter((s) => s.status === 'needs_review');
+  const blocked = services.filter((s) => s.status === 'blocked');
+  // Billing owner is tracked via tags in the snapshot — surface a soft count
+  // of services flagged as billing-owner-needs-review when the tag is
+  // present. We avoid claiming precision the snapshot can't back.
+  const missingBillingOwner = services.filter((s) =>
+    s.tags.some((t) => /billing[_-]owner[_-]?(missing|needs[_-]review)/i.test(t)),
+  );
+
+  const lines: string[] = [];
+  if (services.length === 0) {
+    lines.push("The services catalogue isn't loaded yet — open [Services](/admin/ops/services) to see the planned list.");
+    return lines.join('\n');
+  }
+
+  lines.push(
+    "Here's what to walk on the Services page — focus on the rows that aren't yet trusted and any service waiting on a person or a credential.",
+  );
+  lines.push('');
+
+  if (needsReview.length > 0) {
+    lines.push(`**Needs review** — ${needsReview.length} service${needsReview.length === 1 ? '' : 's'}`);
+    for (const s of needsReview.slice(0, 3)) lines.push(`- ${linkFor(s)}`);
+    lines.push('');
+  }
+  if (blocked.length > 0) {
+    lines.push(`**Blocked** — ${blocked.length} service${blocked.length === 1 ? '' : 's'}`);
+    for (const s of blocked.slice(0, 3)) lines.push(`- ${linkFor(s)}`);
+    lines.push('');
+  }
+  if (missingBillingOwner.length > 0) {
+    lines.push(`**Missing billing owner** — ${missingBillingOwner.length} service${missingBillingOwner.length === 1 ? '' : 's'} tagged for review.`);
+    lines.push('');
+  }
+  if (needsReview.length === 0 && blocked.length === 0 && missingBillingOwner.length === 0) {
+    lines.push("No services are currently flagged as needing review or blocked. The Services page is a clean walk.");
+    lines.push('');
+  }
+
+  lines.push('Open [Services](/admin/ops/services) for the full catalogue and billing-owner column.');
   return lines.join('\n');
 }
 
@@ -1100,6 +1279,21 @@ export function buildFallbackAnswer(
       break;
     case 'contacts_needed':
       body = answerContactsNeeded(items);
+      break;
+    case 'link_billing_emails':
+      body = answerLinkBillingEmails(items);
+      break;
+    case 'gmail_connect_status':
+      body = answerGmailConnectStatus(items);
+      break;
+    case 'outlook_connect_status':
+      body = answerOutlookConnectStatus(items);
+      break;
+    case 'before_email_live':
+      body = answerBeforeEmailLive(items);
+      break;
+    case 'services_check':
+      body = answerServicesCheck(items);
       break;
     case 'generic':
       body = null;

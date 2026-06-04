@@ -1,5 +1,3 @@
-import 'server-only';
-
 // Snapshot data for the Email + Commercial Ops foundation phase.
 //
 // IMPORTANT — what this file is, and is not:

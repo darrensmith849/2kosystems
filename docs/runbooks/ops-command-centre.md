@@ -113,3 +113,30 @@ rows and dedupes snapshot rows by `(type, lowercase title)`. The same
 tiles render — the only differences are: `dataSource: 'db_partial' |
 'db_live'`, snapshot banner suppressed, and `ActivationReadiness` no
 longer renders at the bottom (the cutover is done).
+
+## Quick actions
+
+The Quick actions section is a flat strip of one-click destinations at the
+bottom of the Command Centre. Every tile is a plain navigation link —
+nothing destructive, nothing that triggers a sync or a write. The default
+set:
+
+- **Ask a question** → `/admin/ops/ask` — grounded internal assistant.
+- **Search dashboard** → `/admin/ops/search` — lexical search over the
+  snapshot + DB index.
+- **Review decisions** → `/admin/ops/review` — local-browser canonical picks.
+- **Local email references** → `/admin/ops/emails` — browser-only email
+  reference workspace (see
+  [`ops-local-email-references.md`](./ops-local-email-references.md)).
+- **Services catalogue** → `/admin/ops/services` — supplier services with
+  billing-owner and cadence fields.
+- **Contacts foundation** → `/admin/ops/contacts` — placeholder role list.
+- **Export snapshot JSON** → `/api/admin/ops/export/snapshot.json`.
+- **Export snapshot Markdown** → `/api/admin/ops/export/snapshot.md`.
+- **Activation checklist** → `/admin/ops/activation`.
+- **Reports** → `/admin/ops/reports`.
+- **Health** → `/admin/ops/health`.
+
+Quick actions never carry counters and never gate on `isDbConfigured()`.
+Their job is the first click — the destination page is responsible for
+mode-aware rendering (preview vs live, presence-only checks, etc.).

@@ -156,3 +156,38 @@ event):
 
 No DB writes, no provider writes, no destructive operations are triggered
 by token absence.
+
+## Commercial preflight
+
+The Activation page renders a **Commercial preflight** card between the
+pre-flight summary and the 27-step list. It is informational — none of
+the items block the 27-step sequence, but each one keeps the commercial
+side of the dashboard useful while the database is being prepared.
+
+The five checks:
+
+1. **Test local email references** on `/admin/ops/emails`. Capture one
+   per category as a smoke test. State lives in `localStorage` under
+   `2ko_ops_local_email_refs_v1` and never reaches the network. Full
+   lifecycle in
+   [`ops-local-email-references.md`](./ops-local-email-references.md).
+2. **Confirm service billing owners** on `/admin/ops/services`. Every
+   row either has an owner or is tagged "Needs review". See
+   [`ops-commercial-services.md`](./ops-commercial-services.md) for the
+   ownership model.
+3. **Confirm contact role placeholders** on `/admin/ops/contacts` match
+   the team that will actually be entered as live rows. Adjust the role
+   set before any real names go in.
+4. **Plan the migration of local drafts** once Hetzner connects — the
+   browser-local references and contact drafts each export to JSON, get
+   reviewed offline, and are imported through the standard snapshot
+   import path. The migration runbook is the same as the activation
+   sequence; the only difference is the source.
+5. **Decide on Gmail / Outlook later** as a separately approved phase.
+   Default answer: no. Manual references handle the bulk of the value at
+   a fraction of the privacy / OAuth surface.
+
+The Commercial preflight card never changes the 27-step list and never
+gates Activation status. It exists so an operator preparing for go-live
+walks the commercial pages with the same rigour as the infrastructure
+pages.

@@ -2,13 +2,13 @@ import { AdminCard, Badge, SectionHeader } from '@/components/admin-ui';
 import SnapshotBanner from '@/components/admin-ui/SnapshotBanner';
 import { isSnapshotMode } from '@/lib/ops/snapshot-mode';
 import { CONTACT_ROLE_LABEL, SNAPSHOT_CONTACTS } from '@/lib/ops/email-services-data';
+import ContactsClient, { type ContactsClientSnapshot } from './ContactsClient';
 
-// /admin/ops/contacts — placeholder foundation.
+// /admin/ops/contacts — placeholder foundation + local drafts workspace.
 //
-// Read-only preview. Lists the contact roles the dashboard expects to track
-// (client owner, billing contact, technical contact, etc.) without committing
-// real personal details. The live table fills in once the database is
-// connected and an operator enters real rows.
+// Read-only preview for the snapshot list, with a browser-only drafts CRUD
+// layered on top via ContactsClient. The live table fills in once the
+// database is connected and an operator enters real rows.
 
 export const dynamic = 'force-dynamic';
 
@@ -26,6 +26,15 @@ const FUTURE_FIELDS: string[] = [
 
 export default function ContactsPage() {
   const snapshot = isSnapshotMode();
+
+  // Widen to the client's shape (no 'server-only' types leak into the client).
+  const snapshotContacts: ContactsClientSnapshot[] = SNAPSHOT_CONTACTS.map((c) => ({
+    id: c.id,
+    name: c.name,
+    organisation: c.organisation,
+    role: c.role,
+    notes: c.notes,
+  }));
 
   return (
     <div className="space-y-5">
@@ -51,6 +60,9 @@ export default function ContactsPage() {
           </p>
         </div>
       </AdminCard>
+
+      {/* Required-roles checklist + local drafts CRUD (client) */}
+      <ContactsClient snapshotContacts={snapshotContacts} />
 
       {/* Role catalogue */}
       <AdminCard title="Roles tracked">
@@ -116,6 +128,7 @@ export default function ContactsPage() {
           <li>· No contact rows can be edited until the database is connected.</li>
           <li>· No emails are sent to contacts from this page.</li>
           <li>· No external CRM is connected.</li>
+          <li>· Local drafts stay in your browser only — they are never sent to a server.</li>
         </ul>
       </AdminCard>
     </div>

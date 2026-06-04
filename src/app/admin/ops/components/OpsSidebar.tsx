@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { OPS_NAV_GROUPS, isItemActive } from './opsNavData';
+import { OPS_NAV_ICONS } from '@/components/admin-ui/icons';
 
 // Desktop left rail for the Ops dashboard. Hidden under lg — OpsMobileBar
 // takes over below that breakpoint. Sticky to the viewport so the page
@@ -169,6 +170,7 @@ export default function OpsSidebar({ operatorSlug }: { operatorSlug: string }) {
                       // glyph so it reads as a switcher, not a page link.
                       const isExternalConsole =
                         isConsoleSwitcher && !item.href.startsWith('/admin/ops');
+                      const IconCmp = item.icon ? OPS_NAV_ICONS[item.icon] : undefined;
                       return (
                         <li key={`${group.title}:${item.href}`}>
                           <Link
@@ -180,7 +182,16 @@ export default function OpsSidebar({ operatorSlug }: { operatorSlug: string }) {
                                 : 'text-[#a1a1aa] hover:text-[#f5f5f5] hover:bg-neutral-800/40 border-transparent'
                             }`}
                           >
-                            <span>{item.label}</span>
+                            <span className="flex items-center gap-2 min-w-0">
+                              {IconCmp && (
+                                <IconCmp
+                                  className={`h-4 w-4 shrink-0 ${
+                                    active ? 'text-emerald-300' : 'text-zinc-500'
+                                  }`}
+                                />
+                              )}
+                              <span className="truncate">{item.label}</span>
+                            </span>
                             {isExternalConsole && (
                               <span
                                 aria-hidden="true"

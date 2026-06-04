@@ -109,7 +109,21 @@ const ALL_BLOCKED_BY = [
   'cloudflare_token', 'hetzner_token',
 ];
 
-const EXAMPLES = ['Hetzner', 'SigmaPhi', 'renewals', 'unmapped'];
+const EXAMPLES = [
+  'Hetzner',
+  'SigmaPhi',
+  'renewals',
+  'unmapped',
+  // Email + commercial example chips — these route through the same search
+  // tokenizer; they're suggestions of phrases that match planned email_ref /
+  // service / contact items.
+  'billing emails',
+  'Hetzner invoices',
+  'services needing review',
+  'billing owner missing',
+  'approval contact',
+  'domain renewal emails',
+];
 
 // ---------------------------------------------------------------- Highlight
 

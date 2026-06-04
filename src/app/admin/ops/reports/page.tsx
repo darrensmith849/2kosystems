@@ -10,7 +10,11 @@ import {
   SERVICE_STATUS_TONE,
   EMAIL_CATEGORY_ORDER,
   EMAIL_CATEGORY_LABEL,
+  SNAPSHOT_CONTACTS,
+  SNAPSHOT_EMAIL_REFS,
+  CONTACT_ROLE_LABEL,
 } from '@/lib/ops/email-services-data';
+import type { ContactRole } from '@/lib/ops/email-services-data';
 
 // /admin/ops/reports — read-only summary view. Every counter is derived from
 // buildIndex() via ops-reports so the same surface auto-upgrades to live DB
@@ -66,6 +70,7 @@ export default async function ReportsPage() {
       </p>
 
       <TopSummary summary={summary} />
+      <CommercialReadinessTop items={items} />
       <NeedsAttention summary={summary} items={items} />
       <AtAGlance summary={summary} />
       <ClientPortfolio items={items} />
@@ -266,6 +271,186 @@ function CommercialReadiness() {
         </AdminCard>
       </div>
     </section>
+  );
+}
+
+// ---------------------------------------------------------------- Commercial readiness (top)
+
+const REQUIRED_CONTACT_ROLES: ContactRole[] = [
+  'internal_owner',
+  'client_owner',
+  'billing_contact',
+  'technical_contact',
+  'supplier_support',
+  'approval_contact',
+];
+
+function ReportsIcon({ d, className = 'h-4 w-4 shrink-0' }: { d: string; className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.75}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+      className={className}
+    >
+      <path d={d} />
+    </svg>
+  );
+}
+
+const ICON_CREDIT_CARD = 'M2 4h12v8H2zM2 7h12M5 10h2';
+const ICON_ACTIVITY = 'M2 8h3l2-4 2 8 2-4h3';
+const ICON_USER = 'M8 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zM3 14a5 5 0 0 1 10 0';
+const ICON_CALENDAR = 'M3 4h10v9H3zM3 7h10M5 2v3M11 2v3';
+
+function CommercialReadinessTop({ items }: { items: IndexItem[] }) {
+  const servicesMissingOwner = SNAPSHOT_SERVICES.filter((s) =>
+    /needs review|unknown/i.test(s.billingOwner),
+  );
+  const servicesNeedingReview = SNAPSHOT_SERVICES.filter(
+    (s) => s.status === 'needs_review' || s.status === 'blocked',
+  );
+
+  // Contact roles missing: which required roles have no placeholder?
+  const rolesCovered = new Set<ContactRole>();
+  for (const c of SNAPSHOT_CONTACTS) rolesCovered.add(c.role);
+  const rolesMissing = REQUIRED_CONTACT_ROLES.filter((r) => !rolesCovered.has(r));
+
+  // Renewals / emails needing confirmation: count emails awaiting linking +
+  // renewal items in the index whose body mentions "confirm".
+  const renewals = items.filter((it) => it.type === 'renewal');
+  const renewalsNeedingConfirm = renewals.filter((r) => /confirm/i.test(r.body));
+  const emailsAwaitingLink = SNAPSHOT_EMAIL_REFS.length;
+
+  const cards: Array<{
+    title: string;
+    iconPath: string;
+    count: number;
+    rows: string[];
+    href: string;
+    tone: Tone;
+  }> = [
+    {
+      title: 'Services missing billing owner',
+      iconPath: ICON_CREDIT_CARD,
+      count: servicesMissingOwner.length,
+      rows: servicesMissingOwner.slice(0, 3).map((s) => s.name),
+      href: '/admin/ops/services',
+      tone: servicesMissingOwner.length > 0 ? 'amber' : 'neutral',
+    },
+    {
+      title: 'Services needing review',
+      iconPath: ICON_ACTIVITY,
+      count: servicesNeedingReview.length,
+      rows: servicesNeedingReview.slice(0, 3).map((s) => s.name),
+      href: '/admin/ops/services',
+      tone: servicesNeedingReview.length > 0 ? 'amber' : 'neutral',
+    },
+    {
+      title: 'Contact roles missing',
+      iconPath: ICON_USER,
+      count: rolesMissing.length,
+      rows: rolesMissing.slice(0, 3).map((r) => CONTACT_ROLE_LABEL[r]),
+      href: '/admin/ops/contacts',
+      tone: rolesMissing.length > 0 ? 'amber' : 'green',
+    },
+    {
+      title: 'Renewals / emails needing confirmation',
+      iconPath: ICON_CALENDAR,
+      count: renewalsNeedingConfirm.length + emailsAwaitingLink,
+      rows: [
+        ...renewalsNeedingConfirm.slice(0, 2).map((r) => r.title),
+        emailsAwaitingLink > 0
+          ? `${emailsAwaitingLink} email placeholders awaiting link`
+          : '',
+      ].filter(Boolean) as string[],
+      href: '/admin/ops/renewals',
+      tone:
+        renewalsNeedingConfirm.length + emailsAwaitingLink > 0 ? 'amber' : 'neutral',
+    },
+  ];
+
+  return (
+    <div className="mb-6">
+      <AdminCard title="Commercial readiness">
+        <p className="mb-3 text-xs text-[#a1a1aa] leading-relaxed">
+          Snapshot of where the commercial side of the dashboard is still waiting on confirmation —
+          billing owners, contact roles, and emails / renewals that need linking.
+        </p>
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+          {cards.map((card) => (
+            <CommercialCard key={card.title} card={card} />
+          ))}
+        </div>
+      </AdminCard>
+    </div>
+  );
+}
+
+function CommercialCard({
+  card,
+}: {
+  card: {
+    title: string;
+    iconPath: string;
+    count: number;
+    rows: string[];
+    href: string;
+    tone: Tone;
+  };
+}) {
+  const ring =
+    card.tone === 'green'
+      ? 'border-emerald-400/30 bg-emerald-400/5'
+      : card.tone === 'amber'
+        ? 'border-amber-400/30 bg-amber-400/5'
+        : card.tone === 'rose'
+          ? 'border-rose-400/30 bg-rose-400/5'
+          : card.tone === 'blue'
+            ? 'border-sky-400/30 bg-sky-400/5'
+            : 'border-[#27272a] bg-[#0e0e10]';
+  const iconTint =
+    card.tone === 'green'
+      ? 'text-emerald-300'
+      : card.tone === 'amber'
+        ? 'text-amber-300'
+        : card.tone === 'rose'
+          ? 'text-rose-300'
+          : 'text-[#a1a1aa]';
+  return (
+    <div className={`rounded-2xl border p-4 ${ring}`}>
+      <div className="mb-2 flex items-center gap-2">
+        <span className={iconTint}>
+          <ReportsIcon d={card.iconPath} />
+        </span>
+        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#71717a]">
+          {card.title}
+        </p>
+      </div>
+      <p className="mb-2 text-2xl font-semibold text-[#f5f5f5]">{card.count}</p>
+      {card.rows.length > 0 ? (
+        <ul className="mb-3 space-y-1">
+          {card.rows.map((row, i) => (
+            <li key={i} className="flex gap-2 text-[11px] text-[#e4e4e7]">
+              <span className="text-[#52525b]">·</span>
+              <span className="leading-relaxed">{row}</span>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="mb-3 text-[11px] text-[#71717a]">Nothing flagged.</p>
+      )}
+      <Link
+        href={card.href}
+        className="font-mono text-[10px] uppercase tracking-[0.15em] text-emerald-300 hover:underline"
+      >
+        View →
+      </Link>
+    </div>
   );
 }
 

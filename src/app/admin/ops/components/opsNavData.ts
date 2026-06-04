@@ -6,6 +6,12 @@ export type OpsNavItem = {
   href: string;
   label: string;
   exact?: boolean;
+  // Optional key into the OPS_NAV_ICONS map exported by
+  // src/components/admin-ui/icons.tsx. Made optional rather than required
+  // so adding a new nav row never forces a corresponding icon choice up
+  // front and so the type contract stays loose for any other consumer.
+  // Sidebar/mobile renderers fall back gracefully when icon is undefined.
+  icon?: string;
   // When true, this nav item is shown muted (no emerald border / text) on
   // subroutes that live in another group. Used by the cross-console
   // "Ops Dashboard" entry so we don't double-paint the active rail.
@@ -32,41 +38,41 @@ export const OPS_NAV_GROUPS: OpsNavGroup[] = [
       // dimWhenSubrouteActive flag tells the sidebar to render this row
       // muted on any /admin/ops/* subroute so we don't paint two emerald
       // rails (the console-level one + the actual leaf).
-      { href: '/admin/ops', label: 'Ops Dashboard', dimWhenSubrouteActive: true },
+      { href: '/admin/ops', label: 'Ops Dashboard', icon: 'Dashboard', dimWhenSubrouteActive: true },
       // Agent Ops navigates out of the ops console. While inside /admin/ops
       // this item is never active (pathname does not start with /admin/agent),
       // and OpsSidebar is unmounted on /admin/agent, so the active state for
       // this link is handled correctly by isItemActive without special-casing.
-      { href: '/admin/agent', label: 'Agent Ops' },
+      { href: '/admin/agent', label: 'Agent Ops', icon: 'Chat' },
     ],
   },
   {
     title: 'Operations',
     items: [
-      { href: '/admin/ops', label: 'Overview', exact: true, mobilePinned: true },
-      { href: '/admin/ops/search', label: 'Search', mobilePinned: true },
-      { href: '/admin/ops/ask', label: 'Ask', mobilePinned: true },
-      { href: '/admin/ops/emails', label: 'Emails' },
-      { href: '/admin/ops/clients', label: 'Clients' },
-      { href: '/admin/ops/contacts', label: 'Contacts' },
-      { href: '/admin/ops/assets', label: 'Assets' },
-      { href: '/admin/ops/map', label: 'Map' },
+      { href: '/admin/ops', label: 'Overview', icon: 'Dashboard', exact: true, mobilePinned: true },
+      { href: '/admin/ops/search', label: 'Search', icon: 'Search', mobilePinned: true },
+      { href: '/admin/ops/ask', label: 'Ask', icon: 'Chat', mobilePinned: true },
+      { href: '/admin/ops/emails', label: 'Emails', icon: 'Mail' },
+      { href: '/admin/ops/clients', label: 'Clients', icon: 'Building' },
+      { href: '/admin/ops/contacts', label: 'Contacts', icon: 'User' },
+      { href: '/admin/ops/assets', label: 'Assets', icon: 'Boxes' },
+      { href: '/admin/ops/map', label: 'Map', icon: 'NetworkMap' },
     ],
   },
   {
     title: 'Infrastructure',
     items: [
-      { href: '/admin/ops/github', label: 'GitHub' },
-      { href: '/admin/ops/vercel', label: 'Vercel' },
-      { href: '/admin/ops/infrastructure', label: 'Infrastructure' },
+      { href: '/admin/ops/github', label: 'GitHub', icon: 'Code' },
+      { href: '/admin/ops/vercel', label: 'Vercel', icon: 'Triangle' },
+      { href: '/admin/ops/infrastructure', label: 'Infrastructure', icon: 'Server' },
     ],
   },
   {
     title: 'Workflows',
     items: [
-      { href: '/admin/ops/tickets', label: 'Tickets', mobilePinned: true },
-      { href: '/admin/ops/renewals', label: 'Renewals' },
-      { href: '/admin/ops/incidents', label: 'Incidents' },
+      { href: '/admin/ops/tickets', label: 'Tickets', icon: 'Clipboard', mobilePinned: true },
+      { href: '/admin/ops/renewals', label: 'Renewals', icon: 'Calendar' },
+      { href: '/admin/ops/incidents', label: 'Incidents', icon: 'AlertTriangle' },
     ],
   },
   {
@@ -74,15 +80,15 @@ export const OPS_NAV_GROUPS: OpsNavGroup[] = [
     items: [
       // Bring-up items first so the most-clicked items stay above the fold
       // on short laptops.
-      { href: '/admin/ops/activation', label: 'Activation', mobilePinned: true },
-      { href: '/admin/ops/health', label: 'Health', mobilePinned: true },
-      { href: '/admin/ops/settings', label: 'Settings' },
-      { href: '/admin/ops/reports', label: 'Reports' },
-      { href: '/admin/ops/services', label: 'Services' },
-      { href: '/admin/ops/audits', label: 'Audits' },
-      { href: '/admin/ops/review', label: 'Review' },
-      { href: '/admin/ops/runbooks', label: 'Runbooks' },
-      { href: '/admin/ops/sync-log', label: 'Sync Log' },
+      { href: '/admin/ops/activation', label: 'Activation', icon: 'Rocket', mobilePinned: true },
+      { href: '/admin/ops/health', label: 'Health', icon: 'Activity', mobilePinned: true },
+      { href: '/admin/ops/settings', label: 'Settings', icon: 'Cog' },
+      { href: '/admin/ops/reports', label: 'Reports', icon: 'Chart' },
+      { href: '/admin/ops/services', label: 'Services', icon: 'CreditCard' },
+      { href: '/admin/ops/audits', label: 'Audits', icon: 'Shield' },
+      { href: '/admin/ops/review', label: 'Review', icon: 'Eye' },
+      { href: '/admin/ops/runbooks', label: 'Runbooks', icon: 'Book' },
+      { href: '/admin/ops/sync-log', label: 'Sync Log', icon: 'Refresh' },
     ],
   },
 ];

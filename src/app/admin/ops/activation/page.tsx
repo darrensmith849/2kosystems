@@ -566,6 +566,42 @@ export default function ActivationPage() {
         <ProgressTile label="Optional" value={optionalSteps} total={totalSteps} tone="blue" />
       </div>
 
+      {/* Commercial preflight — inserted between the pre-flight summary and
+          the 27-step sequence. The 27-step list itself is not modified; this
+          card just reminds operators of the commercial-side work that runs
+          alongside activation. */}
+      <div className="mb-6">
+        <AdminCard title="Commercial preflight">
+          <p className="mb-3 text-xs text-[#a1a1aa] leading-relaxed">
+            Five short checks for the commercial side of activation. None of
+            these block the 27-step sequence — they make sure the local-only
+            workspace stays useful while the database is being prepared.
+          </p>
+          <ul className="space-y-2 text-xs text-[#e4e4e7]">
+            <li className="flex gap-2">
+              <span className="mt-1.5 inline-block size-1 shrink-0 rounded-full bg-emerald-400/70" />
+              <span>Test local email references on <code className="text-[#a1a1aa]">/admin/ops/emails</code> — capture one per category as a smoke test.</span>
+            </li>
+            <li className="flex gap-2">
+              <span className="mt-1.5 inline-block size-1 shrink-0 rounded-full bg-emerald-400/70" />
+              <span>Confirm service billing owners on <code className="text-[#a1a1aa]">/admin/ops/services</code> — every row either has an owner or is tagged &ldquo;Needs review&rdquo;.</span>
+            </li>
+            <li className="flex gap-2">
+              <span className="mt-1.5 inline-block size-1 shrink-0 rounded-full bg-emerald-400/70" />
+              <span>Confirm contact role placeholders on <code className="text-[#a1a1aa]">/admin/ops/contacts</code> reflect the real team that will be entered as live rows.</span>
+            </li>
+            <li className="flex gap-2">
+              <span className="mt-1.5 inline-block size-1 shrink-0 rounded-full bg-emerald-400/70" />
+              <span>Plan the migration of local drafts after Hetzner connects — see <code className="text-[#a1a1aa]">docs/runbooks/ops-local-email-references.md</code>.</span>
+            </li>
+            <li className="flex gap-2">
+              <span className="mt-1.5 inline-block size-1 shrink-0 rounded-full bg-emerald-400/70" />
+              <span>Decide on Gmail / Outlook later — only as a separately approved phase. Default answer: no.</span>
+            </li>
+          </ul>
+        </AdminCard>
+      </div>
+
       <div className="mb-6">
         <AdminCard title="Activation sequence (27 steps)">
           <ol className="space-y-3">

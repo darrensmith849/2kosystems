@@ -3,7 +3,28 @@ import { isDbConfigured } from '@/lib/db/client';
 import { AdminCard, SectionHeader, Badge } from '@/components/admin-ui';
 import ActivationReadiness from '@/components/admin-ui/ActivationReadiness';
 import SnapshotBanner from '@/components/admin-ui/SnapshotBanner';
-import QuickActionTile from '@/components/admin-ui/QuickActionTile';
+import {
+  Dashboard as DashboardIcon,
+  Search as SearchIcon,
+  Chat as ChatIcon,
+  Mail as MailIcon,
+  Building as BuildingIcon,
+  Boxes as BoxesIcon,
+  Server as ServerIcon,
+  Clipboard as ClipboardIcon,
+  Calendar as CalendarIcon,
+  AlertTriangle as AlertTriangleIcon,
+  CreditCard as CreditCardIcon,
+  Chart as ChartIcon,
+  Shield as ShieldIcon,
+  Eye as EyeIcon,
+  Rocket as RocketIcon,
+  Activity as ActivityIcon,
+  Book as BookIcon,
+  Download as DownloadIcon,
+  ArrowRight as ArrowRightIcon,
+  type IconComponent,
+} from '@/components/admin-ui/icons';
 import { isSnapshotMode } from '@/lib/ops/snapshot-mode';
 import { buildReportsSummary, type ReportsSummary } from '@/lib/ops/ops-reports';
 import { buildIndex, ACTIVATION_STEPS, type IndexItem } from '@/lib/ops/ops-knowledge-index';
@@ -14,6 +35,18 @@ import { computeRenewalWindow } from '@/lib/ops/renewals-window';
 // buildReportsSummary() so snapshot mode and live DB share one code path. The
 // page is purely server-rendered; every fetch is wrapped in try/catch so a
 // downstream failure never blanks the dashboard.
+//
+// Layout contract (do not regress):
+//   1. Today's picture — top stats tiles (snapshot-driven totals).
+//   2. Next action — the single most important thing to do right now.
+//   3. Key blockers — credential/env gates blocking automation.
+//   4. Operational areas — six executive cards linking deeper into the
+//      console (Clients & assets, Infrastructure, Workflows, Commercial ops,
+//      Email references, Activation).
+//   5. Quick actions — eight one-tap shortcuts to common workflows.
+// Every snapshot/env read is wrapped in try/catch so a broken upstream
+// never blanks the dashboard; the safe-fallback EMPTY_SUMMARY mirrors the
+// real ReportsSummary shape.
 
 type Tone = 'neutral' | 'green' | 'amber' | 'rose' | 'blue';
 
@@ -75,14 +108,19 @@ export default async function OpsOverviewPage() {
       />
       {snapshot && <SnapshotBanner area="The Overview" />}
 
+      <SectionLabel title="Today's picture" />
       <TodaysPicture summary={summary} index={index} />
 
-      <NeedsAttention summary={summary} index={index} />
+      <SectionLabel title="Next action" />
+      <NextAction summary={summary} index={index} />
 
-      <WhatIsReady summary={summary} />
+      <SectionLabel title="Key blockers" />
+      <KeyBlockers />
 
-      <WhatIsBlocked />
+      <SectionLabel title="Operational areas" />
+      <OperationalAreas summary={summary} />
 
+      <SectionLabel title="Quick actions" />
       <QuickActions />
 
       {!dbConfigured && (
@@ -91,6 +129,16 @@ export default async function OpsOverviewPage() {
         </div>
       )}
     </>
+  );
+}
+
+// --------------------------------------------------------------- Section label
+
+function SectionLabel({ title }: { title: string }) {
+  return (
+    <p className="mt-2 mb-3 text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a]">
+      {title}
+    </p>
   );
 }
 
@@ -202,7 +250,7 @@ function TodaysPicture({ summary, index }: { summary: ReportsSummary; index: Ind
   );
 }
 
-// --------------------------------------------------------------- Needs attention
+// --------------------------------------------------------------- Next action
 
 type AttentionRow = {
   id: string;
@@ -213,7 +261,7 @@ type AttentionRow = {
   badge: { text: string; tone: Tone };
 };
 
-function NeedsAttention({ summary, index }: { summary: ReportsSummary; index: IndexItem[] }) {
+function buildAttentionRows(summary: ReportsSummary, index: IndexItem[]): AttentionRow[] {
   const rows: AttentionRow[] = [];
 
   // 1. Urgent incidents (critical/major).
@@ -350,9 +398,15 @@ function NeedsAttention({ summary, index }: { summary: ReportsSummary; index: In
     /* skip */
   }
 
-  const top = rows.slice(0, 8);
-
   void summary;
+  return rows;
+}
+
+function NextAction({ summary, index }: { summary: ReportsSummary; index: IndexItem[] }) {
+  const rows = buildAttentionRows(summary, index);
+  const top = rows.slice(0, 8);
+  const headline = top[0];
+  const rest = top.slice(1);
 
   return (
     <div className="mb-6">
@@ -363,27 +417,58 @@ function NeedsAttention({ summary, index }: { summary: ReportsSummary; index: In
             snapshot fixtures.
           </p>
         ) : (
-          <ul className="space-y-3">
-            {top.map((r) => (
-              <li key={r.id} className="flex items-start gap-3 border-b border-[#1c1c1e] pb-3 last:border-0 last:pb-0">
-                <span className="font-mono text-[11px] text-emerald-300/70 w-6 shrink-0">{r.icon}</span>
-                <div className="flex-1 min-w-0">
-                  <Link
-                    href={r.href}
-                    className="text-xs text-[#f5f5f5] hover:text-emerald-300 font-medium"
+          <div className="space-y-4">
+            {headline && (
+              <Link
+                href={headline.href}
+                className="block rounded-xl border border-emerald-400/30 bg-emerald-400/[0.04] p-4 hover:border-emerald-400/60 transition-colors"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[10px] font-mono uppercase tracking-wider text-emerald-300/80">
+                      Do this next
+                    </p>
+                    <p className="mt-1.5 text-sm font-medium text-[#f5f5f5]">{headline.title}</p>
+                    <p className="mt-1 text-[11px] font-mono text-[#a1a1aa] whitespace-pre-line leading-snug">
+                      {headline.context}
+                    </p>
+                  </div>
+                  <div className="flex flex-col items-end gap-2 shrink-0">
+                    <Badge text={headline.badge.text} tone={headline.badge.tone} />
+                    <ArrowRightIcon className="h-4 w-4 text-emerald-300" />
+                  </div>
+                </div>
+              </Link>
+            )}
+            {rest.length > 0 && (
+              <ul className="space-y-3">
+                {rest.map((r) => (
+                  <li
+                    key={r.id}
+                    className="flex items-start gap-3 border-b border-[#1c1c1e] pb-3 last:border-0 last:pb-0"
                   >
-                    {r.title}
-                  </Link>
-                  <p className="mt-1 text-[10px] font-mono text-[#71717a] whitespace-pre-line leading-snug">
-                    {r.context}
-                  </p>
-                </div>
-                <div className="shrink-0">
-                  <Badge text={r.badge.text} tone={r.badge.tone} />
-                </div>
-              </li>
-            ))}
-          </ul>
+                    <span className="font-mono text-[11px] text-emerald-300/70 w-6 shrink-0">
+                      {r.icon}
+                    </span>
+                    <div className="flex-1 min-w-0">
+                      <Link
+                        href={r.href}
+                        className="text-xs text-[#f5f5f5] hover:text-emerald-300 font-medium"
+                      >
+                        {r.title}
+                      </Link>
+                      <p className="mt-1 text-[10px] font-mono text-[#71717a] whitespace-pre-line leading-snug">
+                        {r.context}
+                      </p>
+                    </div>
+                    <div className="shrink-0">
+                      <Badge text={r.badge.text} tone={r.badge.tone} />
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         )}
       </AdminCard>
     </div>
@@ -396,60 +481,9 @@ function riskRank(r: 'low' | 'med' | 'high'): number {
   return 1;
 }
 
-// --------------------------------------------------------------- What is ready
+// --------------------------------------------------------------- Key blockers
 
-function WhatIsReady({ summary }: { summary: ReportsSummary }) {
-  const items: Array<{ label: string; ready: boolean; subline?: string }> = [
-    { label: 'Snapshot data', ready: summary.totals.assets > 0, subline: `${summary.totals.assets} assets · ${summary.totals.clients} clients` },
-    { label: 'Export pack', ready: true, subline: 'JSON + Markdown' },
-    { label: 'Import preview', ready: true, subline: '/api/admin/ops/import' },
-    { label: 'Assistant / Search', ready: true, subline: 'index + grounded fallback' },
-    { label: 'Review workflow', ready: true, subline: `${SNAPSHOT_DECISIONS.length} decisions` },
-    { label: 'Cron scaffolds', ready: true, subline: 'vercel.json crons' },
-    { label: 'BetterStack scaffold', ready: true, subline: 'webhook route reachable' },
-    {
-      label: 'Reports',
-      ready: true,
-      subline: `${summary.activationReadiness.ready}/${summary.activationReadiness.total} activation`,
-    },
-  ];
-
-  return (
-    <div className="mb-6">
-      <AdminCard title="What is ready">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-          {items.map((it) => (
-            <div
-              key={it.label}
-              className={`rounded-xl border px-3 py-3 ${
-                it.ready
-                  ? 'border-emerald-400/30 bg-emerald-400/[0.04]'
-                  : 'border-[#27272a] bg-[#0a0a0b]'
-              }`}
-            >
-              <div className="flex items-center gap-2">
-                <span
-                  aria-hidden="true"
-                  className={`text-[11px] font-mono ${it.ready ? 'text-emerald-300' : 'text-[#52525b]'}`}
-                >
-                  {it.ready ? 'ready' : 'pending'}
-                </span>
-              </div>
-              <p className="mt-1 text-xs text-[#e4e4e7] font-medium">{it.label}</p>
-              {it.subline && (
-                <p className="mt-0.5 text-[10px] font-mono text-[#71717a]">{it.subline}</p>
-              )}
-            </div>
-          ))}
-        </div>
-      </AdminCard>
-    </div>
-  );
-}
-
-// --------------------------------------------------------------- What is blocked
-
-function WhatIsBlocked() {
+function KeyBlockers() {
   // Presence-only env reads — never echo values.
   const env = (k: string) => Boolean(process.env[k]);
 
@@ -483,9 +517,20 @@ function WhatIsBlocked() {
     { label: `${humanCount} canonical decisions (human)`, status: humanCount > 0 ? 'blocked' : 'resolved' },
   ];
 
+  const blockedCount = blockers.filter((b) => b.status === 'blocked').length;
+  const resolvedCount = blockers.filter((b) => b.status === 'resolved').length;
+  const optionalCount = blockers.filter((b) => b.status === 'optional').length;
+
   return (
     <div className="mb-6">
-      <AdminCard title="What is blocked">
+      <AdminCard
+        title="Credentials and decisions"
+        action={
+          <p className="text-[10px] font-mono text-[#71717a]">
+            {blockedCount} blocked · {resolvedCount} resolved · {optionalCount} optional
+          </p>
+        }
+      >
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
           {blockers.map((b) => (
             <div
@@ -505,59 +550,177 @@ function WhatIsBlocked() {
   );
 }
 
+// --------------------------------------------------------------- Operational areas
+
+type AreaCardProps = {
+  href: string;
+  Icon: IconComponent;
+  title: string;
+  summary: string;
+};
+
+function AreaCard({ href, Icon, title, summary }: AreaCardProps) {
+  return (
+    <Link
+      href={href}
+      className="group block rounded-2xl border border-[#27272a] bg-[#111113] p-4 hover:border-emerald-400/40 transition-colors"
+    >
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex items-center gap-2 min-w-0">
+          <Icon className="h-4 w-4 text-emerald-300/80 shrink-0" />
+          <p className="text-sm font-medium text-[#f5f5f5] truncate">{title}</p>
+        </div>
+        <ArrowRightIcon className="h-4 w-4 text-[#52525b] group-hover:text-emerald-300 shrink-0" />
+      </div>
+      <p className="mt-2 text-[11px] font-mono text-[#a1a1aa] leading-snug">{summary}</p>
+      <p className="mt-2 text-[10px] text-emerald-300/80 group-hover:text-emerald-200 font-mono uppercase tracking-wider">
+        View
+      </p>
+    </Link>
+  );
+}
+
+function OperationalAreas({ summary }: { summary: ReportsSummary }) {
+  const t = summary.totals;
+  const v = t.vercelProjects;
+
+  // Email-references summary — count snapshot email refs without forcing an
+  // import to the data file. Soft-count via the index would be cleaner; this
+  // is a one-line teaser, not the authoritative figure, so we hard-code the
+  // hint copy instead of risking a snapshot import here.
+  return (
+    <div className="mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+        <AreaCard
+          href="/admin/ops/clients"
+          Icon={BuildingIcon}
+          title="Clients & assets"
+          summary={`${t.clients} clients · ${t.assets} assets · ${t.divisions} divisions`}
+        />
+        <AreaCard
+          href="/admin/ops/infrastructure"
+          Icon={ServerIcon}
+          title="Infrastructure"
+          summary={`${t.hetznerServers} Hetzner · ${v.total} Vercel · ${t.cloudflareZones} Cloudflare zones`}
+        />
+        <AreaCard
+          href="/admin/ops/tickets"
+          Icon={ClipboardIcon}
+          title="Workflows"
+          summary={`${t.openTickets} open tickets · ${t.openIncidents} open incidents`}
+        />
+        <AreaCard
+          href="/admin/ops/services"
+          Icon={CreditCardIcon}
+          title="Commercial ops"
+          summary="Services catalogue · pricing · contact roles · readiness"
+        />
+        <AreaCard
+          href="/admin/ops/emails"
+          Icon={MailIcon}
+          title="Email references"
+          summary="Service emails & client linkage · local drafts & exports"
+        />
+        <AreaCard
+          href="/admin/ops/activation"
+          Icon={RocketIcon}
+          title="Activation"
+          summary={`${summary.activationReadiness.ready}/${summary.activationReadiness.total} ready · commercial preflight inside`}
+        />
+      </div>
+    </div>
+  );
+}
+
 // --------------------------------------------------------------- Quick actions
+
+type QuickActionProps = {
+  href: string;
+  Icon: IconComponent;
+  label: string;
+  accent: 'emerald' | 'sky' | 'amber' | 'neutral';
+};
+
+const ACCENT_BORDER: Record<QuickActionProps['accent'], string> = {
+  emerald: 'border-emerald-400/30 hover:border-emerald-400/60 hover:bg-emerald-400/[0.04]',
+  sky: 'border-sky-400/30 hover:border-sky-400/60 hover:bg-sky-400/[0.04]',
+  amber: 'border-amber-400/30 hover:border-amber-400/60 hover:bg-amber-400/[0.04]',
+  neutral: 'border-[#27272a] hover:border-[#3f3f46] hover:bg-neutral-800/40',
+};
+
+const ACCENT_ICON: Record<QuickActionProps['accent'], string> = {
+  emerald: 'text-emerald-300',
+  sky: 'text-sky-300',
+  amber: 'text-amber-300',
+  neutral: 'text-[#a1a1aa]',
+};
+
+function QuickActionButton({ href, Icon, label, accent }: QuickActionProps) {
+  return (
+    <Link
+      href={href}
+      className={`flex items-center justify-between gap-3 rounded-xl border bg-[#0a0a0b] px-4 py-3 transition-colors ${ACCENT_BORDER[accent]}`}
+    >
+      <span className="flex items-center gap-2.5 min-w-0">
+        <Icon className={`h-4 w-4 shrink-0 ${ACCENT_ICON[accent]}`} />
+        <span className="text-sm font-medium text-[#f5f5f5] truncate">{label}</span>
+      </span>
+      <ArrowRightIcon className={`h-4 w-4 shrink-0 ${ACCENT_ICON[accent]}`} />
+    </Link>
+  );
+}
 
 function QuickActions() {
   return (
     <div className="mb-6">
       <AdminCard title="Quick actions">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-          <QuickActionTile
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2.5">
+          <QuickActionButton
             href="/admin/ops/ask"
-            title="Ask a question"
-            description="Plain-English assistant, grounded in the dashboard index."
+            Icon={ChatIcon}
+            label="Ask 2KO"
             accent="emerald"
           />
-          <QuickActionTile
+          <QuickActionButton
             href="/admin/ops/search"
-            title="Search dashboard"
-            description="Lexical search across every snapshot and DB record."
+            Icon={SearchIcon}
+            label="Search dashboard"
             accent="emerald"
           />
-          <QuickActionTile
-            href="/admin/ops/review"
-            title="Review decisions"
-            description="Canonical picks, owner mappings, cleanup actions."
-            accent="sky"
-          />
-          <QuickActionTile
-            href="/api/admin/ops/export/snapshot.json"
-            title="Export snapshot JSON"
-            description="Full discovery snapshot as machine-readable JSON."
-            accent="neutral"
-          />
-          <QuickActionTile
-            href="/api/admin/ops/export/snapshot.md"
-            title="Export snapshot Markdown"
-            description="Same snapshot rendered as a Markdown reference doc."
-            accent="neutral"
-          />
-          <QuickActionTile
-            href="/admin/ops/settings"
-            title="Activation checklist"
-            description="Per-credential readiness + Hetzner migration steps."
+          <QuickActionButton
+            href="/admin/ops/activation"
+            Icon={RocketIcon}
+            label="Review activation"
             accent="amber"
           />
-          <QuickActionTile
-            href="/admin/ops/reports"
-            title="Reports"
-            description="Operational rollups: totals, breakdowns, readiness."
+          <QuickActionButton
+            href="/admin/ops/emails"
+            Icon={MailIcon}
+            label="Email references"
             accent="sky"
           />
-          <QuickActionTile
+          <QuickActionButton
+            href="/admin/ops/services"
+            Icon={CreditCardIcon}
+            label="Services"
+            accent="sky"
+          />
+          <QuickActionButton
             href="/admin/ops/health"
-            title="Health"
-            description="Connectivity, sync runs, BetterStack signals."
+            Icon={ActivityIcon}
+            label="Health"
+            accent="neutral"
+          />
+          <QuickActionButton
+            href="/api/admin/ops/export/snapshot.json"
+            Icon={DownloadIcon}
+            label="Export snapshot"
+            accent="neutral"
+          />
+          <QuickActionButton
+            href="/admin/ops/runbooks"
+            Icon={BookIcon}
+            label="View runbooks"
             accent="neutral"
           />
         </div>
@@ -601,3 +764,21 @@ function Tile({
     </div>
   );
 }
+
+// Silence unused-icon import warnings — these are reserved for upcoming
+// callsites in this file (DashboardIcon: future Today's-picture toolbar;
+// ChartIcon/ShieldIcon/EyeIcon/AlertTriangleIcon/CalendarIcon/BoxesIcon:
+// future operational-area subheaders). Centralising the import list now
+// avoids churn when those callsites land. Each is also a documented
+// member of OPS_NAV_ICONS so the explicit reference here doubles as a
+// type-check guard against the icon module changing shape.
+const _RESERVED_ICONS: IconComponent[] = [
+  DashboardIcon,
+  ChartIcon,
+  ShieldIcon,
+  EyeIcon,
+  AlertTriangleIcon,
+  CalendarIcon,
+  BoxesIcon,
+];
+void _RESERVED_ICONS;

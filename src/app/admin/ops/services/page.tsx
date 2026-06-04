@@ -1,32 +1,41 @@
-import { AdminCard, Badge, SectionHeader } from '@/components/admin-ui';
+import { AdminCard, SectionHeader } from '@/components/admin-ui';
 import SnapshotBanner from '@/components/admin-ui/SnapshotBanner';
 import { isSnapshotMode } from '@/lib/ops/snapshot-mode';
-import {
-  SERVICE_CATEGORY_LABEL,
-  SERVICE_STATUS_LABEL,
-  SERVICE_STATUS_TONE,
-  SNAPSHOT_SERVICES,
-} from '@/lib/ops/email-services-data';
+import { SNAPSHOT_SERVICES } from '@/lib/ops/email-services-data';
+import ServicesClient, {
+  type ServicesClientService,
+} from './ServicesClient';
 
 // /admin/ops/services — supplier services / subscriptions catalogue.
 //
 // Read-only preview. Tracks supplier accounts, subscriptions, services,
 // and recurring tools. Distinct from Renewals: this is the commercial
 // catalogue of every supplier we depend on.
+//
+// The server component owns the snapshot data + the status / safety cards.
+// ServicesClient owns filter chips, summary tiles for the current view,
+// JSON/Markdown export, and the per-service cards.
 
 export const dynamic = 'force-dynamic';
 
 export default function ServicesPage() {
   const snapshot = isSnapshotMode();
-  const total = SNAPSHOT_SERVICES.length;
-  const active = SNAPSHOT_SERVICES.filter((s) => s.status === 'active').length;
-  const needsReview = SNAPSHOT_SERVICES.filter(
-    (s) => s.status === 'needs_review' || s.status === 'blocked',
-  ).length;
-  const planned = SNAPSHOT_SERVICES.filter((s) => s.status === 'planned').length;
-  const missingBillingOwner = SNAPSHOT_SERVICES.filter((s) =>
-    /needs review|unknown/i.test(s.billingOwner),
-  ).length;
+
+  // Pass-through to the client. The shape matches SnapshotService — we widen
+  // to ServicesClientService here so the client file does not need to import
+  // from the 'server-only' module.
+  const services: ServicesClientService[] = SNAPSHOT_SERVICES.map((s) => ({
+    id: s.id,
+    name: s.name,
+    provider: s.provider,
+    category: s.category,
+    linkedScope: s.linkedScope,
+    billingOwner: s.billingOwner,
+    cadence: s.cadence,
+    status: s.status,
+    blockers: s.blockers,
+    notes: s.notes,
+  }));
 
   return (
     <div className="space-y-5">
@@ -36,66 +45,17 @@ export default function ServicesPage() {
       />
       {snapshot && <SnapshotBanner area="Services list" />}
 
-      {/* At-a-glance */}
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-4">
-        <StatusTile label="Total" value={total} tone="neutral" />
-        <StatusTile label="Active" value={active} tone="green" />
-        <StatusTile label="Needs review" value={needsReview} tone="amber" />
-        <StatusTile label="Missing billing owner" value={missingBillingOwner} tone="amber" />
-      </div>
-
-      {planned > 0 && (
+      {/* Status / context */}
+      <AdminCard title="Status">
         <p className="text-xs text-[#a1a1aa] leading-relaxed">
-          {planned} services are planned but not yet active. They become active once the relevant
-          provider API key, subscription, or approval is in place.
+          The Services list is a read-only catalogue of every supplier we depend on. No supplier
+          credentials or provider API keys are stored or shown here. Use the filters below to
+          narrow the view, then export the current view as JSON or Markdown for offline review.
         </p>
-      )}
-
-      {/* Services list */}
-      <AdminCard title="Services list">
-        <ul className="space-y-3">
-          {SNAPSHOT_SERVICES.map((s) => (
-            <li
-              key={s.id}
-              className="rounded-xl border border-[#1c1c1e] bg-[#0e0e10] p-4"
-            >
-              <div className="flex flex-wrap items-center gap-2 mb-2">
-                <p className="text-sm font-semibold text-[#f5f5f5]">{s.name}</p>
-                <Badge
-                  text={SERVICE_STATUS_LABEL[s.status]}
-                  tone={SERVICE_STATUS_TONE[s.status]}
-                />
-                <Badge text={SERVICE_CATEGORY_LABEL[s.category]} tone="neutral" />
-              </div>
-              <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-[140px_1fr] text-xs">
-                <span className="text-[#71717a]">Provider</span>
-                <span className="text-[#e4e4e7]">{s.provider}</span>
-
-                <span className="text-[#71717a]">Linked scope</span>
-                <span className="text-[#e4e4e7]">{s.linkedScope}</span>
-
-                <span className="text-[#71717a]">Billing owner</span>
-                <span className="text-[#e4e4e7]">{s.billingOwner}</span>
-
-                <span className="text-[#71717a]">Cadence</span>
-                <span className="text-[#e4e4e7]">{s.cadence}</span>
-
-                {s.blockers.filter((b) => b !== 'none').length > 0 && (
-                  <>
-                    <span className="text-[#71717a]">Blocker</span>
-                    <span className="text-[#e4e4e7]">
-                      {s.blockers.filter((b) => b !== 'none').join(', ')}
-                    </span>
-                  </>
-                )}
-
-                <span className="text-[#71717a]">Notes</span>
-                <span className="text-[#a1a1aa] leading-relaxed">{s.notes}</span>
-              </div>
-            </li>
-          ))}
-        </ul>
       </AdminCard>
+
+      {/* Filter + summary + cards + export (client) */}
+      <ServicesClient services={services} />
 
       {/* Safety */}
       <AdminCard title="What this page never does">
@@ -106,35 +66,6 @@ export default function ServicesPage() {
           <li>· Renewal dates and amounts live on the Renewals page, not here.</li>
         </ul>
       </AdminCard>
-    </div>
-  );
-}
-
-function StatusTile({
-  label,
-  value,
-  tone,
-}: {
-  label: string;
-  value: number;
-  tone: 'neutral' | 'green' | 'amber' | 'rose' | 'blue';
-}) {
-  const ring =
-    tone === 'green'
-      ? 'border-emerald-400/30 bg-emerald-400/5'
-      : tone === 'amber'
-        ? 'border-amber-400/30 bg-amber-400/5'
-        : tone === 'rose'
-          ? 'border-rose-400/30 bg-rose-400/5'
-          : tone === 'blue'
-            ? 'border-sky-400/30 bg-sky-400/5'
-            : 'border-[#27272a] bg-[#0e0e10]';
-  return (
-    <div className={`rounded-2xl border p-4 ${ring}`}>
-      <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.18em] text-[#71717a]">
-        {label}
-      </p>
-      <p className="text-2xl font-semibold text-[#f5f5f5]">{value}</p>
     </div>
   );
 }

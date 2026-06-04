@@ -83,6 +83,22 @@ export const RUNBOOK_CATALOG: RunbookEntry[] = [
       'Short, practical companion to /admin/ops/activation: how the 27-step page computes status, how the import rehearsal on /admin/ops/review works, and how to read validation findings without confusing them with blockers.',
     topics: ['activation', 'hardening', 'tokens', 'sync', 'validation', 'rehearsal'],
   },
+  {
+    slug: 'ops-commercial-services',
+    path: 'docs/runbooks/ops-commercial-services.md',
+    title: 'Commercial services and billing owners',
+    description:
+      'How the Services page tracks supplier services and subscriptions, why billing owner is the single most important field, and what to walk during the commercial preflight before go-live.',
+    topics: ['services', 'subscriptions', 'billing', 'commercial', 'suppliers', 'preflight'],
+  },
+  {
+    slug: 'ops-local-email-references',
+    path: 'docs/runbooks/ops-local-email-references.md',
+    title: 'Local-only email references',
+    description:
+      'Browser-only email reference workspace on /admin/ops/emails — what is captured, where it lives (localStorage, never the network), how to export, and the planned migration path when the database is connected.',
+    topics: ['emails', 'local-state', 'localStorage', 'preview', 'manual-refs', 'export'],
+  },
 ];
 
 export function findRunbook(slug: string): RunbookEntry | undefined {

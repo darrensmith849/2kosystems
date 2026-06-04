@@ -9,6 +9,7 @@ import {
   isItemActive,
   type OpsNavItem,
 } from './opsNavData';
+import { OPS_NAV_ICONS } from '@/components/admin-ui/icons';
 
 // Compact top bar shown below the lg breakpoint. The full grouped nav lives
 // inside an expand/collapse panel beneath the bar — no off-canvas drawer,
@@ -115,6 +116,7 @@ export default function OpsMobileBar({ operatorSlug }: { operatorSlug: string })
                 {OPS_NAV_GROUPS[0].items.map((item) => {
                   const active = isItemActive(pathname, item);
                   const isExternalConsole = !item.href.startsWith('/admin/ops');
+                  const IconCmp = item.icon ? OPS_NAV_ICONS[item.icon] : undefined;
                   return (
                     <li key={`console:${item.href}`}>
                       <Link
@@ -127,7 +129,16 @@ export default function OpsMobileBar({ operatorSlug }: { operatorSlug: string })
                             : 'text-[#a1a1aa] hover:text-[#f5f5f5] hover:bg-neutral-800/40 border-transparent'
                         }`}
                       >
-                        <span>{item.label}</span>
+                        <span className="flex items-center gap-2 min-w-0">
+                          {IconCmp && (
+                            <IconCmp
+                              className={`h-4 w-4 shrink-0 ${
+                                active ? 'text-emerald-300' : 'text-zinc-500'
+                              }`}
+                            />
+                          )}
+                          <span className="truncate">{item.label}</span>
+                        </span>
                         {isExternalConsole && (
                           <span
                             aria-hidden="true"
@@ -151,19 +162,27 @@ export default function OpsMobileBar({ operatorSlug }: { operatorSlug: string })
               <div className="grid grid-cols-2 gap-1.5">
                 {pinned.map((item) => {
                   const active = isItemActive(pathname, item);
+                  const IconCmp = item.icon ? OPS_NAV_ICONS[item.icon] : undefined;
                   return (
                     <Link
                       key={`pin:${item.href}`}
                       href={item.href}
                       onClick={() => setOpen(false)}
                       aria-current={active ? 'page' : undefined}
-                      className={`px-2 py-2 text-sm rounded border transition-colors text-center ${
+                      className={`px-2 py-2 text-sm rounded border transition-colors flex items-center justify-center gap-2 ${
                         active
                           ? 'bg-neutral-800/80 text-emerald-300 border-emerald-400/60 font-medium'
                           : 'text-[#e4e4e7] border-[#27272a] hover:bg-neutral-800/40 hover:text-[#f5f5f5]'
                       }`}
                     >
-                      {item.label}
+                      {IconCmp && (
+                        <IconCmp
+                          className={`h-4 w-4 shrink-0 ${
+                            active ? 'text-emerald-300' : 'text-zinc-500'
+                          }`}
+                        />
+                      )}
+                      <span className="truncate">{item.label}</span>
                     </Link>
                   );
                 })}
@@ -205,6 +224,7 @@ export default function OpsMobileBar({ operatorSlug }: { operatorSlug: string })
                         <ul className="space-y-0.5">
                           {itemsToShow.map((item) => {
                             const active = isItemActive(pathname, item);
+                            const IconCmp = item.icon ? OPS_NAV_ICONS[item.icon] : undefined;
                             return (
                               <li key={`${group.title}:${item.href}`}>
                                 <Link
@@ -217,7 +237,16 @@ export default function OpsMobileBar({ operatorSlug }: { operatorSlug: string })
                                       : 'text-[#a1a1aa] hover:text-[#f5f5f5] hover:bg-neutral-800/40 border-transparent'
                                   }`}
                                 >
-                                  <span>{item.label}</span>
+                                  <span className="flex items-center gap-2 min-w-0">
+                                    {IconCmp && (
+                                      <IconCmp
+                                        className={`h-4 w-4 shrink-0 ${
+                                          active ? 'text-emerald-300' : 'text-zinc-500'
+                                        }`}
+                                      />
+                                    )}
+                                    <span className="truncate">{item.label}</span>
+                                  </span>
                                 </Link>
                               </li>
                             );
