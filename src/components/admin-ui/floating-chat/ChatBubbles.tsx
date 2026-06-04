@@ -192,7 +192,15 @@ export function ChatBubbles({
                   ))}
                 </div>
               )}
-              <div className="space-y-1">{renderMarkdownLite(m.content)}</div>
+              <div className="space-y-1">
+                {renderMarkdownLite(
+                  (m.content ?? '').trim().length > 0
+                    ? m.content
+                    : (m.sources && m.sources.length > 0
+                        ? "Here's what I found in the dashboard data."
+                        : "I don't have anything matching that yet in the dashboard."),
+                )}
+              </div>
               {m.sources && <SourceCards sources={m.sources} />}
               {isLast && m.followUps && m.followUps.length > 0 && onFollowUpClick && (
                 <div className="mt-3 pt-3 border-t border-[#1c1c1e]">

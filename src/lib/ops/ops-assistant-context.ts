@@ -86,72 +86,316 @@ const TYPE_ORDER: IndexItem['type'][] = [
   'runbook',
 ];
 
-function formatSourceTag(source: IndexItem['source']): string {
-  if (source === 'snapshot') return '_(snapshot)_';
-  if (source === 'db') return '_(live)_';
-  if (source === 'docs') return '_(docs)_';
-  return '_(readiness)_';
-}
-
-function formatExtras(item: IndexItem): string {
-  const parts: string[] = [];
-  if (item.status) parts.push(`status=${item.status}`);
-  if (item.confidence && item.confidence !== 'confirmed') parts.push(`confidence=${item.confidence}`);
-  if (item.blockedBy && item.blockedBy.length > 0) parts.push(`blocked by ${item.blockedBy.join('/')}`);
-  return parts.length === 0 ? '' : ` — ${parts.join(', ')}`;
-}
-
 // --------------------------------------------------------------- Fallback answer
+//
+// In search-only mode (no AI key) this builder is what the user actually
+// sees as the assistant's reply. It MUST read like a real chat answer, not a
+// database dump. We detect intent from the question and produce a short
+// conversational paragraph followed by a tight bulleted summary and a link
+// back to the relevant dashboard section. Generic queries fall back to a
+// grouped summary that still leads with prose, not a bare list of records.
+
+type IntentKey =
+  | 'blocking_activation'
+  | 'belongs_to'
+  | 'on_server'
+  | 'dormant_vercel'
+  | 'duplicate_repos'
+  | 'renewals_upcoming'
+  | 'incidents_attention'
+  | 'before_db_work'
+  | 'generic';
+
+function detectIntent(question: string): IntentKey {
+  const q = question.toLowerCase();
+  if (
+    /(block|blocker|holding|stopping|preventing).*activat/.test(q) ||
+    /activat.*(block|blocker|holding|stopping|preventing|left|outstanding|remaining|next step)/.test(q) ||
+    /what (is|are|am i) (blocking|blocked|preventing|stopping)/.test(q)
+  ) {
+    return 'blocking_activation';
+  }
+  if (/(belong|owned by|part of|under)\s+/.test(q) || /what.*(in|under|owned by|part of)\s+(sigma|2ko|six|client|division)/.test(q)) {
+    return 'belongs_to';
+  }
+  if (/ma130[-_]?(apps|data|tori)/.test(q) || /\bon ma130\b/.test(q) || /running on ma130/.test(q) || /what.*(hetzner|server).*(host|run)/.test(q)) {
+    return 'on_server';
+  }
+  if (/dormant.*vercel|vercel.*dormant|sleeping.*vercel|vercel.*sleeping/.test(q)) {
+    return 'dormant_vercel';
+  }
+  if (/duplicat.*(repo|github)|(repo|github).*duplicat/.test(q)) {
+    return 'duplicate_repos';
+  }
+  if (/renewal|expir|renew\b/.test(q)) {
+    return 'renewals_upcoming';
+  }
+  if (/incident/.test(q) || /(outage|down|issue).*(need|attention|active|open|unresolved)/.test(q)) {
+    return 'incidents_attention';
+  }
+  if (
+    /(before|until|while).*(db|database).*(connect|live|online|set up)/.test(q) ||
+    /(before|until|while).*(connect|live|online).*(db|database)/.test(q) ||
+    /what can i (do|work on|safely)/.test(q) ||
+    /what.*work on.*before/.test(q)
+  ) {
+    return 'before_db_work';
+  }
+  return 'generic';
+}
+
+function friendlyBlocker(raw: string): string {
+  const map: Record<string, string> = {
+    env: 'environment credentials',
+    db: 'the database connection',
+    ssh: 'Hetzner SSH access',
+    human: 'a human decision',
+    github_token: 'a GitHub token',
+    vercel_token: 'a Vercel token',
+    cloudflare_token: 'a Cloudflare token',
+    hetzner_token: 'a Hetzner token',
+  };
+  if (map[raw]) return map[raw];
+  return raw.replace(/_/g, ' ');
+}
+
+function linkFor(item: IndexItem): string {
+  return item.url ? `[${item.title}](${item.url})` : item.title;
+}
+
+function answerBlockingActivation(items: IndexItem[]): string | null {
+  const steps = items.filter((i) => i.type === 'activation_step');
+  if (steps.length === 0) return null;
+  // Items already include the open ones; we surface those that have blockedBy.
+  const open = steps.filter((s) => (s.blockedBy ?? []).length > 0);
+  const blockers = new Set<string>();
+  for (const s of open) for (const b of s.blockedBy ?? []) blockers.add(b);
+  const friendly = Array.from(new Set(Array.from(blockers).map(friendlyBlocker)));
+
+  const lines: string[] = [];
+  if (friendly.length === 0) {
+    lines.push("Activation still has steps to work through, though the dashboard doesn't list specific blockers right now.");
+  } else if (friendly.length <= 3) {
+    lines.push(`Activation is mainly waiting on ${friendly.join(', ')}. Once those are in place, the live database can be connected.`);
+  } else {
+    lines.push(`Activation is mainly blocked by the database connection and the provider credentials. The key blockers are: ${friendly.slice(0, 6).join(', ')}.`);
+  }
+  lines.push('');
+  if (open.length > 0) {
+    lines.push('**Steps still open**');
+    for (const s of open.slice(0, 8)) lines.push(`- ${linkFor(s)}`);
+    lines.push('');
+  }
+  lines.push('You can review the full checklist on [Activation](/admin/ops/activation).');
+  return lines.join('\n');
+}
+
+function answerBelongsTo(items: IndexItem[]): string | null {
+  if (items.length === 0) return null;
+  const lines: string[] = [];
+  lines.push("Here's what the dashboard knows about that:");
+  lines.push('');
+  let shown = 0;
+  for (const t of TYPE_ORDER) {
+    const group = items.filter((i) => i.type === t);
+    if (group.length === 0) continue;
+    lines.push(`**${TYPE_LABEL[t]}**`);
+    for (const i of group.slice(0, 6)) {
+      lines.push(`- ${linkFor(i)}`);
+      shown++;
+      if (shown >= 18) break;
+    }
+    lines.push('');
+    if (shown >= 18) break;
+  }
+  lines.push('Open the full record from any link above.');
+  return lines.join('\n');
+}
+
+function answerOnServer(items: IndexItem[], question: string): string | null {
+  const assets = items.filter((i) => i.type === 'asset' || i.type === 'hetzner_server');
+  if (assets.length === 0) return null;
+  const serverGuess = /ma130-(apps|data|tori)/.exec(question.toLowerCase())?.[0] ?? 'the requested server';
+  const lines: string[] = [];
+  lines.push(`Here's what the dashboard shows running on ${serverGuess}:`);
+  lines.push('');
+  for (const a of assets.slice(0, 10)) lines.push(`- ${linkFor(a)}`);
+  lines.push('');
+  lines.push('See [Infrastructure](/admin/ops/infrastructure) for the full server view.');
+  return lines.join('\n');
+}
+
+function answerDormantVercel(items: IndexItem[]): string | null {
+  const projects = items.filter((i) => i.type === 'vercel_project');
+  if (projects.length === 0) return null;
+  const dormant = projects.filter((p) => /dormant|sleep|inactive/.test((p.status ?? '').toLowerCase()));
+  const list = dormant.length > 0 ? dormant : projects;
+  const lines: string[] = [];
+  if (dormant.length > 0) {
+    lines.push(`These Vercel projects are marked dormant in the dashboard:`);
+  } else {
+    lines.push(`Here are Vercel projects worth a look — none are explicitly tagged dormant yet:`);
+  }
+  lines.push('');
+  for (const p of list.slice(0, 10)) lines.push(`- ${linkFor(p)}${p.status ? ` — _${p.status}_` : ''}`);
+  lines.push('');
+  lines.push('Open [Vercel](/admin/ops/vercel) to filter by state and plan cleanup.');
+  return lines.join('\n');
+}
+
+function answerDuplicateRepos(items: IndexItem[]): string | null {
+  const repos = items.filter((i) => i.type === 'github_repo');
+  if (repos.length === 0) return null;
+  const lines: string[] = [];
+  lines.push("Here are the repo clusters where the dashboard sees duplicates worth resolving:");
+  lines.push('');
+  for (const r of repos.slice(0, 10)) {
+    const extras: string[] = [];
+    if (r.confidence) extras.push(r.confidence.replace(/_/g, ' '));
+    if (r.status) extras.push(r.status);
+    const tail = extras.length ? ` — ${extras.join(', ')}` : '';
+    lines.push(`- ${linkFor(r)}${tail}`);
+  }
+  lines.push('');
+  lines.push('Pick the canonical repo on [GitHub](/admin/ops/github); the others can be archived later.');
+  return lines.join('\n');
+}
+
+function answerRenewals(items: IndexItem[]): string | null {
+  const renewals = items.filter((i) => i.type === 'renewal');
+  if (renewals.length === 0) return null;
+  const lines: string[] = [];
+  lines.push("Here are the upcoming renewals the dashboard knows about:");
+  lines.push('');
+  for (const r of renewals.slice(0, 10)) {
+    lines.push(`- ${linkFor(r)}${r.status ? ` — ${r.status}` : ''}`);
+  }
+  lines.push('');
+  lines.push('Full calendar on [Renewals](/admin/ops/renewals).');
+  return lines.join('\n');
+}
+
+function answerIncidents(items: IndexItem[]): string | null {
+  const incidents = items.filter((i) => i.type === 'incident');
+  if (incidents.length === 0) return null;
+  const open = incidents.filter((i) => !/resolved|closed|done/i.test(i.status ?? ''));
+  const list = open.length > 0 ? open : incidents;
+  const lines: string[] = [];
+  lines.push(open.length > 0 ? "These incidents still need attention:" : "Here are incidents the dashboard is tracking:");
+  lines.push('');
+  for (const i of list.slice(0, 10)) {
+    lines.push(`- ${linkFor(i)}${i.status ? ` — ${i.status}` : ''}`);
+  }
+  lines.push('');
+  lines.push('Open [Incidents](/admin/ops/incidents) for the full timeline.');
+  return lines.join('\n');
+}
+
+function answerBeforeDb(items: IndexItem[]): string {
+  const decisions = items.filter((i) => i.type === 'review_decision');
+  const audits = items.filter((i) => i.type === 'audit_finding');
+  const runbooks = items.filter((i) => i.type === 'runbook');
+  const steps = items.filter((i) => i.type === 'activation_step');
+
+  const lines: string[] = [];
+  lines.push(
+    'Plenty is still actionable before the database is connected. The dashboard is read-only today, but you can triage decisions, work through the activation checklist, and review audit findings — all of that survives once the live DB comes online.',
+  );
+  lines.push('');
+  if (decisions.length > 0) {
+    lines.push('**Open decisions to settle**');
+    for (const d of decisions.slice(0, 5)) lines.push(`- ${linkFor(d)}`);
+    lines.push('');
+  }
+  if (steps.length > 0) {
+    lines.push('**Activation steps you can prep**');
+    for (const s of steps.slice(0, 5)) lines.push(`- ${linkFor(s)}`);
+    lines.push('');
+  }
+  if (audits.length > 0) {
+    lines.push('**Audit findings worth a look**');
+    for (const a of audits.slice(0, 5)) lines.push(`- ${linkFor(a)}`);
+    lines.push('');
+  }
+  if (runbooks.length > 0) {
+    lines.push('**Runbooks for the next steps**');
+    for (const r of runbooks.slice(0, 4)) lines.push(`- ${linkFor(r)}`);
+    lines.push('');
+  }
+  lines.push('Start on [Review](/admin/ops/review) and [Activation](/admin/ops/activation).');
+  return lines.join('\n');
+}
+
+function answerGeneric(items: IndexItem[]): string {
+  if (items.length === 0) {
+    return "I couldn't find anything in the dashboard that matches that. Try one of the suggested prompts, or rephrase your question — I can search clients, assets, repos, Vercel projects, Hetzner servers, renewals, incidents, audit findings, and activation steps.";
+  }
+  const lines: string[] = [];
+  lines.push("Here's what I found in the dashboard data:");
+  lines.push('');
+  let shown = 0;
+  for (const t of TYPE_ORDER) {
+    const group = items.filter((i) => i.type === t);
+    if (group.length === 0) continue;
+    lines.push(`**${TYPE_LABEL[t]}**`);
+    for (const i of group.slice(0, 5)) {
+      lines.push(`- ${linkFor(i)}`);
+      shown++;
+      if (shown >= 18) break;
+    }
+    lines.push('');
+    if (shown >= 18) break;
+  }
+  return lines.join('\n');
+}
 
 export function buildFallbackAnswer(
   question: string,
   results: SearchResult[],
   warnings: AssistantWarning[],
 ): string {
-  // The 'question' parameter is part of the signature so future versions
-  // can echo it. Currently the deterministic answer is purely structural.
-  void question;
+  const items = results.map((r) => r.item);
+  const intent = detectIntent(question);
 
-  const lines: string[] = [];
-
-  if (warnings.includes('ai_key_missing')) {
-    lines.push('AI response disabled — showing grounded search results instead.');
-    lines.push('');
+  let body: string | null = null;
+  switch (intent) {
+    case 'blocking_activation':
+      body = answerBlockingActivation(items);
+      break;
+    case 'belongs_to':
+      body = answerBelongsTo(items);
+      break;
+    case 'on_server':
+      body = answerOnServer(items, question);
+      break;
+    case 'dormant_vercel':
+      body = answerDormantVercel(items);
+      break;
+    case 'duplicate_repos':
+      body = answerDuplicateRepos(items);
+      break;
+    case 'renewals_upcoming':
+      body = answerRenewals(items);
+      break;
+    case 'incidents_attention':
+      body = answerIncidents(items);
+      break;
+    case 'before_db_work':
+      body = answerBeforeDb(items);
+      break;
+    case 'generic':
+      body = null;
+      break;
   }
+  if (!body) body = answerGeneric(items);
 
-  if (results.length === 0) {
-    lines.push("I don't know from the dashboard data.");
-  } else {
-    lines.push(`Found ${results.length} result${results.length === 1 ? '' : 's'} matching your search:`);
-    lines.push('');
-
-    const byType = new Map<IndexItem['type'], SearchResult[]>();
-    for (const r of results) {
-      const list = byType.get(r.item.type) ?? [];
-      list.push(r);
-      byType.set(r.item.type, list);
-    }
-
-    for (const type of TYPE_ORDER) {
-      const group = byType.get(type);
-      if (!group || group.length === 0) continue;
-      lines.push(`**${TYPE_LABEL[type]}**`);
-      for (const r of group) {
-        const link = r.item.url ? `[${r.item.title}](${r.item.url})` : r.item.title;
-        const tag = formatSourceTag(r.item.source);
-        const extras = formatExtras(r.item);
-        lines.push(`- ${link} ${tag}${extras}`);
-      }
-      lines.push('');
-    }
-  }
-
+  // Footer: gentle preview-data note (no env-var jargon).
+  const footer: string[] = [];
   if (warnings.includes('snapshot_mode')) {
-    lines.push('');
-    lines.push('This is read-only snapshot data. Real DB activates next week per docs/runbooks/ops-hetzner-activation.md.');
+    footer.push('_This is preview data — the live database connection is being prepared._');
   }
-
-  return lines.join('\n').trim();
+  const out = footer.length > 0 ? `${body}\n\n${footer.join('\n')}` : body;
+  return out.trim();
 }
 
 // --------------------------------------------------------------- AI context block

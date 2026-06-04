@@ -676,7 +676,15 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
                         <Badge key={w} text={WARNING_LABEL[w]} tone={WARNING_TONE[w]} />
                       ))}
                     </div>
-                    <div className="space-y-1">{renderMarkdownLite(m.content)}</div>
+                    <div className="space-y-1">
+                      {renderMarkdownLite(
+                        (m.content ?? '').trim().length > 0
+                          ? m.content
+                          : (m.sources && m.sources.length > 0
+                              ? "Here's what I found in the dashboard data."
+                              : "I don't have anything matching that yet in the dashboard."),
+                      )}
+                    </div>
                     {m.sources && <SourceCards sources={m.sources} />}
                     {isLast && m.followUps && m.followUps.length > 0 && (
                       <div className="mt-3 pt-3 border-t border-[#1c1c1e]">
@@ -705,7 +713,7 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
               <div className="flex justify-start">
                 <div className="rounded-2xl border border-[#27272a] bg-[#111113] px-4 py-2.5">
                   <p className="text-xs text-[#a1a1aa]">
-                    {stage === 'generating' ? 'Generating…' : 'Searching…'}
+                    {stage === 'generating' ? 'Thinking…' : 'Checking the dashboard…'}
                   </p>
                 </div>
               </div>

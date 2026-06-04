@@ -245,7 +245,7 @@ export function ChatPanel({
             messages={messages}
             onFollowUpClick={(p) => void send(p)}
             busy={busy}
-            busyLabel={stage === 'generating' ? 'Generating…' : 'Searching…'}
+            busyLabel={stage === 'generating' ? 'Thinking…' : 'Checking the dashboard…'}
           />
         )}
 
