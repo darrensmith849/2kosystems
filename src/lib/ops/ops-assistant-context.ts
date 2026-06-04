@@ -29,6 +29,99 @@ export function isAiKeyConfigured(): boolean {
   return Boolean(process.env.ANTHROPIC_API_KEY);
 }
 
+// --------------------------------------------------------------- Assistant intent
+//
+// Before the route runs any dashboard search, classify whether the input is a
+// real dashboard question vs. small talk. Greetings / thanks / capability
+// questions / pure punctuation should return a friendly canned reply with
+// NO source cards — otherwise the user sees random SigmaPhi-or-whatever
+// records for a friendly "hi". Only `dashboard_search` continues to the
+// retrieval pipeline.
+
+export type AssistantIntent =
+  | 'greeting'
+  | 'thanks'
+  | 'capabilities'
+  | 'help'
+  | 'too_short'
+  | 'dashboard_search';
+
+// Anchored patterns — must match the WHOLE trimmed message (allowing trailing
+// punctuation) so that "hi there how do I do X?" still routes to search.
+const GREETING_PATTERNS: RegExp[] = [
+  /^(hi|hello|hey|yo|hiya|howdy|sup)(\s+(there|bot|assistant|2ko|team))?[!?.,\s]*$/,
+  /^good\s+(morning|afternoon|evening|day)(\s+(there|bot|assistant|2ko))?[!?.,\s]*$/,
+  /^(hi|hello|hey)\s+2ko[!?.,\s]*$/,
+];
+
+const THANKS_PATTERNS: RegExp[] = [
+  /^(thanks|thank\s+you|thx|ty|cheers|ta|much\s+appreciated|appreciated)(\s+(so\s+much|a\s+lot|very\s+much|mate|friend|2ko))?[!?.,\s]*$/,
+  /^(ok\s+)?(thanks|thank\s+you)[!?.,\s]*$/,
+];
+
+const CAPABILITIES_PATTERNS: RegExp[] = [
+  /^what\s+can\s+you\s+do[?.,\s!]*$/,
+  /^what\s+do\s+you\s+do[?.,\s!]*$/,
+  /^what\s+(else\s+)?(can|could)\s+you\s+help(\s+(me|with))?[?.,\s!]*$/,
+  /^how\s+(can|do)\s+you\s+help(\s+me)?[?.,\s!]*$/,
+  /^who\s+are\s+you[?.,\s!]*$/,
+  /^what\s+are\s+you[?.,\s!]*$/,
+  /^how\s+do\s+you\s+work[?.,\s!]*$/,
+  /^what\s+do\s+you\s+know[?.,\s!]*$/,
+];
+
+const HELP_PATTERNS: RegExp[] = [
+  /^help[?.,\s!]*$/,
+  /^(can\s+you\s+)?help(\s+me)?[?.,\s!]*$/,
+  /^i\s+need\s+help[?.,\s!]*$/,
+];
+
+export function detectAssistantIntent(raw: string): AssistantIntent {
+  const trimmed = (raw ?? '').trim();
+  if (trimmed.length === 0) return 'too_short';
+
+  const q = trimmed.toLowerCase();
+
+  // Capabilities first — multi-word, specific. Beats greeting if the user
+  // wrote "hi what can you do".
+  for (const re of CAPABILITIES_PATTERNS) if (re.test(q)) return 'capabilities';
+  for (const re of HELP_PATTERNS) if (re.test(q)) return 'help';
+  for (const re of THANKS_PATTERNS) if (re.test(q)) return 'thanks';
+  for (const re of GREETING_PATTERNS) if (re.test(q)) return 'greeting';
+
+  // Punctuation-only OR < 3 chars and not a known token → too short.
+  if (/^[\s\p{P}\p{S}]+$/u.test(trimmed)) return 'too_short';
+  if (trimmed.length <= 2) return 'too_short';
+
+  return 'dashboard_search';
+}
+
+// Quick-start chips offered alongside small-talk replies so the user has an
+// obvious next action. These mirror the prompt-chip list shown on first
+// open of the floating widget / Ask page.
+export const SMALL_TALK_SUGGESTIONS: readonly string[] = [
+  'What is blocking activation?',
+  'What belongs to SigmaPhi?',
+  'Show me upcoming renewals.',
+] as const;
+
+export function buildSmallTalkAnswer(
+  intent: Exclude<AssistantIntent, 'dashboard_search'>,
+): string {
+  switch (intent) {
+    case 'greeting':
+      return "Hi! I'm your 2KO Ops Assistant. Ask me about clients, assets, repos, Vercel projects, Hetzner servers, renewals, incidents, decisions, or activation blockers.";
+    case 'thanks':
+      return "Pleasure — I'm here when you need to search the dashboard.";
+    case 'capabilities':
+      return "I can help you search and understand the Ops Dashboard. You can ask things like: what is blocking activation, what belongs to SigmaPhi, which Vercel projects are dormant, what is on ma130-apps, or which renewals need attention.";
+    case 'help':
+      return "Ask me what you want to find in the dashboard — for example, what is blocking activation, which Vercel projects are dormant, or show me Impart assets.";
+    case 'too_short':
+      return "Ask me what you want to find in the dashboard — for example, \"show me Impart assets\" or \"what is blocking activation?\"";
+  }
+}
+
 // --------------------------------------------------------------- System prompt
 
 export const SYSTEM_PROMPT = [

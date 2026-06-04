@@ -12,6 +12,9 @@ import {
   isAiKeyConfigured,
   buildFallbackAnswer,
   buildAiContextBlock,
+  buildSmallTalkAnswer,
+  detectAssistantIntent,
+  SMALL_TALK_SUGGESTIONS,
   type AssistantAnswer,
   type AssistantSource,
   type AssistantWarning,
@@ -205,6 +208,25 @@ export async function POST(request: NextRequest) {
   // `history` is accepted but intentionally unused this iteration — keeping the
   // schema forward-compatible so a later commit can wire multi-turn into the
   // Anthropic messages array without another client-side change.
+
+  // 0. Intent gate. Greetings, thanks, capability questions, and very-short
+  //    inputs short-circuit BEFORE any dashboard search so the user never
+  //    sees random source cards in response to "hi" or "thanks".
+  const intent = detectAssistantIntent(question);
+  if (intent !== 'dashboard_search') {
+    const smallTalkWarnings: AssistantWarning[] = [];
+    if (!isDbConfigured()) smallTalkWarnings.push('db_missing');
+    if (!isAiKeyConfigured()) smallTalkWarnings.push('ai_key_missing');
+    if (!isDbConfigured()) smallTalkWarnings.push('snapshot_mode');
+    const payload: AssistantAnswer = {
+      mode: isAiKeyConfigured() ? 'ai' : 'search_only',
+      answer: buildSmallTalkAnswer(intent),
+      warnings: smallTalkWarnings,
+      sources: [],
+      followUps: [...SMALL_TALK_SUGGESTIONS],
+    };
+    return NextResponse.json(payload);
+  }
 
   // 1. Run search.
   const searchFilters = { ...(filters ?? {}), q: question };
