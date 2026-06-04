@@ -1,6 +1,7 @@
 import 'server-only';
 
 import type { IndexItem } from './ops-knowledge-index';
+import { ACTIVATION_STEPS } from './ops-knowledge-index';
 import type { SearchResult } from './ops-search';
 
 // --------------------------------------------------------------- Public types
@@ -195,6 +196,12 @@ const TYPE_ORDER: IndexItem['type'][] = [
 // grouped summary that still leads with prose, not a bare list of records.
 
 type IntentKey =
+  | 'what_next'
+  | 'work_today'
+  | 'whats_blocked'
+  | 'which_pages'
+  | 'dashboard_status_summary'
+  | 'missing_before_golive'
   | 'blocking_activation'
   | 'belongs_to'
   | 'on_server'
@@ -213,6 +220,65 @@ type IntentKey =
 
 function detectIntent(question: string): IntentKey {
   const q = question.toLowerCase();
+
+  // Operational intents — these are the highest-precedence matchers so that
+  // a phrase like "what's missing before go-live" routes here instead of
+  // being captured by the broader "what is blocking activation" matcher
+  // further down. Each pattern is anchored or scoped tightly enough to
+  // avoid catching adjacent intents.
+
+  if (
+    /missing\s+before\s+go.?live/.test(q) ||
+    /before\s+(we\s+)?(can\s+)?(go\s+live|launch)/.test(q) ||
+    /(launch|go.?live)\s+(checklist|gaps?|requirements?)/.test(q) ||
+    /are\s+we\s+ready\s+(to\s+)?(go.?live|launch)/.test(q) ||
+    /pre.?launch\s+(checklist|gaps?|status)/.test(q) ||
+    /what\s+do\s+we\s+need\s+before\s+(go.?live|launch)/.test(q)
+  ) {
+    return 'missing_before_golive';
+  }
+  if (
+    /(summari[sz]e|summary)(\s+(the|of|me))?\s+(the\s+)?(dashboard|ops|activation|status|state)/.test(q) ||
+    /(give|show)\s+(me\s+)?(a\s+)?(status|summary)/.test(q) ||
+    /overall\s+(status|state|health)/.test(q) ||
+    /how\s+(are\s+we|is\s+it|is\s+the\s+dashboard)\s+(doing|going|going on)/.test(q) ||
+    /state\s+of\s+the\s+(dashboard|ops)/.test(q)
+  ) {
+    return 'dashboard_status_summary';
+  }
+  if (
+    /^what(\s+is|s|’s)?\s+blocked\b/.test(q) ||
+    /^which\s+(items?|steps?|things?)\s+are\s+blocked/.test(q) ||
+    /^(what\s+are\s+)?(the\s+)?blockers?\b/.test(q) ||
+    /what(\s+is|s|’s)?\s+holding\s+(it|us|the\s+dashboard)\s+up/.test(q)
+  ) {
+    return 'whats_blocked';
+  }
+  if (
+    /^what\s+should\s+i\s+do\s+next/.test(q) ||
+    /^what(\s+is|s|’s)?\s+next/.test(q) ||
+    /^what(\s+do\s+i\s+do)?\s+now\b/.test(q) ||
+    /^next\s+step(s)?\b/.test(q) ||
+    /^what\s+do\s+i\s+do\s+next/.test(q)
+  ) {
+    return 'what_next';
+  }
+  if (
+    /what\s+can\s+i\s+(safely\s+)?work\s+on\s+today/.test(q) ||
+    /what\s+can\s+i\s+do\s+today/.test(q) ||
+    /safe\s+to\s+work\s+on\s+(today|now)/.test(q) ||
+    /^(any|what)\s+work\s+for\s+today/.test(q)
+  ) {
+    return 'work_today';
+  }
+  if (
+    /which\s+page(s)?\s+(should|do)\s+i\s+(check|look|visit)/.test(q) ||
+    /^where\s+(do|should)\s+i\s+(check|look|go|start)/.test(q) ||
+    /where\s+to\s+(look|start|begin)/.test(q) ||
+    /which\s+(dashboard\s+)?page(s)?\s+(are\s+)?(most\s+)?(useful|relevant)/.test(q)
+  ) {
+    return 'which_pages';
+  }
 
   // Email-linking specific intents come first so phrases like "Where are
   // billing emails tracked?" or "Is email linking active?" don't get
@@ -582,6 +648,336 @@ function answerContactsNeeded(items: IndexItem[]): string {
   return lines.join('\n');
 }
 
+// ---------------------------------------------------------------- Operational intents
+//
+// These six intents do not depend on search results — they read the
+// activation step list directly. Search results are still passed in so the
+// builders can cite related items (open decisions, audit findings) when
+// they're present, but the prose itself is built from the static activation
+// data so the answers are stable in preview mode.
+
+const OPTIONAL_ACTIVATION_GROUPS = new Set<string>(['Optional later']);
+
+type ActivationLite = {
+  id: string;
+  label: string;
+  group: string;
+  done: boolean;
+  blockedBy: string[];
+  note?: string;
+};
+
+function activationListLite(): ActivationLite[] {
+  return ACTIVATION_STEPS.map((s) => ({
+    id: s.id,
+    label: s.label,
+    group: s.group,
+    done: s.done,
+    blockedBy: s.blockedBy,
+    note: s.note,
+  }));
+}
+
+function activationStepLink(s: ActivationLite): string {
+  // Activation steps live on /admin/ops/activation. We anchor by step id
+  // even though the page currently uses numeric headings — the id keeps the
+  // link stable across future renumbering.
+  return `[${s.label}](/admin/ops/activation#${s.id})`;
+}
+
+function envForBlocker(token: string): string | null {
+  switch (token) {
+    case 'github_token':
+      return 'GITHUB_TOKEN';
+    case 'vercel_token':
+      return 'VERCEL_API_TOKEN';
+    case 'cloudflare_token':
+      return 'CLOUDFLARE_API_TOKEN';
+    case 'hetzner_token':
+      return 'HETZNER_API_TOKEN';
+    default:
+      return null;
+  }
+}
+
+function tokenSatisfied(token: string): boolean {
+  // 'env' / 'db' / 'ssh' / 'human' are operator-visible state — we can't
+  // confirm them from the dashboard. We only resolve provider-token blockers
+  // by checking the corresponding env var presence.
+  const name = envForBlocker(token);
+  if (!name) return false;
+  return Boolean(process.env[name]);
+}
+
+function isStepReady(s: ActivationLite): boolean {
+  // A step is "ready to work on now" when every blocker is either already
+  // satisfied (env var present) or is `human` (operator-driven decision).
+  if (s.done) return false;
+  if (s.blockedBy.length === 0) return true;
+  return s.blockedBy.every((b) => b === 'human' || tokenSatisfied(b));
+}
+
+function answerWhatNext(items: IndexItem[]): string {
+  const steps = activationListLite();
+  const pending = steps.filter((s) => !s.done);
+  if (pending.length === 0) {
+    return [
+      "Activation looks complete from where the dashboard sits. There are no pending steps in the activation list.",
+      '',
+      'Open [Activation](/admin/ops/activation) for the full checklist or [Health](/admin/ops/health) to confirm every integration is reporting green.',
+    ].join('\n');
+  }
+
+  // Prefer steps the operator can act on now: env-only blockers count as
+  // "ready" when the env is present; human-only steps are always actionable.
+  const ready = pending.filter(isStepReady);
+  const candidates = (ready.length > 0 ? ready : pending).slice(0, 5);
+
+  const lines: string[] = [];
+  if (ready.length > 0) {
+    lines.push(
+      `Do this next: **${candidates[0].label}**. It is the lowest-numbered step on the activation list that isn't waiting on something you haven't provisioned yet.`,
+    );
+  } else {
+    lines.push(
+      `The next pending step is **${candidates[0].label}**. It is still gated on ${candidates[0].blockedBy.map(friendlyBlocker).join(', ')}, so make sure that piece is in place first.`,
+    );
+  }
+  lines.push('');
+  lines.push('**Other candidates worth a look**');
+  for (const s of candidates.slice(1)) {
+    const tail = s.blockedBy.length > 0 ? ` — waiting on ${s.blockedBy.map(friendlyBlocker).join(', ')}` : '';
+    lines.push(`- ${activationStepLink(s)}${tail}`);
+  }
+  if (candidates.length <= 1) {
+    lines.push('- (no other ready steps right now)');
+  }
+  lines.push('');
+
+  // If we have related items from search (decisions, runbooks) mention them
+  // as a follow-on.
+  const decisions = items.filter((i) => i.type === 'review_decision');
+  if (decisions.length > 0) {
+    lines.push(`While you're there, there ${decisions.length === 1 ? 'is' : 'are'} ${decisions.length} open decision${decisions.length === 1 ? '' : 's'} on [Review](/admin/ops/review) that the team can settle in the browser.`);
+    lines.push('');
+  }
+
+  lines.push('Open [Activation](/admin/ops/activation) for the full 27-step view.');
+  return lines.join('\n');
+}
+
+function answerWorkToday(items: IndexItem[]): string {
+  const steps = activationListLite();
+  const humanFriendly = steps.filter(
+    (s) => !s.done && s.blockedBy.length > 0 && s.blockedBy.every((b) => b === 'human'),
+  );
+  const readyEnv = steps.filter(
+    (s) =>
+      !s.done &&
+      s.blockedBy.length > 0 &&
+      s.blockedBy.some((b) => b === 'human') === false &&
+      s.blockedBy.every((b) => tokenSatisfied(b) || b === 'env'),
+  );
+
+  const lines: string[] = [];
+  lines.push(
+    "Plenty is safe to work on today without waiting for a credential or for Hetzner. The dashboard tracks two kinds of work that operators can take in the browser: human decisions and items already gated only on env vars you've provisioned.",
+  );
+  lines.push('');
+
+  if (humanFriendly.length > 0) {
+    lines.push('**Decisions and reviews you can settle today**');
+    for (const s of humanFriendly.slice(0, 6)) lines.push(`- ${activationStepLink(s)}`);
+    lines.push('');
+  }
+  if (readyEnv.length > 0) {
+    lines.push('**Already unblocked — credentials are in place**');
+    for (const s of readyEnv.slice(0, 6)) lines.push(`- ${activationStepLink(s)}`);
+    lines.push('');
+  }
+  if (humanFriendly.length === 0 && readyEnv.length === 0) {
+    lines.push("Nothing on the activation list is fully unblocked right now — the next steps are all waiting on a credential, the database, or SSH access to ma130.");
+    lines.push('');
+  }
+
+  const decisions = items.filter((i) => i.type === 'review_decision');
+  if (decisions.length > 0) {
+    lines.push('**Open snapshot decisions**');
+    for (const d of decisions.slice(0, 5)) lines.push(`- ${linkFor(d)}`);
+    lines.push('');
+  }
+
+  lines.push('Start on [Review](/admin/ops/review) and [Activation](/admin/ops/activation).');
+  return lines.join('\n');
+}
+
+function answerWhatsBlocked(items: IndexItem[]): string {
+  const steps = activationListLite();
+  const open = steps.filter((s) => !s.done && s.blockedBy.length > 0);
+  const grouped = new Map<string, ActivationLite[]>();
+  for (const s of open) {
+    for (const b of s.blockedBy) {
+      const arr = grouped.get(b) ?? [];
+      arr.push(s);
+      grouped.set(b, arr);
+    }
+  }
+
+  const lines: string[] = [];
+  if (grouped.size === 0) {
+    lines.push("Nothing is currently blocked — every open step on the activation list has its blockers cleared.");
+    lines.push('');
+    lines.push("Open [Activation](/admin/ops/activation) to see what's pending.");
+    return lines.join('\n');
+  }
+
+  lines.push(
+    `There ${open.length === 1 ? 'is' : 'are'} ${open.length} open step${open.length === 1 ? '' : 's'} on the activation list. Grouped by blocker:`,
+  );
+  lines.push('');
+
+  // Stable order: env, db, ssh, human, provider tokens.
+  const order = ['env', 'db', 'ssh', 'human', 'github_token', 'vercel_token', 'cloudflare_token', 'hetzner_token'];
+  const seen = new Set<string>();
+  for (const key of order) {
+    const list = grouped.get(key);
+    if (!list || list.length === 0) continue;
+    seen.add(key);
+    const friendly = friendlyBlocker(key);
+    const sample = list[0];
+    lines.push(`- **${friendly}** — ${list.length} step${list.length === 1 ? '' : 's'} (e.g. ${activationStepLink(sample)})`);
+  }
+  for (const [key, list] of grouped.entries()) {
+    if (seen.has(key) || list.length === 0) continue;
+    const sample = list[0];
+    lines.push(`- **${friendlyBlocker(key)}** — ${list.length} step${list.length === 1 ? '' : 's'} (e.g. ${activationStepLink(sample)})`);
+  }
+  lines.push('');
+
+  // Surface high-signal audit findings as additional blockers.
+  const findings = items.filter((i) => i.type === 'audit_finding');
+  const highFindings = findings.filter((f) => /high|critical|error/i.test(f.status ?? '')).slice(0, 3);
+  if (highFindings.length > 0) {
+    lines.push('**Audit findings worth treating as blockers**');
+    for (const f of highFindings) lines.push(`- ${linkFor(f)}`);
+    lines.push('');
+  }
+
+  lines.push('Open [Activation](/admin/ops/activation) for the full breakdown.');
+  return lines.join('\n');
+}
+
+function answerWhichPages(_items: IndexItem[], snapshotMode: boolean): string {
+  const lines: string[] = [];
+  lines.push(
+    snapshotMode
+      ? "Right now the dashboard is in preview mode (snapshot data), so the most useful pages are the ones that let you prepare the import without making any changes."
+      : "The database is connected, so the most useful pages are the ones where you confirm each integration is reporting in.",
+  );
+  lines.push('');
+
+  if (snapshotMode) {
+    lines.push('**Start here**');
+    lines.push('- [Review](/admin/ops/review) — preview, rehearsal, and the import readiness card.');
+    lines.push('- [Activation](/admin/ops/activation) — the 27-step sequence from preview to live.');
+    lines.push('- [Health](/admin/ops/health) — confirm env vars and integration presence.');
+    lines.push('');
+    lines.push('**Also useful**');
+    lines.push('- [Overview](/admin/ops) — the at-a-glance summary.');
+    lines.push('- [Runbooks](/admin/ops/runbooks) — written guides for each setup step.');
+    lines.push('- [Emails](/admin/ops/emails) and [Services](/admin/ops/services) — confirm the planned-category lists look right before live data arrives.');
+  } else {
+    lines.push('**Start here**');
+    lines.push('- [Health](/admin/ops/health) — confirm each provider token is in place and the database is reporting ok.');
+    lines.push('- [Activation](/admin/ops/activation) — work through the remaining sync steps.');
+    lines.push('- [Reports](/admin/ops/reports) — current counts and status.');
+    lines.push('');
+    lines.push('**Also useful**');
+    lines.push('- [Overview](/admin/ops) — the at-a-glance summary.');
+    lines.push('- [Sync log](/admin/ops/sync-log) — confirm the latest sync runs completed.');
+    lines.push('- [Runbooks](/admin/ops/runbooks) — the same guides, now cross-referenced from the Activation page.');
+  }
+  return lines.join('\n');
+}
+
+function answerDashboardStatusSummary(items: IndexItem[], snapshotMode: boolean): string {
+  const steps = activationListLite();
+  const total = steps.length;
+  const done = steps.filter((s) => s.done).length;
+  const blockedHuman = steps.filter((s) => !s.done && s.blockedBy.includes('human')).length;
+  const blockedDb = steps.filter((s) => !s.done && s.blockedBy.includes('db')).length;
+  const blockedSsh = steps.filter((s) => !s.done && s.blockedBy.includes('ssh')).length;
+
+  const providerTokenStatus: Array<[string, boolean]> = [
+    ['GitHub', Boolean(process.env.GITHUB_TOKEN)],
+    ['Vercel', Boolean(process.env.VERCEL_API_TOKEN)],
+    ['Cloudflare', Boolean(process.env.CLOUDFLARE_API_TOKEN) && Boolean(process.env.CLOUDFLARE_ACCOUNT_ID)],
+    ['Hetzner', Boolean(process.env.HETZNER_API_TOKEN)],
+    ['Cron secret', Boolean(process.env.CRON_SECRET)],
+  ];
+  const presentNames = providerTokenStatus.filter(([, v]) => v).map(([n]) => n);
+  const missingNames = providerTokenStatus.filter(([, v]) => !v).map(([n]) => n);
+
+  const decisions = items.filter((i) => i.type === 'review_decision').length;
+  const findings = items.filter((i) => i.type === 'audit_finding').length;
+
+  const lines: string[] = [];
+  lines.push(
+    snapshotMode
+      ? "The dashboard is in preview mode (snapshot data). The live database has not been connected yet, so every page reads from the bundled snapshot."
+      : "The database is connected. Pages now read from the live database; preview mode is off.",
+  );
+  lines.push('');
+  lines.push(`**Activation** — ${done} of ${total} steps done, ${blockedHuman} waiting on a human decision, ${blockedDb} on the database, ${blockedSsh} on SSH access.`);
+  if (presentNames.length > 0) {
+    lines.push(`**Integration keys** — ${presentNames.join(', ')} set up. ${missingNames.length > 0 ? `Still pending: ${missingNames.join(', ')}.` : 'All provider keys present.'}`);
+  } else {
+    lines.push(`**Integration keys** — none set up yet. Pending: ${missingNames.join(', ')}.`);
+  }
+  lines.push(`**Open work** — ${decisions} review decision${decisions === 1 ? '' : 's'} and ${findings} audit finding${findings === 1 ? '' : 's'} surfaced in the latest search.`);
+  lines.push('');
+  lines.push('Open [Reports](/admin/ops/reports) or [Activation](/admin/ops/activation) for the full picture.');
+  return lines.join('\n');
+}
+
+function answerMissingBeforeGolive(items: IndexItem[]): string {
+  const steps = activationListLite();
+  const required = steps.filter((s) => !s.done && !OPTIONAL_ACTIVATION_GROUPS.has(s.group));
+
+  const lines: string[] = [];
+  if (required.length === 0) {
+    lines.push("You're not missing anything required for go-live according to the activation list. Optional integrations (Anthropic, BetterStack) are tracked separately and don't gate launch.");
+    lines.push('');
+    lines.push('Open [Activation](/admin/ops/activation) for the full checklist.');
+    return lines.join('\n');
+  }
+
+  lines.push(
+    `You still need ${required.length} required step${required.length === 1 ? '' : 's'} done before go-live. Optional items (Anthropic key, BetterStack) are not included — those can be added later without blocking launch.`,
+  );
+  lines.push('');
+  lines.push('**Required steps still open**');
+  for (const s of required.slice(0, 12)) {
+    const tail = s.blockedBy.length > 0 ? ` — waiting on ${s.blockedBy.map(friendlyBlocker).join(', ')}` : '';
+    lines.push(`- ${activationStepLink(s)}${tail}`);
+  }
+  if (required.length > 12) {
+    lines.push(`- (${required.length - 12} more)`);
+  }
+  lines.push('');
+
+  const findings = items.filter((i) => i.type === 'audit_finding');
+  const highFindings = findings.filter((f) => /high|critical|error/i.test(f.status ?? '')).slice(0, 3);
+  if (highFindings.length > 0) {
+    lines.push('**High-severity findings to clear first**');
+    for (const f of highFindings) lines.push(`- ${linkFor(f)}`);
+    lines.push('');
+  }
+
+  lines.push('Open [Activation](/admin/ops/activation) for the full 27-step view.');
+  return lines.join('\n');
+}
+
 function answerGeneric(items: IndexItem[]): string {
   if (items.length === 0) {
     return "I couldn't find anything in the dashboard that matches that. Try one of the suggested prompts, or rephrase your question — I can search clients, assets, repos, Vercel projects, Hetzner servers, renewals, incidents, audit findings, and activation steps.";
@@ -612,9 +1008,31 @@ export function buildFallbackAnswer(
 ): string {
   const items = results.map((r) => r.item);
   const intent = detectIntent(question);
+  // snapshot_mode warning is the canonical signal for "preview vs live"
+  // throughout the assistant — reuse it for operational intents so we don't
+  // re-derive the state from the env.
+  const snapshotMode = warnings.includes('snapshot_mode');
 
   let body: string | null = null;
   switch (intent) {
+    case 'what_next':
+      body = answerWhatNext(items);
+      break;
+    case 'work_today':
+      body = answerWorkToday(items);
+      break;
+    case 'whats_blocked':
+      body = answerWhatsBlocked(items);
+      break;
+    case 'which_pages':
+      body = answerWhichPages(items, snapshotMode);
+      break;
+    case 'dashboard_status_summary':
+      body = answerDashboardStatusSummary(items, snapshotMode);
+      break;
+    case 'missing_before_golive':
+      body = answerMissingBeforeGolive(items);
+      break;
     case 'blocking_activation':
       body = answerBlockingActivation(items);
       break;

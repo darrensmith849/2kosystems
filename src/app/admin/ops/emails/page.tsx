@@ -60,8 +60,8 @@ export default function EmailsPage() {
             email bodies are stored.
           </p>
           <p className="text-xs text-[#a1a1aa] leading-relaxed">
-            Current state: <span className="text-[#f5f5f5]">{status}</span> · Manual reference UI
-            is shown below as a disabled preview.
+            Current state: <span className="text-[#f5f5f5]">{status}</span> · The manual reference
+            form is shown below as a disabled preview.
           </p>
         </div>
       </AdminCard>
@@ -152,11 +152,11 @@ export default function EmailsPage() {
       {/* Safety */}
       <AdminCard title="What this page never does">
         <ul className="space-y-2 text-xs text-[#a1a1aa] leading-relaxed">
-          <li>· Never reads any inbox.</li>
+          <li>· Never reads your inbox.</li>
           <li>· Never sends any email.</li>
           <li>· Never archives, deletes, or labels any email.</li>
-          <li>· Never stores email body content.</li>
-          <li>· Never exposes secrets or message contents.</li>
+          <li>· Never stores the email body.</li>
+          <li>· Never shows secrets or message contents.</li>
           <li>· Never connects to Gmail or Outlook without an explicit, separately approved phase.</li>
         </ul>
       </AdminCard>

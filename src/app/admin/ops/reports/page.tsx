@@ -56,7 +56,7 @@ export default async function ReportsPage() {
     <>
       <SectionHeader
         title="Reports"
-        subtitle="Snapshot of the current operational picture. Counts come from snapshot data while DATABASE_URL is unset; once Hetzner connects, the same view switches to live DB data."
+        subtitle="A snapshot of the current operational picture. Counts come from preview data (snapshot data) while DATABASE_URL is unset; once Hetzner connects, the same view switches to live database data."
       />
       {snapshot && <SnapshotBanner area="Reports" />}
 
@@ -741,25 +741,25 @@ function SuggestedNextActions({ summary }: { summary: ReportsSummary }) {
   const openTickets = summary.totals.openTickets;
 
   const beforeDb = [
-    `Walk the ${decisionsTotal} pending decisions in /admin/ops/review (${decisionsHigh} high-risk first).`,
-    `Triage the ${importNeedsReview} import groups marked needs_review so the first import is clean.`,
+    `Walk the ${decisionsTotal} pages that need a decision in /admin/ops/review (${decisionsHigh} high-risk first).`,
+    `Take a first look at the ${importNeedsReview} import groups marked "needs review" so the first import is clean.`,
     `Confirm renewal dates with xneelo / Hetzner / Vercel before reminders go live.`,
     `Resolve ${openIncidents} open incident${openIncidents === 1 ? '' : 's'} or downgrade to monitoring.`,
-    `Close out quick-win operator tickets (${openTickets} open) so the post-DB backlog is shorter.`,
+    `Close out quick-win team-member tickets (${openTickets} open) so the post-database backlog is shorter.`,
   ];
 
   const afterDb = [
-    'Run the snapshot import dry-run (/api/admin/ops/import/snapshot/preview) and review the diff.',
-    'Commit the snapshot import so /admin/ops surfaces switch from snapshot to DB rows.',
-    `Resolve the ${importBlocked} blocked import group${importBlocked === 1 ? '' : 's'} once provider tokens unlock the source data.`,
-    'Wire BREVO_OPS_DIGEST_TO and BETTERSTACK_WEBHOOK_SECRET so renewal / incident notifications fire.',
-    'Schedule the 07:00 SAST renewal digest cron in Vercel + verify the first run.',
+    'Run the snapshot import rehearsal (no changes saved) at /api/admin/ops/import/snapshot/preview and review the diff.',
+    'Save the snapshot import for real so /admin/ops pages switch from preview data to database rows.',
+    `Resolve the ${importBlocked} blocked import group${importBlocked === 1 ? '' : 's'} once provider API keys unlock the source data.`,
+    'Set up BREVO_OPS_DIGEST_TO and BETTERSTACK_WEBHOOK_SECRET so renewal and incident notifications fire.',
+    'Schedule the 07:00 SAST renewal digest scheduled job in Vercel and verify the first run.',
   ];
 
   const afterProviderTokens = [
-    'GITHUB_TOKEN: archive the canonical-pick losers across the 5 repo clusters.',
+    'GITHUB_TOKEN: archive the canonical-pick losers across the 5 repository clusters.',
     'VERCEL_API_TOKEN: walk the ~25 dormant pumpbots-projects projects and delete confirmed unused ones.',
-    'CLOUDFLARE_API_TOKEN: re-import full zone list and clean stale records (dev.saprivateschools dead A record).',
+    'CLOUDFLARE_API_TOKEN: re-import the full zone list and clean stale records (dev.saprivateschools dead A record).',
     'HETZNER_API_TOKEN: add a daily disk-usage check on ma130-apps; enable off-site Postgres backups for ma130-data.',
     'Schedule the first real sync runs for all four providers to baseline drift detection.',
   ];
@@ -768,9 +768,9 @@ function SuggestedNextActions({ summary }: { summary: ReportsSummary }) {
     <div className="mb-6">
       <AdminCard title="Suggested next actions">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          <SuggestionColumn title="Before DB" items={beforeDb} tone="amber" />
-          <SuggestionColumn title="After DB" items={afterDb} tone="blue" />
-          <SuggestionColumn title="After provider tokens" items={afterProviderTokens} tone="green" />
+          <SuggestionColumn title="Before the database is connected" items={beforeDb} tone="amber" />
+          <SuggestionColumn title="After the database is connected" items={afterDb} tone="blue" />
+          <SuggestionColumn title="After provider API keys" items={afterProviderTokens} tone="green" />
         </div>
       </AdminCard>
     </div>

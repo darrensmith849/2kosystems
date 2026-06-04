@@ -5,33 +5,40 @@ import { AdminCard, Badge, SectionHeader } from '@/components/admin-ui';
 import SnapshotBanner from '@/components/admin-ui/SnapshotBanner';
 import { isDbConfigured } from '@/lib/db/client';
 import { isSnapshotMode } from '@/lib/ops/snapshot-mode';
+import { validateSnapshot, VALIDATION_CATEGORY_LABEL } from '@/lib/ops/snapshot-validation';
 
-// /admin/ops/activation — day-of Hetzner activation playbook.
+// /admin/ops/activation — full 27-step bring-up sequence from snapshot mode
+// through to a live, monitored, scheduled-job-driven ops console.
 //
-// Server component, presence-only env reads (never echo or log values), and
-// no destructive UI. The page is a high-altitude operator checklist that
-// mirrors docs/runbooks/ops-hetzner-activation.md and reacts to the same
-// signals as the ActivationReadiness panel: isDbConfigured() and Boolean
-// presence of the eight + two env vars listed in the runbook.
+// Status signals are presence-only env reads. We never echo or log values.
+// Steps that can only be confirmed by a human (SSH work, redeploys, snapshot
+// import runs, sync runs) carry status "Manual" and the operator marks them
+// done by following the matching runbook.
 
 type Tone = 'green' | 'amber' | 'rose' | 'blue';
 
-type StepStatus = 'Done' | 'Pending' | 'Blocked' | 'Manual';
+type StepStatus = 'Done' | 'Pending' | 'Blocked' | 'Manual' | 'Optional';
+
+type BlockerToken =
+  | 'env'
+  | 'ssh'
+  | 'db'
+  | 'github_token'
+  | 'vercel_token'
+  | 'cloudflare_token'
+  | 'hetzner_token'
+  | 'human';
 
 type Step = {
   n: number;
   title: string;
   description: string;
   status: StepStatus;
-  runbookSection?: string;
+  blockedBy: BlockerToken[];
+  where: string;
+  runbook: string;
+  safeNextAction: string;
 };
-
-const PROVIDER_TOKEN_ENVS = [
-  'GITHUB_TOKEN',
-  'VERCEL_API_TOKEN',
-  'CLOUDFLARE_API_TOKEN',
-  'HETZNER_API_TOKEN',
-] as const;
 
 const TOKEN_PANEL_ENVS = [
   'GITHUB_TOKEN',
@@ -43,8 +50,6 @@ const TOKEN_PANEL_ENVS = [
 ] as const;
 
 function hasVercelCrons(): boolean {
-  // Pure file-presence read of repo-tracked vercel.json. Never throws — any
-  // failure (missing file, malformed JSON, missing array) returns false.
   try {
     const path = join(process.cwd(), 'vercel.json');
     if (!existsSync(path)) return false;
@@ -66,8 +71,21 @@ function statusTone(status: StepStatus): Tone {
       return 'rose';
     case 'Manual':
       return 'blue';
+    case 'Optional':
+      return 'blue';
   }
 }
+
+const BLOCKER_LABEL: Record<BlockerToken, string> = {
+  env: 'env var',
+  ssh: 'SSH key',
+  db: 'database',
+  github_token: 'GitHub token',
+  vercel_token: 'Vercel token',
+  cloudflare_token: 'Cloudflare token',
+  hetzner_token: 'Hetzner token',
+  human: 'human review',
+};
 
 export default function ActivationPage() {
   const dbConfigured = isDbConfigured();
@@ -75,6 +93,18 @@ export default function ActivationPage() {
 
   const databaseUrlPresent = Boolean(process.env.DATABASE_URL);
   const databaseUrlDirectPresent = Boolean(process.env.DATABASE_URL_DIRECT);
+
+  const githubTokenPresent = Boolean(process.env.GITHUB_TOKEN);
+  const vercelTokenPresent = Boolean(process.env.VERCEL_API_TOKEN);
+  const cloudflareTokenPresent = Boolean(process.env.CLOUDFLARE_API_TOKEN);
+  const cloudflareAccountPresent = Boolean(process.env.CLOUDFLARE_ACCOUNT_ID);
+  const cloudflareBothPresent = cloudflareTokenPresent && cloudflareAccountPresent;
+  const hetznerTokenPresent = Boolean(process.env.HETZNER_API_TOKEN);
+  const cronSecretPresent = Boolean(process.env.CRON_SECRET);
+  const cronsScaffolded = hasVercelCrons();
+  const anthropicKeyPresent = Boolean(process.env.ANTHROPIC_API_KEY);
+  const betterstackSecretPresent = Boolean(process.env.BETTERSTACK_WEBHOOK_SECRET);
+  const brevoDigestRecipientPresent = Boolean(process.env.BREVO_OPS_DIGEST_TO);
 
   const tokenPresence = TOKEN_PANEL_ENVS.map((name) => Boolean(process.env[name]));
   const tokensConfiguredCount = tokenPresence.filter(Boolean).length;
@@ -85,139 +115,323 @@ export default function ActivationPage() {
         ? 'rose'
         : 'amber';
 
-  const providerTokensPresent = PROVIDER_TOKEN_ENVS.filter((n) => Boolean(process.env[n])).length;
-  const providerTokensAllSet = providerTokensPresent === PROVIDER_TOKEN_ENVS.length;
-
-  const cronSecretPresent = Boolean(process.env.CRON_SECRET);
-  const cronsScaffolded = hasVercelCrons();
-  const cronStepDone = cronsScaffolded && cronSecretPresent;
+  // Validation report — informational only, never blocks activation.
+  const validation = validateSnapshot();
 
   const steps: Step[] = [
     {
       n: 1,
-      title: 'Restore SSH key',
-      description: '~/.ssh/ma130_migration on the operator Mac. No env signal — operator confirms.',
+      title: 'Restore the SSH key for the ma130 servers',
+      description:
+        'Put ~/.ssh/ma130_migration back on the operator Mac so the ops database server is reachable.',
       status: 'Manual',
-      runbookSection: 'Prerequisites',
+      blockedBy: ['ssh'],
+      where: 'Operator laptop + Hetzner cloud console',
+      runbook: 'docs/runbooks/ops-hetzner-activation.md',
+      safeNextAction: 'Follow the SSH restore steps in the Hetzner activation runbook.',
     },
     {
       n: 2,
-      title: 'Create ops database on ma130-data',
-      description: 'psql block over SSH — creates the ops Postgres database.',
+      title: 'Create the ops database on ma130-data',
+      description: 'A new Postgres database for the dashboard, separate from any existing databases.',
       status: 'Manual',
-      runbookSection: 'Step 1 — create the ops database',
+      blockedBy: ['ssh', 'db'],
+      where: 'SSH to ma130-data, then psql',
+      runbook: 'docs/runbooks/ops-db-setup.md',
+      safeNextAction: 'Run the CREATE DATABASE block from the database setup runbook.',
     },
     {
       n: 3,
-      title: 'Create ops_app role',
-      description: 'Strong password stored in 1Password; never in repo or shell history.',
+      title: 'Create the ops_app role with least-privilege access',
+      description: 'A dedicated app role with only the grants the dashboard needs.',
       status: 'Manual',
-      runbookSection: 'Step 1 — create the ops database',
+      blockedBy: ['ssh', 'db'],
+      where: 'psql as superuser on ma130-data',
+      runbook: 'docs/runbooks/ops-db-setup.md',
+      safeNextAction: 'Store the role password in 1Password — never in the repo or shell history.',
     },
     {
       n: 4,
-      title: 'Run migrations 0000-0002',
-      description: 'drizzle-kit migrate against DATABASE_URL_DIRECT.',
+      title: 'Run database migrations 0000 to 0002',
+      description: 'drizzle-kit migrate against DATABASE_URL_DIRECT — sets up the tables.',
       status: databaseUrlDirectPresent ? 'Done' : 'Pending',
-      runbookSection: 'Step 3 — apply migrations',
+      blockedBy: ['db'],
+      where: 'Operator laptop running drizzle-kit',
+      runbook: 'docs/runbooks/ops-db-setup.md',
+      safeNextAction: databaseUrlDirectPresent
+        ? 'Direct connection string is present — re-run drizzle-kit migrate if any new migrations land.'
+        : 'Set DATABASE_URL_DIRECT locally and run drizzle-kit migrate.',
     },
     {
       n: 5,
-      title: 'Set DATABASE_URL in Vercel',
-      description: 'Pooled URL on the 2kosystems.com project, Production scope.',
+      title: 'Set DATABASE_URL (pooled) in Vercel',
+      description: 'Production-scope environment variable — the pooled connection string.',
       status: databaseUrlPresent ? 'Done' : 'Pending',
-      runbookSection: 'Step 2 — set Vercel env vars',
+      blockedBy: ['env', 'db'],
+      where: 'Vercel project settings → Environment Variables',
+      runbook: 'docs/runbooks/ops-db-setup.md',
+      safeNextAction: databaseUrlPresent
+        ? 'Pooled URL is present.'
+        : 'Add DATABASE_URL in Vercel and redeploy.',
     },
     {
       n: 6,
-      title: 'Set DATABASE_URL_DIRECT in Vercel',
-      description: 'Direct URL used by migrations only.',
+      title: 'Set DATABASE_URL_DIRECT (direct) in Vercel',
+      description: 'Direct connection string used by migrations only.',
       status: databaseUrlDirectPresent ? 'Done' : 'Pending',
-      runbookSection: 'Step 2 — set Vercel env vars',
+      blockedBy: ['env', 'db'],
+      where: 'Vercel project settings → Environment Variables',
+      runbook: 'docs/runbooks/ops-db-setup.md',
+      safeNextAction: databaseUrlDirectPresent
+        ? 'Direct URL is present.'
+        : 'Add DATABASE_URL_DIRECT in Vercel — used only for migrations.',
     },
     {
       n: 7,
-      title: 'Redeploy Vercel',
-      description: 'Trigger a redeploy after env vars land so the running runtime picks them up.',
+      title: 'Redeploy Vercel production',
+      description: 'Pick up the new environment variables on the running runtime.',
       status: 'Manual',
-      runbookSection: 'Step 2 — set Vercel env vars',
+      blockedBy: ['env'],
+      where: 'Vercel → Deployments → Redeploy',
+      runbook: 'docs/runbooks/ops-hetzner-activation.md',
+      safeNextAction: 'Trigger a redeploy after DATABASE_URL and DATABASE_URL_DIRECT are saved.',
     },
     {
       n: 8,
-      title: 'Verify DB connected',
-      description: 'isDbConfigured() flips to true and pingDb() responds OK.',
+      title: 'Verify the database is connected',
+      description: 'The Database card on the Health page reports a healthy ping.',
       status: dbConfigured ? 'Done' : 'Pending',
-      runbookSection: 'Step 3 — apply migrations',
+      blockedBy: ['db'],
+      where: '/admin/ops/health → Database card',
+      runbook: 'docs/runbooks/ops-activation-hardening.md',
+      safeNextAction: dbConfigured
+        ? 'Database connection confirmed — proceed to the import preview.'
+        : 'Open the Health page after the redeploy completes to confirm connection.',
     },
     {
       n: 9,
-      title: 'Run snapshot import preview',
-      description: 'GET /api/admin/ops/import/snapshot/preview — describes every row, no writes.',
+      title: 'Run the snapshot import preview',
+      description: 'Read-only walk of every row that would land — no writes.',
       status: 'Manual',
-      runbookSection: 'Step 4 — run snapshot import preview',
+      blockedBy: [],
+      where: '/admin/ops/review → Import preview',
+      runbook: 'docs/runbooks/ops-review-session.md',
+      safeNextAction: 'Open the Review page and scan the preview table for surprises.',
     },
     {
       n: 10,
-      title: 'Run snapshot import dry-run',
-      description: 'POST /api/admin/ops/import/snapshot/run with dryRun:true.',
+      title: 'Run the snapshot import as a rehearsal',
+      description: 'Same import code path with dry-run on — nothing is saved.',
       status: 'Manual',
-      runbookSection: 'Step 5 — run snapshot import dry-run',
+      blockedBy: ['db'],
+      where: '/admin/ops/review → Rehearsal button',
+      runbook: 'docs/runbooks/ops-review-session.md',
+      safeNextAction: 'Run the rehearsal once the DB is connected to surface any runtime errors.',
     },
     {
       n: 11,
-      title: 'Run snapshot import committed',
-      description: 'Same route with dryRun:false — commits inside a transaction.',
+      title: 'Run the snapshot import for real',
+      description: 'Commit the same data inside a transaction.',
       status: 'Manual',
-      runbookSection: 'Step 7 — run snapshot import for real',
+      blockedBy: ['db'],
+      where: '/admin/ops/review → Save for real',
+      runbook: 'docs/runbooks/ops-review-session.md',
+      safeNextAction: 'Only after the rehearsal succeeds — then commit and verify counts.',
     },
     {
       n: 12,
-      title: 'Run foundational seeds',
-      description: 'Divisions, operators, baseline integration_status rows.',
+      title: 'Spot-check the imported rows',
+      description: 'Open clients / assets / tickets / renewals / incidents and confirm rows match.',
       status: 'Manual',
-      runbookSection: 'Step 7 — run snapshot import for real',
+      blockedBy: ['db'],
+      where: '/admin/ops/clients · /assets · /tickets · /renewals · /incidents',
+      runbook: 'docs/runbooks/ops-review-session.md',
+      safeNextAction: 'Walk each list view and sanity-check the first page of results.',
     },
     {
       n: 13,
-      title: 'Add provider tokens',
-      description: providerTokensAllSet
-        ? 'GITHUB_TOKEN, VERCEL_API_TOKEN, CLOUDFLARE_API_TOKEN, HETZNER_API_TOKEN present.'
-        : `${providerTokensPresent}/4 provider tokens present (GitHub, Vercel, Cloudflare, Hetzner).`,
-      status: providerTokensAllSet ? 'Done' : 'Pending',
-      runbookSection: 'Step 2 — set Vercel env vars',
+      title: 'Bridge the review decisions to tickets',
+      description: 'Each open snapshot decision becomes a ticket so the work is tracked.',
+      status: 'Manual',
+      blockedBy: ['db', 'human'],
+      where: '/admin/ops/review → Decision bridge',
+      runbook: 'docs/runbooks/ops-review-session.md',
+      safeNextAction: 'After import, click Bridge to create tickets from each unresolved decision.',
     },
     {
       n: 14,
-      title: 'Run first syncs',
-      description: 'GitHub → Vercel → Cloudflare → Hetzner, in order, from the provider pages.',
-      status: 'Manual',
-      runbookSection: 'Step 8 — first sync runs',
+      title: 'Add GITHUB_TOKEN',
+      description: 'Read-only token so the dashboard can sync repos and archive decisions.',
+      status: githubTokenPresent ? 'Done' : 'Pending',
+      blockedBy: ['env', 'github_token'],
+      where: 'Vercel environment variables',
+      runbook: 'docs/runbooks/ops-activation-hardening.md',
+      safeNextAction: githubTokenPresent
+        ? 'GitHub token present — run the first sync next.'
+        : 'Create a fine-grained PAT in GitHub with repo read; add as GITHUB_TOKEN.',
     },
     {
       n: 15,
-      title: 'Enable Vercel Cron',
-      description: cronStepDone
-        ? 'vercel.json has crons array and CRON_SECRET is set.'
-        : cronsScaffolded
-          ? 'vercel.json has crons array — CRON_SECRET still pending.'
-          : 'vercel.json crons array missing.',
-      status: cronStepDone ? 'Done' : 'Pending',
-      runbookSection: 'Step 9 — turn on cron triggers',
+      title: 'Run the first GitHub sync',
+      description: 'Populates the repos table so the External clients page shows live data.',
+      status: 'Manual',
+      blockedBy: ['github_token', 'db'],
+      where: '/admin/ops/github → Sync',
+      runbook: 'docs/runbooks/ops-activation-hardening.md',
+      safeNextAction: 'Click Sync on the GitHub page once both the DB and token are live.',
     },
     {
       n: 16,
-      title: 'Enable BetterStack + renewal reminders',
-      description: 'Optional. Verifies BETTERSTACK_WEBHOOK_SECRET and wires the 07:00 SAST digest.',
-      status: 'Pending',
-      runbookSection: 'Step 2 — set Vercel env vars',
+      title: 'Add VERCEL_API_TOKEN',
+      description: 'Read-only token so the dashboard can sync Vercel projects + deployments.',
+      status: vercelTokenPresent ? 'Done' : 'Pending',
+      blockedBy: ['env', 'vercel_token'],
+      where: 'Vercel environment variables',
+      runbook: 'docs/runbooks/ops-activation-hardening.md',
+      safeNextAction: vercelTokenPresent
+        ? 'Vercel token present — run the first sync next.'
+        : 'Create a Vercel API token with read scope; add as VERCEL_API_TOKEN.',
+    },
+    {
+      n: 17,
+      title: 'Run the first Vercel sync',
+      description: 'Refreshes both Vercel teams so the dashboard can see live projects.',
+      status: 'Manual',
+      blockedBy: ['vercel_token', 'db'],
+      where: '/admin/ops/vercel → Sync',
+      runbook: 'docs/runbooks/ops-activation-hardening.md',
+      safeNextAction: 'Sync after the token is set; confirm both teams come back.',
+    },
+    {
+      n: 18,
+      title: 'Add CLOUDFLARE_API_TOKEN + CLOUDFLARE_ACCOUNT_ID',
+      description: 'Both are needed so the dashboard can list zones, Pages projects, and DNS.',
+      status: cloudflareBothPresent ? 'Done' : 'Pending',
+      blockedBy: ['env', 'cloudflare_token'],
+      where: 'Vercel environment variables',
+      runbook: 'docs/runbooks/ops-activation-hardening.md',
+      safeNextAction: cloudflareBothPresent
+        ? 'Cloudflare credentials present — run the first sync next.'
+        : 'Create a read token in Cloudflare and copy the account id alongside it.',
+    },
+    {
+      n: 19,
+      title: 'Run the first Cloudflare sync',
+      description: 'Lists all ~40 zones so the snapshot illustrative subset is replaced with real data.',
+      status: 'Manual',
+      blockedBy: ['cloudflare_token', 'db'],
+      where: '/admin/ops/infrastructure → Cloudflare',
+      runbook: 'docs/runbooks/ops-activation-hardening.md',
+      safeNextAction: 'Sync once both Cloudflare credentials are in place.',
+    },
+    {
+      n: 20,
+      title: 'Add HETZNER_API_TOKEN',
+      description: 'Read-only token so the dashboard can list servers and load balancers.',
+      status: hetznerTokenPresent ? 'Done' : 'Pending',
+      blockedBy: ['env', 'hetzner_token'],
+      where: 'Vercel environment variables',
+      runbook: 'docs/runbooks/ops-activation-hardening.md',
+      safeNextAction: hetznerTokenPresent
+        ? 'Hetzner token present — run the first sync next.'
+        : 'Create a Hetzner read token; add as HETZNER_API_TOKEN.',
+    },
+    {
+      n: 21,
+      title: 'Run the first Hetzner sync',
+      description: 'Refreshes the three ma130 servers and their labels.',
+      status: 'Manual',
+      blockedBy: ['hetzner_token', 'db'],
+      where: '/admin/ops/infrastructure → Hetzner',
+      runbook: 'docs/runbooks/ops-activation-hardening.md',
+      safeNextAction: 'Sync after the token lands; expect three servers to come back.',
+    },
+    {
+      n: 22,
+      title: 'Add CRON_SECRET',
+      description: 'A shared secret so only Vercel Cron can hit the scheduled-job routes.',
+      status: cronSecretPresent ? 'Done' : 'Pending',
+      blockedBy: ['env'],
+      where: 'Vercel environment variables',
+      runbook: 'docs/runbooks/ops-activation-hardening.md',
+      safeNextAction: cronSecretPresent
+        ? 'CRON_SECRET present.'
+        : 'Generate a strong random secret and add as CRON_SECRET.',
+    },
+    {
+      n: 23,
+      title: 'Enable Vercel scheduled jobs',
+      description: 'vercel.json carries the crons array; the runtime runs them on schedule.',
+      status: cronsScaffolded && cronSecretPresent ? 'Done' : 'Pending',
+      blockedBy: ['env'],
+      where: 'vercel.json + redeploy',
+      runbook: 'docs/runbooks/ops-renewal-reminders.md',
+      safeNextAction:
+        cronsScaffolded && cronSecretPresent
+          ? 'Scheduled jobs are wired.'
+          : cronsScaffolded
+            ? 'vercel.json has the crons array — CRON_SECRET still missing.'
+            : 'Add the crons array to vercel.json and redeploy.',
+    },
+    {
+      n: 24,
+      title: 'Add ANTHROPIC_API_KEY (optional)',
+      description: 'Enables AI-mode answers on the Ask page. Search-only mode runs fine without it.',
+      status: anthropicKeyPresent ? 'Done' : 'Optional',
+      blockedBy: ['env'],
+      where: 'Vercel environment variables',
+      runbook: 'docs/runbooks/ops-assistant.md',
+      safeNextAction: anthropicKeyPresent
+        ? 'AI mode is available.'
+        : 'Skip for now — Ask still works in search-only mode.',
+    },
+    {
+      n: 25,
+      title: 'Add BETTERSTACK_WEBHOOK_SECRET (optional)',
+      description: 'Validates incoming BetterStack alerts so they create real incidents.',
+      status: betterstackSecretPresent ? 'Done' : 'Optional',
+      blockedBy: ['env'],
+      where: 'Vercel environment variables',
+      runbook: 'docs/runbooks/ops-activation-hardening.md',
+      safeNextAction: betterstackSecretPresent
+        ? 'BetterStack inbound webhook is verified.'
+        : 'Skip until you wire BetterStack alerts to the dashboard.',
+    },
+    {
+      n: 26,
+      title: 'Add BREVO_OPS_DIGEST_TO',
+      description: 'The daily renewal digest needs a recipient address.',
+      status: brevoDigestRecipientPresent ? 'Done' : 'Pending',
+      blockedBy: ['env'],
+      where: 'Vercel environment variables',
+      runbook: 'docs/runbooks/ops-renewal-reminders.md',
+      safeNextAction: brevoDigestRecipientPresent
+        ? 'Digest recipient is set.'
+        : 'Add the operator inbox as BREVO_OPS_DIGEST_TO so the 07:00 SAST digest has somewhere to land.',
+    },
+    {
+      n: 27,
+      title: 'Verify the emails / services / contacts foundation',
+      description: 'Walk these three pages to confirm the manual-reference baseline matches reality.',
+      status: 'Manual',
+      blockedBy: ['human'],
+      where: '/admin/ops/emails · /services · /contacts',
+      runbook: 'docs/runbooks/ops-email-linkage.md',
+      safeNextAction: 'After import, spot-check each page and edit anything that does not match.',
     },
   ];
+
+  const totalSteps = steps.length;
+  const doneSteps = steps.filter((s) => s.status === 'Done').length;
+  const pendingSteps = steps.filter((s) => s.status === 'Pending').length;
+  const optionalSteps = steps.filter((s) => s.status === 'Optional').length;
+  const manualSteps = steps.filter((s) => s.status === 'Manual').length;
 
   return (
     <>
       <SectionHeader
         title="Activation"
-        subtitle="Steps to bring the live database online."
+        subtitle="Step-by-step bring-up — from snapshot mode to a live, monitored dashboard."
       />
       {snapshot && <SnapshotBanner area="Activation" />}
 
@@ -226,24 +440,31 @@ export default function ActivationPage() {
           label="Snapshot data"
           value="Ready"
           tone="green"
-          hint="27 assets · 15 clients · 38 repos"
+          hint="Discovery data is loaded and read-only."
         />
         <StatusCard
           label="Database"
-          value={dbConfigured ? 'Ready' : 'Pending'}
+          value={dbConfigured ? 'Connected' : 'Not connected'}
           tone={dbConfigured ? 'green' : 'amber'}
-          hint={dbConfigured ? 'DATABASE_URL set' : 'Waiting for DATABASE_URL'}
+          hint={dbConfigured ? 'DATABASE_URL is set.' : 'Waiting for DATABASE_URL.'}
         />
         <StatusCard
           label="Tokens configured"
           value={`${tokensConfiguredCount} / ${TOKEN_PANEL_ENVS.length}`}
           tone={tokensConfiguredTone}
-          hint="Presence-only — values are never displayed."
+          hint="Presence only — values are never displayed."
         />
       </div>
 
+      <div className="mb-6 grid grid-cols-2 gap-3 md:grid-cols-4">
+        <ProgressTile label="Done" value={doneSteps} total={totalSteps} tone="green" />
+        <ProgressTile label="Pending" value={pendingSteps} total={totalSteps} tone="amber" />
+        <ProgressTile label="Manual" value={manualSteps} total={totalSteps} tone="blue" />
+        <ProgressTile label="Optional" value={optionalSteps} total={totalSteps} tone="blue" />
+      </div>
+
       <div className="mb-6">
-        <AdminCard title="Activation sequence">
+        <AdminCard title="Activation sequence (27 steps)">
           <ol className="space-y-3">
             {steps.map((step) => (
               <li
@@ -257,13 +478,35 @@ export default function ActivationPage() {
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="text-sm font-semibold text-[#f5f5f5]">{step.title}</span>
                     <Badge text={step.status} tone={statusTone(step.status)} />
+                    {step.blockedBy.length > 0 && step.status !== 'Done' && (
+                      <span className="flex flex-wrap gap-1">
+                        {step.blockedBy.map((b) => (
+                          <Badge key={b} text={`needs ${BLOCKER_LABEL[b]}`} tone="neutral" />
+                        ))}
+                      </span>
+                    )}
                   </div>
-                  <p className="mt-1 text-xs text-[#a1a1aa]">{step.description}</p>
-                  {step.runbookSection && (
-                    <p className="mt-1.5 font-mono text-[10px] uppercase tracking-[0.15em] text-[#52525b]">
-                      Runbook · {step.runbookSection}
-                    </p>
-                  )}
+                  <p className="mt-1.5 text-xs text-[#a1a1aa] leading-relaxed">
+                    {step.description}
+                  </p>
+                  <p className="mt-2 text-[11px] text-[#71717a]">
+                    <span className="font-mono uppercase tracking-[0.15em] text-[10px] text-[#52525b]">
+                      Where ·{' '}
+                    </span>
+                    {step.where}
+                  </p>
+                  <p className="mt-1 text-[11px] text-[#71717a]">
+                    <span className="font-mono uppercase tracking-[0.15em] text-[10px] text-[#52525b]">
+                      Runbook ·{' '}
+                    </span>
+                    <code className="text-[#a1a1aa]">{step.runbook}</code>
+                  </p>
+                  <p className="mt-1 text-[11px] leading-relaxed text-emerald-300/80">
+                    <span className="font-mono uppercase tracking-[0.15em] text-[10px] text-emerald-400/70">
+                      Safe next action ·{' '}
+                    </span>
+                    {step.safeNextAction}
+                  </p>
                 </div>
               </li>
             ))}
@@ -272,22 +515,51 @@ export default function ActivationPage() {
       </div>
 
       <div className="mb-6">
-        <AdminCard title="Email linkage — next steps">
+        <AdminCard title="Snapshot validation — informational">
           <p className="mb-3 text-xs text-[#a1a1aa] leading-relaxed">
-            Email linkage is in preview today. The following steps make it active once the
+            Findings from a pure-function pass over the snapshot data. They never block activation
+            — fix them before the import or accept the default behaviour.
+          </p>
+          <div className="mb-3 flex flex-wrap gap-2">
+            <Badge text={`${validation.bySeverity.error} errors`} tone="rose" />
+            <Badge text={`${validation.bySeverity.warn} warnings`} tone="amber" />
+            <Badge text={`${validation.bySeverity.info} info`} tone="blue" />
+          </div>
+          <ul className="space-y-1.5 text-[11px] text-[#a1a1aa]">
+            {(Object.keys(validation.byCategory) as (keyof typeof validation.byCategory)[])
+              .filter((k) => validation.byCategory[k].length > 0)
+              .map((k) => (
+                <li key={k} className="flex justify-between gap-3">
+                  <span className="text-[#e4e4e7]">{VALIDATION_CATEGORY_LABEL[k]}</span>
+                  <span className="font-mono text-[10px] text-[#71717a]">
+                    {validation.byCategory[k].length} item{validation.byCategory[k].length === 1 ? '' : 's'}
+                  </span>
+                </li>
+              ))}
+          </ul>
+          <p className="mt-3 text-[11px] text-[#52525b]">
+            Full per-finding detail is on the Review page under &ldquo;Validation findings&rdquo;.
+          </p>
+        </AdminCard>
+      </div>
+
+      <div className="mb-6">
+        <AdminCard title="Email linking — next steps">
+          <p className="mb-3 text-xs text-[#a1a1aa] leading-relaxed">
+            Email linking is in preview today. The following steps make it active once the
             database is connected. No inbox is connected, and no email is sent or read by the
-            dashboard.
+            dashboard automatically.
           </p>
           <ol className="space-y-2 text-xs text-[#e4e4e7]">
             <li>
-              <span className="text-[#71717a]">1.</span> Decide the email linkage approach — manual
+              <span className="text-[#71717a]">1.</span> Pick the email linking approach — manual
               references first; Gmail or Outlook integration only as a later, separately approved
               phase.
             </li>
             <li>
-              <span className="text-[#71717a]">2.</span> After the database is connected, enable
-              the manual email-reference form and begin filing billing, renewal, support, and
-              approval emails.
+              <span className="text-[#71717a]">2.</span> After the database is connected, open the
+              manual email-reference form and start filing billing, renewal, support, and approval
+              emails.
             </li>
             <li>
               <span className="text-[#71717a]">3.</span> If Gmail or Outlook integration is later
@@ -295,39 +567,15 @@ export default function ActivationPage() {
               or labelling.
             </li>
             <li>
-              <span className="text-[#71717a]">4.</span> Set <code className="text-[#e4e4e7]">BREVO_OPS_DIGEST_TO</code> so the daily renewal digest
-              has a recipient.
+              <span className="text-[#71717a]">4.</span> Set{' '}
+              <code className="text-[#e4e4e7]">BREVO_OPS_DIGEST_TO</code> so the daily renewal
+              digest has a recipient.
             </li>
             <li>
-              <span className="text-[#71717a]">5.</span> Verify on the Health page that no inbox
-              ingestion is active until explicitly approved.
+              <span className="text-[#71717a]">5.</span> Confirm on the Health page that no inbox
+              reads are active until explicitly approved.
             </li>
           </ol>
-        </AdminCard>
-      </div>
-
-      <div className="mb-6">
-        <AdminCard title="Runbook links">
-          <ul className="space-y-1.5 text-xs text-[#a1a1aa]">
-            <li>
-              <code className="text-[#e4e4e7]">docs/runbooks/ops-hetzner-activation.md</code>
-            </li>
-            <li>
-              <code className="text-[#e4e4e7]">docs/runbooks/ops-db-setup.md</code>
-            </li>
-            <li>
-              <code className="text-[#e4e4e7]">docs/runbooks/ops-renewal-reminders.md</code>
-            </li>
-            <li>
-              <code className="text-[#e4e4e7]">docs/runbooks/ops-assistant.md</code>
-            </li>
-            <li>
-              <code className="text-[#e4e4e7]">docs/runbooks/ops-search.md</code>
-            </li>
-            <li>
-              <code className="text-[#e4e4e7]">docs/runbooks/ops-email-linkage.md</code>
-            </li>
-          </ul>
         </AdminCard>
       </div>
 
@@ -337,9 +585,9 @@ export default function ActivationPage() {
             Safety
           </p>
           <p className="text-xs leading-relaxed text-amber-100/80">
-            DB-changing actions are disabled until DATABASE_URL is set. Provider sync actions are
-            disabled until the corresponding token is set. Snapshot data remains read-only. No
-            destructive UI exists on this page.
+            Database changes are disabled until DATABASE_URL is set. Provider sync actions are
+            disabled until the matching token is set. Snapshot data stays read-only. No
+            destructive action exists on this page.
           </p>
         </div>
       </div>
@@ -373,9 +621,40 @@ function StatusCard({
       </p>
       <div className="mb-2 flex items-baseline gap-3">
         <p className="text-xl font-semibold text-[#f5f5f5]">{value}</p>
-        <Badge text={tone === 'green' ? 'ready' : tone === 'amber' ? 'pending' : tone === 'rose' ? 'blocked' : 'info'} tone={tone} />
       </div>
       {hint && <p className="text-[11px] text-[#71717a]">{hint}</p>}
+    </div>
+  );
+}
+
+function ProgressTile({
+  label,
+  value,
+  total,
+  tone,
+}: {
+  label: string;
+  value: number;
+  total: number;
+  tone: Tone;
+}) {
+  const ring =
+    tone === 'green'
+      ? 'border-emerald-400/30 bg-emerald-400/5 text-emerald-200'
+      : tone === 'amber'
+        ? 'border-amber-400/30 bg-amber-400/5 text-amber-200'
+        : tone === 'rose'
+          ? 'border-rose-400/30 bg-rose-400/5 text-rose-200'
+          : 'border-sky-400/30 bg-sky-400/5 text-sky-200';
+  return (
+    <div className={`rounded-2xl border p-3 ${ring}`}>
+      <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.18em] text-[#71717a]">
+        {label}
+      </p>
+      <p className="text-base font-semibold">
+        {value}
+        <span className="text-[#71717a] text-xs"> / {total}</span>
+      </p>
     </div>
   );
 }

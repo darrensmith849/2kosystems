@@ -201,3 +201,26 @@ Run this in order:
 - Never exposes any secret value via UI or API.
 - Never assumes consent — every integration phase is a separately approved
   decision.
+
+## Step 27 — foundation verification
+
+After the snapshot import is committed (step 11 of the Activation page) and
+all four provider syncs have run at least once, walk the email + commercial
+foundation in this order to confirm the baseline:
+
+1. **`/admin/ops/emails`** — confirm every snapshot email reference is
+   present, the categories match what the operator expects to see, and no
+   reference is dangling (the linked-client / linked-asset / linked-renewal
+   / linked-incident text fields point at something that actually exists).
+2. **`/admin/ops/services`** — confirm every supplier service has a
+   billing owner (or is explicitly tagged "Needs review"), the status is
+   accurate, and any "blocked" entries have a real reason.
+3. **`/admin/ops/contacts`** — confirm the placeholder roles list reflects
+   the team that will actually be entered as live rows. Adjust the role
+   set before any real names go in.
+
+This is step 27 on `/admin/ops/activation`. It is the last gate before the
+dashboard is treated as the source of truth for commercial ops.
+
+See [`ops-activation-hardening.md`](./ops-activation-hardening.md) for the
+short read on how the Activation page tracks this step.

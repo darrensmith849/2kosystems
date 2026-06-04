@@ -32,9 +32,9 @@ export default function ServicesPage() {
     <div className="space-y-5">
       <SectionHeader
         title="Services"
-        subtitle="Supplier accounts, subscriptions, and recurring tools — the commercial catalogue."
+        subtitle="Supplier accounts, subscriptions, and recurring tools — the commercial list."
       />
-      {snapshot && <SnapshotBanner area="Services catalogue" />}
+      {snapshot && <SnapshotBanner area="Services list" />}
 
       {/* At-a-glance */}
       <div className="grid grid-cols-1 gap-3 md:grid-cols-4">
@@ -47,12 +47,12 @@ export default function ServicesPage() {
       {planned > 0 && (
         <p className="text-xs text-[#a1a1aa] leading-relaxed">
           {planned} services are planned but not yet active. They become active once the relevant
-          token, subscription, or approval is in place.
+          provider API key, subscription, or approval is in place.
         </p>
       )}
 
-      {/* Catalogue */}
-      <AdminCard title="Catalogue">
+      {/* Services list */}
+      <AdminCard title="Services list">
         <ul className="space-y-3">
           {SNAPSHOT_SERVICES.map((s) => (
             <li
@@ -102,7 +102,7 @@ export default function ServicesPage() {
         <ul className="space-y-2 text-xs text-[#a1a1aa] leading-relaxed">
           <li>· No supplier credentials are stored or displayed.</li>
           <li>· No billing actions can be triggered from this page.</li>
-          <li>· No provider mutations are wired — read-only catalogue only.</li>
+          <li>· No provider changes are wired — read-only list only.</li>
           <li>· Renewal dates and amounts live on the Renewals page, not here.</li>
         </ul>
       </AdminCard>

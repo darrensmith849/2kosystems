@@ -75,6 +75,14 @@ export const RUNBOOK_CATALOG: RunbookEntry[] = [
       'Plan for linking billing, supplier, support, approval, and incident emails into the dashboard — manual references first, optional Gmail/Outlook integration only as a later, separately approved phase.',
     topics: ['emails', 'commercial', 'manual-refs', 'privacy', 'planned'],
   },
+  {
+    slug: 'ops-activation-hardening',
+    path: 'docs/runbooks/ops-activation-hardening.md',
+    title: 'Activation hardening',
+    description:
+      'Short, practical companion to /admin/ops/activation: how the 27-step page computes status, how the import rehearsal on /admin/ops/review works, and how to read validation findings without confusing them with blockers.',
+    topics: ['activation', 'hardening', 'tokens', 'sync', 'validation', 'rehearsal'],
+  },
 ];
 
 export function findRunbook(slug: string): RunbookEntry | undefined {

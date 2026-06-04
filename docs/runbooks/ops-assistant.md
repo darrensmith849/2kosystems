@@ -258,3 +258,43 @@ beyond the original ones documented above:
 All of these short-circuit before search runs and never return real
 email-body content. Source cards include the planned email reference, the
 service, or the placeholder contact only — never any private content.
+
+## Operational intents (no AI required)
+
+The Assistant adds six operational intents that run entirely in fallback
+mode — they read the activation step list, the snapshot decisions, and the
+audit findings, and produce a short prose answer followed by a tight bullet
+list and a route link. None of them require `ANTHROPIC_API_KEY`. All of
+them work in preview mode (snapshot data) and live mode equally.
+
+- **what_next** — answers "what should I do next" / "what's next" / "what
+  now". Reads the activation step list, finds the lowest-numbered step
+  that is not yet done and not waiting on a credential the operator
+  hasn't provisioned, and returns a single "Do this next" lede followed
+  by 1-3 candidate actions with a runbook link each.
+- **work_today** — answers "what can I safely work on today" / "what can I
+  do today". Returns the steps that need only human attention right now
+  (decisions, owner mappings, repo cluster picks) plus any open snapshot
+  decisions — never recommends a step that is gated on SSH, database, or
+  a missing token.
+- **whats_blocked** — answers "what is blocked" / "what are the blockers".
+  Groups every open activation step by its blocker token (`env`, `db`,
+  `ssh`, `human`, or a provider token), with a count and one example step
+  per group. Adds any high-severity audit findings as additional blockers.
+- **which_pages** — answers "which pages should I check" / "where should
+  I look". Returns the most useful dashboard routes for the current
+  state: Review and Activation when snapshot mode is active, Health and
+  the relevant provider page when the database is connected but a token
+  is missing, always Overview and Runbooks.
+- **dashboard_status_summary** — answers "summarise the dashboard status"
+  / "overall status" / "how is it going". Produces a short paragraph:
+  preview-or-live mode, activation progress (X of 27 steps done), token
+  coverage, open decisions and findings.
+- **missing_before_golive** — answers "what is missing before go-live" /
+  "pre-launch checklist" / "are we ready to launch". Filters the
+  activation steps to the required (non-Optional) items still not done
+  and lists each with its where-to-do-it and runbook link. Treats
+  Anthropic and BetterStack as Optional and excludes them.
+
+All six short-circuit before search runs, never expose secret values, and
+never claim a step is done when the underlying env var is absent.

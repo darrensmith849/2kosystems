@@ -16,9 +16,9 @@ export default async function SyncLogPage() {
       <WaitingForDb
         area="Sync runs"
         whatYouWillSee={[
-          'Every cron and manual sync run across all providers',
+          'Every scheduled-job and manual sync run across all providers',
           'Per-run counts: seen / created / updated / skipped',
-          'Duration and triggering operator for each run',
+          'Duration and the team member who triggered each run',
         ]}
       />
       {runs.length === 0 ? (

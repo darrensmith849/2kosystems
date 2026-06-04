@@ -6,20 +6,26 @@ import DecisionBridgeCard from '@/components/admin-ui/DecisionBridgeCard';
 import NotConnectedBanner from '../NotConnectedBanner';
 import { isSnapshotMode } from '@/lib/ops/snapshot-mode';
 import { listSnapshotDecisionItems } from '@/lib/ops/ops-snapshot-data';
+import { validateSnapshot } from '@/lib/ops/snapshot-validation';
 import DecisionsClient from './DecisionsClient';
 import ReviewSessionClient from './ReviewSessionClient';
+import ImportRehearsalCard, { ValidationFindingsCard } from './ImportRehearsalCard';
 
-// Server component. Fetches the snapshot decisions list and composes:
+// Server component. Composes the Review page:
 //   1. SectionHeader + SnapshotBanner / NotConnectedBanner
-//   2. ImportPreviewCard (Phase A component — supersedes the old inline
-//      "Import readiness" table, which is now removed to avoid duplicating
-//      the same readiness signal twice on one page).
-//   3. DecisionsClient — the browser-only review workflow.
-//   4. Footer explainer card.
+//   2. ImportPreviewCard
+//   3. ImportRehearsalCard — what would happen if we imported right now,
+//      rendered as a single read over snapshot data + the validation pass.
+//   4. ValidationFindingsCard — per-finding detail, grouped by category.
+//   5. ImportDependencyOrderCard
+//   6. Review session (browser-only)
+//   7. DecisionsClient
+//   8. Decision-to-ticket bridge
 
 export default async function ReviewPage() {
   const snapshot = isSnapshotMode();
   const decisions = listSnapshotDecisionItems();
+  const validationReport = validateSnapshot();
 
   return (
     <>
@@ -31,6 +37,14 @@ export default async function ReviewPage() {
 
       <div className="mb-6">
         <ImportPreviewCard />
+      </div>
+
+      <div className="mb-6">
+        <ImportRehearsalCard />
+      </div>
+
+      <div className="mb-6">
+        <ValidationFindingsCard report={validationReport} />
       </div>
 
       <div className="mb-6">
@@ -52,7 +66,7 @@ export default async function ReviewPage() {
       <div className="mt-8">
         <AdminCard title="What this page is for">
           <p className="text-xs text-[#a1a1aa] leading-relaxed">
-            The dashboard is in read-only Snapshot Mode until Hetzner Postgres lands. The items above are real ambiguities surfaced from the discovery work — choosing now means the first DB import is clean and the canonical mappings are obvious. Status + notes you set here are stored in <strong className="text-[#e4e4e7]">your browser only</strong>; once <code className="text-emerald-300">DATABASE_URL</code> is set, the same questions will reappear as ticket rows seeded from this list and the local entries can be migrated.
+            The dashboard is in read-only snapshot mode until Hetzner Postgres lands. The items above are real ambiguities surfaced from the discovery work — choosing now means the first database import is clean and the canonical mappings are obvious. Status + notes you set here are stored in <strong className="text-[#e4e4e7]">your browser only</strong>; once <code className="text-emerald-300">DATABASE_URL</code> is set, the same questions will reappear as ticket rows seeded from this list and the local entries can be migrated.
           </p>
         </AdminCard>
       </div>

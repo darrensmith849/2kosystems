@@ -347,3 +347,17 @@ Waiting for Hetzner — all of these become check marks after Steps 1, 3, 5,
 > commits or PRs where useful.
 
 - _(blank — fill in on the activation day)_
+
+## After this runbook: use the 27-step Activation page
+
+Once you've worked through this playbook, hand off to the in-app companion
+page at `/admin/ops/activation`. It mirrors steps 1-8 of this runbook
+(SSH, database creation, role, migrations, env vars, redeploy, verify) and
+then carries the operator through the remaining 19 steps — import preview,
+import rehearsal, commit, provider tokens, scheduled jobs, and the
+optional integrations. The page reads only presence flags and the database
+ping; it never changes infrastructure.
+
+See [`ops-activation-hardening.md`](./ops-activation-hardening.md) for a
+short, practical walk-through of how the 27-step page computes status and
+how to interpret the import rehearsal output before clicking Commit.

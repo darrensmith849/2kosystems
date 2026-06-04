@@ -269,3 +269,34 @@ for the first Monday of each quarter.
 |---|---|---|---|
 | _pending_ | | | |
 
+
+## How the dashboard detects database readiness
+
+Once the database is up, the dashboard reads two presence flags and one
+live probe:
+
+- **`DATABASE_URL`** is the pooled connection string used by the running
+  application. `isDbConfigured()` returns true when it is set.
+- **`DATABASE_URL_DIRECT`** is the direct (non-pooled) connection used by
+  `drizzle-kit` migrations. The Activation page checks its presence as a
+  proxy for "migrations have been applied"; it does not connect with it
+  from the dashboard runtime.
+- **`pingDb()`** runs a trivial round-trip against `DATABASE_URL`. The
+  Health card uses this to distinguish "credentials present but
+  unreachable" from "credentials present and working".
+
+If `pingDb()` reports `ok`, the import preview will read live row counts.
+Until then, it falls back to the snapshot counts and labels the page as
+"preview mode (snapshot data)".
+
+## Run the validation report after import
+
+After committing the snapshot import, walk through `/admin/ops/review` one
+more time. The Import Rehearsal card surfaces validation findings against
+the snapshot — link errors, soft inconsistencies, and `needs_review`
+markers. These findings do not block the import, but they're the easiest
+place to spot a stale link or a missing decision recommendation before the
+team starts using the live data.
+
+See [`ops-activation-hardening.md`](./ops-activation-hardening.md) for the
+full read on how validation findings are categorised.
