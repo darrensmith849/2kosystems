@@ -11,7 +11,7 @@ export default async function MapPage() {
     <>
       <SectionHeader
         title="Asset map"
-        subtitle="Relationship explorer across divisions, clients, assets, repos, projects, servers, zones, domains, tickets, renewals, and incidents."
+        subtitle="How clients, assets, and infrastructure relate."
       />
       {snapshot && <SnapshotBanner area="The asset map" />}
       <MapClient initialItems={items} />

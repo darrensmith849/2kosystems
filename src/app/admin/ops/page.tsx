@@ -71,7 +71,7 @@ export default async function OpsOverviewPage() {
     <>
       <SectionHeader
         title="Ops Command Centre"
-        subtitle="Today's picture, what needs attention, what's ready, what's blocked — one front door."
+        subtitle="Today's picture and what needs attention."
       />
       {snapshot && <SnapshotBanner area="The Overview" />}
 

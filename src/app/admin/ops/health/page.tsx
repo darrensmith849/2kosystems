@@ -78,7 +78,7 @@ export default async function HealthPage() {
     <>
       <SectionHeader
         title="Health"
-        subtitle="One-page diagnostic snapshot — runtime, DB, integrations, and feature flags."
+        subtitle="Runtime, database, and integration status."
       />
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">

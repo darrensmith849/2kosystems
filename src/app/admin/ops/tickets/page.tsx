@@ -28,7 +28,7 @@ export default async function TicketsPage() {
     <>
       <SectionHeader
         title="Tickets"
-        subtitle="Support, bugs, change requests, content updates, emergencies, and billing — tracked end-to-end with internal/external comments and time logging."
+        subtitle="Support, change requests, bug reports, and content updates."
       />
       {snapshot ? (
         <SnapshotBanner area="Tickets" />

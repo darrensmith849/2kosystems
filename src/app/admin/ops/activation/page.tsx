@@ -217,7 +217,7 @@ export default function ActivationPage() {
     <>
       <SectionHeader
         title="Activation"
-        subtitle="Hetzner Postgres activation playbook. Most steps cannot be safely performed until the SSH key is restored and DATABASE_URL is set."
+        subtitle="Steps to bring the live database online."
       />
       {snapshot && <SnapshotBanner area="Activation" />}
 

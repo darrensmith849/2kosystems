@@ -17,7 +17,7 @@ export default async function SettingsPage() {
     <>
       <SectionHeader
         title="Settings"
-        subtitle="Connectivity status for every integration. Manual sync runs land here in Phase 2 — use the per-section ‘Run sync now’ buttons for now."
+        subtitle="Connection status and setup."
       />
       <NotConnectedBanner />
 

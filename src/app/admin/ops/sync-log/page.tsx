@@ -11,7 +11,7 @@ export default async function SyncLogPage() {
   const runs = await listRecentSyncRuns(100);
   return (
     <>
-      <SectionHeader title="Sync log" subtitle="Every cron / manual sync run, with outcome and counts." />
+      <SectionHeader title="Sync log" subtitle="Recent automatic and manual sync runs." />
       <NotConnectedBanner />
       <WaitingForDb
         area="Sync runs"

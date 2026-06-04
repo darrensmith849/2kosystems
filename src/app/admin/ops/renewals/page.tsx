@@ -28,7 +28,7 @@ export default async function RenewalsPage() {
     <>
       <SectionHeader
         title="Renewals"
-        subtitle="Domain, hosting, SSL, subscription, retainer renewals — coloured by window to due."
+        subtitle="Upcoming domains, hosting, subscriptions, and retainers."
       />
       {snapshot ? (
         <SnapshotBanner area="Renewals" />

@@ -11,7 +11,7 @@ export default async function SearchPage() {
     <>
       <SectionHeader
         title="Search"
-        subtitle="Lexical search across every record in the Ops Dashboard — divisions, clients, assets, repos, projects, servers, tickets, renewals, incidents, findings, decisions, activation steps, runbooks."
+        subtitle="Find any record across the dashboard."
       />
       {snapshot && <SnapshotBanner area="Search results" />}
       <SearchClient initialItems={items} />

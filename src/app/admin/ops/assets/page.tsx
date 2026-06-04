@@ -17,7 +17,7 @@ export default async function AssetsPage() {
     <>
       <SectionHeader
         title="Assets"
-        subtitle="Every managed website / app / SaaS / API / internal tool. Linking to CF, Hetzner, Vercel, repo, domain is Phase 1+ as those tables fill."
+        subtitle="Websites, apps, APIs, and internal tools we manage."
       />
       {snapshot ? (
         <SnapshotBanner area="The asset inventory" />

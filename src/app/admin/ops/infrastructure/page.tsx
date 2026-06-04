@@ -30,7 +30,7 @@ export default async function InfrastructurePage() {
     <>
       <SectionHeader
         title="Infrastructure"
-        subtitle="Read-only Cloudflare zones, DNS records, Pages projects, and Hetzner servers. Sync upserts by external ID; missing rows are marked vanished, never deleted."
+        subtitle="Cloudflare zones, DNS records, and Hetzner servers."
       />
       {snapshot ? (
         <SnapshotBanner area="Infrastructure (CF zones + Pages + Hetzner servers)" />

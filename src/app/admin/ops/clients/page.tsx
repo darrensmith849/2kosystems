@@ -14,7 +14,7 @@ export default async function ClientsPage() {
     <>
       <SectionHeader
         title="Clients"
-        subtitle="Directory of clients across 2KO Africa. Add new clients here; deeper Contacts/Subscriptions wiring lands in Phase 2."
+        subtitle="Companies and brands we manage."
       />
       {snapshot ? (
         <SnapshotBanner area="The clients directory" />

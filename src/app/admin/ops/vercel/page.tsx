@@ -16,7 +16,7 @@ export default async function VercelProjectsPage() {
     <>
       <SectionHeader
         title="Vercel projects"
-        subtitle="Both teams (pumpbots-projects + impart-global) are tracked. Use the state filter to drive ongoing Vercel decom."
+        subtitle="Projects across both Vercel teams. Filter by state to plan cleanup."
       />
       {snapshot ? (
         <SnapshotBanner area="The Vercel project list" />

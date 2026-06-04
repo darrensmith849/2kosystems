@@ -26,7 +26,7 @@ export default async function IncidentsPage() {
     <>
       <SectionHeader
         title="Incidents"
-        subtitle="Track uptime / deployment / customer-impacting events. BetterStack auto-ingestion is Phase 2B."
+        subtitle="Operational events to track and resolve."
       />
       {snapshot ? (
         <SnapshotBanner area="Incidents" />

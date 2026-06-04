@@ -15,7 +15,7 @@ export default function AskPage() {
     <>
       <SectionHeader
         title="Ask"
-        subtitle="Ground-truthed search assistant. Answers come from your dashboard data — no hallucinations, no external lookups. Snapshot Mode is clearly labelled."
+        subtitle="Ask questions about your dashboard data."
       />
       {snapshot && <SnapshotBanner area="Ask answers" />}
       <AskClient hasAiKey={hasAiKey} />

@@ -25,7 +25,7 @@ export default async function ReviewPage() {
     <>
       <SectionHeader
         title="Review &amp; decisions"
-        subtitle="Ambiguous items from the discovery snapshot — pick an option per item before Hetzner Postgres lands so the import is clean."
+        subtitle="Open decisions to settle before the database goes live."
       />
       {snapshot ? <SnapshotBanner area="Review &amp; decisions" /> : <NotConnectedBanner />}
 

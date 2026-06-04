@@ -11,7 +11,7 @@ export default function RunbooksIndexPage() {
     <div className="space-y-5">
       <SectionHeader
         title="Runbooks"
-        subtitle="Operational documentation under docs/runbooks/. Click a runbook below to view its contents."
+        subtitle="Operational guides for the team."
       />
       {isSnapshotMode() && <SnapshotBanner area="Runbooks" />}
 

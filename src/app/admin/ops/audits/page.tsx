@@ -14,7 +14,7 @@ export default async function AuditsPage() {
     <>
       <SectionHeader
         title="Audits"
-        subtitle="Known operational issues, seeded from the infra-handover discovery. Resolve, acknowledge, or wontfix as you triage."
+        subtitle="Known issues and reviews to triage."
       />
       {snapshot ? (
         <SnapshotBanner area="Audit findings" />
