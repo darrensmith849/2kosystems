@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { AdminCard, Badge, EmptyState, Row } from '@/components/admin-ui';
 import type { IndexItem, IndexItemType } from '@/lib/ops/ops-knowledge-index';
+import { BLOCKED_BY_LABEL, labelFor } from '@/lib/ops/labels';
 
 // ---------------------------------------------------------------- Types
 
@@ -243,11 +244,11 @@ function ClientLineageCard({
       title={c.subtitle ? `${c.subtitle}` : 'Client'}
       action={
         c.confidence === 'needs_review' ? (
-          <Badge text="needs review" tone="amber" />
+          <Badge text="Needs review" tone="amber" />
         ) : c.confidence === 'confirmed' ? (
-          <Badge text="confirmed" tone="green" />
+          <Badge text="Confirmed" tone="green" />
         ) : c.confidence === 'likely' ? (
-          <Badge text="likely" tone="blue" />
+          <Badge text="Likely" tone="blue" />
         ) : null
       }
     >
@@ -309,7 +310,7 @@ function AssetDetail({
   return (
     <AdminCard
       title="Selected asset"
-      action={asset.confidence ? <Badge text={asset.confidence} tone={asset.confidence === 'needs_review' ? 'amber' : asset.confidence === 'confirmed' ? 'green' : 'blue'} /> : null}
+      action={asset.confidence ? <Badge text={asset.confidence === 'needs_review' ? 'Needs review' : asset.confidence === 'confirmed' ? 'Confirmed' : 'Likely'} tone={asset.confidence === 'needs_review' ? 'amber' : asset.confidence === 'confirmed' ? 'green' : 'blue'} /> : null}
     >
       <div className="space-y-3">
         <div>
@@ -486,7 +487,7 @@ export default function MapClient({ initialItems }: { initialItems: IndexItem[] 
               active={selectedDivisionCode === 'all'}
               onClick={() => setSelectedDivisionCode('all')}
             >
-              all
+              All
             </Chip>
             {divisions.map((d) => {
               const code = d.relations?.divisionCode ?? d.subtitle ?? d.id;
@@ -505,38 +506,50 @@ export default function MapClient({ initialItems }: { initialItems: IndexItem[] 
 
         <AdminCard title="Provider">
           <div className="flex flex-wrap gap-1.5">
-            {(['all', 'vercel', 'hetzner', 'cloudflare', 'github'] as ProviderKey[]).map((p) => (
-              <Chip key={p} active={selectedProvider === p} onClick={() => setSelectedProvider(p)}>
-                {p}
-              </Chip>
-            ))}
+            {(['all', 'vercel', 'hetzner', 'cloudflare', 'github'] as ProviderKey[]).map((p) => {
+              const label =
+                p === 'all'
+                  ? 'All'
+                  : p === 'github'
+                  ? 'GitHub'
+                  : p[0].toUpperCase() + p.slice(1);
+              return (
+                <Chip key={p} active={selectedProvider === p} onClick={() => setSelectedProvider(p)}>
+                  {label}
+                </Chip>
+              );
+            })}
           </div>
         </AdminCard>
 
         <AdminCard title="Status">
           <div className="flex flex-wrap gap-1.5">
-            {(['all', 'needs_review', 'unmapped'] as StatusKey[]).map((s) => (
-              <Chip key={s} active={selectedStatus === s} onClick={() => setSelectedStatus(s)}>
-                {s}
-              </Chip>
-            ))}
+            {(['all', 'needs_review', 'unmapped'] as StatusKey[]).map((s) => {
+              const label =
+                s === 'all' ? 'All' : s === 'needs_review' ? 'Needs review' : 'Unlinked';
+              return (
+                <Chip key={s} active={selectedStatus === s} onClick={() => setSelectedStatus(s)}>
+                  {label}
+                </Chip>
+              );
+            })}
           </div>
         </AdminCard>
 
-        <AdminCard title="Blocked by">
+        <AdminCard title="Waiting on">
           <select
             value={selectedBlockedBy}
             onChange={(e) => setSelectedBlockedBy(e.target.value as BlockedByKey)}
-            className="w-full rounded-lg border border-[#27272a] bg-[#0a0a0b] px-2.5 py-2 text-xs font-mono text-[#e4e4e7] focus:border-emerald-400/40 focus:outline-none"
+            className="w-full rounded-lg border border-[#27272a] bg-[#0a0a0b] px-2.5 py-2 text-xs text-[#e4e4e7] focus:border-emerald-400/40 focus:outline-none"
           >
-            <option value="all">all</option>
-            <option value="db">db</option>
-            <option value="ssh">ssh</option>
-            <option value="github_token">github_token</option>
-            <option value="vercel_token">vercel_token</option>
-            <option value="cloudflare_token">cloudflare_token</option>
-            <option value="hetzner_token">hetzner_token</option>
-            <option value="human">human</option>
+            <option value="all">Anything</option>
+            <option value="db">{labelFor(BLOCKED_BY_LABEL, 'db')}</option>
+            <option value="ssh">{labelFor(BLOCKED_BY_LABEL, 'ssh')}</option>
+            <option value="github_token">{labelFor(BLOCKED_BY_LABEL, 'github_token')}</option>
+            <option value="vercel_token">{labelFor(BLOCKED_BY_LABEL, 'vercel_token')}</option>
+            <option value="cloudflare_token">{labelFor(BLOCKED_BY_LABEL, 'cloudflare_token')}</option>
+            <option value="hetzner_token">{labelFor(BLOCKED_BY_LABEL, 'hetzner_token')}</option>
+            <option value="human">{labelFor(BLOCKED_BY_LABEL, 'human')}</option>
           </select>
         </AdminCard>
 
@@ -591,7 +604,7 @@ export default function MapClient({ initialItems }: { initialItems: IndexItem[] 
         )}
 
         {!selectedClientId && (unmappedAssets.length > 0 || lineageData.providerlessVercel.length > 0) && (
-          <AdminCard title="Unmapped">
+          <AdminCard title="Not yet linked to a client">
             <div className="space-y-3">
               <BadgeGroup label="Assets" items={unmappedAssets} tone="amber" onPick={(it) => pickAsset(it.id)} />
               <BadgeGroup label="Vercel projects" items={lineageData.providerlessVercel} tone="amber" onPick={pickItem} />
@@ -613,7 +626,7 @@ export default function MapClient({ initialItems }: { initialItems: IndexItem[] 
         ) : (
           <EmptyState
             title="Nothing selected"
-            hint="Select a client (centre) or asset (centre) to see its lineage here."
+            hint="Select a client or asset on the left to see what's connected to it."
           />
         )}
       </aside>

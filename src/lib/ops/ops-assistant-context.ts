@@ -400,14 +400,19 @@ function answerBlockingActivation(items: IndexItem[]): string | null {
   if (friendly.length === 0) {
     lines.push("Activation still has steps to work through, though the dashboard doesn't list specific blockers right now.");
   } else if (friendly.length <= 3) {
-    lines.push(`Activation is mainly waiting on ${friendly.join(', ')}. Once those are in place, the live database can be connected.`);
+    lines.push(`Activation is mainly waiting on ${friendly.join(', ')}. The next practical step is restoring Hetzner SSH access, then creating the ops database and setting the database connection in Vercel.`);
   } else {
-    lines.push(`Activation is mainly blocked by the database connection and the provider credentials. The key blockers are: ${friendly.slice(0, 6).join(', ')}.`);
+    const head = friendly.slice(0, 3).join(', ');
+    const more = friendly.length - 3;
+    lines.push(`Activation is mainly blocked by the database connection and access credentials. The next practical step is restoring Hetzner SSH access, then creating the ops database and setting the database connection in Vercel.`);
+    lines.push('');
+    lines.push(`Key blockers: ${head}${more > 0 ? ` and ${more} more` : ''}.`);
   }
   lines.push('');
   if (open.length > 0) {
     lines.push('**Steps still open**');
-    for (const s of open.slice(0, 8)) lines.push(`- ${linkFor(s)}`);
+    for (const s of open.slice(0, 5)) lines.push(`- ${linkFor(s)}`);
+    if (open.length > 5) lines.push('- Open [Activation](/admin/ops/activation) for the remaining steps.');
     lines.push('');
   }
   lines.push('You can review the full checklist on [Activation](/admin/ops/activation).');
@@ -420,19 +425,29 @@ function answerBelongsTo(items: IndexItem[]): string | null {
   lines.push("Here's what the dashboard knows about that:");
   lines.push('');
   let shown = 0;
+  let truncated = false;
   for (const t of TYPE_ORDER) {
     const group = items.filter((i) => i.type === t);
     if (group.length === 0) continue;
     lines.push(`**${TYPE_LABEL[t]}**`);
-    for (const i of group.slice(0, 6)) {
+    const slice = group.slice(0, 3);
+    for (const i of slice) {
       lines.push(`- ${linkFor(i)}`);
       shown++;
-      if (shown >= 18) break;
+      if (shown >= 10) break;
     }
+    if (group.length > slice.length) truncated = true;
     lines.push('');
-    if (shown >= 18) break;
+    if (shown >= 10) {
+      truncated = truncated || items.length > shown;
+      break;
+    }
   }
-  lines.push('Open the full record from any link above.');
+  if (truncated) {
+    lines.push('Open [Search](/admin/ops/search) for the full list.');
+  } else {
+    lines.push('Open the full record from any link above.');
+  }
   return lines.join('\n');
 }
 
@@ -443,7 +458,8 @@ function answerOnServer(items: IndexItem[], question: string): string | null {
   const lines: string[] = [];
   lines.push(`Here's what the dashboard shows running on ${serverGuess}:`);
   lines.push('');
-  for (const a of assets.slice(0, 10)) lines.push(`- ${linkFor(a)}`);
+  for (const a of assets.slice(0, 5)) lines.push(`- ${linkFor(a)}`);
+  if (assets.length > 5) lines.push('- Open [Infrastructure](/admin/ops/infrastructure) for the full list.');
   lines.push('');
   lines.push('See [Infrastructure](/admin/ops/infrastructure) for the full server view.');
   return lines.join('\n');
@@ -461,7 +477,8 @@ function answerDormantVercel(items: IndexItem[]): string | null {
     lines.push(`Here are Vercel projects worth a look — none are explicitly tagged dormant yet:`);
   }
   lines.push('');
-  for (const p of list.slice(0, 10)) lines.push(`- ${linkFor(p)}${p.status ? ` — _${p.status}_` : ''}`);
+  for (const p of list.slice(0, 5)) lines.push(`- ${linkFor(p)}${p.status ? ` — _${p.status}_` : ''}`);
+  if (list.length > 5) lines.push('- Open [Vercel](/admin/ops/vercel) for the full list.');
   lines.push('');
   lines.push('Open [Vercel](/admin/ops/vercel) to filter by state and plan cleanup.');
   return lines.join('\n');
@@ -473,13 +490,14 @@ function answerDuplicateRepos(items: IndexItem[]): string | null {
   const lines: string[] = [];
   lines.push("Here are the repo clusters where the dashboard sees duplicates worth resolving:");
   lines.push('');
-  for (const r of repos.slice(0, 10)) {
+  for (const r of repos.slice(0, 5)) {
     const extras: string[] = [];
     if (r.confidence) extras.push(r.confidence.replace(/_/g, ' '));
     if (r.status) extras.push(r.status);
     const tail = extras.length ? ` — ${extras.join(', ')}` : '';
     lines.push(`- ${linkFor(r)}${tail}`);
   }
+  if (repos.length > 5) lines.push('- Open [GitHub](/admin/ops/github) for the full list.');
   lines.push('');
   lines.push('Pick the canonical repo on [GitHub](/admin/ops/github); the others can be archived later.');
   return lines.join('\n');
@@ -491,9 +509,10 @@ function answerRenewals(items: IndexItem[]): string | null {
   const lines: string[] = [];
   lines.push("Here are the upcoming renewals the dashboard knows about:");
   lines.push('');
-  for (const r of renewals.slice(0, 10)) {
+  for (const r of renewals.slice(0, 5)) {
     lines.push(`- ${linkFor(r)}${r.status ? ` — ${r.status}` : ''}`);
   }
+  if (renewals.length > 5) lines.push('- Open [Renewals](/admin/ops/renewals) for the full list.');
   lines.push('');
   lines.push('Full calendar on [Renewals](/admin/ops/renewals).');
   return lines.join('\n');
@@ -507,9 +526,10 @@ function answerIncidents(items: IndexItem[]): string | null {
   const lines: string[] = [];
   lines.push(open.length > 0 ? "These incidents still need attention:" : "Here are incidents the dashboard is tracking:");
   lines.push('');
-  for (const i of list.slice(0, 10)) {
+  for (const i of list.slice(0, 5)) {
     lines.push(`- ${linkFor(i)}${i.status ? ` — ${i.status}` : ''}`);
   }
+  if (list.length > 5) lines.push('- Open [Incidents](/admin/ops/incidents) for the full list.');
   lines.push('');
   lines.push('Open [Incidents](/admin/ops/incidents) for the full timeline.');
   return lines.join('\n');
@@ -528,22 +548,22 @@ function answerBeforeDb(items: IndexItem[]): string {
   lines.push('');
   if (decisions.length > 0) {
     lines.push('**Open decisions to settle**');
-    for (const d of decisions.slice(0, 5)) lines.push(`- ${linkFor(d)}`);
+    for (const d of decisions.slice(0, 3)) lines.push(`- ${linkFor(d)}`);
     lines.push('');
   }
   if (steps.length > 0) {
     lines.push('**Activation steps you can prep**');
-    for (const s of steps.slice(0, 5)) lines.push(`- ${linkFor(s)}`);
+    for (const s of steps.slice(0, 3)) lines.push(`- ${linkFor(s)}`);
     lines.push('');
   }
   if (audits.length > 0) {
     lines.push('**Audit findings worth a look**');
-    for (const a of audits.slice(0, 5)) lines.push(`- ${linkFor(a)}`);
+    for (const a of audits.slice(0, 3)) lines.push(`- ${linkFor(a)}`);
     lines.push('');
   }
   if (runbooks.length > 0) {
     lines.push('**Runbooks for the next steps**');
-    for (const r of runbooks.slice(0, 4)) lines.push(`- ${linkFor(r)}`);
+    for (const r of runbooks.slice(0, 3)) lines.push(`- ${linkFor(r)}`);
     lines.push('');
   }
   lines.push('Start on [Review](/admin/ops/review) and [Activation](/admin/ops/activation).');
@@ -553,7 +573,7 @@ function answerBeforeDb(items: IndexItem[]): string {
 function answerEmailLinkingStatus(items: IndexItem[]): string {
   const lines: string[] = [];
   lines.push(
-    "Email linking is prepared but not active yet. The dashboard can show planned email reference categories, and manual linking will activate after the database is connected. Gmail and Outlook ingestion has not been enabled — those are a later, explicitly approved phase.",
+    "Email linking is prepared but not active yet — manual linking turns on once the production database is connected.",
   );
   lines.push('');
   const emailSteps = items.filter(
@@ -561,7 +581,7 @@ function answerEmailLinkingStatus(items: IndexItem[]): string {
   );
   if (emailSteps.length > 0) {
     lines.push('**Email setup steps tracked**');
-    for (const s of emailSteps.slice(0, 6)) lines.push(`- ${linkFor(s)}`);
+    for (const s of emailSteps.slice(0, 4)) lines.push(`- ${linkFor(s)}`);
     lines.push('');
   }
   lines.push('See [Emails](/admin/ops/emails) for the preview and [Activation](/admin/ops/activation) for the setup steps.');
@@ -576,7 +596,7 @@ function answerEmailCategoryTrack(items: IndexItem[]): string {
   );
   lines.push('');
   if (emails.length > 0) {
-    for (const e of emails.slice(0, 8)) {
+    for (const e of emails.slice(0, 5)) {
       lines.push(`- ${linkFor(e)}${e.subtitle ? ` — ${e.subtitle.toLowerCase()}` : ''}`);
     }
     lines.push('');
@@ -591,10 +611,11 @@ function answerServicesOverview(items: IndexItem[]): string {
   const lines: string[] = [];
   lines.push("Here are the supplier services and subscriptions the dashboard is tracking:");
   lines.push('');
-  for (const s of services.slice(0, 12)) {
+  for (const s of services.slice(0, 5)) {
     const status = s.status ? ` — ${s.status.replace(/_/g, ' ')}` : '';
     lines.push(`- ${linkFor(s)}${status}`);
   }
+  if (services.length > 5) lines.push('- Open [Services](/admin/ops/services) for the full list.');
   lines.push('');
   lines.push('Open [Services](/admin/ops/services) for billing owner, cadence, and notes per service.');
   return lines.join('\n');
@@ -609,10 +630,11 @@ function answerServicesNeedingReview(items: IndexItem[]): string {
   } else {
     lines.push("These services need a review or are not yet active:");
     lines.push('');
-    for (const s of needsReview.slice(0, 10)) {
+    for (const s of needsReview.slice(0, 5)) {
       const status = s.status ? ` — ${s.status.replace(/_/g, ' ')}` : '';
       lines.push(`- ${linkFor(s)}${status}`);
     }
+    if (needsReview.length > 5) lines.push('- Open [Services](/admin/ops/services) for the full list.');
     lines.push('');
   }
   lines.push('Open [Services](/admin/ops/services) for the full catalogue.');
@@ -637,11 +659,12 @@ function answerContactsNeeded(items: IndexItem[]): string {
   const contacts = items.filter((i) => i.type === 'contact');
   const lines: string[] = [];
   lines.push(
-    "Contacts are a planned foundation — the live Contacts table will fill in once the database is connected and operators enter real rows. The placeholder roles the dashboard expects to track are:",
+    "Contacts are a planned foundation — the live Contacts table will fill in once the production database is connected. The placeholder roles the dashboard expects to track are:",
   );
   lines.push('');
   if (contacts.length > 0) {
-    for (const c of contacts.slice(0, 8)) lines.push(`- ${linkFor(c)}${c.subtitle ? ` — ${c.subtitle}` : ''}`);
+    for (const c of contacts.slice(0, 4)) lines.push(`- ${linkFor(c)}${c.subtitle ? ` — ${c.subtitle}` : ''}`);
+    if (contacts.length > 4) lines.push('- Open [Contacts](/admin/ops/contacts) for the full list.');
     lines.push('');
   }
   lines.push('Open [Contacts](/admin/ops/contacts) to see the placeholder rows.');
@@ -736,11 +759,11 @@ function answerWhatNext(items: IndexItem[]): string {
   const lines: string[] = [];
   if (ready.length > 0) {
     lines.push(
-      `Do this next: **${candidates[0].label}**. It is the lowest-numbered step on the activation list that isn't waiting on something you haven't provisioned yet.`,
+      `Do this next: **${candidates[0].label}** — the lowest-numbered step that isn't waiting on something unprovisioned.`,
     );
   } else {
     lines.push(
-      `The next pending step is **${candidates[0].label}**. It is still gated on ${candidates[0].blockedBy.map(friendlyBlocker).join(', ')}, so make sure that piece is in place first.`,
+      `The next pending step is **${candidates[0].label}** — still gated on ${candidates[0].blockedBy.map(friendlyBlocker).join(', ')}.`,
     );
   }
   lines.push('');
@@ -781,18 +804,18 @@ function answerWorkToday(items: IndexItem[]): string {
 
   const lines: string[] = [];
   lines.push(
-    "Plenty is safe to work on today without waiting for a credential or for Hetzner. The dashboard tracks two kinds of work that operators can take in the browser: human decisions and items already gated only on env vars you've provisioned.",
+    "Plenty is safe to work on today without waiting for a credential. Focus on the review queue, services and billing owners, email categories, client-to-asset mapping, and activation prep — all of that survives once the live database is connected.",
   );
   lines.push('');
 
   if (humanFriendly.length > 0) {
     lines.push('**Decisions and reviews you can settle today**');
-    for (const s of humanFriendly.slice(0, 6)) lines.push(`- ${activationStepLink(s)}`);
+    for (const s of humanFriendly.slice(0, 3)) lines.push(`- ${activationStepLink(s)}`);
     lines.push('');
   }
   if (readyEnv.length > 0) {
     lines.push('**Already unblocked — credentials are in place**');
-    for (const s of readyEnv.slice(0, 6)) lines.push(`- ${activationStepLink(s)}`);
+    for (const s of readyEnv.slice(0, 3)) lines.push(`- ${activationStepLink(s)}`);
     lines.push('');
   }
   if (humanFriendly.length === 0 && readyEnv.length === 0) {
@@ -802,8 +825,8 @@ function answerWorkToday(items: IndexItem[]): string {
 
   const decisions = items.filter((i) => i.type === 'review_decision');
   if (decisions.length > 0) {
-    lines.push('**Open snapshot decisions**');
-    for (const d of decisions.slice(0, 5)) lines.push(`- ${linkFor(d)}`);
+    lines.push('**Open preview decisions**');
+    for (const d of decisions.slice(0, 3)) lines.push(`- ${linkFor(d)}`);
     lines.push('');
   }
 
@@ -882,20 +905,14 @@ function answerWhichPages(_items: IndexItem[], snapshotMode: boolean): string {
     lines.push('- [Activation](/admin/ops/activation) — the 27-step sequence from preview to live.');
     lines.push('- [Health](/admin/ops/health) — confirm env vars and integration presence.');
     lines.push('');
-    lines.push('**Also useful**');
-    lines.push('- [Overview](/admin/ops) — the at-a-glance summary.');
-    lines.push('- [Runbooks](/admin/ops/runbooks) — written guides for each setup step.');
-    lines.push('- [Emails](/admin/ops/emails) and [Services](/admin/ops/services) — confirm the planned-category lists look right before live data arrives.');
+    lines.push('Once those are in shape, the [Overview](/admin/ops), [Runbooks](/admin/ops/runbooks), [Emails](/admin/ops/emails), and [Services](/admin/ops/services) pages round out the preview.');
   } else {
     lines.push('**Start here**');
     lines.push('- [Health](/admin/ops/health) — confirm each provider token is in place and the database is reporting ok.');
     lines.push('- [Activation](/admin/ops/activation) — work through the remaining sync steps.');
     lines.push('- [Reports](/admin/ops/reports) — current counts and status.');
     lines.push('');
-    lines.push('**Also useful**');
-    lines.push('- [Overview](/admin/ops) — the at-a-glance summary.');
-    lines.push('- [Sync log](/admin/ops/sync-log) — confirm the latest sync runs completed.');
-    lines.push('- [Runbooks](/admin/ops/runbooks) — the same guides, now cross-referenced from the Activation page.');
+    lines.push('After that, [Overview](/admin/ops), [Sync log](/admin/ops/sync-log), and [Runbooks](/admin/ops/runbooks) round out the picture.');
   }
   return lines.join('\n');
 }
@@ -957,12 +974,12 @@ function answerMissingBeforeGolive(items: IndexItem[]): string {
   );
   lines.push('');
   lines.push('**Required steps still open**');
-  for (const s of required.slice(0, 12)) {
+  for (const s of required.slice(0, 5)) {
     const tail = s.blockedBy.length > 0 ? ` — waiting on ${s.blockedBy.map(friendlyBlocker).join(', ')}` : '';
     lines.push(`- ${activationStepLink(s)}${tail}`);
   }
-  if (required.length > 12) {
-    lines.push(`- (${required.length - 12} more)`);
+  if (required.length > 5) {
+    lines.push('- Open [Activation](/admin/ops/activation) for the remaining steps.');
   }
   lines.push('');
 
@@ -986,17 +1003,26 @@ function answerGeneric(items: IndexItem[]): string {
   lines.push("Here's what I found in the dashboard data:");
   lines.push('');
   let shown = 0;
+  let truncated = false;
   for (const t of TYPE_ORDER) {
     const group = items.filter((i) => i.type === t);
     if (group.length === 0) continue;
     lines.push(`**${TYPE_LABEL[t]}**`);
-    for (const i of group.slice(0, 5)) {
+    const slice = group.slice(0, 3);
+    for (const i of slice) {
       lines.push(`- ${linkFor(i)}`);
       shown++;
-      if (shown >= 18) break;
+      if (shown >= 10) break;
     }
+    if (group.length > slice.length) truncated = true;
     lines.push('');
-    if (shown >= 18) break;
+    if (shown >= 10) {
+      truncated = truncated || items.length > shown;
+      break;
+    }
+  }
+  if (truncated) {
+    lines.push('Open [Search](/admin/ops/search) for the full list.');
   }
   return lines.join('\n');
 }

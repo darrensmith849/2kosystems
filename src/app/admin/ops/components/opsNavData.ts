@@ -6,6 +6,14 @@ export type OpsNavItem = {
   href: string;
   label: string;
   exact?: boolean;
+  // When true, this nav item is shown muted (no emerald border / text) on
+  // subroutes that live in another group. Used by the cross-console
+  // "Ops Dashboard" entry so we don't double-paint the active rail.
+  dimWhenSubrouteActive?: boolean;
+  // When true, this item is pinned to the mobile top-of-panel grid. Owning
+  // the pinned set here keeps OpsMobileBar's pinned list and the data file
+  // in sync.
+  mobilePinned?: boolean;
 };
 
 export type OpsNavGroup = {
@@ -20,8 +28,11 @@ export const OPS_NAV_GROUPS: OpsNavGroup[] = [
       // Ops Dashboard is active across all /admin/ops* routes (console-level
       // indicator). It intentionally uses prefix matching — not exact — so
       // it stays highlighted on every sub-route. The Overview item below in
-      // the Operations group is what indicates the actual current page.
-      { href: '/admin/ops', label: 'Ops Dashboard' },
+      // the Operations group is what indicates the actual current page. The
+      // dimWhenSubrouteActive flag tells the sidebar to render this row
+      // muted on any /admin/ops/* subroute so we don't paint two emerald
+      // rails (the console-level one + the actual leaf).
+      { href: '/admin/ops', label: 'Ops Dashboard', dimWhenSubrouteActive: true },
       // Agent Ops navigates out of the ops console. While inside /admin/ops
       // this item is never active (pathname does not start with /admin/agent),
       // and OpsSidebar is unmounted on /admin/agent, so the active state for
@@ -32,9 +43,9 @@ export const OPS_NAV_GROUPS: OpsNavGroup[] = [
   {
     title: 'Operations',
     items: [
-      { href: '/admin/ops', label: 'Overview', exact: true },
-      { href: '/admin/ops/search', label: 'Search' },
-      { href: '/admin/ops/ask', label: 'Ask' },
+      { href: '/admin/ops', label: 'Overview', exact: true, mobilePinned: true },
+      { href: '/admin/ops/search', label: 'Search', mobilePinned: true },
+      { href: '/admin/ops/ask', label: 'Ask', mobilePinned: true },
       { href: '/admin/ops/emails', label: 'Emails' },
       { href: '/admin/ops/clients', label: 'Clients' },
       { href: '/admin/ops/contacts', label: 'Contacts' },
@@ -53,7 +64,7 @@ export const OPS_NAV_GROUPS: OpsNavGroup[] = [
   {
     title: 'Workflows',
     items: [
-      { href: '/admin/ops/tickets', label: 'Tickets' },
+      { href: '/admin/ops/tickets', label: 'Tickets', mobilePinned: true },
       { href: '/admin/ops/renewals', label: 'Renewals' },
       { href: '/admin/ops/incidents', label: 'Incidents' },
     ],
@@ -61,15 +72,17 @@ export const OPS_NAV_GROUPS: OpsNavGroup[] = [
   {
     title: 'Control',
     items: [
+      // Bring-up items first so the most-clicked items stay above the fold
+      // on short laptops.
+      { href: '/admin/ops/activation', label: 'Activation', mobilePinned: true },
+      { href: '/admin/ops/health', label: 'Health', mobilePinned: true },
+      { href: '/admin/ops/settings', label: 'Settings' },
       { href: '/admin/ops/reports', label: 'Reports' },
       { href: '/admin/ops/services', label: 'Services' },
       { href: '/admin/ops/audits', label: 'Audits' },
       { href: '/admin/ops/review', label: 'Review' },
-      { href: '/admin/ops/activation', label: 'Activation' },
-      { href: '/admin/ops/health', label: 'Health' },
       { href: '/admin/ops/runbooks', label: 'Runbooks' },
       { href: '/admin/ops/sync-log', label: 'Sync Log' },
-      { href: '/admin/ops/settings', label: 'Settings' },
     ],
   },
 ];
@@ -84,4 +97,10 @@ export function isItemActive(pathname: string, item: OpsNavItem): boolean {
   // the rule below also keeps the deeper items themselves correctly
   // scoped (e.g. /admin/ops/clients vs /admin/ops/clients/123).
   return pathname === item.href || pathname.startsWith(item.href + '/');
+}
+
+// Flat list of items pinned to the mobile bar's top grid. Centralised here
+// so OpsMobileBar reads the data file instead of duplicating the list.
+export function getMobilePinnedItems(): OpsNavItem[] {
+  return OPS_NAV_GROUPS.flatMap((g) => g.items).filter((i) => i.mobilePinned);
 }

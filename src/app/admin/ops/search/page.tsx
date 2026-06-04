@@ -11,7 +11,7 @@ export default async function SearchPage() {
     <>
       <SectionHeader
         title="Search"
-        subtitle="Find any record across the dashboard."
+        subtitle="Find any client, asset, repo, project, server, ticket, renewal, incident, or runbook."
       />
       {snapshot && <SnapshotBanner area="Search results" />}
       <SearchClient initialItems={items} />

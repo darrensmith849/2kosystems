@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { AdminCard, Badge, DataTable, EmptyState, StatusPill } from '@/components/admin-ui';
 import type { CloudflareZone, CloudflarePagesProject, HetznerServer } from '@/lib/db/schema/infra';
 import type { IntegrationConnectivity } from '@/lib/integrations/types';
+import { SYNC_STATE_LABEL, labelFor } from '@/lib/ops/labels';
 
 const STATE_TONES: Record<string, 'green' | 'amber' | 'rose' | 'neutral'> = {
   seen: 'green', vanished: 'rose',
@@ -49,7 +50,7 @@ export default function InfrastructureClient({
     <div className="space-y-5">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <AdminCard
-          title="Integration: Cloudflare"
+          title="Cloudflare"
           action={
             <div className="flex items-center gap-3">
               <StatusPill status={cloudflareStatus.status === 'connected' ? 'connected' : 'not_connected'} />
@@ -66,7 +67,7 @@ export default function InfrastructureClient({
         >
           {cloudflareStatus.status === 'connected' ? (
             <p className="text-xs text-[#71717a]">
-              Sync reads zones + DNS records + Pages projects. Read-only; never deletes; missing rows tagged <code>vanished</code>.
+              Sync reads DNS zones, DNS records, and Pages projects. Read-only — nothing is deleted. Rows that disappear upstream are marked Missing.
             </p>
           ) : (
             <p className="text-xs text-amber-200">{cloudflareStatus.detail}</p>
@@ -74,7 +75,7 @@ export default function InfrastructureClient({
         </AdminCard>
 
         <AdminCard
-          title="Integration: Hetzner Cloud"
+          title="Hetzner Cloud"
           action={
             <div className="flex items-center gap-3">
               <StatusPill status={hetznerStatus.status === 'connected' ? 'connected' : 'not_connected'} />
@@ -91,7 +92,7 @@ export default function InfrastructureClient({
         >
           {hetznerStatus.status === 'connected' ? (
             <p className="text-xs text-[#71717a]">
-              Sync reads servers + labels + IPs. Metrics + backups in Phase 2. Read-only.
+              Sync reads servers, labels, and IP addresses. Read-only. Metrics and backup status come in a later step.
             </p>
           ) : (
             <p className="text-xs text-amber-200">{hetznerStatus.detail}</p>
@@ -104,7 +105,7 @@ export default function InfrastructureClient({
       <div>
         <h3 className="text-xs font-mono uppercase tracking-[0.18em] text-[#71717a] mb-3">Hetzner servers</h3>
         {hetznerServers.length === 0 ? (
-          <EmptyState title="No Hetzner servers yet" hint="Set HETZNER_API_TOKEN and click Run sync." />
+          <EmptyState title="No Hetzner servers yet" hint="Connect Hetzner in Settings and click Run sync." />
         ) : (
           <DataTable
             rows={hetznerServers}
@@ -114,7 +115,7 @@ export default function InfrastructureClient({
               { key: 'location', header: 'Location', render: (s) => s.location ?? <span className="text-[#52525b]">—</span> },
               { key: 'status', header: 'Status', render: (s) => <Badge text={s.status ?? 'unknown'} tone={s.status === 'running' ? 'green' : 'neutral'} /> },
               { key: 'ipv4', header: 'IPv4', render: (s) => <span className="font-mono text-[10px]">{s.publicIpv4 ?? '—'}</span> },
-              { key: 'state', header: 'Sync', render: (s) => <Badge text={s.state} tone={STATE_TONES[s.state] ?? 'neutral'} /> },
+              { key: 'state', header: 'Status', render: (s) => <Badge text={labelFor(SYNC_STATE_LABEL, s.state)} tone={STATE_TONES[s.state] ?? 'neutral'} /> },
             ]}
           />
         )}
@@ -123,7 +124,7 @@ export default function InfrastructureClient({
       <div>
         <h3 className="text-xs font-mono uppercase tracking-[0.18em] text-[#71717a] mb-3">Cloudflare zones</h3>
         {zones.length === 0 ? (
-          <EmptyState title="No Cloudflare zones yet" hint="Set CLOUDFLARE_API_TOKEN + CLOUDFLARE_ACCOUNT_ID and click Run sync." />
+          <EmptyState title="No Cloudflare zones yet" hint="Connect Cloudflare in Settings and click Run sync." />
         ) : (
           <DataTable
             rows={zones}
@@ -131,7 +132,7 @@ export default function InfrastructureClient({
               { key: 'name', header: 'Name', render: (z) => <span className="font-medium text-[#f5f5f5]">{z.name}</span> },
               { key: 'status', header: 'Status', render: (z) => <Badge text={z.status ?? 'unknown'} tone={z.status === 'active' ? 'green' : 'neutral'} /> },
               { key: 'plan', header: 'Plan', render: (z) => z.plan ?? <span className="text-[#52525b]">—</span> },
-              { key: 'state', header: 'Sync', render: (z) => <Badge text={z.state} tone={STATE_TONES[z.state] ?? 'neutral'} /> },
+              { key: 'state', header: 'Status', render: (z) => <Badge text={labelFor(SYNC_STATE_LABEL, z.state)} tone={STATE_TONES[z.state] ?? 'neutral'} /> },
             ]}
           />
         )}
@@ -149,7 +150,7 @@ export default function InfrastructureClient({
               { key: 'branch', header: 'Branch', render: (p) => p.productionBranch ?? <span className="text-[#52525b]">—</span> },
               { key: 'status', header: 'Latest deploy', render: (p) => p.latestDeploymentStatus ?? <span className="text-[#52525b]">—</span> },
               { key: 'domains', header: 'Custom domains', render: (p) => p.customDomains.length > 0 ? <span className="font-mono text-[10px]">{p.customDomains.join(', ')}</span> : <span className="text-[#52525b]">—</span> },
-              { key: 'state', header: 'Sync', render: (p) => <Badge text={p.state} tone={STATE_TONES[p.state] ?? 'neutral'} /> },
+              { key: 'state', header: 'Status', render: (p) => <Badge text={labelFor(SYNC_STATE_LABEL, p.state)} tone={STATE_TONES[p.state] ?? 'neutral'} /> },
             ]}
           />
         )}

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { AdminCard, Badge, DataTable, EmptyState, StatusPill } from '@/components/admin-ui';
 import type { GithubRepoRow } from '@/lib/ops/github-service';
 import type { IntegrationConnectivity } from '@/lib/integrations/types';
+import { REPO_CATEGORY_LABEL, labelFor } from '@/lib/ops/labels';
 
 const CATEGORY_TONES: Record<string, 'neutral' | 'green' | 'amber' | 'rose' | 'blue'> = {
   '2ko_africa': 'green',
@@ -58,7 +59,7 @@ export default function GithubReposClient({
   return (
     <div className="space-y-5">
       <AdminCard
-        title={`Integration: GitHub`}
+        title="GitHub"
         action={
           <div className="flex items-center gap-3">
             <StatusPill status={integrationStatus.status === 'connected' ? 'connected' : 'not_connected'} />
@@ -74,10 +75,10 @@ export default function GithubReposClient({
         }
       >
         {integrationStatus.status === 'connected' ? (
-          <p className="text-xs text-[#71717a]">Connected via personal token. Classification is heuristic — overrides happen via topic tags or manual category edits (Phase 2).</p>
+          <p className="text-xs text-[#71717a]">Connected. Categories are a best-guess from repo names and topics; manual category edits are planned for a later step.</p>
         ) : (
           <p className="text-xs text-amber-200">
-            Not connected: {integrationStatus.detail ?? 'Set GITHUB_TOKEN.'}
+            Not connected. {integrationStatus.detail ?? 'Add a GitHub access token in Settings to enable sync.'}
           </p>
         )}
         {syncError && <p className="mt-2 text-xs text-rose-400">{syncError}</p>}
@@ -101,7 +102,7 @@ export default function GithubReposClient({
       {visible.length === 0 ? (
         <EmptyState
           title="No GitHub repos imported yet"
-          hint="If the integration is connected, run sync. Otherwise set GITHUB_TOKEN and try again."
+          hint="If GitHub is connected, run a sync. Otherwise add a GitHub access token in Settings and try again."
         />
       ) : (
         <DataTable
@@ -114,8 +115,8 @@ export default function GithubReposClient({
                 {r.isArchived && <span className="ml-2 text-[10px] text-amber-300">archived</span>}
               </span>
             )},
-            { key: 'visibility', header: 'Vis', render: (r) => <Badge text={r.visibility} tone={r.visibility === 'private' ? 'neutral' : 'blue'} /> },
-            { key: 'category', header: 'Category', render: (r) => <Badge text={r.category.replace('_', ' ')} tone={CATEGORY_TONES[r.category] ?? 'neutral'} /> },
+            { key: 'visibility', header: 'Visibility', render: (r) => <Badge text={r.visibility[0].toUpperCase() + r.visibility.slice(1)} tone={r.visibility === 'private' ? 'neutral' : 'blue'} /> },
+            { key: 'category', header: 'Category', render: (r) => <Badge text={labelFor(REPO_CATEGORY_LABEL, r.category)} tone={CATEGORY_TONES[r.category] ?? 'neutral'} /> },
             { key: 'language', header: 'Language', render: (r) => r.language ?? <span className="text-[#52525b]">—</span> },
             { key: 'pushed', header: 'Last push', render: (r) => fmtDate(r.pushedAt) },
           ]}

@@ -31,6 +31,7 @@ export default async function ClientsPage() {
           />
         </>
       )}
+
       <ClientsClient initialClients={clients} isSnapshot={snapshot} />
     </>
   );

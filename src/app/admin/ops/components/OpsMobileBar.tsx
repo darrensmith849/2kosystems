@@ -1,41 +1,29 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { OPS_NAV_GROUPS, isItemActive, type OpsNavItem } from './opsNavData';
+import {
+  OPS_NAV_GROUPS,
+  getMobilePinnedItems,
+  isItemActive,
+  type OpsNavItem,
+} from './opsNavData';
 
 // Compact top bar shown below the lg breakpoint. The full grouped nav lives
 // inside an expand/collapse panel beneath the bar — no off-canvas drawer,
 // just a slide-down list. Layout:
-//   1. Pinned section — six high-frequency destinations in a 2-column grid
-//      so the most common operator jumps are one tap away.
-//   2. "More" disclosure — the remaining grouped items behind a single
-//      reveal so the panel doesn't dump the full 23-row list on every open.
-//   3. Sticky footer inside the scroll region — Switch team member +
-//      Sign out stay reachable without scrolling the whole nav.
+//   1. Pinned section — high-frequency destinations in a 2-column grid so
+//      the most common team-member jumps are one tap away. The pinned set
+//      is owned by opsNavData via the mobilePinned flag (single source of
+//      truth shared with the desktop sidebar).
+//   2. "All sections" disclosure — the remaining grouped items behind a
+//      single reveal, with items that already appear in the pinned grid
+//      hidden so users don't see them twice.
+//   3. Sticky footer inside the scroll region — Switch user + Sign out
+//      stay reachable without scrolling the whole nav.
 // The panel closes when any link is tapped, when the route changes (back /
 // forward), and when the user presses Escape.
-
-const PINNED_HREFS: ReadonlySet<string> = new Set([
-  '/admin/ops',
-  '/admin/ops/search',
-  '/admin/ops/ask',
-  '/admin/ops/tickets',
-  '/admin/ops/activation',
-  '/admin/ops/health',
-]);
-
-// All in-console items, flat. We re-classify with PINNED_HREFS to build
-// the pinned grid + remaining list.
-function collectInConsoleItems(): OpsNavItem[] {
-  const out: OpsNavItem[] = [];
-  for (let i = 0; i < OPS_NAV_GROUPS.length; i++) {
-    if (i === 0) continue; // skip the Admin consoles switcher
-    for (const item of OPS_NAV_GROUPS[i].items) out.push(item);
-  }
-  return out;
-}
 
 export default function OpsMobileBar({ operatorSlug }: { operatorSlug: string }) {
   const pathname = usePathname() ?? '';
@@ -70,11 +58,15 @@ export default function OpsMobileBar({ operatorSlug }: { operatorSlug: string })
     router.refresh();
   }
 
-  const inConsoleItems = collectInConsoleItems();
-  const pinned = inConsoleItems.filter((i) => PINNED_HREFS.has(i.href));
+  const pinned = useMemo<OpsNavItem[]>(() => getMobilePinnedItems(), []);
+  const pinnedHrefs = useMemo<Set<string>>(
+    () => new Set(pinned.map((i) => i.href)),
+    [pinned],
+  );
+
   // Show an "active" dot on the hamburger when the user is deeper than the
   // Overview route — a quick visual cue that they're inside the tree.
-  const isDeep = pathname !== '/admin/ops' && pathname.startsWith('/admin/ops');
+  const isOnSubpage = pathname !== '/admin/ops';
 
   return (
     <div className="lg:hidden sticky top-0 z-30 border-b border-[#1c1c1e] bg-[#0a0a0b]/95 backdrop-blur-sm">
@@ -88,7 +80,7 @@ export default function OpsMobileBar({ operatorSlug }: { operatorSlug: string })
             aria-label="Toggle navigation"
           >
             {open ? '×' : '☰'}
-            {!open && isDeep && (
+            {!open && isOnSubpage && (
               <span
                 aria-hidden="true"
                 className="absolute -top-0.5 -right-0.5 inline-block h-1.5 w-1.5 rounded-full bg-emerald-400"
@@ -96,14 +88,16 @@ export default function OpsMobileBar({ operatorSlug }: { operatorSlug: string })
             )}
           </button>
           <span className="text-xs text-[#a1a1aa] truncate">
-            2KO Systems · Ops Dashboard
+            <span className="hidden sm:inline">2KO Systems · </span>
+            Ops Dashboard
           </span>
         </div>
         <button
           type="button"
           onClick={handleSwitchOperator}
           className="text-xs text-emerald-300 hover:text-emerald-200 border border-emerald-400/30 rounded-md px-2.5 py-1 shrink-0"
-          title="Switch team member"
+          title="Switch user"
+          aria-label="Switch user"
         >
           {operatorSlug}
         </button>
@@ -129,8 +123,8 @@ export default function OpsMobileBar({ operatorSlug }: { operatorSlug: string })
                         aria-current={active ? 'page' : undefined}
                         className={`flex items-center justify-between gap-2 px-2 py-1.5 text-sm rounded border-l-2 transition-colors ${
                           active
-                            ? 'bg-neutral-800 text-emerald-300 border-emerald-400 font-medium'
-                            : 'text-[#a1a1aa] hover:text-[#f5f5f5] hover:bg-neutral-800 border-transparent'
+                            ? 'bg-neutral-800/80 ring-1 ring-emerald-500/20 text-emerald-300 border-emerald-400 font-medium'
+                            : 'text-[#a1a1aa] hover:text-[#f5f5f5] hover:bg-neutral-800/40 border-transparent'
                         }`}
                       >
                         <span>{item.label}</span>
@@ -149,7 +143,7 @@ export default function OpsMobileBar({ operatorSlug }: { operatorSlug: string })
               </ul>
             </div>
 
-            {/* Pinned grid — top six destinations as a 2-column tap grid. */}
+            {/* Pinned grid — top destinations as a 2-column tap grid. */}
             <div>
               <p className="px-1 mb-1.5 text-[10px] uppercase tracking-wider text-zinc-500">
                 Pinned
@@ -165,8 +159,8 @@ export default function OpsMobileBar({ operatorSlug }: { operatorSlug: string })
                       aria-current={active ? 'page' : undefined}
                       className={`px-2 py-2 text-sm rounded border transition-colors text-center ${
                         active
-                          ? 'bg-neutral-800 text-emerald-300 border-emerald-400/60 font-medium'
-                          : 'text-[#e4e4e7] border-[#27272a] hover:bg-neutral-800 hover:text-[#f5f5f5]'
+                          ? 'bg-neutral-800/80 text-emerald-300 border-emerald-400/60 font-medium'
+                          : 'text-[#e4e4e7] border-[#27272a] hover:bg-neutral-800/40 hover:text-[#f5f5f5]'
                       }`}
                     >
                       {item.label}
@@ -176,8 +170,9 @@ export default function OpsMobileBar({ operatorSlug }: { operatorSlug: string })
               </div>
             </div>
 
-            {/* "More" disclosure — full grouped list behind a single reveal so we
-                don't dump 17 extra rows on every open. */}
+            {/* "All sections" disclosure — full grouped list, with items that
+                already appear in the pinned grid filtered out so the user
+                doesn't see them twice. */}
             <div>
               <button
                 type="button"
@@ -185,7 +180,7 @@ export default function OpsMobileBar({ operatorSlug }: { operatorSlug: string })
                 onClick={() => setMoreOpen((v) => !v)}
                 className="w-full flex items-center justify-between px-1 mb-1.5 text-[10px] uppercase tracking-wider text-zinc-500 hover:text-zinc-300 transition-colors"
               >
-                <span>More pages</span>
+                <span>All sections</span>
                 <span
                   aria-hidden="true"
                   className={`text-[10px] leading-none transition-transform ${
@@ -197,49 +192,56 @@ export default function OpsMobileBar({ operatorSlug }: { operatorSlug: string })
               </button>
               {moreOpen && (
                 <div className="space-y-3">
-                  {OPS_NAV_GROUPS.slice(1).map((group) => (
-                    <div key={group.title}>
-                      <p className="px-1 mb-1 text-[10px] uppercase tracking-wider text-zinc-500">
-                        {group.title}
-                      </p>
-                      <ul className="space-y-0.5">
-                        {group.items.map((item) => {
-                          const active = isItemActive(pathname, item);
-                          return (
-                            <li key={`${group.title}:${item.href}`}>
-                              <Link
-                                href={item.href}
-                                onClick={() => setOpen(false)}
-                                aria-current={active ? 'page' : undefined}
-                                className={`flex items-center justify-between gap-2 px-2 py-1.5 text-sm rounded border-l-2 transition-colors ${
-                                  active
-                                    ? 'bg-neutral-800 text-emerald-300 border-emerald-400 font-medium'
-                                    : 'text-[#a1a1aa] hover:text-[#f5f5f5] hover:bg-neutral-800 border-transparent'
-                                }`}
-                              >
-                                <span>{item.label}</span>
-                              </Link>
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    </div>
-                  ))}
+                  {OPS_NAV_GROUPS.slice(1).map((group) => {
+                    const itemsToShow = group.items.filter(
+                      (i) => !pinnedHrefs.has(i.href),
+                    );
+                    if (itemsToShow.length === 0) return null;
+                    return (
+                      <div key={group.title}>
+                        <p className="px-1 mb-1 text-[10px] uppercase tracking-wider text-zinc-500">
+                          {group.title}
+                        </p>
+                        <ul className="space-y-0.5">
+                          {itemsToShow.map((item) => {
+                            const active = isItemActive(pathname, item);
+                            return (
+                              <li key={`${group.title}:${item.href}`}>
+                                <Link
+                                  href={item.href}
+                                  onClick={() => setOpen(false)}
+                                  aria-current={active ? 'page' : undefined}
+                                  className={`flex items-center justify-between gap-2 px-2 py-1.5 text-sm rounded border-l-2 transition-colors ${
+                                    active
+                                      ? 'bg-neutral-800/80 ring-1 ring-emerald-500/20 text-emerald-300 border-emerald-400 font-medium'
+                                      : 'text-[#a1a1aa] hover:text-[#f5f5f5] hover:bg-neutral-800/40 border-transparent'
+                                  }`}
+                                >
+                                  <span>{item.label}</span>
+                                </Link>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </div>
+                    );
+                  })}
                 </div>
               )}
             </div>
           </div>
 
-          {/* Sticky footer inside the scroll region — sign-out + switch-operator
+          {/* Sticky footer inside the scroll region — sign-out + switch-user
               stay reachable without scrolling 17 nav rows. */}
           <div className="shrink-0 border-t border-[#1c1c1e] bg-[#0a0a0b]/95 px-3 py-3 space-y-2">
             <button
               type="button"
               onClick={handleSwitchOperator}
               className="w-full text-xs text-emerald-300 hover:text-emerald-200 border border-emerald-400/30 rounded-md px-2.5 py-1.5 text-left"
+              aria-label="Switch user"
             >
               <span className="block text-[11px] text-emerald-200/90">
-                Switch team member
+                Switch user
               </span>
               <span className="block truncate font-mono text-[10px] text-[#a1a1aa]">
                 {operatorSlug}

@@ -16,7 +16,7 @@ export default async function GithubReposPage() {
     <>
       <SectionHeader
         title="GitHub repos"
-        subtitle="All repositories under our account, grouped by area. Personal and legacy repos are hidden by default."
+        subtitle="All repositories under our account, grouped by team. Personal and legacy repos are hidden by default."
       />
       {snapshot ? (
         <SnapshotBanner area="The GitHub repo classification" />

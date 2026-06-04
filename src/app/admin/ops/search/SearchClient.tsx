@@ -109,10 +109,7 @@ const ALL_BLOCKED_BY = [
   'cloudflare_token', 'hetzner_token',
 ];
 
-const EXAMPLES = [
-  'SigmaPhi', 'Impart', 'ma130', 'Vercel', 'unmapped',
-  'blocked by db', 'renewals', 'SAPS', 'Cloudflare', 'dormant',
-];
+const EXAMPLES = ['Hetzner', 'SigmaPhi', 'renewals', 'unmapped'];
 
 // ---------------------------------------------------------------- Highlight
 
@@ -155,7 +152,7 @@ function MultiSelect<T extends string>({
   const [open, setOpen] = useState(false);
   const summary =
     selected.length === 0
-      ? 'all'
+      ? 'Any'
       : selected.length <= 2
         ? selected.join(', ')
         : `${selected.length} selected`;
@@ -220,6 +217,8 @@ export default function SearchClient({ initialItems }: { initialItems: IndexItem
   const [saved, setSaved] = useState<SavedSearch[]>([]);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   const [saveName, setSaveName] = useState('');
+  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
+  const [openWhy, setOpenWhy] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -351,109 +350,30 @@ export default function SearchClient({ initialItems }: { initialItems: IndexItem
     setDebouncedQ(example);
   }
 
+  const hasQuery = filters.q.trim().length > 0;
+  const showSaved = saved.length > 0;
+  const advancedActive =
+    filters.types.length > 0 ||
+    filters.sources.length > 0 ||
+    filters.blockedBy.length > 0;
+  const advancedOpen = showAdvancedFilters || advancedActive;
+
   return (
     <div className="space-y-5">
-      <AdminCard title="Query">
+      <AdminCard title="Search">
         <div className="space-y-3">
-          <div className="flex items-center gap-3">
+          <div className="relative">
             <input
               type="text"
               value={filters.q}
               onChange={(e) => setFilters((p) => ({ ...p, q: e.target.value }))}
-              placeholder="Search clients, assets, repos, projects, servers, tickets, renewals, incidents…"
-              className="flex-1 rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5] placeholder:text-[#3f3f46] focus:border-[#0f7b3a]/50 focus:outline-none transition-colors"
+              placeholder="Search clients, assets, repos, renewals, incidents, decisions, services…"
+              className="w-full rounded-lg border border-emerald-400/30 bg-[#0a0a0b] px-4 py-3 text-sm text-[#f5f5f5] placeholder:text-[#3f3f46] focus:border-emerald-400/60 focus:outline-none transition-colors"
             />
-            <span className="shrink-0 rounded-full border border-[#27272a] px-3 py-1 text-[11px] font-mono text-[#a1a1aa]">
-              {results.length} / {totalAfterFilters}
-            </span>
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <MultiSelect
-              label="type"
-              options={ALL_TYPES}
-              selected={filters.types}
-              onChange={(next) => setFilters((p) => ({ ...p, types: next }))}
-            />
-            <MultiSelect
-              label="source"
-              options={ALL_SOURCES}
-              selected={filters.sources}
-              onChange={(next) => setFilters((p) => ({ ...p, sources: next }))}
-            />
-            <MultiSelect
-              label="blockedBy"
-              options={ALL_BLOCKED_BY}
-              selected={filters.blockedBy}
-              onChange={(next) => setFilters((p) => ({ ...p, blockedBy: next }))}
-            />
-            {(filters.types.length > 0 ||
-              filters.sources.length > 0 ||
-              filters.blockedBy.length > 0 ||
-              filters.q.length > 0) && (
-              <button
-                type="button"
-                onClick={() =>
-                  setFilters({ q: '', types: [], sources: [], blockedBy: [] })
-                }
-                className="rounded-full border border-[#27272a] hover:border-[#3f3f46] px-3 py-1 text-[11px] font-mono text-[#71717a] hover:text-[#f5f5f5] transition-colors"
-              >
-                Reset
-              </button>
-            )}
-            <button
-              type="button"
-              disabled={!hasActiveFilters}
-              onClick={() => setShowSaveDialog(true)}
-              className="rounded-full border border-[#27272a] hover:border-emerald-400/40 disabled:opacity-40 disabled:hover:border-[#27272a] disabled:cursor-not-allowed px-3 py-1 text-[11px] font-mono text-[#a1a1aa] hover:text-emerald-300 transition-colors"
-            >
-              Save current search
-            </button>
-          </div>
-          {showSaveDialog && (
-            <div className="rounded-lg border border-[#27272a] bg-[#0a0a0b] p-3">
-              <p className="text-[10px] font-mono uppercase tracking-wider text-[#71717a] mb-2">
-                Save search
-              </p>
-              <div className="flex flex-wrap items-center gap-2">
-                <input
-                  type="text"
-                  value={saveName}
-                  onChange={(e) => setSaveName(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') handleSaveCurrent();
-                    else if (e.key === 'Escape') {
-                      setShowSaveDialog(false);
-                      setSaveName('');
-                    }
-                  }}
-                  autoFocus
-                  placeholder="Name this search…"
-                  className="flex-1 min-w-[200px] rounded-lg border border-[#27272a] bg-[#111113] px-3 py-1.5 text-xs text-[#f5f5f5] placeholder:text-[#3f3f46] focus:border-[#0f7b3a]/50 focus:outline-none transition-colors"
-                />
-                <button
-                  type="button"
-                  onClick={handleSaveCurrent}
-                  disabled={saveName.trim().length === 0}
-                  className="rounded-full border border-emerald-400/30 bg-emerald-400/5 px-3 py-1 text-[11px] font-mono text-emerald-300 hover:border-emerald-400/60 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                >
-                  Save
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowSaveDialog(false);
-                    setSaveName('');
-                  }}
-                  className="rounded-full border border-[#27272a] hover:border-[#3f3f46] px-3 py-1 text-[11px] font-mono text-[#71717a] hover:text-[#f5f5f5] transition-colors"
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          )}
-          <div className="flex flex-wrap items-center gap-2 pt-1">
             <span className="text-[10px] font-mono uppercase tracking-wider text-[#52525b]">
-              examples:
+              Try:
             </span>
             {EXAMPLES.map((ex) => (
               <button
@@ -465,14 +385,115 @@ export default function SearchClient({ initialItems }: { initialItems: IndexItem
                 {ex}
               </button>
             ))}
+            <button
+              type="button"
+              onClick={() => setShowAdvancedFilters((v) => !v)}
+              aria-expanded={advancedOpen}
+              className="ml-auto rounded-full border border-[#27272a] hover:border-[#3f3f46] px-3 py-1 text-[11px] font-mono text-[#a1a1aa] hover:text-[#f5f5f5] transition-colors"
+            >
+              {advancedOpen ? 'Hide filters' : 'More filters'}
+              {advancedActive && (
+                <span className="ml-1.5 text-emerald-300">
+                  · {filters.types.length + filters.sources.length + filters.blockedBy.length}
+                </span>
+              )}
+            </button>
           </div>
+          {advancedOpen && (
+            <div className="rounded-lg border border-[#27272a] bg-[#0a0a0b] p-3">
+              <div className="flex flex-wrap items-center gap-2">
+                <MultiSelect
+                  label="type"
+                  options={ALL_TYPES}
+                  selected={filters.types}
+                  onChange={(next) => setFilters((p) => ({ ...p, types: next }))}
+                />
+                <MultiSelect
+                  label="source"
+                  options={ALL_SOURCES}
+                  selected={filters.sources}
+                  onChange={(next) => setFilters((p) => ({ ...p, sources: next }))}
+                />
+                <MultiSelect
+                  label="blockedBy"
+                  options={ALL_BLOCKED_BY}
+                  selected={filters.blockedBy}
+                  onChange={(next) => setFilters((p) => ({ ...p, blockedBy: next }))}
+                />
+                {(filters.types.length > 0 ||
+                  filters.sources.length > 0 ||
+                  filters.blockedBy.length > 0 ||
+                  filters.q.length > 0) && (
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setFilters({ q: '', types: [], sources: [], blockedBy: [] })
+                    }
+                    className="rounded-full border border-[#27272a] hover:border-[#3f3f46] px-3 py-1 text-[11px] font-mono text-[#71717a] hover:text-[#f5f5f5] transition-colors"
+                  >
+                    Reset
+                  </button>
+                )}
+                <button
+                  type="button"
+                  disabled={!hasActiveFilters}
+                  onClick={() => setShowSaveDialog(true)}
+                  className="rounded-full border border-[#27272a] hover:border-emerald-400/40 disabled:opacity-40 disabled:hover:border-[#27272a] disabled:cursor-not-allowed px-3 py-1 text-[11px] font-mono text-[#a1a1aa] hover:text-emerald-300 transition-colors"
+                >
+                  Save current search
+                </button>
+              </div>
+              {showSaveDialog && (
+                <div className="mt-3 rounded-lg border border-[#27272a] bg-[#111113] p-3">
+                  <p className="text-[10px] font-mono uppercase tracking-wider text-[#71717a] mb-2">
+                    Save search
+                  </p>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <input
+                      type="text"
+                      value={saveName}
+                      onChange={(e) => setSaveName(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') handleSaveCurrent();
+                        else if (e.key === 'Escape') {
+                          setShowSaveDialog(false);
+                          setSaveName('');
+                        }
+                      }}
+                      autoFocus
+                      placeholder="Name this search…"
+                      className="flex-1 min-w-[200px] rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3 py-1.5 text-xs text-[#f5f5f5] placeholder:text-[#3f3f46] focus:border-[#0f7b3a]/50 focus:outline-none transition-colors"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleSaveCurrent}
+                      disabled={saveName.trim().length === 0}
+                      className="rounded-full border border-emerald-400/30 bg-emerald-400/5 px-3 py-1 text-[11px] font-mono text-emerald-300 hover:border-emerald-400/60 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                    >
+                      Save
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowSaveDialog(false);
+                        setSaveName('');
+                      }}
+                      className="rounded-full border border-[#27272a] hover:border-[#3f3f46] px-3 py-1 text-[11px] font-mono text-[#71717a] hover:text-[#f5f5f5] transition-colors"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </AdminCard>
 
-      <AdminCard
-        title="Saved searches"
-        action={
-          saved.length > 0 ? (
+      {showSaved && (
+        <AdminCard
+          title="Saved searches"
+          action={
             <button
               type="button"
               onClick={handleClearAllSaved}
@@ -480,18 +501,12 @@ export default function SearchClient({ initialItems }: { initialItems: IndexItem
             >
               Clear all saved
             </button>
-          ) : undefined
-        }
-      >
-        <div className="space-y-2">
-          <p className="text-[10px] font-mono uppercase tracking-wider text-[#52525b]">
-            Saved locally in this browser
-          </p>
-          {saved.length === 0 ? (
-            <p className="text-xs text-[#71717a]">
-              No saved searches yet. Save useful queries from the button above.
+          }
+        >
+          <div className="space-y-2">
+            <p className="text-[10px] font-mono uppercase tracking-wider text-[#52525b]">
+              Saved locally in this browser
             </p>
-          ) : (
             <ul className="space-y-1.5">
               {saved.map((s) => (
                 <li
@@ -521,20 +536,42 @@ export default function SearchClient({ initialItems }: { initialItems: IndexItem
                 </li>
               ))}
             </ul>
-          )}
-        </div>
-      </AdminCard>
+          </div>
+        </AdminCard>
+      )}
 
       {results.length === 0 ? (
-        <EmptyState
-          title="No results"
-          hint="No results. Try one of the examples below or broaden your filters."
-        />
+        hasActiveFilters ? (
+          <EmptyState
+            title="No results"
+            hint="No results for that search. Try a shorter query, or open More filters to widen the search."
+          />
+        ) : (
+          <EmptyState
+            title="Start by searching for a client name, an asset, or a question"
+            hint={'For example, "Hetzner" or "SigmaPhi". The search covers clients, assets, repos, projects, servers, tickets, renewals, incidents, decisions, services, and runbooks.'}
+          />
+        )
       ) : (
         <div className="space-y-3">
-          {results.map(({ item, reasons }) => (
-            <ResultCard key={`${item.source}::${item.type}::${item.id}`} item={item} reasons={reasons} tokens={tokens} />
-          ))}
+          <p className="text-[10px] font-mono uppercase tracking-wider text-[#71717a]">
+            {hasQuery ? `Showing ${results.length} of ${totalAfterFilters} results` : `Showing ${results.length} of ${totalAfterFilters} indexed items`}
+          </p>
+          {results.map(({ item, reasons }) => {
+            const cardKey = `${item.source}::${item.type}::${item.id}`;
+            return (
+              <ResultCard
+                key={cardKey}
+                item={item}
+                reasons={reasons}
+                tokens={tokens}
+                whyOpen={Boolean(openWhy[cardKey])}
+                onToggleWhy={() =>
+                  setOpenWhy((prev) => ({ ...prev, [cardKey]: !prev[cardKey] }))
+                }
+              />
+            );
+          })}
         </div>
       )}
     </div>
@@ -547,20 +584,24 @@ function ResultCard({
   item,
   reasons,
   tokens,
+  whyOpen,
+  onToggleWhy,
 }: {
   item: IndexItem;
   reasons: string[];
   tokens: string[];
+  whyOpen: boolean;
+  onToggleWhy: () => void;
 }) {
   const excerpt = item.body.length > 200 ? item.body.slice(0, 200) + '…' : item.body;
-  const tone: 'green' | 'blue' | 'neutral' | 'amber' =
+  const sourceTone: 'green' | 'blue' | 'neutral' | 'amber' =
     item.source === 'db' ? 'green'
       : item.source === 'snapshot' ? 'blue'
       : item.source === 'readiness' ? 'amber'
       : 'neutral';
   return (
-    <div className="rounded-2xl border border-[#27272a] bg-[#111113] p-4">
-      <div className="flex items-start justify-between gap-3 mb-2">
+    <div className="rounded-2xl border border-[#27272a] bg-[#111113] p-3">
+      <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
           {item.url ? (
             <Link
@@ -574,30 +615,41 @@ function ResultCard({
               {highlight(item.title, tokens)}
             </p>
           )}
-          <p className="mt-0.5 text-[11px] font-mono text-[#71717a]">
-            {item.type} · {item.source}
-            {item.status ? ` · ${item.status}` : ''}
-            {item.confidence ? ` · ${item.confidence}` : ''}
-            {item.subtitle ? ` · ${item.subtitle}` : ''}
-          </p>
+          {item.subtitle && (
+            <p className="mt-0.5 text-[11px] text-[#71717a]">{item.subtitle}</p>
+          )}
         </div>
-        <div className="shrink-0">
-          <Badge text={item.source} tone={tone} />
+        <div className="shrink-0 flex flex-wrap items-center justify-end gap-1.5">
+          <Badge text={item.type} tone="neutral" />
+          <Badge text={item.source} tone={sourceTone} />
+          {item.status ? <Badge text={item.status} tone="neutral" /> : null}
         </div>
       </div>
-      <p className="text-xs text-[#a1a1aa] leading-relaxed break-words">
+      <p className="mt-2 text-xs text-[#a1a1aa] leading-relaxed break-words line-clamp-2">
         {highlight(excerpt, tokens)}
       </p>
       {reasons.length > 0 && (
-        <div className="mt-3 flex flex-wrap gap-1">
-          {reasons.slice(0, 8).map((r, i) => (
-            <span
-              key={i}
-              className="inline-block text-[10px] font-mono text-[#71717a] border border-[#27272a] rounded-full px-1.5 py-0.5"
-            >
-              {r}
-            </span>
-          ))}
+        <div className="mt-2">
+          <button
+            type="button"
+            onClick={onToggleWhy}
+            aria-expanded={whyOpen}
+            className="text-[10px] font-mono uppercase tracking-wider text-[#71717a] hover:text-emerald-300 transition-colors"
+          >
+            {whyOpen ? 'Hide why' : `Why? · ${reasons.length}`}
+          </button>
+          {whyOpen && (
+            <div className="mt-2 flex flex-wrap gap-1">
+              {reasons.slice(0, 8).map((r, i) => (
+                <span
+                  key={i}
+                  className="inline-block text-[10px] font-mono text-[#71717a] border border-[#27272a] rounded-full px-1.5 py-0.5"
+                >
+                  {r}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>

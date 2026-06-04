@@ -5,6 +5,12 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { AdminCard, Badge, DataTable, EmptyState } from '@/components/admin-ui';
 import type { TicketWithRefs } from '@/lib/ops/tickets-service';
+import {
+  TICKET_KIND_LABEL,
+  TICKET_STATUS_LABEL,
+  TICKET_PRIORITY_LABEL,
+  labelFor,
+} from '@/lib/ops/labels';
 
 const TICKET_KINDS = ['support', 'bug', 'change_request', 'content_update', 'emergency', 'billing'] as const;
 const PRIORITIES = ['low', 'med', 'high', 'urgent'] as const;
@@ -142,9 +148,9 @@ export default function TicketsClient({
   return (
     <div className="space-y-5">
       {isSnapshot ? (
-        <AdminCard title="Add ticket — read-only in snapshot mode">
+        <AdminCard title="Add ticket — read-only in preview mode">
           <p className="text-xs text-[#a1a1aa]">
-            Creating tickets activates once <code className="text-emerald-300">DATABASE_URL</code> is set. The rows below are real operational tasks identified during discovery, marked <em className="text-emerald-300/80 not-italic">snapshot</em>.
+            Adding tickets turns on once the production database is connected. The rows below are real operational tasks from the saved sample data.
           </p>
         </AdminCard>
       ) : (
@@ -157,7 +163,7 @@ export default function TicketsClient({
             disabled={busy}
           >
             {TICKET_KINDS.map((k) => (
-              <option key={k} value={k}>{k}</option>
+              <option key={k} value={k}>{labelFor(TICKET_KIND_LABEL, k)}</option>
             ))}
           </select>
           <input
@@ -175,7 +181,7 @@ export default function TicketsClient({
             disabled={busy}
           >
             {PRIORITIES.map((p) => (
-              <option key={p} value={p}>{p}</option>
+              <option key={p} value={p}>{labelFor(TICKET_PRIORITY_LABEL, p)}</option>
             ))}
           </select>
           <input
@@ -192,7 +198,7 @@ export default function TicketsClient({
             className="rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5] lg:col-span-2"
             disabled={busy}
           >
-            <option value="">no client</option>
+            <option value="">No client</option>
             {clients.map((c) => (
               <option key={c.id} value={c.id}>{c.name}</option>
             ))}
@@ -203,7 +209,7 @@ export default function TicketsClient({
             className="rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5] lg:col-span-2"
             disabled={busy}
           >
-            <option value="">no asset</option>
+            <option value="">No asset</option>
             {assets.map((a) => (
               <option key={a.id} value={a.id}>{a.name}</option>
             ))}
@@ -214,7 +220,7 @@ export default function TicketsClient({
             className="rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5] lg:col-span-2"
             disabled={busy}
           >
-            <option value="">unassigned</option>
+            <option value="">Unassigned</option>
             {operators.map((o) => (
               <option key={o.id} value={o.id}>{o.displayName}</option>
             ))}
@@ -259,7 +265,7 @@ export default function TicketsClient({
             <Chip active={statusFilter === 'all'} onClick={() => setStatusFilter('all')}>All</Chip>
             {STATUS_OPTIONS.map((s) => (
               <Chip key={s} active={statusFilter === s} onClick={() => setStatusFilter(s)}>
-                {s.replace(/_/g, ' ')}
+                {labelFor(TICKET_STATUS_LABEL, s)}
               </Chip>
             ))}
           </div>
@@ -268,7 +274,7 @@ export default function TicketsClient({
             <Chip active={priorityFilter === 'all'} onClick={() => setPriorityFilter('all')}>All</Chip>
             {PRIORITY_FILTERS.map((p) => (
               <Chip key={p} active={priorityFilter === p} onClick={() => setPriorityFilter(p)}>
-                {p}
+                {labelFor(TICKET_PRIORITY_LABEL, p)}
               </Chip>
             ))}
           </div>
@@ -280,7 +286,7 @@ export default function TicketsClient({
           title={initialTickets.length === 0 ? 'No tickets yet' : 'No tickets match these filters'}
           hint={
             initialTickets.length === 0
-              ? 'Capture the next support request, bug, change, or content update here.'
+              ? 'Capture the next support request, bug, change request, or content update here.'
               : 'Try clearing a chip or switching client.'
           }
         />
@@ -297,16 +303,16 @@ export default function TicketsClient({
                 </Link>
               ),
             },
-            { key: 'kind', header: 'Kind', render: (t) => <Badge text={t.kind} /> },
+            { key: 'kind', header: 'Kind', render: (t) => <Badge text={labelFor(TICKET_KIND_LABEL, t.kind)} /> },
             {
               key: 'status',
               header: 'Status',
-              render: (t) => <Badge text={t.status.replace(/_/g, ' ')} tone={STATUS_TONES[t.status] ?? 'amber'} />,
+              render: (t) => <Badge text={labelFor(TICKET_STATUS_LABEL, t.status)} tone={STATUS_TONES[t.status] ?? 'amber'} />,
             },
             {
               key: 'priority',
               header: 'Priority',
-              render: (t) => <Badge text={t.priority} tone={PRIORITY_TONES[t.priority] ?? 'neutral'} />,
+              render: (t) => <Badge text={labelFor(TICKET_PRIORITY_LABEL, t.priority)} tone={PRIORITY_TONES[t.priority] ?? 'neutral'} />,
             },
             {
               key: 'client',

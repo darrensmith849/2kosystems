@@ -16,7 +16,7 @@ export default async function VercelProjectsPage() {
     <>
       <SectionHeader
         title="Vercel projects"
-        subtitle="Projects across both Vercel teams. Filter by state to plan cleanup."
+        subtitle="Projects across both Vercel teams. Filter by status to plan cleanup."
       />
       {snapshot ? (
         <SnapshotBanner area="The Vercel project list" />

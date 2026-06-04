@@ -28,7 +28,7 @@ export default async function AssetsPage() {
             area="Assets"
             whatYouWillSee={[
               'Asset inventory across all clients',
-              'Linked GitHub repos, Vercel projects, Cloudflare zones, Hetzner servers',
+              'Linked repositories, hosted projects, DNS zones, and servers',
               'Domain registrations and renewal windows per asset',
             ]}
           />

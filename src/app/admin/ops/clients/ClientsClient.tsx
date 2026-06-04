@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { AdminCard, Badge, DataTable, EmptyState } from '@/components/admin-ui';
 import type { ClientWithDivision } from '@/lib/ops/clients-service';
+import { CLIENT_STATUS_LABEL, labelFor } from '@/lib/ops/labels';
 
 const STATUS_TONES: Record<string, 'neutral' | 'green' | 'amber' | 'rose' | 'blue'> = {
   active: 'green', lead: 'blue', paused: 'amber', archived: 'neutral', former: 'rose',
@@ -51,9 +52,9 @@ export default function ClientsClient({
   if (isSnapshot) {
     return (
       <div className="space-y-5">
-        <AdminCard title="Add client — read-only in snapshot mode">
+        <AdminCard title="Add client — read-only in preview mode">
           <p className="text-xs text-[#a1a1aa]">
-            Creating clients activates once <code className="text-emerald-300">DATABASE_URL</code> is set. The rows below are the discovery snapshot from <code className="text-emerald-300">infra-handover</code>.
+            Adding clients turns on once the production database is connected. The rows below are the saved sample data.
           </p>
         </AdminCard>
         <SnapshotTable rows={initialClients} />
@@ -79,11 +80,11 @@ export default function ClientsClient({
             className="rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5] focus:border-[#0f7b3a]/50 focus:outline-none"
             disabled={busy}
           >
-            <option value="active">active</option>
-            <option value="lead">lead</option>
-            <option value="paused">paused</option>
-            <option value="archived">archived</option>
-            <option value="former">former</option>
+            <option value="active">Active</option>
+            <option value="lead">Lead</option>
+            <option value="paused">Paused</option>
+            <option value="archived">Archived</option>
+            <option value="former">Former</option>
           </select>
           <button
             type="submit"
@@ -97,7 +98,7 @@ export default function ClientsClient({
       </AdminCard>
 
       {initialClients.length === 0 ? (
-        <EmptyState title="No clients yet" hint="Add your first client above. Imports from the inventory and CRM are Phase 2." />
+        <EmptyState title="No clients yet" hint="Add your first client above. Importing from the inventory and CRM is planned for a later step." />
       ) : (
         <DataTable
           rows={initialClients}
@@ -108,7 +109,7 @@ export default function ClientsClient({
               </Link>
             ) },
             { key: 'division', header: 'Division', render: (c) => c.division?.name ?? <span className="text-[#52525b]">—</span> },
-            { key: 'status', header: 'Status', render: (c) => <Badge text={c.status} tone={STATUS_TONES[c.status] ?? 'neutral'} /> },
+            { key: 'status', header: 'Status', render: (c) => <Badge text={labelFor(CLIENT_STATUS_LABEL, c.status)} tone={STATUS_TONES[c.status] ?? 'neutral'} /> },
             { key: 'updated', header: 'Updated', render: (c) => fmtDate(c.updatedAt) },
           ]}
         />
@@ -124,7 +125,7 @@ function fmtDate(d: Date | null): string {
 
 function SnapshotTable({ rows }: { rows: ClientWithDivision[] }) {
   if (rows.length === 0) {
-    return <EmptyState title="Snapshot is empty" hint="Edit src/lib/ops/ops-snapshot-data.ts to seed more discovery entries." />;
+    return <EmptyState title="Sample data is empty" hint="Edit src/lib/ops/ops-snapshot-data.ts to seed more sample entries." />;
   }
   return (
     <DataTable
@@ -134,12 +135,12 @@ function SnapshotTable({ rows }: { rows: ClientWithDivision[] }) {
           <Link href={`/admin/ops/clients/${c.id}`} className="font-medium text-[#f5f5f5] hover:text-emerald-300 transition-colors">
             {c.name}
             <span className="ml-2 inline-block text-[9px] uppercase tracking-wider text-emerald-300/80 border border-emerald-400/30 rounded-full px-1.5 py-0.5 align-middle">
-              snapshot
+              preview
             </span>
           </Link>
         ) },
         { key: 'division', header: 'Division', render: (c) => c.division?.name ?? <span className="text-[#52525b]">—</span> },
-        { key: 'status', header: 'Status', render: (c) => <Badge text={c.status} tone={STATUS_TONES[c.status] ?? 'neutral'} /> },
+        { key: 'status', header: 'Status', render: (c) => <Badge text={labelFor(CLIENT_STATUS_LABEL, c.status)} tone={STATUS_TONES[c.status] ?? 'neutral'} /> },
         { key: 'tags', header: 'Tags', render: (c) => c.tags.length > 0 ? <span className="font-mono text-[10px] text-[#a1a1aa]">{c.tags.join(', ')}</span> : <span className="text-[#52525b]">—</span> },
         { key: 'notes', header: 'Notes', render: (c) => c.notes ? <span className="text-[11px] text-[#a1a1aa]">{c.notes}</span> : <span className="text-[#52525b]">—</span> },
       ]}

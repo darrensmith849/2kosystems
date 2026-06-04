@@ -226,35 +226,66 @@ function renderInline(text: string, keyHint: number): React.ReactNode {
 }
 
 // --------------------------------------------------------------- Source cards
+//
+// IMPORTANT: this inlined SourceCards is the twin of
+// src/components/admin-ui/floating-chat/SourceCards.tsx. Until the
+// floating-chat barrel is adopted on this page, the two implementations
+// MUST stay in sync — defaults to 5 visible sources with a "Show N more
+// sources" toggle, validates hrefs to avoid broken <a href="undefined">,
+// and uses the same compact padding/typography.
+
+const SOURCE_CARDS_DEFAULT_VISIBLE = 5;
+
+function isValidHref(href: string | undefined): href is string {
+  if (!href) return false;
+  if (href === '#') return false;
+  return href.startsWith('/') || href.startsWith('http');
+}
 
 function SourceCards({ sources }: { sources: AssistantSource[] }) {
+  const [expanded, setExpanded] = useState<boolean>(false);
   if (sources.length === 0) return null;
+  const visible = expanded ? sources : sources.slice(0, SOURCE_CARDS_DEFAULT_VISIBLE);
+  const hidden = sources.length - SOURCE_CARDS_DEFAULT_VISIBLE;
+  const showToggle = sources.length > SOURCE_CARDS_DEFAULT_VISIBLE;
   return (
-    <div className="mt-3 rounded-xl border border-[#1c1c1e] bg-[#0a0a0b] p-3">
-      <p className="text-xs text-[#71717a] mb-2">Related records ({sources.length})</p>
-      <ul className="space-y-1.5">
-        {sources.slice(0, 8).map((s) => {
+    <div className="mt-3 rounded-xl border border-[#1c1c1e] bg-[#0a0a0b] px-3 py-2.5">
+      <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a] mb-2">
+        Sources ({sources.length})
+      </p>
+      <ul className="space-y-1">
+        {visible.map((s) => {
           const kindLabel = SOURCE_KIND_LABEL[s.source] ?? s.source;
           const kindTone: 'neutral' | 'green' | 'amber' | 'rose' | 'blue' =
             s.source === 'db' ? 'green' : s.source === 'snapshot' ? 'blue' : 'neutral';
+          const valid = isValidHref(s.url);
           return (
-            <li key={s.id} className="flex items-center gap-2 text-xs">
+            <li key={s.id} className="flex flex-wrap items-center gap-2 text-xs py-1">
               <Badge text={s.type.replace(/_/g, ' ')} tone="neutral" />
               <Badge text={kindLabel} tone={kindTone} />
-              {s.url ? (
+              {valid ? (
                 <a
                   href={s.url}
-                  className="text-emerald-300 hover:text-emerald-200 underline underline-offset-2 truncate"
+                  className="text-emerald-300 hover:text-emerald-200 underline underline-offset-2 truncate text-[12px]"
                 >
                   {s.title}
                 </a>
               ) : (
-                <span className="text-[#e4e4e7] truncate">{s.title}</span>
+                <span className="text-[#e4e4e7] truncate text-[12px]">{s.title}</span>
               )}
             </li>
           );
         })}
       </ul>
+      {showToggle && (
+        <button
+          type="button"
+          onClick={() => setExpanded((v) => !v)}
+          className="mt-2 text-[11px] uppercase tracking-[0.18em] text-emerald-300 hover:text-emerald-200"
+        >
+          {expanded ? 'Show fewer' : `Show ${hidden} more sources`}
+        </button>
+      )}
     </div>
   );
 }

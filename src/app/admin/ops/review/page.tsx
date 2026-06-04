@@ -11,16 +11,16 @@ import DecisionsClient from './DecisionsClient';
 import ReviewSessionClient from './ReviewSessionClient';
 import ImportRehearsalCard, { ValidationFindingsCard } from './ImportRehearsalCard';
 
-// Server component. Composes the Review page:
-//   1. SectionHeader + SnapshotBanner / NotConnectedBanner
-//   2. ImportPreviewCard
-//   3. ImportRehearsalCard — what would happen if we imported right now,
-//      rendered as a single read over snapshot data + the validation pass.
-//   4. ValidationFindingsCard — per-finding detail, grouped by category.
-//   5. ImportDependencyOrderCard
-//   6. Review session (browser-only)
-//   7. DecisionsClient
-//   8. Decision-to-ticket bridge
+// Server component. Composes the Review page in a renumbered, clearly-named flow:
+//   1. What I've reviewed locally — browser-local checklist (ReviewSessionClient)
+//   2. Will be imported when the database connects — ImportPreviewCard
+//   3. Import rehearsal — split across four small cards inside ImportRehearsalCard
+//   4. Validation findings
+//   5. Dependency order
+//   6. Needs human decision — DecisionsClient
+//   7. Decisions → tickets bridge
+//
+// Names match Track C's brief. No data plumbing changes; section copy only.
 
 export default async function ReviewPage() {
   const snapshot = isSnapshotMode();
@@ -30,44 +30,98 @@ export default async function ReviewPage() {
   return (
     <>
       <SectionHeader
-        title="Review &amp; decisions"
+        title="Review & decisions"
         subtitle="Open decisions to settle before the database goes live."
       />
-      {snapshot ? <SnapshotBanner area="Review &amp; decisions" /> : <NotConnectedBanner />}
+      {snapshot ? <SnapshotBanner area="Review & decisions" /> : <NotConnectedBanner />}
 
-      <div className="mb-6">
-        <ImportPreviewCard />
-      </div>
+      <nav className="mb-6 hidden flex-wrap gap-3 rounded-2xl border border-[#1c1c1e] bg-[#0a0a0b]/60 px-4 py-3 text-[11px] text-[#a1a1aa] sm:flex">
+        <span className="font-mono uppercase tracking-[0.18em] text-[10px] text-[#52525b]">
+          Jump to
+        </span>
+        <a href="#step-1" className="hover:text-emerald-300">
+          1. Reviewed locally
+        </a>
+        <a href="#step-2" className="hover:text-emerald-300">
+          2. Will be imported
+        </a>
+        <a href="#step-3" className="hover:text-emerald-300">
+          3. Rehearsal
+        </a>
+        <a href="#step-4" className="hover:text-emerald-300">
+          4. Validation
+        </a>
+        <a href="#step-5" className="hover:text-emerald-300">
+          5. Dependency order
+        </a>
+        <a href="#step-6" className="hover:text-emerald-300">
+          6. Needs human decision
+        </a>
+        <a href="#step-7" className="hover:text-emerald-300">
+          7. Decisions → tickets
+        </a>
+      </nav>
 
-      <div className="mb-6">
-        <ImportRehearsalCard />
-      </div>
-
-      <div className="mb-6">
-        <ValidationFindingsCard report={validationReport} />
-      </div>
-
-      <div className="mb-6">
-        <ImportDependencyOrderCard />
-      </div>
-
-      <section className="mb-8">
-        <h3 className="text-sm font-semibold text-[#f5f5f5] mb-3">Review session</h3>
+      <section id="step-1" className="mb-8 scroll-mt-24">
+        <h3 className="mb-3 text-sm font-semibold text-[#f5f5f5]">
+          1. What I&rsquo;ve reviewed locally
+        </h3>
         <ReviewSessionClient />
       </section>
 
-      <DecisionsClient initialDecisions={decisions} />
+      <section id="step-2" className="mb-8 scroll-mt-24">
+        <h3 className="mb-3 text-sm font-semibold text-[#f5f5f5]">
+          2. Will be imported when the database connects
+        </h3>
+        <ImportPreviewCard />
+      </section>
 
-      <section className="mt-8">
-        <h3 className="text-sm font-semibold text-[#f5f5f5] mb-3">Decision-to-ticket bridge</h3>
+      <section id="step-3" className="mb-8 scroll-mt-24">
+        <h3 className="mb-3 text-sm font-semibold text-[#f5f5f5]">3. Import rehearsal</h3>
+        <ImportRehearsalCard />
+      </section>
+
+      <section id="step-4" className="mb-8 scroll-mt-24">
+        <h3 className="mb-3 text-sm font-semibold text-[#f5f5f5]">4. Validation findings</h3>
+        <ValidationFindingsCard report={validationReport} />
+      </section>
+
+      <section id="step-5" className="mb-8 scroll-mt-24">
+        <h3 className="mb-3 text-sm font-semibold text-[#f5f5f5]">5. Dependency order</h3>
+        <ImportDependencyOrderCard />
+      </section>
+
+      <section id="step-6" className="mb-8 scroll-mt-24">
+        <h3 className="mb-3 text-sm font-semibold text-[#f5f5f5]">6. Needs human decision</h3>
+        <DecisionsClient initialDecisions={decisions} />
+      </section>
+
+      <section id="step-7" className="mb-8 scroll-mt-24">
+        <h3 className="mb-3 text-sm font-semibold text-[#f5f5f5]">
+          7. Decisions &rarr; tickets bridge
+        </h3>
         <DecisionBridgeCard />
       </section>
 
       <div className="mt-8">
-        <AdminCard title="What this page is for">
-          <p className="text-xs text-[#a1a1aa] leading-relaxed">
-            The dashboard is in read-only snapshot mode until Hetzner Postgres lands. The items above are real ambiguities surfaced from the discovery work — choosing now means the first database import is clean and the canonical mappings are obvious. Status + notes you set here are stored in <strong className="text-[#e4e4e7]">your browser only</strong>; once <code className="text-emerald-300">DATABASE_URL</code> is set, the same questions will reappear as ticket rows seeded from this list and the local entries can be migrated.
-          </p>
+        <AdminCard title="Scope and limits">
+          <ul className="space-y-1.5 text-xs text-[#a1a1aa] leading-relaxed">
+            <li className="flex gap-2">
+              <span className="mt-1.5 inline-block size-1 shrink-0 rounded-full bg-[#52525b]" />
+              <span>Read-only preview of the import.</span>
+            </li>
+            <li className="flex gap-2">
+              <span className="mt-1.5 inline-block size-1 shrink-0 rounded-full bg-[#52525b]" />
+              <span>
+                Decisions and notes are saved in this browser only — switching browsers or clearing
+                site data will lose them.
+              </span>
+            </li>
+            <li className="flex gap-2">
+              <span className="mt-1.5 inline-block size-1 shrink-0 rounded-full bg-[#52525b]" />
+              <span>No data is written to the production database from this page.</span>
+            </li>
+          </ul>
         </AdminCard>
       </div>
     </>

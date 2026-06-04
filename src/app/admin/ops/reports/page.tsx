@@ -56,7 +56,7 @@ export default async function ReportsPage() {
     <>
       <SectionHeader
         title="Reports"
-        subtitle="A snapshot of the current operational picture. Counts come from preview data (snapshot data) while DATABASE_URL is unset; once Hetzner connects, the same view switches to live database data."
+        subtitle="Snapshot of operational status — read-only."
       />
       {snapshot && <SnapshotBanner area="Reports" />}
 
@@ -65,6 +65,8 @@ export default async function ReportsPage() {
         {' · '}source: <span className="text-[#a1a1aa]">{summary.dataSource}</span>
       </p>
 
+      <TopSummary summary={summary} />
+      <NeedsAttention summary={summary} items={items} />
       <AtAGlance summary={summary} />
       <ClientPortfolio items={items} />
       <InfrastructureFootprint summary={summary} items={items} />
@@ -83,6 +85,110 @@ export default async function ReportsPage() {
   );
 }
 
+// ---------------------------------------------------------------- Top summary
+
+function TopSummary({ summary }: { summary: ReportsSummary }) {
+  const t = summary.totals;
+  const decisionsTotal =
+    (summary.decisionsByRisk.high ?? 0) +
+    (summary.decisionsByRisk.med ?? 0) +
+    (summary.decisionsByRisk.low ?? 0);
+  const tiles: Array<{ label: string; value: number; tone?: Tone }> = [
+    { label: 'Clients', value: t.clients },
+    { label: 'Assets', value: t.assets },
+    { label: 'Open decisions', value: decisionsTotal, tone: decisionsTotal > 0 ? 'amber' : 'neutral' },
+    {
+      label: 'Activation steps pending',
+      value: summary.activationReadiness.pending,
+      tone: summary.activationReadiness.pending > 0 ? 'amber' : 'green',
+    },
+  ];
+  return (
+    <div className="mb-6">
+      <AdminCard title="Summary">
+        <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+          {tiles.map((tile) => (
+            <Tile key={tile.label} label={tile.label} value={tile.value} tone={tile.tone} />
+          ))}
+        </div>
+      </AdminCard>
+    </div>
+  );
+}
+
+function NeedsAttention({ summary, items }: { summary: ReportsSummary; items: IndexItem[] }) {
+  const highRiskDecisions = summary.decisionsByRisk.high ?? 0;
+
+  // audit findings with severity major/critical/high considered high severity
+  const highSeverityAuditFindings = items.filter((it) => {
+    if (it.type !== 'audit_finding') return false;
+    if ((it.status ?? 'open') !== 'open') return false;
+    const sev = it.tags[2] ?? '';
+    return sev === 'critical' || sev === 'major' || sev === 'high';
+  }).length;
+
+  // Services missing a billing owner (snapshot data)
+  const servicesMissingOwner = SNAPSHOT_SERVICES.filter((s) =>
+    /needs review|unknown/i.test(s.billingOwner),
+  ).length;
+
+  const openIncidents = summary.totals.openIncidents;
+
+  const tiles: Array<{ label: string; value: number; href: string; tone: Tone }> = [
+    {
+      label: 'High-risk decisions',
+      value: highRiskDecisions,
+      href: '/admin/ops/review',
+      tone: highRiskDecisions > 0 ? 'rose' : 'neutral',
+    },
+    {
+      label: 'High-severity audit findings',
+      value: highSeverityAuditFindings,
+      href: '/admin/ops/audits',
+      tone: highSeverityAuditFindings > 0 ? 'rose' : 'neutral',
+    },
+    {
+      label: 'Services missing billing owner',
+      value: servicesMissingOwner,
+      href: '/admin/ops/services',
+      tone: servicesMissingOwner > 0 ? 'amber' : 'neutral',
+    },
+    {
+      label: 'Open incidents',
+      value: openIncidents,
+      href: '/admin/ops/incidents',
+      tone: openIncidents > 0 ? 'rose' : 'neutral',
+    },
+  ];
+
+  const totalAttention = tiles.reduce((acc, t) => acc + t.value, 0);
+
+  return (
+    <div className="mb-6">
+      <AdminCard
+        title="Needs attention"
+        action={
+          <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-[#71717a]">
+            {totalAttention === 0 ? 'all clear' : `${totalAttention} flagged`}
+          </span>
+        }
+      >
+        <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+          {tiles.map((tile) => (
+            <Link
+              key={tile.label}
+              href={tile.href}
+              className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/40 rounded-2xl"
+            >
+              <Tile label={tile.label} value={tile.value} tone={tile.tone} />
+            </Link>
+          ))}
+        </div>
+      </AdminCard>
+    </div>
+  );
+}
+
 function CommercialReadiness() {
   const totalServices = SNAPSHOT_SERVICES.length;
   const needsReview = SNAPSHOT_SERVICES.filter(
@@ -95,9 +201,7 @@ function CommercialReadiness() {
     <section className="mb-8">
       <h2 className="mb-3 text-sm font-medium text-[#f5f5f5]">Commercial readiness</h2>
       <p className="mb-4 text-xs text-[#a1a1aa]">
-        Email linkage and services catalogue — both in preview mode while the database connection
-        is being prepared. Manual email references and live editing activate after the database
-        is connected.
+        Email linkage and services catalogue — both in preview mode until the database is connected.
       </p>
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <AdminCard title="Email linkage readiness">

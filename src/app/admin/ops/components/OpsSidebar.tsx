@@ -81,6 +81,11 @@ export default function OpsSidebar({ operatorSlug }: { operatorSlug: string }) {
     router.refresh();
   }
 
+  // True when the user has navigated past the console-level Overview into a
+  // specific leaf. Used to dim the cross-console "Ops Dashboard" row so we
+  // only paint one emerald rail at a time.
+  const isOnOpsSubroute = pathname !== '/admin/ops' && pathname.startsWith('/admin/ops');
+
   return (
     <aside className="hidden lg:flex lg:flex-col w-56 shrink-0 border-r border-[#1c1c1e] bg-[#0a0a0b]/95 backdrop-blur-sm sticky top-0 h-screen">
       <div className="flex flex-col h-full min-h-0">
@@ -91,7 +96,7 @@ export default function OpsSidebar({ operatorSlug }: { operatorSlug: string }) {
           <p className="mt-1 text-base font-medium text-[#f5f5f5]">Ops Dashboard</p>
         </div>
 
-        <nav className="flex-1 min-h-0 px-2 py-4 space-y-5 overflow-y-auto">
+        <nav className="flex-1 min-h-0 px-2 py-4 pb-3 space-y-5 overflow-y-auto">
           {OPS_NAV_GROUPS.map((group, idx) => {
             const isConsoleSwitcher = idx === 0;
             const groupHasActive = group.items.some((item) =>
@@ -150,7 +155,15 @@ export default function OpsSidebar({ operatorSlug }: { operatorSlug: string }) {
                     className="space-y-0.5"
                   >
                     {group.items.map((item) => {
-                      const active = isItemActive(pathname, item);
+                      const rawActive = isItemActive(pathname, item);
+                      // Dim the cross-console "Ops Dashboard" row when the
+                      // user is on any /admin/ops/* subroute — that prevents
+                      // the double-emerald-rail glitch where both the
+                      // console-switcher row and the actual leaf light up.
+                      const suppressActive = Boolean(
+                        item.dimWhenSubrouteActive && isOnOpsSubroute,
+                      );
+                      const active = rawActive && !suppressActive;
                       // The Admin consoles group sends users out of this
                       // console; mark the external destination with a small
                       // glyph so it reads as a switcher, not a page link.
@@ -161,10 +174,10 @@ export default function OpsSidebar({ operatorSlug }: { operatorSlug: string }) {
                           <Link
                             href={item.href}
                             aria-current={active ? 'page' : undefined}
-                            className={`flex items-center justify-between gap-2 px-2 py-1.5 text-sm rounded border-l-2 transition-colors ${
+                            className={`flex items-center justify-between gap-2 px-2 py-1.5 text-[13px] rounded border-l-2 transition-colors ${
                               active
-                                ? 'bg-neutral-800 text-emerald-300 border-emerald-400 font-medium'
-                                : 'text-[#a1a1aa] hover:text-[#f5f5f5] hover:bg-neutral-800 border-transparent'
+                                ? 'bg-neutral-800/80 ring-1 ring-emerald-500/20 text-emerald-300 border-emerald-400 font-medium'
+                                : 'text-[#a1a1aa] hover:text-[#f5f5f5] hover:bg-neutral-800/40 border-transparent'
                             }`}
                           >
                             <span>{item.label}</span>
@@ -189,16 +202,17 @@ export default function OpsSidebar({ operatorSlug }: { operatorSlug: string }) {
 
         <div className="shrink-0 px-4 py-4 border-t border-[#1c1c1e] space-y-2 bg-[#0a0a0b]/95">
           <div className="flex flex-col gap-1">
-            <span className="text-[10px] uppercase tracking-wider text-[#52525b]">
-              signed in as
+            <span className="text-[10px] text-[#71717a]">
+              Signed in as
             </span>
             <button
               type="button"
               onClick={handleSwitchOperator}
               className="text-xs text-emerald-300 hover:text-emerald-200 border border-emerald-400/30 rounded-md px-2.5 py-1 text-left"
-              title="Switch team member"
+              title={operatorSlug}
+              aria-label="Switch user"
             >
-              <span className="block text-[11px] text-emerald-200/90">Switch team member</span>
+              <span className="block text-[11px] text-emerald-200/90">Switch user</span>
               <span className="block truncate font-mono text-[10px] text-[#a1a1aa]">
                 {operatorSlug}
               </span>

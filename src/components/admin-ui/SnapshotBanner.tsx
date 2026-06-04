@@ -12,7 +12,7 @@ export default function SnapshotBanner({
       <span className="text-emerald-300/90 font-medium">Preview mode</span>
       <span className="text-emerald-200/40">·</span>
       <span className="text-emerald-200/80">
-        {area} is showing saved discovery data. Editing will be available after the database is connected.
+        {area} is showing saved sample data. Editing turns on once the production database is connected.
       </span>
     </div>
   );

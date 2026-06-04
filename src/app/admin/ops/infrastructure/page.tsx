@@ -33,7 +33,7 @@ export default async function InfrastructurePage() {
         subtitle="Cloudflare zones, DNS records, and Hetzner servers."
       />
       {snapshot ? (
-        <SnapshotBanner area="Infrastructure (CF zones + Pages + Hetzner servers)" />
+        <SnapshotBanner area="Infrastructure (DNS, Pages, and servers)" />
       ) : (
         <>
           <NotConnectedBanner />

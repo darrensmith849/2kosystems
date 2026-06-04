@@ -134,7 +134,10 @@ export default async function HealthPage() {
         subtitle="Runtime, database, and integration status. Every check is presence-only — no secret values are ever shown."
       />
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <HealthSection
+        title="Core app"
+        subtitle="Runtime environment and deployment target."
+      >
         <AdminCard title="Runtime">
           <Row label="Detected runtime" value={<Badge text={runtime} tone={runtime === 'unknown' ? 'neutral' : 'blue'} />} />
           <Row label="Deployment env" value={<Badge text={deployEnv} tone={deployEnv === 'production' ? 'green' : 'amber'} />} />
@@ -143,7 +146,12 @@ export default async function HealthPage() {
           <Row label="Commit sha" value={<span className="font-mono text-xs">{sha}</span>} />
           <Row label="Commit ref" value={<span className="font-mono text-xs">{ref}</span>} />
         </AdminCard>
+      </HealthSection>
 
+      <HealthSection
+        title="Database"
+        subtitle="Production database connectivity and current data source."
+      >
         {/* 1. Database */}
         <AdminCard title="Database">
           <Row label="DATABASE_URL" value={<YesNo ok={dbConfigured} yes="set up" no="needs setup" />} />
@@ -207,7 +215,12 @@ export default async function HealthPage() {
             }
           />
         </AdminCard>
+      </HealthSection>
 
+      <HealthSection
+        title="Search and assistant"
+        subtitle="Search index and AI assistant readiness."
+      >
         {/* 3. Search & Ask */}
         <AdminCard title="Search and Ask">
           <Row label="Assistant mode" value={<Badge text={aiMode} tone={aiConfigured ? 'green' : 'blue'} />} />
@@ -229,7 +242,12 @@ export default async function HealthPage() {
             }
           />
         </AdminCard>
+      </HealthSection>
 
+      <HealthSection
+        title="Import and export"
+        subtitle="Snapshot import preview, rehearsal, and CSV exports."
+      >
         {/* 4. Import & export */}
         <AdminCard title="Import and export">
           <Row
@@ -257,7 +275,26 @@ export default async function HealthPage() {
             value={<Badge text={importPreview.dbConfigured ? 'rehearsal or save for real' : 'rehearsal only'} tone={importPreview.dbConfigured ? 'green' : 'amber'} />}
           />
         </AdminCard>
+      </HealthSection>
 
+      <HealthSection
+        title="Provider syncs"
+        subtitle="Access tokens for the four external systems we sync from."
+      >
+        {/* 10. Provider sync tokens */}
+        <AdminCard title="Provider API keys">
+          <Row label="GITHUB_TOKEN" value={<YesNo ok={present('GITHUB_TOKEN')} yes="set up" no="needs setup" />} />
+          <Row label="VERCEL_API_TOKEN" value={<YesNo ok={present('VERCEL_API_TOKEN')} yes="set up" no="needs setup" />} />
+          <Row label="CLOUDFLARE_API_TOKEN" value={<YesNo ok={present('CLOUDFLARE_API_TOKEN')} yes="set up" no="needs setup" />} />
+          <Row label="CLOUDFLARE_ACCOUNT_ID" value={<YesNo ok={present('CLOUDFLARE_ACCOUNT_ID')} yes="set up" no="needs setup" />} />
+          <Row label="HETZNER_API_TOKEN" value={<YesNo ok={present('HETZNER_API_TOKEN')} yes="set up" no="needs setup" />} />
+        </AdminCard>
+      </HealthSection>
+
+      <HealthSection
+        title="Email and commercial ops"
+        subtitle="Outbound email delivery and supplier list."
+      >
         {/* 5. Email linking */}
         <AdminCard title="Email linking">
           <Row
@@ -308,7 +345,12 @@ export default async function HealthPage() {
             }
           />
         </AdminCard>
+      </HealthSection>
 
+      <HealthSection
+        title="Scheduled jobs"
+        subtitle="Cron entries, renewal digest delivery, and uptime monitor."
+      >
         {/* 7. Cron / scheduled jobs */}
         <AdminCard title="Scheduled jobs">
           <Row label="vercel.json crons" value={<YesNo ok={cronFile.ok} yes="set up" no="needs setup" />} />
@@ -363,15 +405,12 @@ export default async function HealthPage() {
           />
         </AdminCard>
 
-        {/* 10. Provider sync tokens */}
-        <AdminCard title="Provider API keys">
-          <Row label="GITHUB_TOKEN" value={<YesNo ok={present('GITHUB_TOKEN')} yes="set up" no="needs setup" />} />
-          <Row label="VERCEL_API_TOKEN" value={<YesNo ok={present('VERCEL_API_TOKEN')} yes="set up" no="needs setup" />} />
-          <Row label="CLOUDFLARE_API_TOKEN" value={<YesNo ok={present('CLOUDFLARE_API_TOKEN')} yes="set up" no="needs setup" />} />
-          <Row label="CLOUDFLARE_ACCOUNT_ID" value={<YesNo ok={present('CLOUDFLARE_ACCOUNT_ID')} yes="set up" no="needs setup" />} />
-          <Row label="HETZNER_API_TOKEN" value={<YesNo ok={present('HETZNER_API_TOKEN')} yes="set up" no="needs setup" />} />
-        </AdminCard>
+      </HealthSection>
 
+      <HealthSection
+        title="Safety guarantees"
+        subtitle="Read-only behaviour and presence-only secret checks."
+      >
         {/* 11. Safety guarantees */}
         <AdminCard title="Safety guarantees">
           <ul>
@@ -398,7 +437,29 @@ export default async function HealthPage() {
             ))}
           </ul>
         </AdminCard>
-      </div>
+      </HealthSection>
     </>
+  );
+}
+
+function HealthSection({
+  title,
+  subtitle,
+  children,
+}: {
+  title: string;
+  subtitle?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="mt-6 first:mt-0">
+      <div className="mb-3">
+        <h2 className="text-sm font-mono uppercase tracking-[0.18em] text-[#a1a1aa]">{title}</h2>
+        {subtitle && (
+          <p className="mt-1 text-xs text-[#71717a]">{subtitle}</p>
+        )}
+      </div>
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">{children}</div>
+    </section>
   );
 }

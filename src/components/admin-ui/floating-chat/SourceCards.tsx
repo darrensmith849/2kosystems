@@ -1,10 +1,17 @@
 'use client';
 
 // Compact source card list rendered below assistant bubbles.
-// Source kind mapping: 'db' -> 'live', 'snapshot' -> 'preview', others stay.
+// Defaults to 5 visible sources with an emerald-link "Show <n> more sources"
+// toggle. Cards with an invalid href degrade to plain text — never broken
+// anchors. Stays in sync with the inlined twin in
+// src/app/admin/ops/ask/AskClient.tsx until the floating-chat barrel is
+// adopted by the Ask page.
 
+import { useState } from 'react';
 import { Badge } from '@/components/admin-ui';
 import type { AssistantSource } from './chatTypes';
+
+const DEFAULT_VISIBLE = 5;
 
 function sourceLabel(source: AssistantSource['source']): {
   text: string;
@@ -15,35 +22,54 @@ function sourceLabel(source: AssistantSource['source']): {
   return { text: source, tone: 'neutral' };
 }
 
+function isValidHref(href: string | undefined): href is string {
+  if (!href) return false;
+  if (href === '#') return false;
+  return href.startsWith('/') || href.startsWith('http');
+}
+
 export function SourceCards({ sources }: { sources: AssistantSource[] }) {
+  const [expanded, setExpanded] = useState<boolean>(false);
   if (sources.length === 0) return null;
-  const shown = sources.slice(0, 8);
+  const visible = expanded ? sources : sources.slice(0, DEFAULT_VISIBLE);
+  const hidden = sources.length - DEFAULT_VISIBLE;
+  const showToggle = sources.length > DEFAULT_VISIBLE;
   return (
-    <div className="mt-3 rounded-xl border border-[#1c1c1e] bg-[#0a0a0b] p-3">
+    <div className="mt-3 rounded-xl border border-[#1c1c1e] bg-[#0a0a0b] px-3 py-2.5">
       <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a] mb-2">
-        Related records ({sources.length})
+        Sources ({sources.length})
       </p>
-      <ul className="space-y-1.5">
-        {shown.map((s) => {
+      <ul className="space-y-1">
+        {visible.map((s) => {
           const tag = sourceLabel(s.source);
+          const valid = isValidHref(s.url);
           return (
-            <li key={s.id} className="flex flex-wrap items-center gap-2 text-xs">
+            <li key={s.id} className="flex flex-wrap items-center gap-2 text-xs py-1">
               <Badge text={s.type.replace(/_/g, ' ')} tone="neutral" />
               <Badge text={tag.text} tone={tag.tone} />
-              {s.url ? (
+              {valid ? (
                 <a
                   href={s.url}
-                  className="text-emerald-300 hover:text-emerald-200 underline underline-offset-2 truncate"
+                  className="text-emerald-300 hover:text-emerald-200 underline underline-offset-2 truncate text-[12px]"
                 >
                   {s.title}
                 </a>
               ) : (
-                <span className="text-[#e4e4e7] truncate">{s.title}</span>
+                <span className="text-[#e4e4e7] truncate text-[12px]">{s.title}</span>
               )}
             </li>
           );
         })}
       </ul>
+      {showToggle && (
+        <button
+          type="button"
+          onClick={() => setExpanded((v) => !v)}
+          className="mt-2 text-[11px] uppercase tracking-[0.18em] text-emerald-300 hover:text-emerald-200"
+        >
+          {expanded ? 'Show fewer' : `Show ${hidden} more sources`}
+        </button>
+      )}
     </div>
   );
 }

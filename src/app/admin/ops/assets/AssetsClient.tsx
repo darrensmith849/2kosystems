@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { AdminCard, Badge, DataTable, EmptyState } from '@/components/admin-ui';
 import type { AssetWithRefs } from '@/lib/ops/assets-service';
+import { ASSET_TYPE_LABEL, labelFor } from '@/lib/ops/labels';
 
 const ASSET_TYPES = [
   'website', 'saas_app', 'portal', 'api', 'landing', 'internal_tool', 'database', 'service',
@@ -61,9 +62,9 @@ export default function AssetsClient({
   if (isSnapshot) {
     return (
       <div className="space-y-5">
-        <AdminCard title="Add asset — read-only in snapshot mode">
+        <AdminCard title="Add asset — read-only in preview mode">
           <p className="text-xs text-[#a1a1aa]">
-            Creating assets activates once <code className="text-emerald-300">DATABASE_URL</code> is set. The rows below are the discovery snapshot.
+            Adding assets turns on once the production database is connected. The rows below are the saved sample data.
           </p>
         </AdminCard>
         <DataTable
@@ -75,7 +76,7 @@ export default function AssetsClient({
                 <span className="ml-2 inline-block text-[9px] uppercase tracking-wider text-emerald-300/80 border border-emerald-400/30 rounded-full px-1.5 py-0.5 align-middle">snapshot</span>
               </Link>
             ) },
-            { key: 'type', header: 'Type', render: (a) => <Badge text={a.type} /> },
+            { key: 'type', header: 'Type', render: (a) => <Badge text={labelFor(ASSET_TYPE_LABEL, a.type)} /> },
             { key: 'client', header: 'Client', render: (a) => a.client?.name ?? <span className="text-[#52525b]">—</span> },
             { key: 'url', header: 'Live URL', render: (a) =>
               a.liveUrl
@@ -109,7 +110,7 @@ export default function AssetsClient({
             disabled={busy}
           >
             {ASSET_TYPES.map((t) => (
-              <option key={t} value={t}>{t}</option>
+              <option key={t} value={t}>{labelFor(ASSET_TYPE_LABEL, t)}</option>
             ))}
           </select>
           <input
@@ -126,7 +127,7 @@ export default function AssetsClient({
             className="rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5]"
             disabled={busy}
           >
-            <option value="">no client</option>
+            <option value="">No client</option>
             {clients.map((c) => (
               <option key={c.id} value={c.id}>{c.name}</option>
             ))}
@@ -143,7 +144,7 @@ export default function AssetsClient({
       </AdminCard>
 
       {initialAssets.length === 0 ? (
-        <EmptyState title="No assets yet" hint="Add assets to start building the cross-walk between clients and infrastructure." />
+        <EmptyState title="No assets yet" hint="Add assets to start linking clients to the websites, apps, and tools we manage for them." />
       ) : (
         <DataTable
           rows={initialAssets}
@@ -153,14 +154,14 @@ export default function AssetsClient({
                 {a.name}
               </Link>
             ) },
-            { key: 'type', header: 'Type', render: (a) => <Badge text={a.type} /> },
+            { key: 'type', header: 'Type', render: (a) => <Badge text={labelFor(ASSET_TYPE_LABEL, a.type)} /> },
             { key: 'client', header: 'Client', render: (a) => a.client?.name ?? <span className="text-[#52525b]">—</span> },
             { key: 'url', header: 'Live URL', render: (a) =>
               a.liveUrl
                 ? <a href={a.liveUrl} target="_blank" rel="noreferrer" className="text-emerald-300 hover:underline">{a.liveUrl}</a>
                 : <span className="text-[#52525b]">—</span>
             },
-            { key: 'status', header: 'Status', render: (a) => <Badge text={a.status} tone={a.status === 'active' ? 'green' : 'neutral'} /> },
+            { key: 'status', header: 'Status', render: (a) => <Badge text={a.status[0].toUpperCase() + a.status.slice(1)} tone={a.status === 'active' ? 'green' : 'neutral'} /> },
           ]}
         />
       )}

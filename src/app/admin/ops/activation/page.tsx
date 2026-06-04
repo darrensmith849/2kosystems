@@ -427,6 +427,35 @@ export default function ActivationPage() {
   const optionalSteps = steps.filter((s) => s.status === 'Optional').length;
   const manualSteps = steps.filter((s) => s.status === 'Manual').length;
 
+  // Pre-flight inputs — friendly labels for credential presence checks.
+  const credentialRows: Array<{ label: string; present: boolean; hint: string }> = [
+    {
+      label: 'GitHub access',
+      present: githubTokenPresent,
+      hint: 'Needed for repo sync.',
+    },
+    {
+      label: 'Vercel access',
+      present: vercelTokenPresent,
+      hint: 'Needed for project + deployment sync.',
+    },
+    {
+      label: 'Cloudflare access',
+      present: cloudflareBothPresent,
+      hint: 'Both the access token and account id are required.',
+    },
+    {
+      label: 'Hetzner access',
+      present: hetznerTokenPresent,
+      hint: 'Needed for server sync.',
+    },
+    {
+      label: 'Production database',
+      present: databaseUrlPresent,
+      hint: 'Pooled connection string for the live ops database.',
+    },
+  ];
+
   return (
     <>
       <SectionHeader
@@ -434,6 +463,80 @@ export default function ActivationPage() {
         subtitle="Step-by-step bring-up — from snapshot mode to a live, monitored dashboard."
       />
       {snapshot && <SnapshotBanner area="Activation" />}
+
+      <div className="mb-4">
+        <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.18em] text-[#71717a]">
+          Pre-flight summary
+        </p>
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
+          <PreflightCard
+            title="Before you start"
+            intent="blue"
+            bullets={[
+              'Confirm you are signed in as an operator with admin permissions.',
+              'Confirm the snapshot mode banner is visible on the Health page.',
+              'Read the activation hardening runbook before touching production.',
+              `Total steps: ${totalSteps} — ${doneSteps} done, ${pendingSteps} still pending.`,
+            ]}
+          />
+          <PreflightCard
+            title="Do not do this yet"
+            intent="amber"
+            bullets={[
+              'Do not change any DNS records on Cloudflare.',
+              'Do not run any provider sync — no writes until tokens land.',
+              'Do not connect Gmail or Outlook — email linking stays manual for now.',
+              'Do not redeploy until DATABASE_URL and DATABASE_URL_DIRECT are saved.',
+            ]}
+          />
+          <PreflightCard
+            title="Safe to do now"
+            intent="green"
+            bullets={[
+              'Walk every Operations page and review the saved sample data.',
+              'Work the Review & decisions queue — captures stay in this browser.',
+              'Confirm the billing owner on every row of the Services page.',
+              'Validate client-to-asset mapping and walk the Emails categories.',
+            ]}
+          />
+          <PreflightCard
+            title="Needs credentials"
+            intent="amber"
+            credentials={credentialRows}
+          />
+          <PreflightCard
+            title="After database connects"
+            intent="green"
+            bullets={[
+              'Run the import preview on the Review page — read-only walkthrough.',
+              'Run the import as a rehearsal — a dry run inside a transaction that is always rolled back.',
+              'Run the import for real once the rehearsal is clean.',
+              'Verify counts on Clients, Assets, Tickets, Renewals, and Incidents.',
+            ]}
+          />
+          <PreflightCard
+            title="Rollback plan"
+            intent="blue"
+            bullets={[
+              'Preview mode writes nothing — closing the tab is rollback.',
+              'Rehearsal runs as a dry-run inside a transaction; nothing is committed.',
+              'After save, every imported row is tagged with the import run id and can be reverted.',
+              'See docs/runbooks/ops-activation-hardening.md#safe-rollback for the full procedure.',
+            ]}
+          />
+          <PreflightCard
+            title="Success looks like"
+            intent="green"
+            checklist={[
+              'Database card on Health shows a healthy ping.',
+              '/admin/ops/review shows imported counts that match the snapshot preview.',
+              'All four provider syncs succeeded at least once.',
+              'Validation report has zero errors (warnings and info are OK).',
+              'Team members can sign in and reach the operator views.',
+            ]}
+          />
+        </div>
+      </div>
 
       <div className="mb-6 grid grid-cols-1 gap-3 md:grid-cols-3">
         <StatusCard
@@ -623,6 +726,78 @@ function StatusCard({
         <p className="text-xl font-semibold text-[#f5f5f5]">{value}</p>
       </div>
       {hint && <p className="text-[11px] text-[#71717a]">{hint}</p>}
+    </div>
+  );
+}
+
+function PreflightCard({
+  title,
+  intent,
+  bullets,
+  checklist,
+  credentials,
+}: {
+  title: string;
+  intent: 'green' | 'amber' | 'rose' | 'blue';
+  bullets?: string[];
+  checklist?: string[];
+  credentials?: Array<{ label: string; present: boolean; hint: string }>;
+}) {
+  const ring =
+    intent === 'green'
+      ? 'border-emerald-400/30 bg-emerald-400/[0.04]'
+      : intent === 'amber'
+        ? 'border-amber-400/30 bg-amber-400/[0.04]'
+        : intent === 'rose'
+          ? 'border-rose-400/30 bg-rose-400/[0.04]'
+          : 'border-sky-400/30 bg-sky-400/[0.04]';
+  const heading =
+    intent === 'green'
+      ? 'text-emerald-300/90'
+      : intent === 'amber'
+        ? 'text-amber-300/90'
+        : intent === 'rose'
+          ? 'text-rose-300/90'
+          : 'text-sky-300/90';
+  return (
+    <div className={`rounded-2xl border p-4 ${ring}`}>
+      <p className={`mb-3 font-mono text-[10px] uppercase tracking-[0.18em] ${heading}`}>{title}</p>
+      {bullets && (
+        <ul className="space-y-1.5 text-[12px] leading-relaxed text-[#e4e4e7]">
+          {bullets.map((b, i) => (
+            <li key={i} className="flex gap-2">
+              <span className="mt-1.5 inline-block size-1 shrink-0 rounded-full bg-[#52525b]" />
+              <span>{b}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+      {checklist && (
+        <ul className="space-y-1.5 text-[12px] leading-relaxed text-[#e4e4e7]">
+          {checklist.map((b, i) => (
+            <li key={i} className="flex gap-2">
+              <span className="mt-0.5 inline-block size-3.5 shrink-0 rounded-sm border border-emerald-400/40 bg-emerald-400/[0.04]" />
+              <span>{b}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+      {credentials && (
+        <ul className="space-y-2 text-[12px] leading-relaxed text-[#e4e4e7]">
+          {credentials.map((c) => (
+            <li
+              key={c.label}
+              className="flex items-start justify-between gap-3 rounded-lg border border-[#1c1c1e] bg-[#0a0a0b]/60 px-3 py-2"
+            >
+              <div className="min-w-0 flex-1">
+                <p className="text-[12px] font-medium text-[#f5f5f5]">{c.label}</p>
+                <p className="mt-0.5 text-[11px] text-[#a1a1aa]">{c.hint}</p>
+              </div>
+              <Badge text={c.present ? 'present' : 'missing'} tone={c.present ? 'green' : 'amber'} />
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
