@@ -4,6 +4,13 @@ import SnapshotBanner from '@/components/admin-ui/SnapshotBanner';
 import { isSnapshotMode } from '@/lib/ops/snapshot-mode';
 import { buildReportsSummary, type ReportsSummary } from '@/lib/ops/ops-reports';
 import { buildIndex, type IndexItem } from '@/lib/ops/ops-knowledge-index';
+import {
+  SNAPSHOT_SERVICES,
+  SERVICE_STATUS_LABEL,
+  SERVICE_STATUS_TONE,
+  EMAIL_CATEGORY_ORDER,
+  EMAIL_CATEGORY_LABEL,
+} from '@/lib/ops/email-services-data';
 
 // /admin/ops/reports — read-only summary view. Every counter is derived from
 // buildIndex() via ops-reports so the same surface auto-upgrades to live DB
@@ -70,8 +77,91 @@ export default async function ReportsPage() {
       <BlockedBySection summary={summary} />
       <ActivationSummary summary={summary} />
       <ImportSummary summary={summary} />
+      <CommercialReadiness />
       <SuggestedNextActions summary={summary} />
     </>
+  );
+}
+
+function CommercialReadiness() {
+  const totalServices = SNAPSHOT_SERVICES.length;
+  const needsReview = SNAPSHOT_SERVICES.filter(
+    (s) => s.status === 'needs_review' || s.status === 'blocked',
+  );
+  const missingOwner = SNAPSHOT_SERVICES.filter((s) =>
+    /needs review|unknown/i.test(s.billingOwner),
+  );
+  return (
+    <section className="mb-8">
+      <h2 className="mb-3 text-sm font-medium text-[#f5f5f5]">Commercial readiness</h2>
+      <p className="mb-4 text-xs text-[#a1a1aa]">
+        Email linkage and services catalogue — both in preview mode while the database connection
+        is being prepared. Manual email references and live editing activate after the database
+        is connected.
+      </p>
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <AdminCard title="Email linkage readiness">
+          <div className="space-y-3">
+            <div className="flex flex-wrap items-center gap-2">
+              <Badge text="Email linking — not active yet" tone="amber" />
+              <Badge text="No inbox is being read" tone="green" />
+              <Badge text="No emails being sent" tone="green" />
+            </div>
+            <p className="text-xs text-[#a1a1aa] leading-relaxed">
+              Manual references will activate once the database is connected. Gmail and Outlook
+              integration are kept out of scope until separately approved.
+            </p>
+            <div>
+              <p className="mb-1.5 text-[10px] uppercase tracking-[0.18em] text-[#71717a]">
+                Planned categories ({EMAIL_CATEGORY_ORDER.length})
+              </p>
+              <div className="flex flex-wrap gap-1.5">
+                {EMAIL_CATEGORY_ORDER.map((c) => (
+                  <Badge key={c} text={EMAIL_CATEGORY_LABEL[c]} tone="neutral" />
+                ))}
+              </div>
+            </div>
+            <p className="text-xs">
+              <Link
+                href="/admin/ops/emails"
+                className="text-emerald-300 hover:text-emerald-200 underline underline-offset-2"
+              >
+                Open Emails →
+              </Link>
+            </p>
+          </div>
+        </AdminCard>
+
+        <AdminCard title="Services catalogue">
+          <div className="space-y-3">
+            <div className="flex flex-wrap items-center gap-2">
+              <Badge text={`${totalServices} total`} tone="neutral" />
+              <Badge text={`${needsReview.length} need review`} tone="amber" />
+              <Badge text={`${missingOwner.length} missing billing owner`} tone="amber" />
+            </div>
+            {needsReview.length > 0 && (
+              <ul className="space-y-1.5 text-xs text-[#e4e4e7]">
+                {needsReview.slice(0, 6).map((s) => (
+                  <li key={s.id} className="flex flex-wrap items-center gap-1.5">
+                    <span aria-hidden className="text-[#52525b]">·</span>
+                    <span>{s.name}</span>
+                    <Badge text={SERVICE_STATUS_LABEL[s.status]} tone={SERVICE_STATUS_TONE[s.status]} />
+                  </li>
+                ))}
+              </ul>
+            )}
+            <p className="text-xs">
+              <Link
+                href="/admin/ops/services"
+                className="text-emerald-300 hover:text-emerald-200 underline underline-offset-2"
+              >
+                Open Services →
+              </Link>
+            </p>
+          </div>
+        </AdminCard>
+      </div>
+    </section>
   );
 }
 

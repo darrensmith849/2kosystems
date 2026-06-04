@@ -39,6 +39,9 @@ const IndexTypeEnum = z.enum([
   'import_readiness',
   'activation_step',
   'runbook',
+  'email_ref',
+  'service',
+  'contact',
 ]);
 
 const SourceEnum = z.enum(['snapshot', 'db', 'docs', 'readiness']);
@@ -166,6 +169,18 @@ function buildFollowUps(results: SearchResult[]): string[] {
         break;
       case 'division':
         followUps.push(`Which clients are in ${item.title}?`);
+        seenTypes.add(item.type);
+        break;
+      case 'email_ref':
+        followUps.push('Is email linking active yet?');
+        seenTypes.add(item.type);
+        break;
+      case 'service':
+        followUps.push(`Who owns billing for ${item.title}?`);
+        seenTypes.add(item.type);
+        break;
+      case 'contact':
+        followUps.push('What contacts are needed before go-live?');
         seenTypes.add(item.type);
         break;
     }

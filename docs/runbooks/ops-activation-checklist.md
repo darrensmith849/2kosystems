@@ -94,3 +94,25 @@ The page enforces three invariants:
 
 If `DATABASE_URL` is unset the page still renders the full sequence — it
 becomes a forward-looking checklist instead of an audit trail.
+
+## Email linkage activation (foundation phase)
+
+After the main activation sequence completes, the following email-linkage
+steps activate the manual reference UI:
+
+1. Enable the manual email-reference form on `/admin/ops/emails`. The form
+   stays disabled until `DATABASE_URL` is set, so this step is mainly a
+   verification that the form lights up after the DB cuts over.
+2. File one placeholder reference per category as a smoke test (billing,
+   domain renewal, hosting renewal, supplier notice, client support, change
+   request, client approval, incident comms, quote / proposal, internal
+   handover).
+3. Set `BREVO_OPS_DIGEST_TO` so the daily renewal digest has a recipient.
+4. Verify on the Health page that the email-linkage card reads:
+   - Email linking → manual ready
+   - Gmail integration → inactive
+   - Outlook integration → inactive
+   - Inbox ingestion guard → off (correct)
+   - `BREVO_OPS_DIGEST_TO` → configured
+5. Confirm no inbox ingestion is enabled. Gmail / Outlook integration are a
+   separately approved later phase — see `docs/runbooks/ops-email-linkage.md`.

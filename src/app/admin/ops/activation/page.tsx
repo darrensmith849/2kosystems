@@ -272,6 +272,41 @@ export default function ActivationPage() {
       </div>
 
       <div className="mb-6">
+        <AdminCard title="Email linkage — next steps">
+          <p className="mb-3 text-xs text-[#a1a1aa] leading-relaxed">
+            Email linkage is in preview today. The following steps make it active once the
+            database is connected. No inbox is connected, and no email is sent or read by the
+            dashboard.
+          </p>
+          <ol className="space-y-2 text-xs text-[#e4e4e7]">
+            <li>
+              <span className="text-[#71717a]">1.</span> Decide the email linkage approach — manual
+              references first; Gmail or Outlook integration only as a later, separately approved
+              phase.
+            </li>
+            <li>
+              <span className="text-[#71717a]">2.</span> After the database is connected, enable
+              the manual email-reference form and begin filing billing, renewal, support, and
+              approval emails.
+            </li>
+            <li>
+              <span className="text-[#71717a]">3.</span> If Gmail or Outlook integration is later
+              approved, add it behind explicit opt-in. Read access only — no archiving, deleting,
+              or labelling.
+            </li>
+            <li>
+              <span className="text-[#71717a]">4.</span> Set <code className="text-[#e4e4e7]">BREVO_OPS_DIGEST_TO</code> so the daily renewal digest
+              has a recipient.
+            </li>
+            <li>
+              <span className="text-[#71717a]">5.</span> Verify on the Health page that no inbox
+              ingestion is active until explicitly approved.
+            </li>
+          </ol>
+        </AdminCard>
+      </div>
+
+      <div className="mb-6">
         <AdminCard title="Runbook links">
           <ul className="space-y-1.5 text-xs text-[#a1a1aa]">
             <li>
@@ -288,6 +323,9 @@ export default function ActivationPage() {
             </li>
             <li>
               <code className="text-[#e4e4e7]">docs/runbooks/ops-search.md</code>
+            </li>
+            <li>
+              <code className="text-[#e4e4e7]">docs/runbooks/ops-email-linkage.md</code>
             </li>
           </ul>
         </AdminCard>

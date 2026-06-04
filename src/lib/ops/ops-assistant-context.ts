@@ -158,6 +158,9 @@ const TYPE_LABEL: Record<IndexItem['type'], string> = {
   import_readiness: 'Import readiness',
   activation_step: 'Activation steps',
   runbook: 'Runbooks',
+  email_ref: 'Email references',
+  service: 'Services & subscriptions',
+  contact: 'Contacts',
 };
 
 const TYPE_ORDER: IndexItem['type'][] = [
@@ -177,6 +180,9 @@ const TYPE_ORDER: IndexItem['type'][] = [
   'import_readiness',
   'activation_step',
   'runbook',
+  'email_ref',
+  'service',
+  'contact',
 ];
 
 // --------------------------------------------------------------- Fallback answer
@@ -197,10 +203,69 @@ type IntentKey =
   | 'renewals_upcoming'
   | 'incidents_attention'
   | 'before_db_work'
+  | 'email_linking_status'
+  | 'email_category_track'
+  | 'services_overview'
+  | 'services_needing_review'
+  | 'billing_owner'
+  | 'contacts_needed'
   | 'generic';
 
 function detectIntent(question: string): IntentKey {
   const q = question.toLowerCase();
+
+  // Email-linking specific intents come first so phrases like "Where are
+  // billing emails tracked?" or "Is email linking active?" don't get
+  // misrouted to renewals/incidents.
+  if (
+    /(is\s+)?email\s+(linking|linkage|integration)\s+(active|enabled|set up|on|live|working|ready)/.test(q) ||
+    /^has\s+email\s+(linking|integration)\s+been\s+enabled/.test(q) ||
+    /will\s+email\s+(linking|integration)\s+(work|happen|be)/.test(q) ||
+    /what.*email\s+(setup|integration|linking).*(missing|left|needed)/.test(q)
+  ) {
+    return 'email_linking_status';
+  }
+  if (
+    /(billing|invoice).*email|email.*(billing|invoice)/.test(q) ||
+    /(hetzner|vercel|cloudflare|supplier).*invoice.*(email|appear|tracked|linked)/.test(q) ||
+    /where.*(hetzner|vercel|cloudflare).*(invoice|email).*(appear|tracked|linked)/.test(q) ||
+    /(support|change\s+request|approval|renewal).*email/.test(q) ||
+    /email.*(support|change\s+request|approval|renewal|incident|quote|proposal|supplier|handover)/.test(q) ||
+    /where.*(email|emails).*(tracked|linked|appear|go)/.test(q) ||
+    /domain\s+renewal\s+email/.test(q)
+  ) {
+    return 'email_category_track';
+  }
+
+  // Services / subscriptions
+  if (
+    /(supplier|subscription)s?.*(service|catalogue|review|list|all)/.test(q) ||
+    /(show|list).*(supplier|service|subscription)/.test(q) ||
+    /(what|which)\s+(supplier|service|subscription)s?\s+(do we|are we)/.test(q) ||
+    /service\s+catalogue/.test(q)
+  ) {
+    return 'services_overview';
+  }
+  if (
+    /(which|what)\s+(service|subscription)s?\s+(need|require|are).*(review|attention)/.test(q) ||
+    /(which|what)\s+(subscription|service)s?\s+(are|is)\s+planned/.test(q) ||
+    /missing\s+billing\s+owner/.test(q)
+  ) {
+    return 'services_needing_review';
+  }
+  if (
+    /who\s+(owns|pays|is)\s+(the\s+)?(billing|payment|account|invoice)/.test(q) ||
+    /billing\s+owner/.test(q)
+  ) {
+    return 'billing_owner';
+  }
+  if (
+    /(what|which|who)\s+contacts?.*(need|missing|required|before)/.test(q) ||
+    /contacts?\s+needed/.test(q)
+  ) {
+    return 'contacts_needed';
+  }
+
   if (
     /(block|blocker|holding|stopping|preventing).*activat/.test(q) ||
     /activat.*(block|blocker|holding|stopping|preventing|left|outstanding|remaining|next step)/.test(q) ||
@@ -419,6 +484,104 @@ function answerBeforeDb(items: IndexItem[]): string {
   return lines.join('\n');
 }
 
+function answerEmailLinkingStatus(items: IndexItem[]): string {
+  const lines: string[] = [];
+  lines.push(
+    "Email linking is prepared but not active yet. The dashboard can show planned email reference categories, and manual linking will activate after the database is connected. Gmail and Outlook ingestion has not been enabled — those are a later, explicitly approved phase.",
+  );
+  lines.push('');
+  const emailSteps = items.filter(
+    (i) => i.type === 'activation_step' && /email|brevo/i.test(i.title),
+  );
+  if (emailSteps.length > 0) {
+    lines.push('**Email setup steps tracked**');
+    for (const s of emailSteps.slice(0, 6)) lines.push(`- ${linkFor(s)}`);
+    lines.push('');
+  }
+  lines.push('See [Emails](/admin/ops/emails) for the preview and [Activation](/admin/ops/activation) for the setup steps.');
+  return lines.join('\n');
+}
+
+function answerEmailCategoryTrack(items: IndexItem[]): string {
+  const emails = items.filter((i) => i.type === 'email_ref');
+  const lines: string[] = [];
+  lines.push(
+    "Email references are planned — no inbox is being read. When the database is connected, the dashboard will track manual email references in these categories:",
+  );
+  lines.push('');
+  if (emails.length > 0) {
+    for (const e of emails.slice(0, 8)) {
+      lines.push(`- ${linkFor(e)}${e.subtitle ? ` — ${e.subtitle.toLowerCase()}` : ''}`);
+    }
+    lines.push('');
+  }
+  lines.push('Open [Emails](/admin/ops/emails) for the full planned-category preview.');
+  return lines.join('\n');
+}
+
+function answerServicesOverview(items: IndexItem[]): string {
+  const services = items.filter((i) => i.type === 'service');
+  if (services.length === 0) return "The services catalogue is empty — open [Services](/admin/ops/services) to see the planned list.";
+  const lines: string[] = [];
+  lines.push("Here are the supplier services and subscriptions the dashboard is tracking:");
+  lines.push('');
+  for (const s of services.slice(0, 12)) {
+    const status = s.status ? ` — ${s.status.replace(/_/g, ' ')}` : '';
+    lines.push(`- ${linkFor(s)}${status}`);
+  }
+  lines.push('');
+  lines.push('Open [Services](/admin/ops/services) for billing owner, cadence, and notes per service.');
+  return lines.join('\n');
+}
+
+function answerServicesNeedingReview(items: IndexItem[]): string {
+  const services = items.filter((i) => i.type === 'service');
+  const needsReview = services.filter((s) => s.status === 'needs_review' || s.status === 'blocked' || s.status === 'planned');
+  const lines: string[] = [];
+  if (needsReview.length === 0) {
+    lines.push("No services are currently flagged as needing review.");
+  } else {
+    lines.push("These services need a review or are not yet active:");
+    lines.push('');
+    for (const s of needsReview.slice(0, 10)) {
+      const status = s.status ? ` — ${s.status.replace(/_/g, ' ')}` : '';
+      lines.push(`- ${linkFor(s)}${status}`);
+    }
+    lines.push('');
+  }
+  lines.push('Open [Services](/admin/ops/services) for the full catalogue.');
+  return lines.join('\n');
+}
+
+function answerBillingOwner(items: IndexItem[], question: string): string {
+  const services = items.filter((i) => i.type === 'service');
+  const lines: string[] = [];
+  const target = services.find((s) => question.toLowerCase().includes(s.title.toLowerCase().split(/\s+/)[0]));
+  if (target) {
+    lines.push(`Open [${target.title}](${target.url ?? '/admin/ops/services'}) on the Services page — the billing-owner field is shown alongside cadence and status. Many billing owners are still tagged "Needs review" while the dashboard is in preview mode.`);
+  } else {
+    lines.push("Billing ownership is tracked on the Services page. Several services are still tagged \"Needs review\" while the dashboard is in preview mode.");
+  }
+  lines.push('');
+  lines.push('Open [Services](/admin/ops/services) to see who owns each billing relationship.');
+  return lines.join('\n');
+}
+
+function answerContactsNeeded(items: IndexItem[]): string {
+  const contacts = items.filter((i) => i.type === 'contact');
+  const lines: string[] = [];
+  lines.push(
+    "Contacts are a planned foundation — the live Contacts table will fill in once the database is connected and operators enter real rows. The placeholder roles the dashboard expects to track are:",
+  );
+  lines.push('');
+  if (contacts.length > 0) {
+    for (const c of contacts.slice(0, 8)) lines.push(`- ${linkFor(c)}${c.subtitle ? ` — ${c.subtitle}` : ''}`);
+    lines.push('');
+  }
+  lines.push('Open [Contacts](/admin/ops/contacts) to see the placeholder rows.');
+  return lines.join('\n');
+}
+
 function answerGeneric(items: IndexItem[]): string {
   if (items.length === 0) {
     return "I couldn't find anything in the dashboard that matches that. Try one of the suggested prompts, or rephrase your question — I can search clients, assets, repos, Vercel projects, Hetzner servers, renewals, incidents, audit findings, and activation steps.";
@@ -475,6 +638,24 @@ export function buildFallbackAnswer(
       break;
     case 'before_db_work':
       body = answerBeforeDb(items);
+      break;
+    case 'email_linking_status':
+      body = answerEmailLinkingStatus(items);
+      break;
+    case 'email_category_track':
+      body = answerEmailCategoryTrack(items);
+      break;
+    case 'services_overview':
+      body = answerServicesOverview(items);
+      break;
+    case 'services_needing_review':
+      body = answerServicesNeedingReview(items);
+      break;
+    case 'billing_owner':
+      body = answerBillingOwner(items, question);
+      break;
+    case 'contacts_needed':
+      body = answerContactsNeeded(items);
       break;
     case 'generic':
       body = null;

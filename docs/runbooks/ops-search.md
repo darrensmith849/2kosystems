@@ -159,3 +159,23 @@ others. The merge step in `buildIndex()` then:
 The result: DB rows always shadow their snapshot equivalents, snapshot
 rows for types not yet in DB pass through, and no row is ever served
 twice for the same `(type, title)`.
+
+## Email / service / contact types
+
+Three new knowledge-index types were added in the Email + Commercial Ops
+foundation phase:
+
+- `email_ref` — planned email reference rows (subject, sender, category,
+  optional links to client / asset / renewal / incident, operator note).
+  No email body is ever stored.
+- `service` — supplier services catalogue (Hetzner Cloud, Cloudflare,
+  Vercel teams, GitHub, Brevo, BetterStack, xneelo, domain registrars,
+  Anthropic, Google Workspace, etc.) with status, blockers, cadence and
+  billing owner.
+- `contact` — placeholder contact roles (client owner, billing contact,
+  technical contact, supplier support, internal owner, approval contact).
+
+Every row is `source: 'snapshot'` and clearly tagged as planned / preview.
+They participate in search, filter on `types`, and appear in Ask answers
+through dedicated intents — but no real email content or real personal
+contact details are committed to the repo.

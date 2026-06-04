@@ -18,6 +18,14 @@ import {
   getClientConfidence,
   getAssetConfidence,
 } from './ops-snapshot-data';
+import {
+  SNAPSHOT_EMAIL_REFS,
+  SNAPSHOT_SERVICES,
+  SNAPSHOT_CONTACTS,
+  EMAIL_CATEGORY_LABEL,
+  SERVICE_CATEGORY_LABEL,
+  CONTACT_ROLE_LABEL,
+} from './email-services-data';
 import { getDb, isDbConfigured } from '@/lib/db/client';
 import {
   clients as clientsTbl,
@@ -51,7 +59,10 @@ export type IndexItemType =
   | 'review_decision'
   | 'import_readiness'
   | 'activation_step'
-  | 'runbook';
+  | 'runbook'
+  | 'email_ref'
+  | 'service'
+  | 'contact';
 
 export type IndexItemSource = 'snapshot' | 'db' | 'docs' | 'readiness';
 
@@ -147,6 +158,12 @@ export const ACTIVATION_STEPS: ActivationStep[] = [
   { id: 'activation-client-portal', group: 'Optional later', label: 'Client portal', done: false, blockedBy: ['human'] },
   { id: 'activation-ai-summaries', group: 'Optional later', label: 'AI summaries', done: false, blockedBy: ['env'] },
   { id: 'activation-cost-reporting', group: 'Optional later', label: 'Cost reporting', done: false, blockedBy: ['human'] },
+
+  // Email + commercial ops foundation (planned — no inbox is connected)
+  { id: 'activation-email-approach', group: 'Needs human decision', label: 'Decide email linkage approach (manual refs first; Gmail/Outlook only if approved)', done: false, blockedBy: ['human'] },
+  { id: 'activation-email-manual-refs', group: 'Waiting for Hetzner', label: 'Create manual email references after the database is connected', done: false, blockedBy: ['db', 'human'] },
+  { id: 'activation-email-brevo-digest-recipient', group: 'Needs credential', label: 'BREVO_OPS_DIGEST_TO (renewal digest recipient)', done: false, blockedBy: ['env'] },
+  { id: 'activation-email-no-ingest-guard', group: 'Ready', label: 'No inbox ingestion enabled — Gmail/Outlook integration left for a later approved phase', done: true, blockedBy: [], note: 'Dashboard never reads or sends email without explicit approval.' },
 ];
 
 // --------------------------------------------------------------- Runbooks
@@ -472,6 +489,88 @@ function activationItems(): IndexItem[] {
   }));
 }
 
+function emailRefItems(): IndexItem[] {
+  return SNAPSHOT_EMAIL_REFS.map((e) => ({
+    id: e.id,
+    type: 'email_ref',
+    title: e.subject,
+    subtitle: EMAIL_CATEGORY_LABEL[e.category],
+    body: [
+      e.subject,
+      e.fromName,
+      e.fromEmail,
+      EMAIL_CATEGORY_LABEL[e.category],
+      `provider:${e.provider}`,
+      e.linkedClient ?? '',
+      e.linkedAsset ?? '',
+      e.linkedRenewal ?? '',
+      e.linkedIncident ?? '',
+      e.notes,
+    ]
+      .filter(Boolean)
+      .join(' — '),
+    tags: ['email_ref', e.category, e.provider, 'planned'],
+    source: 'snapshot',
+    url: '/admin/ops/emails',
+    status: 'planned',
+    confidence: 'needs_review',
+  }));
+}
+
+function serviceItems(): IndexItem[] {
+  return SNAPSHOT_SERVICES.map((s) => ({
+    id: s.id,
+    type: 'service',
+    title: s.name,
+    subtitle: `${s.provider} · ${SERVICE_CATEGORY_LABEL[s.category]}`,
+    body: [
+      s.name,
+      s.provider,
+      SERVICE_CATEGORY_LABEL[s.category],
+      s.linkedScope,
+      `billing owner: ${s.billingOwner}`,
+      `cadence: ${s.cadence}`,
+      `status: ${s.status}`,
+      s.blockers.filter((b) => b !== 'none').length > 0
+        ? `blocked by: ${s.blockers.join(', ')}`
+        : '',
+      s.notes,
+    ]
+      .filter(Boolean)
+      .join(' — '),
+    tags: ['service', s.category, s.provider.toLowerCase(), s.status, ...s.blockers],
+    source: 'snapshot',
+    url: '/admin/ops/services',
+    status: s.status,
+    blockedBy: s.blockers.filter((b) => b !== 'none'),
+    confidence: s.status === 'active' ? 'confirmed' : 'needs_review',
+  }));
+}
+
+function contactItems(): IndexItem[] {
+  return SNAPSHOT_CONTACTS.map((c) => ({
+    id: c.id,
+    type: 'contact',
+    title: c.name,
+    subtitle: `${CONTACT_ROLE_LABEL[c.role]} · ${c.organisation}`,
+    body: [
+      c.name,
+      c.organisation,
+      CONTACT_ROLE_LABEL[c.role],
+      c.linkedClient ?? '',
+      c.linkedAsset ?? '',
+      c.notes,
+    ]
+      .filter(Boolean)
+      .join(' — '),
+    tags: ['contact', c.role, 'planned'],
+    source: 'snapshot',
+    url: '/admin/ops/contacts',
+    status: 'placeholder',
+    confidence: 'needs_review',
+  }));
+}
+
 function runbookItems(): IndexItem[] {
   return RUNBOOKS.map((r) => ({
     id: r.id,
@@ -732,6 +831,9 @@ export async function buildIndex(): Promise<IndexItem[]> {
     ...importReadinessItems(),
     ...activationItems(),
     ...runbookItems(),
+    ...emailRefItems(),
+    ...serviceItems(),
+    ...contactItems(),
   ];
 
   let live: IndexItem[] = [];

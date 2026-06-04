@@ -67,6 +67,14 @@ export const RUNBOOK_CATALOG: RunbookEntry[] = [
       'Forward-looking checklist for migrating /admin/ops off Vercel onto Hetzner — runtime seams, cron parity, and the boundaries to preserve.',
     topics: ['migration', 'hetzner', 'vercel', 'portability'],
   },
+  {
+    slug: 'ops-email-linkage',
+    path: 'docs/runbooks/ops-email-linkage.md',
+    title: 'Email linkage',
+    description:
+      'Plan for linking billing, supplier, support, approval, and incident emails into the dashboard — manual references first, optional Gmail/Outlook integration only as a later, separately approved phase.',
+    topics: ['emails', 'commercial', 'manual-refs', 'privacy', 'planned'],
+  },
 ];
 
 export function findRunbook(slug: string): RunbookEntry | undefined {

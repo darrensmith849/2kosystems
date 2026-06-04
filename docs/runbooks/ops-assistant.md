@@ -233,3 +233,28 @@ Expected shape:
 | 8 | "Which review decisions need a human?" | either | `review_decision` | Filters on `blockedBy=human`. |
 | 9 | "Which Cloudflare zones are pending?" | either | `cloudflare_zone` | Status from snapshot. |
 | 10 | "Run the GitHub sync." | either | none | Must refuse — cannot execute; points at `/admin/ops/github`. |
+
+## Email, services, and contacts intents
+
+The assistant now recognises a small family of email and commercial intents
+beyond the original ones documented above:
+
+- **email_linking_status** — answers questions like "is email linking active
+  yet?" with the safe canned response: email linking is prepared but not
+  active; manual references will activate once the database is connected;
+  Gmail / Outlook ingestion is not enabled.
+- **email_category_track** — surfaces the planned email categories (billing,
+  domain / hosting renewals, supplier notices, client support, change
+  requests, client approvals, incident comms, quotes / proposals, internal
+  handover) and links back to `/admin/ops/emails`.
+- **services_overview** / **services_needing_review** — list the supplier
+  services catalogue with status badges; flag services needing a review or
+  missing a billing owner.
+- **billing_owner** — points the operator at the Services page where the
+  billing-owner field lives.
+- **contacts_needed** — explains the placeholder Contacts foundation and the
+  roles tracked.
+
+All of these short-circuit before search runs and never return real
+email-body content. Source cards include the planned email reference, the
+service, or the placeholder contact only — never any private content.

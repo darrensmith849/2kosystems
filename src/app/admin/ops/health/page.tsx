@@ -31,8 +31,11 @@ const OPS_ROUTES: Array<{ href: string; label: string }> = [
   { href: '/admin/ops', label: '/admin/ops' },
   { href: '/admin/ops/search', label: '/admin/ops/search' },
   { href: '/admin/ops/ask', label: '/admin/ops/ask' },
+  { href: '/admin/ops/emails', label: '/admin/ops/emails' },
   { href: '/admin/ops/clients', label: '/admin/ops/clients' },
+  { href: '/admin/ops/contacts', label: '/admin/ops/contacts' },
   { href: '/admin/ops/assets', label: '/admin/ops/assets' },
+  { href: '/admin/ops/services', label: '/admin/ops/services' },
   { href: '/admin/ops/map', label: '/admin/ops/map' },
   { href: '/admin/ops/github', label: '/admin/ops/github' },
   { href: '/admin/ops/vercel', label: '/admin/ops/vercel' },
@@ -154,6 +157,37 @@ export default async function HealthPage() {
           />
         </AdminCard>
 
+        <AdminCard title="Email & Commercial">
+          <Row
+            label="Email linking"
+            value={<Badge text={dbConfigured ? 'manual ready' : 'planned'} tone={dbConfigured ? 'green' : 'blue'} />}
+          />
+          <Row
+            label="Gmail integration"
+            value={<Badge text="inactive" tone="neutral" />}
+          />
+          <Row
+            label="Outlook integration"
+            value={<Badge text="inactive" tone="neutral" />}
+          />
+          <Row
+            label="Inbox ingestion guard"
+            value={<Badge text="off (correct)" tone="green" />}
+          />
+          <Row
+            label="BREVO_OPS_DIGEST_TO"
+            value={<YesNo ok={renewalReminders} yes="configured" no="missing" />}
+          />
+          <Row
+            label="Services catalogue"
+            value={<Badge text={dbConfigured ? 'live' : 'preview'} tone={dbConfigured ? 'green' : 'blue'} />}
+          />
+          <Row
+            label="Contacts foundation"
+            value={<Badge text={dbConfigured ? 'live' : 'preview'} tone={dbConfigured ? 'green' : 'blue'} />}
+          />
+        </AdminCard>
+
         <AdminCard title="Safety guarantees">
           <ul>
             <Check label="No provider write APIs to GitHub / Vercel / Cloudflare / Hetzner" />
@@ -161,6 +195,8 @@ export default async function HealthPage() {
             <Check label="No secret values exposed in any response" />
             <Check label="/admin/agent untouched by /admin/ops" />
             <Check label="Snapshot data clearly labelled read-only" />
+            <Check label="No inbox is being read; no emails sent, archived, deleted, or labelled" />
+            <Check label="No email body content stored — references only when DB is connected" />
           </ul>
         </AdminCard>
 
