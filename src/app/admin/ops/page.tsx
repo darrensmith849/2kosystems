@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { isDbConfigured } from '@/lib/db/client';
-import { AdminCard, SectionHeader, Badge, DataTable } from '@/components/admin-ui';
+import { AdminCard, SectionHeader, Badge } from '@/components/admin-ui';
 import ActivationReadiness from '@/components/admin-ui/ActivationReadiness';
 import SnapshotBanner from '@/components/admin-ui/SnapshotBanner';
 import QuickActionTile from '@/components/admin-ui/QuickActionTile';
@@ -357,20 +357,17 @@ function NeedsAttention({ summary, index }: { summary: ReportsSummary; index: In
   return (
     <div className="mb-6">
       <AdminCard title="What needs attention">
-        <DataTable
-          rows={top}
-          columns={[
-            {
-              key: 'icon',
-              header: '',
-              className: 'w-10 font-mono text-emerald-300/70',
-              render: (r) => <span className="font-mono text-[11px]">{r.icon}</span>,
-            },
-            {
-              key: 'title',
-              header: 'Item',
-              render: (r) => (
-                <div>
+        {top.length === 0 ? (
+          <p className="text-xs text-[#71717a]">
+            Nothing flagged. Snapshot data may not be loaded — connect DATABASE_URL or check the
+            snapshot fixtures.
+          </p>
+        ) : (
+          <ul className="space-y-3">
+            {top.map((r) => (
+              <li key={r.id} className="flex items-start gap-3 border-b border-[#1c1c1e] pb-3 last:border-0 last:pb-0">
+                <span className="font-mono text-[11px] text-emerald-300/70 w-6 shrink-0">{r.icon}</span>
+                <div className="flex-1 min-w-0">
                   <Link
                     href={r.href}
                     className="text-xs text-[#f5f5f5] hover:text-emerald-300 font-medium"
@@ -381,22 +378,13 @@ function NeedsAttention({ summary, index }: { summary: ReportsSummary; index: In
                     {r.context}
                   </p>
                 </div>
-              ),
-            },
-            {
-              key: 'badge',
-              header: 'Status',
-              className: 'w-32',
-              render: (r) => <Badge text={r.badge.text} tone={r.badge.tone} />,
-            },
-          ]}
-          empty={
-            <p className="text-xs text-[#71717a]">
-              Nothing flagged. Snapshot data may not be loaded — connect DATABASE_URL or check the
-              snapshot fixtures.
-            </p>
-          }
-        />
+                <div className="shrink-0">
+                  <Badge text={r.badge.text} tone={r.badge.tone} />
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
       </AdminCard>
     </div>
   );
