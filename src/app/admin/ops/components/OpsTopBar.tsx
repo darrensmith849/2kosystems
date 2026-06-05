@@ -1,7 +1,49 @@
 'use client';
 
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Search as SearchIcon } from '@/components/admin-ui/icons';
+
+// Tiny route → sentence-case label map for the page-context hint shown
+// between the wordmark and the search input. Order doesn't matter; the
+// resolver picks the longest matching prefix so deeper routes win.
+const PAGE_LABELS: Record<string, string> = {
+  '/admin/ops': 'Command Centre',
+  '/admin/ops/search': 'Search',
+  '/admin/ops/ask': 'Ask 2KO',
+  '/admin/ops/clients': 'Clients',
+  '/admin/ops/contacts': 'Contacts',
+  '/admin/ops/assets': 'Assets',
+  '/admin/ops/emails': 'Emails',
+  '/admin/ops/services': 'Services',
+  '/admin/ops/map': 'Map',
+  '/admin/ops/github': 'GitHub',
+  '/admin/ops/vercel': 'Vercel',
+  '/admin/ops/infrastructure': 'Infrastructure',
+  '/admin/ops/tickets': 'Tickets',
+  '/admin/ops/renewals': 'Renewals',
+  '/admin/ops/incidents': 'Incidents',
+  '/admin/ops/reports': 'Reports',
+  '/admin/ops/audits': 'Audits',
+  '/admin/ops/review': 'Review',
+  '/admin/ops/activation': 'Activation',
+  '/admin/ops/health': 'Health',
+  '/admin/ops/runbooks': 'Runbooks',
+  '/admin/ops/sync-log': 'Sync log',
+  '/admin/ops/settings': 'Settings',
+};
+
+function resolvePageLabel(pathname: string | null): string | null {
+  if (!pathname) return null;
+  // Longest-prefix match so /admin/ops/clients/123 still resolves to "Clients".
+  let bestKey: string | null = null;
+  for (const key of Object.keys(PAGE_LABELS)) {
+    if (pathname === key || pathname.startsWith(key + '/')) {
+      if (!bestKey || key.length > bestKey.length) bestKey = key;
+    }
+  }
+  return bestKey ? PAGE_LABELS[bestKey] : null;
+}
 
 // Slim 56px top bar mounted by /admin/ops/layout.tsx inside the authenticated
 // branch. Visual-only: no real search input (the ⌘K pill is a Link to the
@@ -14,6 +56,8 @@ import { Search as SearchIcon } from '@/components/admin-ui/icons';
 
 export default function OpsTopBar({ operatorSlug }: { operatorSlug: string }) {
   const initials = computeInitials(operatorSlug);
+  const pathname = usePathname();
+  const pageLabel = resolvePageLabel(pathname);
   return (
     <header className="hidden lg:flex sticky top-0 z-40 h-14 items-center gap-4 border-b border-white/[0.06] bg-[#0a0a0b]/85 backdrop-blur-md px-6">
       <Link
@@ -26,6 +70,12 @@ export default function OpsTopBar({ operatorSlug }: { operatorSlug: string }) {
         />
         2KO Systems
       </Link>
+
+      {pageLabel && (
+        <span className="hidden md:inline text-xs text-zinc-500" aria-label="Current page">
+          {pageLabel}
+        </span>
+      )}
 
       <div className="flex-1 flex justify-center">
         <Link

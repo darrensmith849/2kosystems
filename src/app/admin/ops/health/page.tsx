@@ -28,7 +28,7 @@ function YesNo({ ok, yes = 'yes', no = 'no' }: { ok: boolean; yes?: string; no?:
 
 function Check({ label }: { label: string }) {
   return (
-    <li className="flex items-start gap-2 py-1.5 text-xs text-[#e4e4e7]">
+    <li className="flex items-start gap-2 py-1.5 text-xs text-zinc-200">
       <span aria-hidden className="mt-0.5 text-emerald-300">✓</span>
       <span>{label}</span>
     </li>
@@ -141,10 +141,10 @@ export default async function HealthPage() {
         <AdminCard title="Runtime">
           <Row label="Detected runtime" value={<Badge text={runtime} tone={runtime === 'unknown' ? 'neutral' : 'blue'} />} />
           <Row label="Deployment env" value={<Badge text={deployEnv} tone={deployEnv === 'production' ? 'green' : 'amber'} />} />
-          <Row label="Node env" value={<span className="font-mono text-xs">{nodeEnv}</span>} />
-          <Row label="Vercel region" value={<span className="font-mono text-xs">{region}</span>} />
-          <Row label="Commit sha" value={<span className="font-mono text-xs">{sha}</span>} />
-          <Row label="Commit ref" value={<span className="font-mono text-xs">{ref}</span>} />
+          <Row label="Node env" value={<code className="text-xs bg-white/[0.04] border border-white/[0.06] px-1.5 py-0.5 rounded text-zinc-200 font-mono">{nodeEnv}</code>} />
+          <Row label="Vercel region" value={<code className="text-xs bg-white/[0.04] border border-white/[0.06] px-1.5 py-0.5 rounded text-zinc-200 font-mono">{region}</code>} />
+          <Row label="Commit sha" value={<code className="text-xs bg-white/[0.04] border border-white/[0.06] px-1.5 py-0.5 rounded text-zinc-200 font-mono">{sha}</code>} />
+          <Row label="Commit ref" value={<code className="text-xs bg-white/[0.04] border border-white/[0.06] px-1.5 py-0.5 rounded text-zinc-200 font-mono">{ref}</code>} />
         </AdminCard>
       </HealthSection>
 
@@ -169,7 +169,7 @@ export default async function HealthPage() {
                 ) : (
                   <span className="inline-flex items-center gap-2">
                     <StatusPill status="failed" />
-                    <span className="font-mono text-[10px] text-[#71717a]">{pingError}</span>
+                    <span className="text-xs text-zinc-500">{pingError}</span>
                   </span>
                 )
               ) : (
@@ -193,7 +193,7 @@ export default async function HealthPage() {
           <Row
             label="Snapshot rows"
             value={
-              <span className="font-mono text-xs text-[#e4e4e7]">
+              <span className="text-xs text-zinc-200">
                 {SNAPSHOT_COUNTS.clients} clients · {SNAPSHOT_COUNTS.assets} assets · {SNAPSHOT_COUNTS.repos} repos · {SNAPSHOT_COUNTS.vercelProjects} Vercel · {SNAPSHOT_COUNTS.hetznerServers} Hetzner
               </span>
             }
@@ -227,7 +227,7 @@ export default async function HealthPage() {
           <Row label="ANTHROPIC_API_KEY" value={<YesNo ok={aiConfigured} yes="set up" no="optional — not set" />} />
           <Row
             label="Knowledge index"
-            value={<span className="font-mono text-xs text-[#e4e4e7]">{indexSize} items</span>}
+            value={<span className="text-xs text-zinc-200">{indexSize} items</span>}
           />
           <Row
             label="Intent gate"
@@ -257,7 +257,7 @@ export default async function HealthPage() {
           <Row
             label="Snapshot export (JSON)"
             value={
-              <Link href="/api/admin/ops/export/snapshot.json" className="font-mono text-emerald-300 hover:underline">
+              <Link href="/api/admin/ops/export/snapshot.json" className="text-xs text-emerald-300 hover:underline font-mono">
                 /api/admin/ops/export/snapshot.json
               </Link>
             }
@@ -265,7 +265,7 @@ export default async function HealthPage() {
           <Row
             label="Snapshot export (Markdown)"
             value={
-              <Link href="/api/admin/ops/export/snapshot.md" className="font-mono text-emerald-300 hover:underline">
+              <Link href="/api/admin/ops/export/snapshot.md" className="text-xs text-emerald-300 hover:underline font-mono">
                 /api/admin/ops/export/snapshot.md
               </Link>
             }
@@ -343,7 +343,7 @@ export default async function HealthPage() {
           />
           <Row
             label="Total services"
-            value={<span className="font-mono text-xs text-[#e4e4e7]">{serviceCount}</span>}
+            value={<span className="text-xs text-zinc-200">{serviceCount}</span>}
           />
           <Row
             label="Active"
@@ -390,7 +390,7 @@ export default async function HealthPage() {
               value={
                 <ul className="space-y-0.5">
                   {cronFile.paths.map((p) => (
-                    <li key={p} className="font-mono text-[10px] text-[#a1a1aa]">
+                    <li key={p} className="text-xs text-zinc-400 font-mono">
                       {p}
                     </li>
                   ))}
@@ -406,9 +406,9 @@ export default async function HealthPage() {
           <Row
             label="Incoming alert URL"
             value={
-              <span className="font-mono text-[10px] text-[#a1a1aa]">
+              <code className="text-xs bg-white/[0.04] border border-white/[0.06] px-1.5 py-0.5 rounded text-zinc-200 font-mono">
                 /api/webhooks/betterstack
-              </span>
+              </code>
             }
           />
           <Row
@@ -422,7 +422,7 @@ export default async function HealthPage() {
           <Row label="BREVO_OPS_DIGEST_TO" value={<YesNo ok={renewalReminders} yes="set up" no="needs setup" />} />
           <Row
             label="Used for"
-            value={<span className="text-xs text-[#a1a1aa]">Daily renewal digest email</span>}
+            value={<span className="text-xs text-zinc-400">Daily renewal digest email</span>}
           />
           <Row
             label="Status"
@@ -454,8 +454,8 @@ export default async function HealthPage() {
           <ul className="space-y-1">
             {OPS_ROUTES.map((route) => (
               <li key={route.href} className="flex items-center gap-2 py-1 text-xs">
-                <span aria-hidden className="text-[#52525b]">→</span>
-                <Link href={route.href} className="font-mono text-emerald-300 hover:underline">
+                <span aria-hidden className="text-zinc-600">→</span>
+                <Link href={route.href} className="text-emerald-300 hover:underline font-mono">
                   {route.label}
                 </Link>
               </li>
@@ -479,9 +479,9 @@ function HealthSection({
   return (
     <section className="mt-6 first:mt-0">
       <div className="mb-3">
-        <h2 className="text-sm font-mono uppercase tracking-[0.18em] text-[#a1a1aa]">{title}</h2>
+        <h2 className="text-sm font-medium text-zinc-100">{title}</h2>
         {subtitle && (
-          <p className="mt-1 text-xs text-[#71717a]">{subtitle}</p>
+          <p className="mt-1 text-xs text-zinc-500">{subtitle}</p>
         )}
       </div>
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">{children}</div>

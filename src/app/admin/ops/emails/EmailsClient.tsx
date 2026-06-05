@@ -177,13 +177,13 @@ function statusBadge(status: LocalEmailRefStatus) {
 function providerBadge(provider: EmailProvider) {
   switch (provider) {
     case 'gmail':
-      return <Badge text="gmail" tone="blue" />;
+      return <Badge text="Gmail" tone="blue" />;
     case 'outlook':
-      return <Badge text="outlook" tone="blue" />;
+      return <Badge text="Outlook" tone="blue" />;
     case 'manual':
-      return <Badge text="manual" tone="neutral" />;
+      return <Badge text="Manual" tone="neutral" />;
     case 'unknown':
-      return <Badge text="unknown" tone="neutral" />;
+      return <Badge text="Unknown" tone="neutral" />;
   }
 }
 
@@ -636,26 +636,26 @@ export default function EmailsClient({ snapshotRefs }: { snapshotRefs: SnapshotE
               return (
                 <div
                   key={cat}
-                  className="rounded-xl border border-[#1c1c1e] bg-[#0e0e10]"
+                  className="rounded-xl border border-white/[0.06] bg-white/[0.02]"
                 >
                   <button
                     type="button"
                     onClick={() => toggleCategory(cat)}
                     className="flex w-full items-center justify-between gap-2 px-3 py-2 text-left"
                   >
-                    <span className="flex items-center gap-2 text-sm font-medium text-[#f5f5f5]">
-                      <MailIcon className="h-4 w-4 shrink-0 text-[#71717a]" />
+                    <span className="flex items-center gap-2 text-sm font-medium text-zinc-100">
+                      <MailIcon className="h-4 w-4 shrink-0 text-zinc-400" />
                       {EMAIL_CATEGORY_LABEL[cat]}
-                      <span className="text-xs text-[#71717a]">({inCat.length})</span>
+                      <span className="text-xs text-zinc-500">({inCat.length})</span>
                     </span>
-                    <ChevronIcon open={!collapsed} className="h-4 w-4 text-[#71717a]" />
+                    <ChevronIcon open={!collapsed} className="h-4 w-4 text-zinc-400" />
                   </button>
                   {!collapsed && (
                     <ul className="space-y-2 px-3 pb-3">
                       {inCat.map((r) => (
                         <li
                           key={r.id}
-                          className="rounded-lg border border-[#1c1c1e] bg-[#111113] p-3"
+                          className="rounded-lg border border-white/[0.06] bg-white/[0.02] p-3"
                         >
                           <div className="flex flex-wrap items-center gap-2 mb-1">
                             {statusBadge(r.status)}
@@ -726,15 +726,14 @@ export default function EmailsClient({ snapshotRefs }: { snapshotRefs: SnapshotE
             const inCat = snapshotGrouped.get(cat) ?? [];
             if (inCat.length === 0) return null;
             return (
-              <li key={cat} className="rounded-lg border border-[#1c1c1e] bg-[#0e0e10] p-3">
+              <li key={cat} className="rounded-lg border border-white/[0.06] bg-white/[0.02] p-3">
                 <div className="flex flex-wrap items-center gap-2 mb-1">
                   <Badge text={EMAIL_CATEGORY_LABEL[cat]} tone="blue" />
-                  <Badge text="snapshot preview" tone="neutral" />
                 </div>
                 <ul className="space-y-1">
                   {inCat.map((e) => (
-                    <li key={e.id} className="text-xs text-[#a1a1aa]">
-                      <span className="text-[#f5f5f5]">{e.subject}</span>
+                    <li key={e.id} className="text-xs text-zinc-400">
+                      <span className="text-zinc-100">{e.subject}</span>
                       {e.fromName && <> — from {e.fromName}</>}
                     </li>
                   ))}
@@ -763,7 +762,7 @@ export default function EmailsClient({ snapshotRefs }: { snapshotRefs: SnapshotE
 function FormField({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="block">
-      <span className="mb-1 block text-[11px] font-mono uppercase tracking-wider text-[#71717a]">
+      <span className="mb-1 block text-xs font-medium text-zinc-400">
         {label}
       </span>
       {children}

@@ -4,6 +4,10 @@
 
 'use client';
 
+export { MetricCard } from './MetricCard';
+export { StatusDot } from './StatusDot';
+export { GlassCard } from './GlassCard';
+
 export function AdminCard({
   title,
   children,

@@ -41,9 +41,9 @@ export default async function SettingsPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <AdminCard title="Runtime">
-          <Row label="Detected runtime" value={<span className="font-mono">{detectRuntime()}</span>} />
-          <Row label="Deployment env" value={<span className="font-mono">{getDeploymentEnv()}</span>} />
-          <Row label="Node env" value={<span className="font-mono">{process.env.NODE_ENV}</span>} />
+          <Row label="Detected runtime" value={<code className="text-xs bg-white/[0.04] border border-white/[0.06] px-1.5 py-0.5 rounded text-zinc-200 font-mono">{detectRuntime()}</code>} />
+          <Row label="Deployment env" value={<code className="text-xs bg-white/[0.04] border border-white/[0.06] px-1.5 py-0.5 rounded text-zinc-200 font-mono">{getDeploymentEnv()}</code>} />
+          <Row label="Node env" value={<code className="text-xs bg-white/[0.04] border border-white/[0.06] px-1.5 py-0.5 rounded text-zinc-200 font-mono">{process.env.NODE_ENV}</code>} />
         </AdminCard>
 
         <AdminCard
@@ -55,7 +55,7 @@ export default async function SettingsPage() {
         </AdminCard>
       </div>
 
-      <h3 className="text-xs font-mono uppercase tracking-[0.18em] text-[#71717a] mt-8 mb-3">Integrations</h3>
+      <h3 className="text-sm font-medium text-zinc-100 mt-8 mb-3">Integrations</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <ProviderCard name="GitHub" envVar="GITHUB_TOKEN" status={conn.github} />
         <ProviderCard name="Vercel" envVar="VERCEL_API_TOKEN" status={conn.vercel} />
@@ -84,9 +84,9 @@ function ProviderCard({
       title={name}
       action={<StatusPill status={status.status === 'connected' ? 'connected' : 'not_connected'} />}
     >
-      <Row label="Env" value={<code className="text-[#a1a1aa] text-[11px]">{envVar}</code>} />
+      <Row label="Env" value={<code className="text-xs bg-white/[0.04] border border-white/[0.06] px-1.5 py-0.5 rounded text-zinc-200 font-mono">{envVar}</code>} />
       <Row label="Reason" value={status.status === 'connected' ? 'token present' : `${status.reason}${status.detail ? ` — ${status.detail}` : ''}`} />
-      <Row label="Last checked" value={<span className="font-mono text-[10px]">{status.checkedAt}</span>} />
+      <Row label="Last checked" value={<span className="text-xs text-zinc-500">{status.checkedAt}</span>} />
     </AdminCard>
   );
 }

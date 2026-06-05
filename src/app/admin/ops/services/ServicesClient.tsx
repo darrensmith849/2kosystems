@@ -252,20 +252,20 @@ type Tone = 'neutral' | 'green' | 'amber' | 'rose' | 'blue';
 function SummaryTile({ label, value, tone }: { label: string; value: number; tone: Tone }) {
   const ring =
     tone === 'green'
-      ? 'border-emerald-400/30 bg-emerald-400/5'
+      ? 'border-emerald-400/20 bg-emerald-400/[0.04]'
       : tone === 'amber'
-        ? 'border-amber-400/30 bg-amber-400/5'
+        ? 'border-amber-400/20 bg-amber-400/[0.04]'
         : tone === 'rose'
-          ? 'border-rose-400/30 bg-rose-400/5'
+          ? 'border-rose-400/20 bg-rose-400/[0.04]'
           : tone === 'blue'
-            ? 'border-sky-400/30 bg-sky-400/5'
-            : 'border-[#27272a] bg-[#0e0e10]';
+            ? 'border-sky-400/20 bg-sky-400/[0.04]'
+            : 'border-white/[0.06] bg-white/[0.02]';
   return (
     <div className={`rounded-2xl border p-4 ${ring}`}>
-      <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.18em] text-[#71717a]">
+      <p className="mb-2 text-[11px] font-medium text-zinc-500">
         {label}
       </p>
-      <p className="text-2xl font-semibold text-[#f5f5f5]">{value}</p>
+      <p className="text-2xl font-semibold text-white">{value}</p>
     </div>
   );
 }
@@ -285,7 +285,7 @@ function ChipRow<T extends string>({
 }) {
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#71717a] inline-flex items-center gap-1">
+      <span className="text-[11px] font-medium text-zinc-500 inline-flex items-center gap-1">
         <IconFilter />
         {label}
       </span>
@@ -298,8 +298,8 @@ function ChipRow<T extends string>({
             onClick={() => onChange(opt.value)}
             className={`rounded-full border px-2.5 py-1 text-[11px] transition-colors ${
               active
-                ? 'border-emerald-400/50 bg-emerald-400/10 text-emerald-200'
-                : 'border-[#27272a] bg-[#0e0e10] text-[#a1a1aa] hover:text-[#e4e4e7] hover:border-[#3f3f46]'
+                ? 'border-emerald-400/40 bg-emerald-400/[0.08] text-emerald-200'
+                : 'border-white/[0.06] bg-white/[0.02] text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]'
             }`}
           >
             {opt.label}
