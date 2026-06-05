@@ -3,13 +3,70 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { AdminCard, Badge, DataTable, EmptyState } from '@/components/admin-ui';
+import { AdminCard, Badge, EmptyState } from '@/components/admin-ui';
 import type { AssetWithRefs } from '@/lib/ops/assets-service';
 import { ASSET_TYPE_LABEL, labelFor } from '@/lib/ops/labels';
 
 const ASSET_TYPES = [
   'website', 'saas_app', 'portal', 'api', 'landing', 'internal_tool', 'database', 'service',
 ];
+
+// Compact card-grid renderer modeled on the Cloudflare "Domains" / "Workers"
+// tiles in the account home: one tile per asset, name bold, small subtitle,
+// status dot on the right. No multi-column wide table. Long info (stack,
+// notes, live URL) lives on the per-asset detail page reachable by clicking
+// the tile.
+
+function statusDot(status: string | null | undefined): { color: string; label: string } {
+  switch (status) {
+    case 'active':
+      return { color: 'bg-emerald-400', label: 'Active' };
+    case 'archived':
+      return { color: 'bg-zinc-500', label: 'Archived' };
+    case 'paused':
+      return { color: 'bg-amber-400', label: 'Paused' };
+    case 'planned':
+      return { color: 'bg-sky-400', label: 'Planned' };
+    default:
+      return { color: 'bg-zinc-500', label: status ?? '—' };
+  }
+}
+
+function AssetGrid({ assets }: { assets: AssetWithRefs[] }) {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+      {assets.map((a) => {
+        const dot = statusDot(a.status);
+        const subtitle = [
+          labelFor(ASSET_TYPE_LABEL, a.type),
+          a.client?.name,
+        ]
+          .filter(Boolean)
+          .join(' · ');
+        return (
+          <Link
+            key={a.id}
+            href={`/admin/ops/assets/${a.id}`}
+            className="group rounded-2xl border border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/[0.10] transition-colors px-4 py-3.5 flex items-center justify-between gap-3"
+          >
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-medium text-zinc-100 truncate group-hover:text-white">
+                {a.name}
+              </p>
+              <p className="mt-0.5 text-xs text-zinc-500 truncate">
+                {subtitle || '—'}
+              </p>
+            </div>
+            <span className="flex items-center gap-1.5 shrink-0">
+              <span aria-hidden className={`h-1.5 w-1.5 rounded-full ${dot.color}`} />
+              <span className="text-xs text-zinc-400">{dot.label}</span>
+            </span>
+          </Link>
+        );
+      })}
+    </div>
+  );
+}
 
 export default function AssetsClient({
   initialAssets,
@@ -61,26 +118,13 @@ export default function AssetsClient({
 
   if (isSnapshot) {
     return (
-      <div className="space-y-5">
-        <DataTable
-          rows={initialAssets}
-          columns={[
-            { key: 'name', header: 'Name', render: (a) => (
-              <Link href={`/admin/ops/assets/${a.id}`} className="font-medium text-zinc-100 hover:text-zinc-50 transition-colors">
-                {a.name}
-              </Link>
-            ) },
-            { key: 'type', header: 'Type', render: (a) => <Badge text={labelFor(ASSET_TYPE_LABEL, a.type)} /> },
-            { key: 'client', header: 'Client', render: (a) => a.client?.name ?? <span className="text-zinc-500">—</span> },
-            { key: 'url', header: 'Live URL', render: (a) =>
-              a.liveUrl
-                ? <a href={a.liveUrl} target="_blank" rel="noreferrer" className="text-emerald-300 hover:underline">{a.liveUrl}</a>
-                : <span className="text-zinc-500">—</span>
-            },
-            { key: 'tech', header: 'Stack', render: (a) => a.techStack && a.techStack.length > 0 ? <span className="font-mono text-[10px] text-zinc-400">{a.techStack.join(', ')}</span> : <span className="text-zinc-500">—</span> },
-            { key: 'notes', header: 'Notes', render: (a) => a.notes ? <span className="text-xs text-zinc-400">{a.notes}</span> : <span className="text-zinc-500">—</span> },
-          ]}
-        />
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <p className="text-xs text-zinc-500">
+            {initialAssets.length} {initialAssets.length === 1 ? 'asset' : 'assets'}
+          </p>
+        </div>
+        <AssetGrid assets={initialAssets} />
       </div>
     );
   }
@@ -129,7 +173,7 @@ export default function AssetsClient({
           <button
             type="submit"
             disabled={busy || !name.trim()}
-            className="rounded-full bg-[#0f7b3a] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#B8C4C8] hover:text-black disabled:opacity-40 disabled:cursor-not-allowed transition-colors lg:col-span-5"
+            className="rounded-full bg-emerald-500/20 border border-emerald-400/30 px-5 py-2.5 text-sm font-medium text-emerald-200 hover:bg-emerald-500/30 disabled:opacity-40 disabled:cursor-not-allowed transition-colors lg:col-span-5"
           >
             {busy ? 'Saving…' : 'Add asset'}
           </button>
@@ -140,24 +184,12 @@ export default function AssetsClient({
       {initialAssets.length === 0 ? (
         <EmptyState title="No assets yet" hint="Add assets to start linking clients to the websites, apps, and tools we manage for them." />
       ) : (
-        <DataTable
-          rows={initialAssets}
-          columns={[
-            { key: 'name', header: 'Name', render: (a) => (
-              <Link href={`/admin/ops/assets/${a.id}`} className="font-medium text-zinc-100 hover:text-zinc-50 transition-colors">
-                {a.name}
-              </Link>
-            ) },
-            { key: 'type', header: 'Type', render: (a) => <Badge text={labelFor(ASSET_TYPE_LABEL, a.type)} /> },
-            { key: 'client', header: 'Client', render: (a) => a.client?.name ?? <span className="text-zinc-500">—</span> },
-            { key: 'url', header: 'Live URL', render: (a) =>
-              a.liveUrl
-                ? <a href={a.liveUrl} target="_blank" rel="noreferrer" className="text-emerald-300 hover:underline">{a.liveUrl}</a>
-                : <span className="text-zinc-500">—</span>
-            },
-            { key: 'status', header: 'Status', render: (a) => <Badge text={a.status[0].toUpperCase() + a.status.slice(1)} tone={a.status === 'active' ? 'green' : 'neutral'} /> },
-          ]}
-        />
+        <div className="space-y-3">
+          <p className="text-xs text-zinc-500">
+            {initialAssets.length} {initialAssets.length === 1 ? 'asset' : 'assets'}
+          </p>
+          <AssetGrid assets={initialAssets} />
+        </div>
       )}
     </div>
   );
