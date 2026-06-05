@@ -399,7 +399,7 @@ export default function ServicesClient({ services }: { services: ServicesClientS
       <AdminCard
         title="Export current view"
         action={
-          <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-[#71717a]">
+          <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-zinc-500 dark:text-[#71717a]">
             {filtered.length} services
           </span>
         }
@@ -408,7 +408,7 @@ export default function ServicesClient({ services }: { services: ServicesClientS
           <button
             type="button"
             onClick={onExportJson}
-            className="inline-flex items-center gap-1.5 rounded-full border border-[#27272a] bg-[#0e0e10] px-3 py-1.5 text-xs text-[#e4e4e7] hover:border-emerald-400/40 hover:text-emerald-200 transition-colors"
+            className="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 dark:border-[#27272a] bg-zinc-50 dark:bg-[#0e0e10] px-3 py-1.5 text-xs text-zinc-800 dark:text-[#e4e4e7] hover:border-emerald-400/40 hover:text-emerald-200 transition-colors"
           >
             <IconDownload />
             Export JSON
@@ -416,13 +416,13 @@ export default function ServicesClient({ services }: { services: ServicesClientS
           <button
             type="button"
             onClick={onExportMarkdown}
-            className="inline-flex items-center gap-1.5 rounded-full border border-[#27272a] bg-[#0e0e10] px-3 py-1.5 text-xs text-[#e4e4e7] hover:border-emerald-400/40 hover:text-emerald-200 transition-colors"
+            className="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 dark:border-[#27272a] bg-zinc-50 dark:bg-[#0e0e10] px-3 py-1.5 text-xs text-zinc-800 dark:text-[#e4e4e7] hover:border-emerald-400/40 hover:text-emerald-200 transition-colors"
           >
             <IconDownload />
             Export Markdown
           </button>
         </div>
-        <p className="mt-2 text-[11px] text-[#71717a] leading-relaxed">
+        <p className="mt-2 text-[11px] text-zinc-500 dark:text-[#71717a] leading-relaxed">
           Exports the services currently matching the filters above. No credentials or provider
           API keys are included — labels only.
         </p>
@@ -431,7 +431,7 @@ export default function ServicesClient({ services }: { services: ServicesClientS
       {/* Filtered services tiles */}
       {filtered.length === 0 ? (
         <AdminCard title="Filtered services">
-          <p className="text-xs text-[#71717a]">No services match the current filters.</p>
+          <p className="text-xs text-zinc-500 dark:text-[#71717a]">No services match the current filters.</p>
         </AdminCard>
       ) : (
         <div className="space-y-3">

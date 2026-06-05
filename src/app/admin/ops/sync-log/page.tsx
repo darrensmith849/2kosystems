@@ -32,13 +32,13 @@ export default async function SyncLogPage() {
         <DataTable
           rows={runs}
           columns={[
-            { key: 'provider', header: 'Provider', render: (r) => <span className="font-mono text-[#f5f5f5]">{r.provider}</span> },
+            { key: 'provider', header: 'Provider', render: (r) => <span className="font-mono text-zinc-900 dark:text-[#f5f5f5]">{r.provider}</span> },
             { key: 'status', header: 'Status', render: (r) => <Badge text={r.status} tone={STATUS_TONES[r.status] ?? 'neutral'} /> },
             { key: 'started', header: 'Started', render: (r) => fmtAbs(r.startedAt) },
             { key: 'duration', header: 'Duration', render: (r) => duration(r.startedAt, r.finishedAt) },
-            { key: 'counts', header: 'Counts', render: (r) => <span className="font-mono text-[10px] text-[#a1a1aa]">seen {r.itemsSeen} · +{r.itemsCreated} · ↻{r.itemsUpdated} · skip {r.itemsSkipped}</span> },
-            { key: 'who', header: 'Triggered by', render: (r) => <span className="text-xs text-[#a1a1aa]">{r.triggeredBy ?? '—'}{r.triggeredByOperatorSlug ? ` (${r.triggeredByOperatorSlug})` : ''}</span> },
-            { key: 'error', header: 'Error', render: (r) => r.errorMessage ? <span className="text-xs text-rose-400">{r.errorMessage.slice(0, 60)}</span> : <span className="text-[#52525b]">—</span> },
+            { key: 'counts', header: 'Counts', render: (r) => <span className="font-mono text-[10px] text-zinc-600 dark:text-[#a1a1aa]">seen {r.itemsSeen} · +{r.itemsCreated} · ↻{r.itemsUpdated} · skip {r.itemsSkipped}</span> },
+            { key: 'who', header: 'Triggered by', render: (r) => <span className="text-xs text-zinc-600 dark:text-[#a1a1aa]">{r.triggeredBy ?? '—'}{r.triggeredByOperatorSlug ? ` (${r.triggeredByOperatorSlug})` : ''}</span> },
+            { key: 'error', header: 'Error', render: (r) => r.errorMessage ? <span className="text-xs text-rose-400">{r.errorMessage.slice(0, 60)}</span> : <span className="text-zinc-500 dark:text-[#52525b]">—</span> },
           ]}
         />
       )}

@@ -106,7 +106,7 @@ export default function AssetLinksClient({
           <select
             value={kind}
             onChange={(e) => setKind(e.target.value as never)}
-            className="rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5]"
+            className="rounded-lg border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-zinc-900 dark:text-[#f5f5f5]"
             disabled={busy !== null}
           >
             {KINDS.map((k) => (
@@ -116,7 +116,7 @@ export default function AssetLinksClient({
           <select
             value={chosenRef}
             onChange={(e) => setChosenRef(e.target.value)}
-            className="rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5] md:col-span-1"
+            className="rounded-lg border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-zinc-900 dark:text-[#f5f5f5] md:col-span-1"
             disabled={busy !== null || loading || candidates.length === 0}
           >
             <option value="">
@@ -137,26 +137,26 @@ export default function AssetLinksClient({
           </button>
         </form>
         {error && <p className="mt-3 text-sm text-rose-400">{error}</p>}
-        <p className="mt-3 text-[11px] text-[#52525b]">
+        <p className="mt-3 text-[11px] text-zinc-500 dark:text-[#52525b]">
           Candidates are populated from the relevant sync tables. If nothing shows, run that provider&apos;s sync first.
         </p>
       </AdminCard>
 
       <div>
-        <h3 className="text-xs font-mono uppercase tracking-[0.18em] text-[#71717a] mb-3">Current links</h3>
+        <h3 className="text-xs font-mono uppercase tracking-[0.18em] text-zinc-500 dark:text-[#71717a] mb-3">Current links</h3>
         {initialLinks.length === 0 ? (
           <EmptyState
             title="No links yet"
             hint="Use the form above to attach this asset to a repo, project, zone, server, or domain."
           />
         ) : (
-          <div className="rounded-2xl border border-[#27272a] bg-[#111113]">
+          <div className="rounded-2xl border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#111113]">
             <ul>
               {initialLinks.map((l) => (
-                <li key={l.id} className="flex items-center justify-between gap-3 px-5 py-3 border-b border-[#1c1c1e] last:border-0">
+                <li key={l.id} className="flex items-center justify-between gap-3 px-5 py-3 border-b border-zinc-200 dark:border-[#1c1c1e] last:border-0">
                   <div className="flex items-center gap-3 flex-1 min-w-0">
                     <Badge text={l.kind.replace(/_/g, ' ')} tone={KIND_TONES[l.kind] ?? 'neutral'} />
-                    <span className="text-xs font-mono text-[#e4e4e7] truncate">{l.externalRef}</span>
+                    <span className="text-xs font-mono text-zinc-800 dark:text-[#e4e4e7] truncate">{l.externalRef}</span>
                   </div>
                   <button
                     type="button"

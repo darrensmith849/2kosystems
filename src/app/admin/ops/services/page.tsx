@@ -47,7 +47,7 @@ export default function ServicesPage() {
 
       {/* Status / context */}
       <AdminCard title="Status">
-        <p className="text-xs text-[#a1a1aa] leading-relaxed">
+        <p className="text-xs text-zinc-600 dark:text-[#a1a1aa] leading-relaxed">
           The Services list is a read-only catalogue of every supplier we depend on. No supplier
           credentials or provider API keys are stored or shown here. Use the filters below to
           narrow the view, then export the current view as JSON or Markdown for offline review.
@@ -59,7 +59,7 @@ export default function ServicesPage() {
 
       {/* Safety */}
       <AdminCard title="What this page never does">
-        <ul className="space-y-2 text-xs text-[#a1a1aa] leading-relaxed">
+        <ul className="space-y-2 text-xs text-zinc-600 dark:text-[#a1a1aa] leading-relaxed">
           <li>· No supplier credentials are stored or displayed.</li>
           <li>· No billing actions can be triggered from this page.</li>
           <li>· No provider changes are wired — read-only list only.</li>

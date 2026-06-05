@@ -41,14 +41,14 @@ export default function EmailsPage() {
             <Badge text="No inbox is being read" tone="green" />
             <Badge text="No emails being sent" tone="green" />
           </div>
-          <p className="text-sm text-[#e4e4e7] leading-relaxed">
+          <p className="text-sm text-zinc-800 dark:text-[#e4e4e7] leading-relaxed">
             Email linking is a read-only preview today. Manual email references will activate
             after the database is connected. Gmail and Outlook integration are left for a later,
             explicitly approved phase — no inbox is being read, no emails are being sent, and no
             email bodies are stored.
           </p>
-          <p className="text-xs text-[#a1a1aa] leading-relaxed">
-            Current state: <span className="text-[#f5f5f5]">{status}</span> · A browser-local
+          <p className="text-xs text-zinc-600 dark:text-[#a1a1aa] leading-relaxed">
+            Current state: <span className="text-zinc-900 dark:text-[#f5f5f5]">{status}</span> · A browser-local
             references workspace is available below.
           </p>
         </div>
@@ -56,7 +56,7 @@ export default function EmailsPage() {
 
       {/* Category preview */}
       <AdminCard title="Planned categories">
-        <p className="mb-4 text-xs text-[#a1a1aa] leading-relaxed">
+        <p className="mb-4 text-xs text-zinc-600 dark:text-[#a1a1aa] leading-relaxed">
           When email linking is enabled, every reference is filed under one of these categories.
           The dashboard never reads inboxes — an operator creates the reference manually with the
           subject, sender, and a link back to the original email in Gmail or Outlook.
@@ -79,7 +79,7 @@ export default function EmailsPage() {
 
       {/* Safety */}
       <AdminCard title="What this page never does">
-        <ul className="space-y-2 text-xs text-[#a1a1aa] leading-relaxed">
+        <ul className="space-y-2 text-xs text-zinc-600 dark:text-[#a1a1aa] leading-relaxed">
           <li>· Never reads your inbox.</li>
           <li>· Never sends any email.</li>
           <li>· Never archives, deletes, or labels any email.</li>

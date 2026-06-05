@@ -55,8 +55,8 @@ export default async function RenewalDetailPage({ params }: { params: Promise<{ 
           subtitle={
             <>
               <Link href="/admin/ops/renewals" className="text-emerald-300 hover:underline">← back to Renewals</Link>
-              <span className="ml-2 text-[#52525b]">·</span>
-              <span className="ml-2 text-[#71717a]">{r.kind}</span>
+              <span className="ml-2 text-zinc-500 dark:text-[#52525b]">·</span>
+              <span className="ml-2 text-zinc-500 dark:text-[#71717a]">{r.kind}</span>
             </>
           }
         />
@@ -77,10 +77,10 @@ export default async function RenewalDetailPage({ params }: { params: Promise<{ 
           </div>
           <div className="space-y-4">
             <AdminCard title="What needs confirming">
-              <p className="text-xs text-[#a1a1aa] leading-relaxed">{r.notes ?? 'Verify with the provider before relying on the snapshot date.'}</p>
+              <p className="text-xs text-zinc-600 dark:text-[#a1a1aa] leading-relaxed">{r.notes ?? 'Verify with the provider before relying on the snapshot date.'}</p>
             </AdminCard>
             <AdminCard title="Next action">
-              <p className="text-xs text-[#e4e4e7] leading-relaxed">{SNAPSHOT_NEXT[id] ?? 'Confirm date + cost; mark auto-renew once DATABASE_URL is set.'}</p>
+              <p className="text-xs text-zinc-800 dark:text-[#e4e4e7] leading-relaxed">{SNAPSHOT_NEXT[id] ?? 'Confirm date + cost; mark auto-renew once DATABASE_URL is set.'}</p>
             </AdminCard>
           </div>
         </div>
@@ -102,8 +102,8 @@ export default async function RenewalDetailPage({ params }: { params: Promise<{ 
         subtitle={
           <>
             <Link href="/admin/ops/renewals" className="text-emerald-300 hover:underline">← back to Renewals</Link>
-            <span className="ml-2 text-[#52525b]">·</span>
-            <span className="ml-2 text-[#71717a]">{r.kind}</span>
+            <span className="ml-2 text-zinc-500 dark:text-[#52525b]">·</span>
+            <span className="ml-2 text-zinc-500 dark:text-[#71717a]">{r.kind}</span>
           </>
         }
       />

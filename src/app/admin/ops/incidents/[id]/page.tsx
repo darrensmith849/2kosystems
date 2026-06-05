@@ -76,8 +76,8 @@ export default async function IncidentDetailPage({ params }: { params: Promise<{
           subtitle={
             <>
               <Link href="/admin/ops/incidents" className="text-emerald-300 hover:underline">← back to Incidents</Link>
-              <span className="ml-2 text-[#52525b]">·</span>
-              <span className="ml-2 text-[#71717a]">{i.source}</span>
+              <span className="ml-2 text-zinc-500 dark:text-[#52525b]">·</span>
+              <span className="ml-2 text-zinc-500 dark:text-[#71717a]">{i.source}</span>
             </>
           }
         />
@@ -100,17 +100,17 @@ export default async function IncidentDetailPage({ params }: { params: Promise<{
           </div>
           <div className="space-y-4">
             <AdminCard title="Recommended next step">
-              <p className="text-xs text-[#e4e4e7] leading-relaxed">{ctx?.next ?? 'Review and resolve once Hetzner Postgres connects.'}</p>
+              <p className="text-xs text-zinc-800 dark:text-[#e4e4e7] leading-relaxed">{ctx?.next ?? 'Review and resolve once Hetzner Postgres connects.'}</p>
             </AdminCard>
             <AdminCard title="Client notification">
               {ctx?.clientNotif ? (
                 <p className="text-xs text-amber-200">Client notification recommended — verify with the operator before sending.</p>
               ) : (
-                <p className="text-xs text-[#a1a1aa]">No client notification required for this incident.</p>
+                <p className="text-xs text-zinc-600 dark:text-[#a1a1aa]">No client notification required for this incident.</p>
               )}
             </AdminCard>
             <AdminCard title="Blocked by">
-              <ul className="space-y-1 text-xs text-[#a1a1aa]">
+              <ul className="space-y-1 text-xs text-zinc-600 dark:text-[#a1a1aa]">
                 {(ctx?.blockedBy ?? []).map((b) => <li key={b}>· {b}</li>)}
                 {(!ctx || ctx.blockedBy.length === 0) && <li>· no provider blockers</li>}
               </ul>

@@ -20,9 +20,9 @@ export default function RunbooksIndexPage() {
           <AdminCard key={rb.slug} title={rb.slug}>
             <div className="space-y-3">
               <div>
-                <p className="text-sm font-semibold text-[#f5f5f5]">{rb.title}</p>
+                <p className="text-sm font-semibold text-zinc-900 dark:text-[#f5f5f5]">{rb.title}</p>
                 <p
-                  className="mt-1 text-xs text-[#a1a1aa] leading-relaxed overflow-hidden"
+                  className="mt-1 text-xs text-zinc-600 dark:text-[#a1a1aa] leading-relaxed overflow-hidden"
                   style={{
                     display: '-webkit-box',
                     WebkitLineClamp: 2,
@@ -42,7 +42,7 @@ export default function RunbooksIndexPage() {
               )}
 
               <div className="flex items-center justify-between pt-1">
-                <code className="text-[10px] font-mono text-[#71717a] break-all">
+                <code className="text-[10px] font-mono text-zinc-500 dark:text-[#71717a] break-all">
                   {rb.path}
                 </code>
                 <Link

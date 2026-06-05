@@ -64,9 +64,9 @@ export default async function ReportsPage() {
       />
       {snapshot && <SnapshotBanner area="Reports" />}
 
-      <p className="mb-5 font-mono text-[11px] text-[#71717a]">
+      <p className="mb-5 font-mono text-[11px] text-zinc-500 dark:text-[#71717a]">
         Generated <time dateTime={summary.generatedAt}>{formatTimestamp(summary.generatedAt)}</time>
-        {' · '}source: <span className="text-[#a1a1aa]">{summary.dataSource}</span>
+        {' · '}source: <span className="text-zinc-600 dark:text-[#a1a1aa]">{summary.dataSource}</span>
       </p>
 
       <TopSummary summary={summary} />
@@ -173,7 +173,7 @@ function NeedsAttention({ summary, items }: { summary: ReportsSummary; items: In
       <AdminCard
         title="Needs attention"
         action={
-          <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-[#71717a]">
+          <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-zinc-500 dark:text-[#71717a]">
             {totalAttention === 0 ? 'all clear' : `${totalAttention} flagged`}
           </span>
         }
@@ -204,8 +204,8 @@ function CommercialReadiness() {
   );
   return (
     <section className="mb-8">
-      <h2 className="mb-3 text-sm font-medium text-[#f5f5f5]">Commercial readiness</h2>
-      <p className="mb-4 text-xs text-[#a1a1aa]">
+      <h2 className="mb-3 text-sm font-medium text-zinc-900 dark:text-[#f5f5f5]">Commercial readiness</h2>
+      <p className="mb-4 text-xs text-zinc-600 dark:text-[#a1a1aa]">
         Email linkage and services catalogue — both in preview mode until the database is connected.
       </p>
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
@@ -216,12 +216,12 @@ function CommercialReadiness() {
               <Badge text="No inbox is being read" tone="green" />
               <Badge text="No emails being sent" tone="green" />
             </div>
-            <p className="text-xs text-[#a1a1aa] leading-relaxed">
+            <p className="text-xs text-zinc-600 dark:text-[#a1a1aa] leading-relaxed">
               Manual references will activate once the database is connected. Gmail and Outlook
               integration are kept out of scope until separately approved.
             </p>
             <div>
-              <p className="mb-1.5 text-[10px] uppercase tracking-[0.18em] text-[#71717a]">
+              <p className="mb-1.5 text-[10px] uppercase tracking-[0.18em] text-zinc-500 dark:text-[#71717a]">
                 Planned categories ({EMAIL_CATEGORY_ORDER.length})
               </p>
               <div className="flex flex-wrap gap-1.5">
@@ -249,10 +249,10 @@ function CommercialReadiness() {
               <Badge text={`${missingOwner.length} missing billing owner`} tone="amber" />
             </div>
             {needsReview.length > 0 && (
-              <ul className="space-y-1.5 text-xs text-[#e4e4e7]">
+              <ul className="space-y-1.5 text-xs text-zinc-800 dark:text-[#e4e4e7]">
                 {needsReview.slice(0, 6).map((s) => (
                   <li key={s.id} className="flex flex-wrap items-center gap-1.5">
-                    <span aria-hidden className="text-[#52525b]">·</span>
+                    <span aria-hidden className="text-zinc-500 dark:text-[#52525b]">·</span>
                     <span>{s.name}</span>
                     <Badge text={SERVICE_STATUS_LABEL[s.status]} tone={SERVICE_STATUS_TONE[s.status]} />
                   </li>
@@ -377,7 +377,7 @@ function CommercialReadinessTop({ items }: { items: IndexItem[] }) {
   return (
     <div className="mb-6">
       <AdminCard title="Commercial readiness">
-        <p className="mb-3 text-xs text-[#a1a1aa] leading-relaxed">
+        <p className="mb-3 text-xs text-zinc-600 dark:text-[#a1a1aa] leading-relaxed">
           Snapshot of where the commercial side of the dashboard is still waiting on confirmation —
           billing owners, contact roles, and emails / renewals that need linking.
         </p>
@@ -412,7 +412,7 @@ function CommercialCard({
           ? 'border-rose-400/30 bg-rose-400/5'
           : card.tone === 'blue'
             ? 'border-sky-400/30 bg-sky-400/5'
-            : 'border-[#27272a] bg-[#0e0e10]';
+            : 'border-zinc-200 dark:border-[#27272a] bg-zinc-50 dark:bg-[#0e0e10]';
   const iconTint =
     card.tone === 'green'
       ? 'text-emerald-300'
@@ -420,29 +420,29 @@ function CommercialCard({
         ? 'text-amber-300'
         : card.tone === 'rose'
           ? 'text-rose-300'
-          : 'text-[#a1a1aa]';
+          : 'text-zinc-600 dark:text-[#a1a1aa]';
   return (
     <div className={`rounded-2xl border p-4 ${ring}`}>
       <div className="mb-2 flex items-center gap-2">
         <span className={iconTint}>
           <ReportsIcon d={card.iconPath} />
         </span>
-        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#71717a]">
+        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-zinc-500 dark:text-[#71717a]">
           {card.title}
         </p>
       </div>
-      <p className="mb-2 text-2xl font-semibold text-[#f5f5f5]">{card.count}</p>
+      <p className="mb-2 text-2xl font-semibold text-zinc-900 dark:text-[#f5f5f5]">{card.count}</p>
       {card.rows.length > 0 ? (
         <ul className="mb-3 space-y-1">
           {card.rows.map((row, i) => (
-            <li key={i} className="flex gap-2 text-[11px] text-[#e4e4e7]">
-              <span className="text-[#52525b]">·</span>
+            <li key={i} className="flex gap-2 text-[11px] text-zinc-800 dark:text-[#e4e4e7]">
+              <span className="text-zinc-500 dark:text-[#52525b]">·</span>
               <span className="leading-relaxed">{row}</span>
             </li>
           ))}
         </ul>
       ) : (
-        <p className="mb-3 text-[11px] text-[#71717a]">Nothing flagged.</p>
+        <p className="mb-3 text-[11px] text-zinc-500 dark:text-[#71717a]">Nothing flagged.</p>
       )}
       <Link
         href={card.href}
@@ -493,21 +493,21 @@ function RenewalsByWindow({ summary }: { summary: ReportsSummary }) {
     <div className="mb-6">
       <AdminCard
         title="Renewals by window"
-        action={<span className="font-mono text-[10px] uppercase tracking-[0.15em] text-[#71717a]">{total} tracked</span>}
+        action={<span className="font-mono text-[10px] uppercase tracking-[0.15em] text-zinc-500 dark:text-[#71717a]">{total} tracked</span>}
       >
         {total === 0 ? (
-          <p className="text-xs text-[#71717a]">No renewals indexed.</p>
+          <p className="text-xs text-zinc-500 dark:text-[#71717a]">No renewals indexed.</p>
         ) : (
           <div className="grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-7">
             {rows.map((row) => (
               <div
                 key={row.id}
-                className="rounded-2xl border border-[#27272a] bg-[#0e0e10] p-4 text-center"
+                className="rounded-2xl border border-zinc-200 dark:border-[#27272a] bg-zinc-50 dark:bg-[#0e0e10] p-4 text-center"
               >
-                <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.18em] text-[#71717a]">
+                <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.18em] text-zinc-500 dark:text-[#71717a]">
                   {row.window.replace('_', ' ')}
                 </p>
-                <p className="mb-2 text-xl font-semibold text-[#f5f5f5]">{row.count}</p>
+                <p className="mb-2 text-xl font-semibold text-zinc-900 dark:text-[#f5f5f5]">{row.count}</p>
                 <Badge text={row.window.replace('_', ' ')} tone={row.tone} />
               </div>
             ))}
@@ -530,7 +530,7 @@ function IncidentsSection({ summary }: { summary: ReportsSummary }) {
             { key: 'label', header: 'Severity', render: (r) => <Badge text={r.label} tone={incidentSeverityTone(r.label)} /> },
             { key: 'count', header: 'Count', render: (r) => <span className="font-mono">{r.count}</span>, className: 'text-right' },
           ]}
-          empty={<p className="text-xs text-[#71717a]">No incidents indexed.</p>}
+          empty={<p className="text-xs text-zinc-500 dark:text-[#71717a]">No incidents indexed.</p>}
         />
       </AdminCard>
       <AdminCard title="Incidents by status">
@@ -540,7 +540,7 @@ function IncidentsSection({ summary }: { summary: ReportsSummary }) {
             { key: 'label', header: 'Status', render: (r) => <Badge text={r.label} tone={incidentStatusTone(r.label)} /> },
             { key: 'count', header: 'Count', render: (r) => <span className="font-mono">{r.count}</span>, className: 'text-right' },
           ]}
-          empty={<p className="text-xs text-[#71717a]">No incidents indexed.</p>}
+          empty={<p className="text-xs text-zinc-500 dark:text-[#71717a]">No incidents indexed.</p>}
         />
       </AdminCard>
     </div>
@@ -559,17 +559,17 @@ function DecisionsSection({ summary }: { summary: ReportsSummary }) {
             { key: 'label', header: 'Risk', render: (r) => <Badge text={r.label} tone={riskTone(r.label)} /> },
             { key: 'count', header: 'Count', render: (r) => <span className="font-mono">{r.count}</span>, className: 'text-right' },
           ]}
-          empty={<p className="text-xs text-[#71717a]">No decisions indexed.</p>}
+          empty={<p className="text-xs text-zinc-500 dark:text-[#71717a]">No decisions indexed.</p>}
         />
       </AdminCard>
       <AdminCard title="Decisions by cluster">
         <DataTable
           rows={clusterRows}
           columns={[
-            { key: 'label', header: 'Cluster', render: (r) => <span className="text-xs text-[#e4e4e7]">{r.label.replace(/_/g, ' ')}</span> },
+            { key: 'label', header: 'Cluster', render: (r) => <span className="text-xs text-zinc-800 dark:text-[#e4e4e7]">{r.label.replace(/_/g, ' ')}</span> },
             { key: 'count', header: 'Count', render: (r) => <span className="font-mono">{r.count}</span>, className: 'text-right' },
           ]}
-          empty={<p className="text-xs text-[#71717a]">No decisions indexed.</p>}
+          empty={<p className="text-xs text-zinc-500 dark:text-[#71717a]">No decisions indexed.</p>}
         />
       </AdminCard>
     </div>
@@ -608,7 +608,7 @@ function BlockedBySection({ summary }: { summary: ReportsSummary }) {
               className: 'text-right',
             },
           ]}
-          empty={<p className="text-xs text-[#71717a]">Nothing blocked right now.</p>}
+          empty={<p className="text-xs text-zinc-500 dark:text-[#71717a]">Nothing blocked right now.</p>}
         />
       </AdminCard>
     </div>
@@ -632,11 +632,11 @@ function ActivationSummary({ summary }: { summary: ReportsSummary }) {
         }
       >
         <div className="flex flex-wrap items-baseline gap-4">
-          <p className="text-2xl font-semibold text-[#f5f5f5]">
+          <p className="text-2xl font-semibold text-zinc-900 dark:text-[#f5f5f5]">
             {a.ready}
-            <span className="ml-1 text-sm font-normal text-[#71717a]">/ {a.total} ready</span>
+            <span className="ml-1 text-sm font-normal text-zinc-500 dark:text-[#71717a]">/ {a.total} ready</span>
           </p>
-          <p className="font-mono text-xs text-[#a1a1aa]">{a.pending} pending</p>
+          <p className="font-mono text-xs text-zinc-600 dark:text-[#a1a1aa]">{a.pending} pending</p>
           <Badge text={`${pct}%`} tone={pct >= 50 ? 'green' : pct >= 25 ? 'amber' : 'rose'} />
         </div>
       </AdminCard>
@@ -663,7 +663,7 @@ function ImportSummary({ summary }: { summary: ReportsSummary }) {
           <Stat label="Ready" value={i.ready} tone="green" />
           <Stat label="Needs review" value={i.needs_review} tone="amber" />
           <Stat label="Blocked" value={i.blocked} tone="rose" />
-          <p className="font-mono text-xs text-[#71717a]">{i.total} import groups</p>
+          <p className="font-mono text-xs text-zinc-500 dark:text-[#71717a]">{i.total} import groups</p>
         </div>
       </AdminCard>
     </div>
@@ -723,13 +723,13 @@ function ClientPortfolio({ items }: { items: IndexItem[] }) {
                     {r.title}
                   </Link>
                 ) : (
-                  <span className="text-xs text-[#e4e4e7]">{r.title}</span>
+                  <span className="text-xs text-zinc-800 dark:text-[#e4e4e7]">{r.title}</span>
                 ),
             },
             {
               key: 'division',
               header: 'Division',
-              render: (r) => <span className="text-xs text-[#a1a1aa]">{r.subtitle ?? '—'}</span>,
+              render: (r) => <span className="text-xs text-zinc-600 dark:text-[#a1a1aa]">{r.subtitle ?? '—'}</span>,
             },
             {
               key: 'assets',
@@ -738,7 +738,7 @@ function ClientPortfolio({ items }: { items: IndexItem[] }) {
               className: 'text-right',
             },
           ]}
-          empty={<p className="text-xs text-[#71717a]">No assets linked to clients.</p>}
+          empty={<p className="text-xs text-zinc-500 dark:text-[#71717a]">No assets linked to clients.</p>}
         />
       </AdminCard>
     </div>
@@ -777,43 +777,43 @@ function InfrastructureFootprint({ summary, items }: { summary: ReportsSummary; 
       <AdminCard title="Infrastructure footprint">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div>
-            <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.18em] text-[#71717a]">Vercel by team</p>
+            <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.18em] text-zinc-500 dark:text-[#71717a]">Vercel by team</p>
             <DataTable
               rows={vercelByTeam}
               columns={[
-                { key: 'team', header: 'Team', render: (r) => <span className="text-xs text-[#e4e4e7]">{r.label}</span> },
+                { key: 'team', header: 'Team', render: (r) => <span className="text-xs text-zinc-800 dark:text-[#e4e4e7]">{r.label}</span> },
                 { key: 'count', header: 'Projects', render: (r) => <span className="font-mono">{r.count}</span>, className: 'text-right' },
               ]}
-              empty={<p className="text-xs text-[#71717a]">No Vercel teams indexed.</p>}
+              empty={<p className="text-xs text-zinc-500 dark:text-[#71717a]">No Vercel teams indexed.</p>}
             />
           </div>
           <div>
-            <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.18em] text-[#71717a]">Vercel by state</p>
+            <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.18em] text-zinc-500 dark:text-[#71717a]">Vercel by state</p>
             <DataTable
               rows={vercelByState.filter((r) => r.count > 0)}
               columns={[
                 { key: 'state', header: 'State', render: (r) => <Badge text={r.label.replace(/_/g, ' ')} tone={vercelStateTone(r.label)} /> },
                 { key: 'count', header: 'Count', render: (r) => <span className="font-mono">{r.count}</span>, className: 'text-right' },
               ]}
-              empty={<p className="text-xs text-[#71717a]">No Vercel state data.</p>}
+              empty={<p className="text-xs text-zinc-500 dark:text-[#71717a]">No Vercel state data.</p>}
             />
           </div>
           <div>
-            <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.18em] text-[#71717a]">Hetzner by role</p>
+            <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.18em] text-zinc-500 dark:text-[#71717a]">Hetzner by role</p>
             <DataTable
               rows={hetznerRoleRows}
               columns={[
-                { key: 'role', header: 'Role', render: (r) => <span className="text-xs text-[#e4e4e7]">{r.label}</span> },
+                { key: 'role', header: 'Role', render: (r) => <span className="text-xs text-zinc-800 dark:text-[#e4e4e7]">{r.label}</span> },
                 { key: 'count', header: 'Servers', render: (r) => <span className="font-mono">{r.count}</span>, className: 'text-right' },
               ]}
-              empty={<p className="text-xs text-[#71717a]">No Hetzner servers indexed.</p>}
+              empty={<p className="text-xs text-zinc-500 dark:text-[#71717a]">No Hetzner servers indexed.</p>}
             />
           </div>
           <div>
-            <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.18em] text-[#71717a]">Cloudflare</p>
-            <div className="rounded-2xl border border-[#27272a] bg-[#0e0e10] p-4">
-              <p className="mb-1 text-2xl font-semibold text-[#f5f5f5]">{summary.totals.cloudflareZones}</p>
-              <p className="text-[11px] text-[#71717a]">
+            <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.18em] text-zinc-500 dark:text-[#71717a]">Cloudflare</p>
+            <div className="rounded-2xl border border-zinc-200 dark:border-[#27272a] bg-zinc-50 dark:bg-[#0e0e10] p-4">
+              <p className="mb-1 text-2xl font-semibold text-zinc-900 dark:text-[#f5f5f5]">{summary.totals.cloudflareZones}</p>
+              <p className="text-[11px] text-zinc-500 dark:text-[#71717a]">
                 zones indexed (illustrative subset — full list activates with CLOUDFLARE_API_TOKEN)
               </p>
             </div>
@@ -882,7 +882,7 @@ function RiskRegister({ items }: { items: IndexItem[] }) {
                     {r.title}
                   </Link>
                 ) : (
-                  <span className="text-xs text-[#e4e4e7]">{r.title}</span>
+                  <span className="text-xs text-zinc-800 dark:text-[#e4e4e7]">{r.title}</span>
                 ),
             },
             {
@@ -898,15 +898,15 @@ function RiskRegister({ items }: { items: IndexItem[] }) {
             {
               key: 'status',
               header: 'Status',
-              render: (r) => <span className="text-xs text-[#a1a1aa]">{r.status}</span>,
+              render: (r) => <span className="text-xs text-zinc-600 dark:text-[#a1a1aa]">{r.status}</span>,
             },
             {
               key: 'blockedBy',
               header: 'Blocked by',
-              render: (r) => <span className="font-mono text-[10px] text-[#a1a1aa]">{r.blockedBy}</span>,
+              render: (r) => <span className="font-mono text-[10px] text-zinc-600 dark:text-[#a1a1aa]">{r.blockedBy}</span>,
             },
           ]}
-          empty={<p className="text-xs text-[#71717a]">No risks indexed.</p>}
+          empty={<p className="text-xs text-zinc-500 dark:text-[#71717a]">No risks indexed.</p>}
         />
       </AdminCard>
     </div>
@@ -934,7 +934,7 @@ function RenewalPressure({ items }: { items: IndexItem[] }) {
         <div className="mb-4 flex flex-wrap items-baseline gap-4">
           <Stat label="Due / overdue" value={dueOrOverdue} tone={dueOrOverdue > 0 ? 'rose' : 'neutral'} />
           <Stat label="Needs date confirm" value={needsConfirm} tone={needsConfirm > 0 ? 'amber' : 'neutral'} />
-          <p className="font-mono text-xs text-[#71717a]">{renewals.length} tracked</p>
+          <p className="font-mono text-xs text-zinc-500 dark:text-[#71717a]">{renewals.length} tracked</p>
         </div>
         <DataTable
           rows={topUrgent.map((r) => ({
@@ -954,10 +954,10 @@ function RenewalPressure({ items }: { items: IndexItem[] }) {
                     {r.title}
                   </Link>
                 ) : (
-                  <span className="text-xs text-[#e4e4e7]">{r.title}</span>
+                  <span className="text-xs text-zinc-800 dark:text-[#e4e4e7]">{r.title}</span>
                 ),
             },
-            { key: 'subtitle', header: 'Subject', render: (r) => <span className="text-xs text-[#a1a1aa]">{r.subtitle}</span> },
+            { key: 'subtitle', header: 'Subject', render: (r) => <span className="text-xs text-zinc-600 dark:text-[#a1a1aa]">{r.subtitle}</span> },
             {
               key: 'due',
               header: 'Next due',
@@ -965,7 +965,7 @@ function RenewalPressure({ items }: { items: IndexItem[] }) {
               className: 'text-right',
             },
           ]}
-          empty={<p className="text-xs text-[#71717a]">No renewals with dates.</p>}
+          empty={<p className="text-xs text-zinc-500 dark:text-[#71717a]">No renewals with dates.</p>}
         />
       </AdminCard>
     </div>
@@ -988,7 +988,7 @@ function DecisionBacklog({ summary }: { summary: ReportsSummary }) {
     <div className="mb-6">
       <AdminCard
         title="Decision backlog"
-        action={<span className="font-mono text-[10px] uppercase tracking-[0.15em] text-[#71717a]">{total} pending</span>}
+        action={<span className="font-mono text-[10px] uppercase tracking-[0.15em] text-zinc-500 dark:text-[#71717a]">{total} pending</span>}
       >
         <div className="mb-4 grid grid-cols-3 gap-3">
           <PortfolioTile label="High" value={high} tone={high > 0 ? 'rose' : 'neutral'} />
@@ -996,17 +996,17 @@ function DecisionBacklog({ summary }: { summary: ReportsSummary }) {
           <PortfolioTile label="Low" value={low} tone={low > 0 ? 'blue' : 'neutral'} />
         </div>
         <div className="mb-3">
-          <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.18em] text-[#71717a]">By cluster</p>
+          <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.18em] text-zinc-500 dark:text-[#71717a]">By cluster</p>
           <DataTable
             rows={clusters}
             columns={[
-              { key: 'cluster', header: 'Cluster', render: (r) => <span className="text-xs text-[#e4e4e7]">{r.label}</span> },
+              { key: 'cluster', header: 'Cluster', render: (r) => <span className="text-xs text-zinc-800 dark:text-[#e4e4e7]">{r.label}</span> },
               { key: 'count', header: 'Count', render: (r) => <span className="font-mono">{r.count}</span>, className: 'text-right' },
             ]}
-            empty={<p className="text-xs text-[#71717a]">No decisions indexed.</p>}
+            empty={<p className="text-xs text-zinc-500 dark:text-[#71717a]">No decisions indexed.</p>}
           />
         </div>
-        <p className="mt-3 rounded-lg border border-dashed border-[#27272a] bg-[#0a0a0b] px-3 py-2 text-[11px] text-[#71717a]">
+        <p className="mt-3 rounded-lg border border-dashed border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#0a0a0b] px-3 py-2 text-[11px] text-zinc-500 dark:text-[#71717a]">
           Local review state not visible to server — see{' '}
           <Link href="/admin/ops/review" className="text-emerald-300 hover:underline">
             /admin/ops/review
@@ -1068,14 +1068,14 @@ function SuggestedNextActions({ summary }: { summary: ReportsSummary }) {
 
 function SuggestionColumn({ title, items, tone }: { title: string; items: string[]; tone: Tone }) {
   return (
-    <div className="rounded-2xl border border-[#27272a] bg-[#0e0e10] p-4">
+    <div className="rounded-2xl border border-zinc-200 dark:border-[#27272a] bg-zinc-50 dark:bg-[#0e0e10] p-4">
       <div className="mb-3">
         <Badge text={title} tone={tone} />
       </div>
       <ul className="space-y-2">
         {items.map((item, i) => (
-          <li key={i} className="flex gap-2 text-[11px] leading-relaxed text-[#e4e4e7]">
-            <span className="text-[#52525b]">·</span>
+          <li key={i} className="flex gap-2 text-[11px] leading-relaxed text-zinc-800 dark:text-[#e4e4e7]">
+            <span className="text-zinc-500 dark:text-[#52525b]">·</span>
             <span>{item}</span>
           </li>
         ))}
@@ -1090,11 +1090,11 @@ function PortfolioTile({ label, value, tone }: { label: string; value: number; t
     : tone === 'amber' ? 'border-amber-400/30 bg-amber-400/5'
     : tone === 'rose' ? 'border-rose-400/30 bg-rose-400/5'
     : tone === 'blue' ? 'border-sky-400/30 bg-sky-400/5'
-    : 'border-[#27272a] bg-[#0e0e10]';
+    : 'border-zinc-200 dark:border-[#27272a] bg-zinc-50 dark:bg-[#0e0e10]';
   return (
     <div className={`rounded-2xl border p-4 ${ring}`}>
-      <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.18em] text-[#71717a]">{label}</p>
-      <p className="text-2xl font-semibold text-[#f5f5f5]">{value}</p>
+      <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.18em] text-zinc-500 dark:text-[#71717a]">{label}</p>
+      <p className="text-2xl font-semibold text-zinc-900 dark:text-[#f5f5f5]">{value}</p>
     </div>
   );
 }
@@ -1113,11 +1113,11 @@ function Tile({ label, value, tone }: { label: string; value: React.ReactNode; t
     tone === 'green' ? 'border-emerald-400/30 bg-emerald-400/5'
     : tone === 'amber' ? 'border-amber-400/30 bg-amber-400/5'
     : tone === 'rose' ? 'border-rose-400/30 bg-rose-400/5'
-    : 'border-[#27272a] bg-[#0e0e10]';
+    : 'border-zinc-200 dark:border-[#27272a] bg-zinc-50 dark:bg-[#0e0e10]';
   return (
     <div className={`rounded-2xl border p-4 ${ring}`}>
-      <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.18em] text-[#71717a]">{label}</p>
-      <p className="text-2xl font-semibold text-[#f5f5f5]">{value}</p>
+      <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.18em] text-zinc-500 dark:text-[#71717a]">{label}</p>
+      <p className="text-2xl font-semibold text-zinc-900 dark:text-[#f5f5f5]">{value}</p>
     </div>
   );
 }
@@ -1125,7 +1125,7 @@ function Tile({ label, value, tone }: { label: string; value: React.ReactNode; t
 function Stat({ label, value, tone }: { label: string; value: number; tone: Tone }) {
   return (
     <div className="flex items-baseline gap-2">
-      <span className="text-xl font-semibold text-[#f5f5f5]">{value}</span>
+      <span className="text-xl font-semibold text-zinc-900 dark:text-[#f5f5f5]">{value}</span>
       <Badge text={label} tone={tone} />
     </div>
   );

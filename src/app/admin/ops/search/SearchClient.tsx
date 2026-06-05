@@ -183,7 +183,7 @@ function MultiSelect<T extends string>({
       {open && (
         <>
           <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
-          <div className="absolute z-20 mt-1 max-h-72 w-full min-w-[220px] overflow-auto rounded-lg border border-white/[0.06] bg-[#111113] p-1 shadow-xl">
+          <div className="absolute z-20 mt-1 max-h-72 w-full min-w-[220px] overflow-auto rounded-lg border border-white/[0.06] bg-white dark:bg-[#111113] p-1 shadow-xl">
             <button
               type="button"
               onClick={() => onChange([])}

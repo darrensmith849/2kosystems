@@ -373,17 +373,17 @@ export default async function OpsOverviewPage() {
           }
         >
           <ul className="space-y-2">
-            <li className="flex items-center gap-2 text-sm text-zinc-100">
+            <li className="flex items-center gap-2 text-sm text-zinc-900 dark:text-zinc-100">
               <StatusDot tone="ok" size="sm" />
               <span>Hetzner ({summary.totals.hetznerServers || SNAPSHOT_COUNTS.hetznerServers})</span>
             </li>
-            <li className="flex items-center gap-2 text-sm text-zinc-100">
+            <li className="flex items-center gap-2 text-sm text-zinc-900 dark:text-zinc-100">
               <StatusDot tone="ok" size="sm" />
               <span>
                 Vercel ({vLive} live · {vDormant} dormant · {vMigrated} migrated)
               </span>
             </li>
-            <li className="flex items-center gap-2 text-sm text-zinc-100">
+            <li className="flex items-center gap-2 text-sm text-zinc-900 dark:text-zinc-100">
               <StatusDot tone="ok" size="sm" />
               <span>Cloudflare zones ({summary.totals.cloudflareZones || SNAPSHOT_COUNTS.cloudflareZones})</span>
             </li>
@@ -552,8 +552,8 @@ function ActionButton({
 }) {
   const styles =
     variant === 'primary'
-      ? 'border-white/[0.08] bg-white/[0.06] text-zinc-100 hover:bg-white/[0.10]'
-      : 'border-white/[0.08] bg-white/[0.03] text-zinc-200 hover:bg-white/[0.05]';
+      ? 'border-zinc-200 bg-zinc-100 text-zinc-900 hover:bg-zinc-200 dark:border-white/[0.08] dark:bg-white/[0.06] dark:text-zinc-100 dark:hover:bg-white/[0.10]'
+      : 'border-zinc-200 bg-zinc-50 text-zinc-800 hover:bg-zinc-100 dark:border-white/[0.08] dark:bg-white/[0.03] dark:text-zinc-200 dark:hover:bg-white/[0.05]';
   return (
     <Link
       href={href}
@@ -593,9 +593,9 @@ function MetricCard({
   const sparklineTone =
     tone === 'good' ? 'good' : tone === 'warn' ? 'warn' : tone === 'risk' ? 'risk' : 'good';
   return (
-    <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-4">
+    <div className="rounded-2xl border border-zinc-200 bg-white dark:border-white/[0.06] dark:bg-white/[0.02] p-4 transition-colors">
       <div className="flex items-center gap-2">
-        {Icon && <Icon className="h-4 w-4 text-zinc-400 shrink-0" />}
+        {Icon && <Icon className="h-4 w-4 text-zinc-500 dark:text-zinc-400 shrink-0" />}
         <p className="text-[11px] font-medium text-zinc-500">{title}</p>
       </div>
       <p className={`mt-2 text-2xl font-semibold ${valueColor}`}>{value}</p>
@@ -647,17 +647,17 @@ function GlassCard({
   footerSlot?: React.ReactNode;
 }) {
   return (
-    <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02]">
+    <div className="rounded-2xl border border-zinc-200 bg-white dark:border-white/[0.06] dark:bg-white/[0.02] transition-colors">
       <div className="flex items-center justify-between gap-3 px-5 pt-5 pb-3">
         <div className="flex items-center gap-2 min-w-0">
-          {Icon && <Icon className="h-4 w-4 text-zinc-400 shrink-0" />}
+          {Icon && <Icon className="h-4 w-4 text-zinc-500 dark:text-zinc-400 shrink-0" />}
           <p className="text-sm font-medium text-zinc-100 truncate">{title}</p>
         </div>
         {action && <div className="shrink-0">{action}</div>}
       </div>
       <div className="px-5 pb-5">{children}</div>
       {footerSlot && (
-        <div className="border-t border-white/[0.04] px-5 py-3">{footerSlot}</div>
+        <div className="border-t border-zinc-100 dark:border-white/[0.04] px-5 py-3">{footerSlot}</div>
       )}
     </div>
   );
@@ -669,7 +669,7 @@ function CardLink({ href, label }: { href: string; label: string }) {
   return (
     <Link
       href={href}
-      className="inline-flex items-center gap-1 text-xs font-medium text-zinc-400 hover:text-zinc-200 transition-colors"
+      className="inline-flex items-center gap-1 text-xs font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200 transition-colors"
     >
       <span>{label}</span>
       <ArrowRightIcon className="h-3 w-3" />

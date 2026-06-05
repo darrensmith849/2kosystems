@@ -61,11 +61,11 @@ export default function OperatorPickerClient({
     <div className="min-h-screen flex items-center justify-center p-6">
       <div className="w-full max-w-md">
         <div className="mb-8 text-center">
-          <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#71717a] mb-3">
+          <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-500 dark:text-[#71717a] mb-3">
             2KO Systems · Ops Dashboard
           </p>
-          <h1 className="text-xl font-semibold text-[#f5f5f5]">Who is using the dashboard?</h1>
-          <p className="mt-1.5 text-sm text-[#71717a]">Every action you take will be recorded against this operator.</p>
+          <h1 className="text-xl font-semibold text-zinc-900 dark:text-[#f5f5f5]">Who is using the dashboard?</h1>
+          <p className="mt-1.5 text-sm text-zinc-500 dark:text-[#71717a]">Every action you take will be recorded against this operator.</p>
         </div>
 
         {!dbConfigured && (
@@ -76,14 +76,14 @@ export default function OperatorPickerClient({
         )}
 
         {operators.length > 0 && (
-          <form onSubmit={handleExisting} className="rounded-2xl border border-[#27272a] bg-[#111113] p-5 mb-4">
-            <label className="block text-[10px] font-mono uppercase tracking-[0.15em] text-[#71717a] mb-2">
+          <form onSubmit={handleExisting} className="rounded-2xl border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#111113] p-5 mb-4">
+            <label className="block text-[10px] font-mono uppercase tracking-[0.15em] text-zinc-500 dark:text-[#71717a] mb-2">
               Existing operator
             </label>
             <select
               value={chosen}
               onChange={(e) => setChosen(e.target.value)}
-              className="w-full rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5] focus:border-[#0f7b3a]/50 focus:outline-none transition-colors mb-4"
+              className="w-full rounded-lg border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-zinc-900 dark:text-[#f5f5f5] focus:border-[#0f7b3a]/50 focus:outline-none transition-colors mb-4"
             >
               <option value="">— pick one —</option>
               {operators.map((o) => (
@@ -102,8 +102,8 @@ export default function OperatorPickerClient({
           </form>
         )}
 
-        <form onSubmit={handleAdd} className="rounded-2xl border border-[#27272a] bg-[#111113] p-5">
-          <label className="block text-[10px] font-mono uppercase tracking-[0.15em] text-[#71717a] mb-2">
+        <form onSubmit={handleAdd} className="rounded-2xl border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#111113] p-5">
+          <label className="block text-[10px] font-mono uppercase tracking-[0.15em] text-zinc-500 dark:text-[#71717a] mb-2">
             New operator
           </label>
           <input
@@ -111,13 +111,13 @@ export default function OperatorPickerClient({
             value={newName}
             onChange={(e) => setNewName(e.target.value)}
             placeholder="Full name (e.g. Darren Smith)"
-            className="w-full rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5] placeholder:text-[#3f3f46] focus:border-[#0f7b3a]/50 focus:outline-none transition-colors mb-4"
+            className="w-full rounded-lg border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-zinc-900 dark:text-[#f5f5f5] placeholder:text-[#3f3f46] focus:border-[#0f7b3a]/50 focus:outline-none transition-colors mb-4"
             disabled={busy}
           />
           <button
             type="submit"
             disabled={busy || !newName.trim()}
-            className="w-full rounded-full border border-[#27272a] px-6 py-2.5 text-sm font-medium text-[#f5f5f5] hover:bg-[#1c1c1e] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            className="w-full rounded-full border border-zinc-200 dark:border-[#27272a] px-6 py-2.5 text-sm font-medium text-zinc-900 dark:text-[#f5f5f5] hover:bg-zinc-100 dark:bg-[#1c1c1e] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
           >
             Add &amp; continue
           </button>

@@ -388,14 +388,14 @@ export default function EmailsClient({ snapshotRefs }: { snapshotRefs: SnapshotE
             <Badge text="Not yet in the database" tone="neutral" />
             <Badge text="Metadata only · no email bodies" tone="green" />
           </div>
-          <p className="text-sm text-[#e4e4e7] leading-relaxed">
+          <p className="text-sm text-zinc-800 dark:text-[#e4e4e7] leading-relaxed">
             References created here live in this browser&apos;s local storage only. They are not yet
             synced to a database and they are not shared between devices or operators. When the
             database is connected, the same fields will migrate to a real backend record — the
             shape stays the same.
           </p>
-          <p className="text-xs text-[#a1a1aa] leading-relaxed">
-            Storage key: <span className="font-mono text-[#f5f5f5]">2ko_ops_local_email_refs_v1</span>{' '}
+          <p className="text-xs text-zinc-600 dark:text-[#a1a1aa] leading-relaxed">
+            Storage key: <span className="font-mono text-zinc-900 dark:text-[#f5f5f5]">2ko_ops_local_email_refs_v1</span>{' '}
             · {hydrated ? `${totalLocal} local reference${totalLocal === 1 ? '' : 's'}` : 'loading…'}
           </p>
         </div>
@@ -407,7 +407,7 @@ export default function EmailsClient({ snapshotRefs }: { snapshotRefs: SnapshotE
           <button
             type="button"
             onClick={openNewForm}
-            className="inline-flex items-center gap-2 rounded-md border border-[#27272a] bg-[#18181b] px-3 py-2 text-xs text-[#f5f5f5] hover:bg-[#1f1f23]"
+            className="inline-flex items-center gap-2 rounded-md border border-zinc-200 dark:border-[#27272a] bg-[#18181b] px-3 py-2 text-xs text-zinc-900 dark:text-[#f5f5f5] hover:bg-[#1f1f23]"
           >
             <PlusIcon />
             New reference
@@ -416,7 +416,7 @@ export default function EmailsClient({ snapshotRefs }: { snapshotRefs: SnapshotE
             type="button"
             onClick={handleExportJson}
             disabled={totalLocal === 0}
-            className="inline-flex items-center gap-2 rounded-md border border-[#27272a] bg-[#18181b] px-3 py-2 text-xs text-[#f5f5f5] hover:bg-[#1f1f23] disabled:opacity-40 disabled:cursor-not-allowed"
+            className="inline-flex items-center gap-2 rounded-md border border-zinc-200 dark:border-[#27272a] bg-[#18181b] px-3 py-2 text-xs text-zinc-900 dark:text-[#f5f5f5] hover:bg-[#1f1f23] disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <DownloadIcon />
             Export JSON
@@ -425,7 +425,7 @@ export default function EmailsClient({ snapshotRefs }: { snapshotRefs: SnapshotE
             type="button"
             onClick={handleExportMd}
             disabled={totalLocal === 0}
-            className="inline-flex items-center gap-2 rounded-md border border-[#27272a] bg-[#18181b] px-3 py-2 text-xs text-[#f5f5f5] hover:bg-[#1f1f23] disabled:opacity-40 disabled:cursor-not-allowed"
+            className="inline-flex items-center gap-2 rounded-md border border-zinc-200 dark:border-[#27272a] bg-[#18181b] px-3 py-2 text-xs text-zinc-900 dark:text-[#f5f5f5] hover:bg-[#1f1f23] disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <DownloadIcon />
             Export Markdown
@@ -452,7 +452,7 @@ export default function EmailsClient({ snapshotRefs }: { snapshotRefs: SnapshotE
                 value={draft.subject}
                 onChange={(e) => setDraft({ ...draft, subject: e.target.value })}
                 placeholder="Hetzner Cloud · invoice — October 2026"
-                className="w-full rounded-md border border-[#27272a] bg-[#0a0a0b] px-3 py-2 text-sm text-[#f5f5f5] focus:border-[#3f3f46] focus:outline-none"
+                className="w-full rounded-md border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#0a0a0b] px-3 py-2 text-sm text-zinc-900 dark:text-[#f5f5f5] focus:border-[#3f3f46] focus:outline-none"
               />
             </FormField>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -462,7 +462,7 @@ export default function EmailsClient({ snapshotRefs }: { snapshotRefs: SnapshotE
                   value={draft.fromName}
                   onChange={(e) => setDraft({ ...draft, fromName: e.target.value })}
                   placeholder="Hetzner Cloud"
-                  className="w-full rounded-md border border-[#27272a] bg-[#0a0a0b] px-3 py-2 text-sm text-[#f5f5f5] focus:border-[#3f3f46] focus:outline-none"
+                  className="w-full rounded-md border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#0a0a0b] px-3 py-2 text-sm text-zinc-900 dark:text-[#f5f5f5] focus:border-[#3f3f46] focus:outline-none"
                 />
               </FormField>
               <FormField label="From email">
@@ -471,7 +471,7 @@ export default function EmailsClient({ snapshotRefs }: { snapshotRefs: SnapshotE
                   value={draft.fromEmail}
                   onChange={(e) => setDraft({ ...draft, fromEmail: e.target.value })}
                   placeholder="billing@hetzner.com"
-                  className="w-full rounded-md border border-[#27272a] bg-[#0a0a0b] px-3 py-2 text-sm text-[#f5f5f5] focus:border-[#3f3f46] focus:outline-none"
+                  className="w-full rounded-md border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#0a0a0b] px-3 py-2 text-sm text-zinc-900 dark:text-[#f5f5f5] focus:border-[#3f3f46] focus:outline-none"
                 />
               </FormField>
             </div>
@@ -482,7 +482,7 @@ export default function EmailsClient({ snapshotRefs }: { snapshotRefs: SnapshotE
                   onChange={(e) =>
                     setDraft({ ...draft, category: e.target.value as EmailCategory })
                   }
-                  className="w-full rounded-md border border-[#27272a] bg-[#0a0a0b] px-3 py-2 text-sm text-[#f5f5f5] focus:border-[#3f3f46] focus:outline-none"
+                  className="w-full rounded-md border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#0a0a0b] px-3 py-2 text-sm text-zinc-900 dark:text-[#f5f5f5] focus:border-[#3f3f46] focus:outline-none"
                 >
                   {EMAIL_CATEGORY_ORDER.map((c) => (
                     <option key={c} value={c}>
@@ -497,7 +497,7 @@ export default function EmailsClient({ snapshotRefs }: { snapshotRefs: SnapshotE
                   onChange={(e) =>
                     setDraft({ ...draft, provider: e.target.value as EmailProvider })
                   }
-                  className="w-full rounded-md border border-[#27272a] bg-[#0a0a0b] px-3 py-2 text-sm text-[#f5f5f5] focus:border-[#3f3f46] focus:outline-none"
+                  className="w-full rounded-md border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#0a0a0b] px-3 py-2 text-sm text-zinc-900 dark:text-[#f5f5f5] focus:border-[#3f3f46] focus:outline-none"
                 >
                   {PROVIDER_OPTIONS.map((p) => (
                     <option key={p} value={p}>
@@ -512,7 +512,7 @@ export default function EmailsClient({ snapshotRefs }: { snapshotRefs: SnapshotE
                   onChange={(e) =>
                     setDraft({ ...draft, status: e.target.value as LocalEmailRefStatus })
                   }
-                  className="w-full rounded-md border border-[#27272a] bg-[#0a0a0b] px-3 py-2 text-sm text-[#f5f5f5] focus:border-[#3f3f46] focus:outline-none"
+                  className="w-full rounded-md border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#0a0a0b] px-3 py-2 text-sm text-zinc-900 dark:text-[#f5f5f5] focus:border-[#3f3f46] focus:outline-none"
                 >
                   {STATUS_OPTIONS.map((s) => (
                     <option key={s} value={s}>
@@ -532,7 +532,7 @@ export default function EmailsClient({ snapshotRefs }: { snapshotRefs: SnapshotE
                 value={draft.externalUrl}
                 onChange={(e) => setDraft({ ...draft, externalUrl: e.target.value })}
                 placeholder="https://mail.google.com/…"
-                className="w-full rounded-md border border-[#27272a] bg-[#0a0a0b] px-3 py-2 text-sm text-[#f5f5f5] focus:border-[#3f3f46] focus:outline-none"
+                className="w-full rounded-md border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#0a0a0b] px-3 py-2 text-sm text-zinc-900 dark:text-[#f5f5f5] focus:border-[#3f3f46] focus:outline-none"
               />
             </FormField>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -542,7 +542,7 @@ export default function EmailsClient({ snapshotRefs }: { snapshotRefs: SnapshotE
                   value={draft.linkedClient}
                   onChange={(e) => setDraft({ ...draft, linkedClient: e.target.value })}
                   placeholder="Internal · 2KO Systems"
-                  className="w-full rounded-md border border-[#27272a] bg-[#0a0a0b] px-3 py-2 text-sm text-[#f5f5f5] focus:border-[#3f3f46] focus:outline-none"
+                  className="w-full rounded-md border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#0a0a0b] px-3 py-2 text-sm text-zinc-900 dark:text-[#f5f5f5] focus:border-[#3f3f46] focus:outline-none"
                 />
               </FormField>
               <FormField label="Linked asset">
@@ -551,7 +551,7 @@ export default function EmailsClient({ snapshotRefs }: { snapshotRefs: SnapshotE
                   value={draft.linkedAsset}
                   onChange={(e) => setDraft({ ...draft, linkedAsset: e.target.value })}
                   placeholder="ma130-data (Hetzner server)"
-                  className="w-full rounded-md border border-[#27272a] bg-[#0a0a0b] px-3 py-2 text-sm text-[#f5f5f5] focus:border-[#3f3f46] focus:outline-none"
+                  className="w-full rounded-md border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#0a0a0b] px-3 py-2 text-sm text-zinc-900 dark:text-[#f5f5f5] focus:border-[#3f3f46] focus:outline-none"
                 />
               </FormField>
               <FormField label="Linked ticket">
@@ -560,7 +560,7 @@ export default function EmailsClient({ snapshotRefs }: { snapshotRefs: SnapshotE
                   value={draft.linkedTicket}
                   onChange={(e) => setDraft({ ...draft, linkedTicket: e.target.value })}
                   placeholder="Optional ticket reference"
-                  className="w-full rounded-md border border-[#27272a] bg-[#0a0a0b] px-3 py-2 text-sm text-[#f5f5f5] focus:border-[#3f3f46] focus:outline-none"
+                  className="w-full rounded-md border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#0a0a0b] px-3 py-2 text-sm text-zinc-900 dark:text-[#f5f5f5] focus:border-[#3f3f46] focus:outline-none"
                 />
               </FormField>
               <FormField label="Linked renewal">
@@ -569,7 +569,7 @@ export default function EmailsClient({ snapshotRefs }: { snapshotRefs: SnapshotE
                   value={draft.linkedRenewal}
                   onChange={(e) => setDraft({ ...draft, linkedRenewal: e.target.value })}
                   placeholder="Optional renewal reference"
-                  className="w-full rounded-md border border-[#27272a] bg-[#0a0a0b] px-3 py-2 text-sm text-[#f5f5f5] focus:border-[#3f3f46] focus:outline-none"
+                  className="w-full rounded-md border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#0a0a0b] px-3 py-2 text-sm text-zinc-900 dark:text-[#f5f5f5] focus:border-[#3f3f46] focus:outline-none"
                 />
               </FormField>
               <FormField label="Linked incident">
@@ -578,7 +578,7 @@ export default function EmailsClient({ snapshotRefs }: { snapshotRefs: SnapshotE
                   value={draft.linkedIncident}
                   onChange={(e) => setDraft({ ...draft, linkedIncident: e.target.value })}
                   placeholder="Optional incident reference"
-                  className="w-full rounded-md border border-[#27272a] bg-[#0a0a0b] px-3 py-2 text-sm text-[#f5f5f5] focus:border-[#3f3f46] focus:outline-none"
+                  className="w-full rounded-md border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#0a0a0b] px-3 py-2 text-sm text-zinc-900 dark:text-[#f5f5f5] focus:border-[#3f3f46] focus:outline-none"
                 />
               </FormField>
             </div>
@@ -588,7 +588,7 @@ export default function EmailsClient({ snapshotRefs }: { snapshotRefs: SnapshotE
                 onChange={(e) => setDraft({ ...draft, notes: e.target.value })}
                 placeholder="Short operator note. No email body content."
                 rows={3}
-                className="w-full rounded-md border border-[#27272a] bg-[#0a0a0b] px-3 py-2 text-sm text-[#f5f5f5] focus:border-[#3f3f46] focus:outline-none"
+                className="w-full rounded-md border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#0a0a0b] px-3 py-2 text-sm text-zinc-900 dark:text-[#f5f5f5] focus:border-[#3f3f46] focus:outline-none"
               />
             </FormField>
             <div className="flex flex-wrap items-center gap-2 pt-2">
@@ -604,12 +604,12 @@ export default function EmailsClient({ snapshotRefs }: { snapshotRefs: SnapshotE
               <button
                 type="button"
                 onClick={cancelForm}
-                className="inline-flex items-center gap-2 rounded-md border border-[#27272a] bg-[#18181b] px-3 py-2 text-xs text-[#a1a1aa] hover:bg-[#1f1f23]"
+                className="inline-flex items-center gap-2 rounded-md border border-zinc-200 dark:border-[#27272a] bg-[#18181b] px-3 py-2 text-xs text-zinc-600 dark:text-[#a1a1aa] hover:bg-[#1f1f23]"
               >
                 <XIcon />
                 Cancel
               </button>
-              <span className="text-[11px] text-[#71717a]">
+              <span className="text-[11px] text-zinc-500 dark:text-[#71717a]">
                 Saved only in this browser. No email body content stored.
               </span>
             </div>
@@ -620,11 +620,11 @@ export default function EmailsClient({ snapshotRefs }: { snapshotRefs: SnapshotE
       {/* 3. List of local refs grouped by category */}
       <AdminCard title="Saved references (this browser)">
         {!hydrated ? (
-          <p className="text-xs text-[#71717a]">Loading…</p>
+          <p className="text-xs text-zinc-500 dark:text-[#71717a]">Loading…</p>
         ) : totalLocal === 0 ? (
-          <p className="text-sm text-[#a1a1aa] leading-relaxed">
+          <p className="text-sm text-zinc-600 dark:text-[#a1a1aa] leading-relaxed">
             No local references yet. Use{' '}
-            <span className="text-[#f5f5f5]">New reference</span> to file one — it stays in this
+            <span className="text-zinc-900 dark:text-[#f5f5f5]">New reference</span> to file one — it stays in this
             browser only.
           </p>
         ) : (
@@ -667,14 +667,14 @@ export default function EmailsClient({ snapshotRefs }: { snapshotRefs: SnapshotE
                               <Badge text="incident-linked" tone="neutral" />
                             )}
                           </div>
-                          <p className="text-sm font-medium text-[#f5f5f5]">{r.subject}</p>
+                          <p className="text-sm font-medium text-zinc-900 dark:text-[#f5f5f5]">{r.subject}</p>
                           {(r.fromName || r.fromEmail) && (
-                            <p className="text-xs text-[#a1a1aa] mt-0.5">
+                            <p className="text-xs text-zinc-600 dark:text-[#a1a1aa] mt-0.5">
                               from {r.fromName || 'unknown'}
                               {r.fromEmail && (
                                 <>
                                   {' '}
-                                  <span className="text-[#52525b]">
+                                  <span className="text-zinc-500 dark:text-[#52525b]">
                                     &lt;{r.fromEmail}&gt;
                                   </span>
                                 </>
@@ -682,7 +682,7 @@ export default function EmailsClient({ snapshotRefs }: { snapshotRefs: SnapshotE
                             </p>
                           )}
                           {r.notes && (
-                            <p className="text-xs text-[#a1a1aa] mt-1.5 leading-relaxed">
+                            <p className="text-xs text-zinc-600 dark:text-[#a1a1aa] mt-1.5 leading-relaxed">
                               {r.notes}
                             </p>
                           )}
@@ -690,7 +690,7 @@ export default function EmailsClient({ snapshotRefs }: { snapshotRefs: SnapshotE
                             <button
                               type="button"
                               onClick={() => openEditForm(r)}
-                              className="inline-flex items-center gap-1.5 rounded-md border border-[#27272a] bg-[#18181b] px-2 py-1 text-[11px] text-[#e4e4e7] hover:bg-[#1f1f23]"
+                              className="inline-flex items-center gap-1.5 rounded-md border border-zinc-200 dark:border-[#27272a] bg-[#18181b] px-2 py-1 text-[11px] text-zinc-800 dark:text-[#e4e4e7] hover:bg-[#1f1f23]"
                             >
                               <EditIcon className="h-3.5 w-3.5 shrink-0" />
                               Edit
@@ -717,7 +717,7 @@ export default function EmailsClient({ snapshotRefs }: { snapshotRefs: SnapshotE
 
       {/* 4. Planned categories recap — snapshot preview rows from props */}
       <AdminCard title="Planned categories recap (preview)">
-        <p className="mb-3 text-xs text-[#a1a1aa] leading-relaxed">
+        <p className="mb-3 text-xs text-zinc-600 dark:text-[#a1a1aa] leading-relaxed">
           Reference how each category is meant to look when used. These rows come from the planned
           snapshot data — they are not editable here.
         </p>
@@ -746,7 +746,7 @@ export default function EmailsClient({ snapshotRefs }: { snapshotRefs: SnapshotE
 
       {/* 5. Disabled future shared form hint */}
       <AdminCard title="Future shared form">
-        <p className="text-xs text-[#a1a1aa] leading-relaxed">
+        <p className="text-xs text-zinc-600 dark:text-[#a1a1aa] leading-relaxed">
           A shared, multi-operator email reference form will activate once the database is
           connected. Until then, the form above is browser-only — references created here stay on
           this device. The same fields will move 1:1 to the shared form, so anything captured now

@@ -127,8 +127,8 @@ export default async function ClientDetailPage({
             <Link href="/admin/ops/clients" className="text-emerald-300 hover:underline">
               ← back to Clients
             </Link>
-            <span className="ml-2 text-[#52525b]">·</span>
-            <span className="ml-2 text-[#71717a]">{client.status}</span>
+            <span className="ml-2 text-zinc-500 dark:text-[#52525b]">·</span>
+            <span className="ml-2 text-zinc-500 dark:text-[#71717a]">{client.status}</span>
           </>
         }
       />
@@ -174,7 +174,7 @@ export default async function ClientDetailPage({
             />
           )}
           {client.tags && client.tags.length > 0 && (
-            <Row label="Tags" value={<span className="font-mono text-[10px] text-[#a1a1aa]">{client.tags.join(', ')}</span>} />
+            <Row label="Tags" value={<span className="font-mono text-[10px] text-zinc-600 dark:text-[#a1a1aa]">{client.tags.join(', ')}</span>} />
           )}
           <Row label="Notes" value={client.notes ?? null} />
         </AdminCard>
@@ -187,14 +187,14 @@ export default async function ClientDetailPage({
               {contacts.map((c) => (
                 <li
                   key={c.id}
-                  className="flex flex-col gap-1 rounded-lg border border-[#1c1c1e] bg-[#0a0a0b] px-3 py-2"
+                  className="flex flex-col gap-1 rounded-lg border border-zinc-200 dark:border-[#1c1c1e] bg-white dark:bg-[#0a0a0b] px-3 py-2"
                 >
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium text-[#f5f5f5]">{c.fullName}</span>
+                    <span className="text-sm font-medium text-zinc-900 dark:text-[#f5f5f5]">{c.fullName}</span>
                     {c.role && <Badge text={c.role} />}
                     {c.isPrimary === 'true' && <Badge text="primary" tone="green" />}
                   </div>
-                  <div className="flex flex-wrap gap-3 text-[11px] text-[#a1a1aa]">
+                  <div className="flex flex-wrap gap-3 text-[11px] text-zinc-600 dark:text-[#a1a1aa]">
                     {c.email && <span>{c.email}</span>}
                     {c.phone && <span>{c.phone}</span>}
                   </div>
@@ -219,7 +219,7 @@ export default async function ClientDetailPage({
                   render: (a) => (
                     <Link
                       href={`/admin/ops/assets/${a.id}`}
-                      className="font-medium text-[#f5f5f5] hover:text-emerald-300 transition-colors"
+                      className="font-medium text-zinc-900 dark:text-[#f5f5f5] hover:text-emerald-300 transition-colors"
                     >
                       {a.name}
                     </Link>
@@ -251,7 +251,7 @@ export default async function ClientDetailPage({
                   render: (t) => (
                     <Link
                       href={`/admin/ops/tickets/${t.id}`}
-                      className="font-medium text-[#f5f5f5] hover:text-emerald-300 transition-colors"
+                      className="font-medium text-zinc-900 dark:text-[#f5f5f5] hover:text-emerald-300 transition-colors"
                     >
                       {t.title}
                     </Link>
@@ -282,7 +282,7 @@ export default async function ClientDetailPage({
                   key: 'name',
                   header: 'Name',
                   render: (r) => (
-                    <span className="font-medium text-[#f5f5f5]">{r.name}</span>
+                    <span className="font-medium text-zinc-900 dark:text-[#f5f5f5]">{r.name}</span>
                   ),
                 },
                 { key: 'kind', header: 'Kind', render: (r) => <Badge text={r.kind} /> },
@@ -317,7 +317,7 @@ export default async function ClientDetailPage({
                   key: 'summary',
                   header: 'Summary',
                   render: (i) => (
-                    <span className="font-medium text-[#f5f5f5]">{i.summary}</span>
+                    <span className="font-medium text-zinc-900 dark:text-[#f5f5f5]">{i.summary}</span>
                   ),
                 },
                 {

@@ -133,7 +133,7 @@ export default async function ImportRehearsalCard() {
 
   return (
     <div className="space-y-4">
-      <p className="text-xs leading-relaxed text-[#a1a1aa]">
+      <p className="text-xs leading-relaxed text-zinc-600 dark:text-[#a1a1aa]">
         A dry run of the import — read-only, never writes to the production database.
       </p>
 
@@ -143,13 +143,13 @@ export default async function ImportRehearsalCard() {
       >
         <div className="space-y-4">
           <div>
-            <p className="mb-2 text-[11px] font-medium uppercase tracking-[0.18em] text-[#71717a]">
+            <p className="mb-2 text-[11px] font-medium uppercase tracking-[0.18em] text-zinc-500 dark:text-[#71717a]">
               Import order
             </p>
-            <ol className="space-y-1.5 text-xs text-[#e4e4e7]">
+            <ol className="space-y-1.5 text-xs text-zinc-800 dark:text-[#e4e4e7]">
               {IMPORT_ORDER.map((label, i) => (
                 <li key={label} className="flex gap-3">
-                  <span className="w-6 shrink-0 text-right font-mono text-[10px] text-[#52525b]">
+                  <span className="w-6 shrink-0 text-right font-mono text-[10px] text-zinc-500 dark:text-[#52525b]">
                     {String(i + 1).padStart(2, '0')}
                   </span>
                   <span>{label}</span>
@@ -159,13 +159,13 @@ export default async function ImportRehearsalCard() {
           </div>
 
           <div>
-            <p className="mb-2 text-[11px] font-medium uppercase tracking-[0.18em] text-[#71717a]">
+            <p className="mb-2 text-[11px] font-medium uppercase tracking-[0.18em] text-zinc-500 dark:text-[#71717a]">
               Readiness by category
             </p>
             {groups.length <= 6 ? (
-              <div className="overflow-x-auto rounded-xl border border-[#1c1c1e] bg-[#0a0a0b]">
+              <div className="overflow-x-auto rounded-xl border border-zinc-200 dark:border-[#1c1c1e] bg-white dark:bg-[#0a0a0b]">
                 <table className="min-w-full text-left text-xs">
-                  <thead className="border-b border-[#1c1c1e]">
+                  <thead className="border-b border-zinc-200 dark:border-[#1c1c1e]">
                     <tr>
                       <ThCell>Category</ThCell>
                       <ThCell>Snapshot</ThCell>
@@ -177,15 +177,15 @@ export default async function ImportRehearsalCard() {
                   </thead>
                   <tbody>
                     {groups.map((g) => (
-                      <tr key={g.category} className="border-b border-[#1c1c1e] last:border-0">
-                        <td className="px-4 py-3 font-medium text-[#f5f5f5]">{g.category}</td>
-                        <td className="px-4 py-3 font-mono text-[11px] text-[#e4e4e7]">
+                      <tr key={g.category} className="border-b border-zinc-200 dark:border-[#1c1c1e] last:border-0">
+                        <td className="px-4 py-3 font-medium text-zinc-900 dark:text-[#f5f5f5]">{g.category}</td>
+                        <td className="px-4 py-3 font-mono text-[11px] text-zinc-800 dark:text-[#e4e4e7]">
                           {g.snapshotCount}
                         </td>
                         <td className="px-4 py-3 font-mono text-[11px] text-emerald-300">
                           {g.willInsert}
                         </td>
-                        <td className="px-4 py-3 font-mono text-[11px] text-[#a1a1aa]">
+                        <td className="px-4 py-3 font-mono text-[11px] text-zinc-600 dark:text-[#a1a1aa]">
                           {g.willSkip}
                         </td>
                         <td className="px-4 py-3">
@@ -194,7 +194,7 @@ export default async function ImportRehearsalCard() {
                             tone={READINESS_TONE[g.readiness]}
                           />
                         </td>
-                        <td className="max-w-md px-4 py-3 text-[11px] text-[#a1a1aa]">{g.notes}</td>
+                        <td className="max-w-md px-4 py-3 text-[11px] text-zinc-600 dark:text-[#a1a1aa]">{g.notes}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -205,21 +205,21 @@ export default async function ImportRehearsalCard() {
                 {groups.map((g) => (
                   <li
                     key={g.category}
-                    className="rounded-xl border border-[#1c1c1e] bg-[#0a0a0b] px-3 py-2"
+                    className="rounded-xl border border-zinc-200 dark:border-[#1c1c1e] bg-white dark:bg-[#0a0a0b] px-3 py-2"
                   >
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="text-xs font-medium text-[#f5f5f5]">{g.category}</span>
+                      <span className="text-xs font-medium text-zinc-900 dark:text-[#f5f5f5]">{g.category}</span>
                       <Badge
                         text={g.readiness.replace('_', ' ')}
                         tone={READINESS_TONE[g.readiness]}
                       />
                     </div>
-                    <p className="mt-1 text-[11px] text-[#a1a1aa]">
-                      <span className="text-[#e4e4e7]">{g.snapshotCount}</span> in snapshot ·{' '}
+                    <p className="mt-1 text-[11px] text-zinc-600 dark:text-[#a1a1aa]">
+                      <span className="text-zinc-800 dark:text-[#e4e4e7]">{g.snapshotCount}</span> in snapshot ·{' '}
                       <span className="text-emerald-300">{g.willInsert}</span> will save ·{' '}
-                      <span className="text-[#a1a1aa]">{g.willSkip}</span> will skip
+                      <span className="text-zinc-600 dark:text-[#a1a1aa]">{g.willSkip}</span> will skip
                     </p>
-                    <p className="mt-1 text-[11px] text-[#a1a1aa]">{g.notes}</p>
+                    <p className="mt-1 text-[11px] text-zinc-600 dark:text-[#a1a1aa]">{g.notes}</p>
                   </li>
                 ))}
               </ul>
@@ -241,28 +241,28 @@ export default async function ImportRehearsalCard() {
           </p>
         ) : (
           <div className="space-y-3">
-            <p className="text-xs text-[#a1a1aa]">
+            <p className="text-xs text-zinc-600 dark:text-[#a1a1aa]">
               {needsHumanCount} total · {humanOnlyDecisions.length} can be picked right now without
               waiting on tokens or SSH.
             </p>
             {humanOnlyDecisions.length === 0 ? (
-              <p className="text-xs text-[#a1a1aa]">
+              <p className="text-xs text-zinc-600 dark:text-[#a1a1aa]">
                 Every open decision is waiting on a token or SSH key — see the Blocked until DB
                 card.
               </p>
             ) : (
-              <ul className="space-y-2 text-xs text-[#e4e4e7]">
+              <ul className="space-y-2 text-xs text-zinc-800 dark:text-[#e4e4e7]">
                 {humanOnlyDecisions.slice(0, 8).map((d) => (
                   <li
                     key={d.id}
-                    className="rounded-lg border border-[#1c1c1e] bg-[#0a0a0b] px-3 py-2"
+                    className="rounded-lg border border-zinc-200 dark:border-[#1c1c1e] bg-white dark:bg-[#0a0a0b] px-3 py-2"
                   >
                     <p className="font-medium">{d.title}</p>
-                    <p className="mt-0.5 text-[11px] text-[#a1a1aa]">{d.recommendation}</p>
+                    <p className="mt-0.5 text-[11px] text-zinc-600 dark:text-[#a1a1aa]">{d.recommendation}</p>
                   </li>
                 ))}
                 {humanOnlyDecisions.length > 8 && (
-                  <li className="px-3 text-[11px] text-[#71717a]">
+                  <li className="px-3 text-[11px] text-zinc-500 dark:text-[#71717a]">
                     + {humanOnlyDecisions.length - 8} more on the Review session below.
                   </li>
                 )}
@@ -278,20 +278,20 @@ export default async function ImportRehearsalCard() {
       {/* Card 3 — Will be skipped */}
       <AdminCard title={`Will be skipped · ${willSkipCount}`}>
         <div className="space-y-3">
-          <ul className="space-y-2 text-xs text-[#e4e4e7]">
-            <li className="rounded-lg border border-[#1c1c1e] bg-[#0a0a0b] px-3 py-2">
+          <ul className="space-y-2 text-xs text-zinc-800 dark:text-[#e4e4e7]">
+            <li className="rounded-lg border border-zinc-200 dark:border-[#1c1c1e] bg-white dark:bg-[#0a0a0b] px-3 py-2">
               <p className="font-medium">
                 {skippedEmailRefs.length} placeholder email reference
                 {skippedEmailRefs.length === 1 ? '' : 's'}
               </p>
-              <p className="mt-0.5 text-[11px] text-[#a1a1aa]">
+              <p className="mt-0.5 text-[11px] text-zinc-600 dark:text-[#a1a1aa]">
                 Email references in the saved sample data are intentional placeholders. They are
                 skipped until real Gmail / Outlook links land in the linking phase.
               </p>
             </li>
-            <li className="rounded-lg border border-[#1c1c1e] bg-[#0a0a0b] px-3 py-2">
+            <li className="rounded-lg border border-zinc-200 dark:border-[#1c1c1e] bg-white dark:bg-[#0a0a0b] px-3 py-2">
               <p className="font-medium">Placeholder contacts</p>
-              <p className="mt-0.5 text-[11px] text-[#a1a1aa]">
+              <p className="mt-0.5 text-[11px] text-zinc-600 dark:text-[#a1a1aa]">
                 Contacts in the saved sample data are generic role placeholders. They stay
                 read-only until the live Contacts table is populated.
               </p>
@@ -331,18 +331,18 @@ export default async function ImportRehearsalCard() {
           )}
 
           <div>
-            <p className="mb-2 text-[11px] font-medium uppercase tracking-[0.18em] text-[#71717a]">
+            <p className="mb-2 text-[11px] font-medium uppercase tracking-[0.18em] text-zinc-500 dark:text-[#71717a]">
               Credentials still missing
             </p>
-            <ul className="space-y-2 text-xs text-[#e4e4e7]">
+            <ul className="space-y-2 text-xs text-zinc-800 dark:text-[#e4e4e7]">
               {credentialBullets.map((c) => (
                 <li
                   key={c.label}
-                  className="flex items-start justify-between gap-3 rounded-lg border border-[#1c1c1e] bg-[#0a0a0b] px-3 py-2"
+                  className="flex items-start justify-between gap-3 rounded-lg border border-zinc-200 dark:border-[#1c1c1e] bg-white dark:bg-[#0a0a0b] px-3 py-2"
                 >
                   <div className="min-w-0 flex-1">
-                    <p className="text-[12px] font-medium text-[#f5f5f5]">{c.label}</p>
-                    <p className="mt-0.5 text-[11px] text-[#a1a1aa]">{c.note}</p>
+                    <p className="text-[12px] font-medium text-zinc-900 dark:text-[#f5f5f5]">{c.label}</p>
+                    <p className="mt-0.5 text-[11px] text-zinc-600 dark:text-[#a1a1aa]">{c.note}</p>
                   </div>
                   <Badge
                     text={c.present ? 'present' : 'missing'}
@@ -373,7 +373,7 @@ export function ValidationFindingsCard({ report }: { report: ValidationReport })
   );
   return (
     <AdminCard title="Validation findings">
-      <p className="mb-3 text-xs leading-relaxed text-[#a1a1aa]">
+      <p className="mb-3 text-xs leading-relaxed text-zinc-600 dark:text-[#a1a1aa]">
         A second pass that double-checks the saved sample data for shape errors, orphan links, and
         placeholder rows. None of these block the rehearsal — they are guidance for you.
       </p>
@@ -440,39 +440,39 @@ function ValidationCategoryBlockClient({
 
   return (
     <div>
-      <p className="mb-2 text-xs font-medium text-[#f5f5f5]">
+      <p className="mb-2 text-xs font-medium text-zinc-900 dark:text-[#f5f5f5]">
         {label}
-        <span className="ml-2 font-mono text-[10px] text-[#71717a]">({total})</span>
+        <span className="ml-2 font-mono text-[10px] text-zinc-500 dark:text-[#71717a]">({total})</span>
       </p>
       <ul className="space-y-1.5">
         {preview.map((f) => (
           <li
             key={f.id}
-            className="flex gap-3 rounded-lg border border-[#1c1c1e] bg-[#0a0a0b] px-3 py-2"
+            className="flex gap-3 rounded-lg border border-zinc-200 dark:border-[#1c1c1e] bg-white dark:bg-[#0a0a0b] px-3 py-2"
           >
             <Badge text={SEVERITY_LABEL[f.severity]} tone={SEVERITY_TONE[f.severity]} />
             <div className="min-w-0 flex-1">
-              <p className="text-xs text-[#e4e4e7]">{f.title}</p>
-              {f.detail && <p className="mt-0.5 text-[11px] text-[#a1a1aa]">{f.detail}</p>}
+              <p className="text-xs text-zinc-800 dark:text-[#e4e4e7]">{f.title}</p>
+              {f.detail && <p className="mt-0.5 text-[11px] text-zinc-600 dark:text-[#a1a1aa]">{f.detail}</p>}
             </div>
           </li>
         ))}
       </ul>
       {rest.length > 0 && (
         <details className="mt-2">
-          <summary className="cursor-pointer list-none rounded-lg border border-[#1c1c1e] bg-[#0a0a0b] px-3 py-1.5 text-[11px] font-mono uppercase tracking-[0.18em] text-emerald-300/80 hover:text-emerald-200">
+          <summary className="cursor-pointer list-none rounded-lg border border-zinc-200 dark:border-[#1c1c1e] bg-white dark:bg-[#0a0a0b] px-3 py-1.5 text-[11px] font-mono uppercase tracking-[0.18em] text-emerald-300/80 hover:text-emerald-200">
             Show all {total}
           </summary>
           <ul className="mt-2 space-y-1.5">
             {rest.map((f) => (
               <li
                 key={f.id}
-                className="flex gap-3 rounded-lg border border-[#1c1c1e] bg-[#0a0a0b] px-3 py-2"
+                className="flex gap-3 rounded-lg border border-zinc-200 dark:border-[#1c1c1e] bg-white dark:bg-[#0a0a0b] px-3 py-2"
               >
                 <Badge text={SEVERITY_LABEL[f.severity]} tone={SEVERITY_TONE[f.severity]} />
                 <div className="min-w-0 flex-1">
-                  <p className="text-xs text-[#e4e4e7]">{f.title}</p>
-                  {f.detail && <p className="mt-0.5 text-[11px] text-[#a1a1aa]">{f.detail}</p>}
+                  <p className="text-xs text-zinc-800 dark:text-[#e4e4e7]">{f.title}</p>
+                  {f.detail && <p className="mt-0.5 text-[11px] text-zinc-600 dark:text-[#a1a1aa]">{f.detail}</p>}
                 </div>
               </li>
             ))}
@@ -489,7 +489,7 @@ function ValidationCategoryBlockClient({
 
 function ThCell({ children }: { children: React.ReactNode }) {
   return (
-    <th className="px-4 py-3 font-mono text-[10px] uppercase tracking-[0.15em] text-[#71717a]">
+    <th className="px-4 py-3 font-mono text-[10px] uppercase tracking-[0.15em] text-zinc-500 dark:text-[#71717a]">
       {children}
     </th>
   );
@@ -505,11 +505,11 @@ function BlockedRow({
   example?: string;
 }) {
   return (
-    <div className="flex items-start gap-3 rounded-lg border border-[#1c1c1e] bg-[#0a0a0b] px-3 py-2">
+    <div className="flex items-start gap-3 rounded-lg border border-zinc-200 dark:border-[#1c1c1e] bg-white dark:bg-[#0a0a0b] px-3 py-2">
       <Badge text={`${count}`} tone="amber" />
       <div className="min-w-0 flex-1">
-        <p className="text-xs text-[#e4e4e7]">{label}</p>
-        {example && <p className="mt-0.5 text-[11px] text-[#a1a1aa]">e.g. {example}</p>}
+        <p className="text-xs text-zinc-800 dark:text-[#e4e4e7]">{label}</p>
+        {example && <p className="mt-0.5 text-[11px] text-zinc-600 dark:text-[#a1a1aa]">e.g. {example}</p>}
       </div>
     </div>
   );

@@ -200,13 +200,13 @@ function renderInline(text: string, keyHint: number): React.ReactNode {
       );
     } else if (first.kind === 'bold') {
       nodes.push(
-        <strong key={`b-${keyHint}-${key++}`} className="text-[#f5f5f5] font-medium">
+        <strong key={`b-${keyHint}-${key++}`} className="text-zinc-900 dark:text-[#f5f5f5] font-medium">
           {first.match[1]}
         </strong>,
       );
     } else if (first.kind === 'italic') {
       nodes.push(
-        <em key={`i-${keyHint}-${key++}`} className="text-[#a1a1aa] not-italic">
+        <em key={`i-${keyHint}-${key++}`} className="text-zinc-600 dark:text-[#a1a1aa] not-italic">
           {first.match[1]}
         </em>,
       );
@@ -214,7 +214,7 @@ function renderInline(text: string, keyHint: number): React.ReactNode {
       nodes.push(
         <code
           key={`c-${keyHint}-${key++}`}
-          className="px-1 py-0.5 rounded bg-[#1c1c1e] text-[12px] font-mono text-emerald-300"
+          className="px-1 py-0.5 rounded bg-zinc-100 dark:bg-[#1c1c1e] text-[12px] font-mono text-emerald-300"
         >
           {first.match[1]}
         </code>,

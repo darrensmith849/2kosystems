@@ -84,8 +84,8 @@ export default async function AssetDetailPage({ params }: { params: Promise<{ id
         subtitle={
           <span>
             <Link href="/admin/ops/assets" className="text-emerald-300 hover:underline">← Assets</Link>
-            <span className="ml-2 text-[#52525b]">·</span>
-            <span className="ml-2 text-[#71717a]">{asset.type}</span>
+            <span className="ml-2 text-zinc-500 dark:text-[#52525b]">·</span>
+            <span className="ml-2 text-zinc-500 dark:text-[#71717a]">{asset.type}</span>
           </span>
         }
       />
@@ -115,7 +115,7 @@ export default async function AssetDetailPage({ params }: { params: Promise<{ id
               <Row label="Division" value={(asset as { division?: { name: string } | null }).division!.name} />
             )}
             {asset.techStack && asset.techStack.length > 0 && (
-              <Row label="Stack" value={<span className="font-mono text-[10px] text-[#a1a1aa]">{asset.techStack.join(', ')}</span>} />
+              <Row label="Stack" value={<span className="font-mono text-[10px] text-zinc-600 dark:text-[#a1a1aa]">{asset.techStack.join(', ')}</span>} />
             )}
             {confidence && (
               <Row
@@ -142,7 +142,7 @@ export default async function AssetDetailPage({ params }: { params: Promise<{ id
       {!isSnap && <AssetLinksClient assetId={id} initialLinks={links} />}
       {isSnap && (
         <AdminCard title="Asset linking — read-only in snapshot mode">
-          <p className="text-xs text-[#a1a1aa]">Linking to repos / projects / zones / servers / domains activates when <code className="text-emerald-300">DATABASE_URL</code> is set.</p>
+          <p className="text-xs text-zinc-600 dark:text-[#a1a1aa]">Linking to repos / projects / zones / servers / domains activates when <code className="text-emerald-300">DATABASE_URL</code> is set.</p>
         </AdminCard>
       )}
 
@@ -160,7 +160,7 @@ export default async function AssetDetailPage({ params }: { params: Promise<{ id
                   render: (t) => (
                     <Link
                       href={`/admin/ops/tickets/${t.id}`}
-                      className="font-medium text-[#f5f5f5] hover:text-emerald-300 transition-colors"
+                      className="font-medium text-zinc-900 dark:text-[#f5f5f5] hover:text-emerald-300 transition-colors"
                     >
                       {t.title}
                     </Link>
@@ -190,7 +190,7 @@ export default async function AssetDetailPage({ params }: { params: Promise<{ id
                 {
                   key: 'name',
                   header: 'Name',
-                  render: (r) => <span className="font-medium text-[#f5f5f5]">{r.name}</span>,
+                  render: (r) => <span className="font-medium text-zinc-900 dark:text-[#f5f5f5]">{r.name}</span>,
                 },
                 { key: 'kind', header: 'Kind', render: (r) => <Badge text={r.kind} /> },
                 {
@@ -225,7 +225,7 @@ export default async function AssetDetailPage({ params }: { params: Promise<{ id
                     key: 'summary',
                     header: 'Summary',
                     render: (i) => (
-                      <span className="font-medium text-[#f5f5f5]">{i.summary}</span>
+                      <span className="font-medium text-zinc-900 dark:text-[#f5f5f5]">{i.summary}</span>
                     ),
                   },
                   {

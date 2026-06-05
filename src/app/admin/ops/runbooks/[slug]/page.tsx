@@ -66,7 +66,7 @@ function renderInline(text: string, keyPrefix: string): React.ReactNode[] {
       out.push(
         <code
           key={`${keyPrefix}-c-${i++}`}
-          className="font-mono text-[0.85em] text-emerald-200 bg-[#0a0a0b] border border-[#1c1c1e] rounded px-1 py-0.5"
+          className="font-mono text-[0.85em] text-emerald-200 bg-white dark:bg-[#0a0a0b] border border-zinc-200 dark:border-[#1c1c1e] rounded px-1 py-0.5"
         >
           {m[2]}
         </code>
@@ -89,14 +89,14 @@ function renderInline(text: string, keyPrefix: string): React.ReactNode[] {
     } else if (m[6]) {
       // bold
       out.push(
-        <strong key={`${keyPrefix}-b-${i++}`} className="font-semibold text-[#f5f5f5]">
+        <strong key={`${keyPrefix}-b-${i++}`} className="font-semibold text-zinc-900 dark:text-[#f5f5f5]">
           {m[7]}
         </strong>
       );
     } else if (m[8]) {
       // italic
       out.push(
-        <em key={`${keyPrefix}-i-${i++}`} className="italic text-[#e4e4e7]">
+        <em key={`${keyPrefix}-i-${i++}`} className="italic text-zinc-800 dark:text-[#e4e4e7]">
           {m[9]}
         </em>
       );
@@ -208,19 +208,19 @@ function renderBlock(block: Block, idx: number): React.ReactNode {
   switch (block.kind) {
     case 'h1':
       return (
-        <h1 key={key} className="text-xl font-semibold text-[#f5f5f5] mt-6 mb-3">
+        <h1 key={key} className="text-xl font-semibold text-zinc-900 dark:text-[#f5f5f5] mt-6 mb-3">
           {renderInline(block.text, key)}
         </h1>
       );
     case 'h2':
       return (
-        <h2 key={key} className="text-base font-semibold text-[#f5f5f5] mt-6 mb-2">
+        <h2 key={key} className="text-base font-semibold text-zinc-900 dark:text-[#f5f5f5] mt-6 mb-2">
           {renderInline(block.text, key)}
         </h2>
       );
     case 'h3':
       return (
-        <h3 key={key} className="text-sm font-semibold text-[#e4e4e7] mt-4 mb-2">
+        <h3 key={key} className="text-sm font-semibold text-zinc-800 dark:text-[#e4e4e7] mt-4 mb-2">
           {renderInline(block.text, key)}
         </h3>
       );
@@ -250,16 +250,16 @@ function renderBlock(block: Block, idx: number): React.ReactNode {
       return (
         <pre
           key={key}
-          className="my-3 overflow-x-auto rounded-xl border border-[#1c1c1e] bg-[#0a0a0b] p-4"
+          className="my-3 overflow-x-auto rounded-xl border border-zinc-200 dark:border-[#1c1c1e] bg-white dark:bg-[#0a0a0b] p-4"
         >
-          <code className="font-mono text-[12px] leading-relaxed text-[#e4e4e7] whitespace-pre">
+          <code className="font-mono text-[12px] leading-relaxed text-zinc-800 dark:text-[#e4e4e7] whitespace-pre">
             {block.text}
           </code>
         </pre>
       );
     case 'raw':
       return (
-        <p key={key} className="text-xs font-mono text-[#a1a1aa] my-2 whitespace-pre-wrap break-words">
+        <p key={key} className="text-xs font-mono text-zinc-600 dark:text-[#a1a1aa] my-2 whitespace-pre-wrap break-words">
           {block.text}
         </p>
       );
@@ -299,8 +299,8 @@ export default async function RunbookViewerPage({
         }
       />
 
-      <div className="rounded-2xl border border-[#27272a] bg-[#111113] p-6">
-        <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a] mb-4">
+      <div className="rounded-2xl border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#111113] p-6">
+        <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-zinc-500 dark:text-[#71717a] mb-4">
           {entry.path}
         </p>
         <article className="max-w-none">

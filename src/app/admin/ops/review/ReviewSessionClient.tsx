@@ -280,7 +280,7 @@ export default function ReviewSessionClient() {
         <div>
           <label
             htmlFor="review-session-reviewer"
-            className="block text-[10px] uppercase tracking-wider text-[#52525b] mb-1.5"
+            className="block text-[10px] uppercase tracking-wider text-zinc-500 dark:text-[#52525b] mb-1.5"
           >
             Reviewer name
           </label>
@@ -292,14 +292,14 @@ export default function ReviewSessionClient() {
             onBlur={commitReviewerName}
             placeholder="Your name (saved locally on blur)"
             maxLength={120}
-            className="w-full rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3 py-2 text-xs text-[#e4e4e7] placeholder:text-[#52525b] focus:outline-none focus:border-[#3f3f46]"
+            className="w-full rounded-lg border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#0a0a0b] px-3 py-2 text-xs text-zinc-800 dark:text-[#e4e4e7] placeholder:text-zinc-500 dark:text-[#52525b] focus:outline-none focus:border-[#3f3f46]"
           />
         </div>
 
         <div className="flex items-center justify-between gap-3 flex-wrap">
-          <p className="font-mono text-[11px] text-[#71717a]">
+          <p className="font-mono text-[11px] text-zinc-500 dark:text-[#71717a]">
             Started at:{' '}
-            <span className="text-[#a1a1aa]">
+            <span className="text-zinc-600 dark:text-[#a1a1aa]">
               {hydrated
                 ? session.startedAt || '— not started —'
                 : 'loading…'}
@@ -308,14 +308,14 @@ export default function ReviewSessionClient() {
           <button
             type="button"
             onClick={resetSession}
-            className="text-[10px] font-mono uppercase tracking-[0.15em] px-3 py-1.5 rounded-full border border-[#27272a] text-[#a1a1aa] hover:bg-[#1c1c1e] transition-colors"
+            className="text-[10px] font-mono uppercase tracking-[0.15em] px-3 py-1.5 rounded-full border border-zinc-200 dark:border-[#27272a] text-zinc-600 dark:text-[#a1a1aa] hover:bg-zinc-100 dark:bg-[#1c1c1e] transition-colors"
           >
             Reset session
           </button>
         </div>
 
-        <div className="rounded-2xl border border-[#27272a] bg-[#0a0a0b] p-4">
-          <p className="text-[10px] uppercase tracking-wider text-[#52525b] mb-2">
+        <div className="rounded-2xl border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#0a0a0b] p-4">
+          <p className="text-[10px] uppercase tracking-wider text-zinc-500 dark:text-[#52525b] mb-2">
             Session stats
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
@@ -335,7 +335,7 @@ export default function ReviewSessionClient() {
         <div>
           <label
             htmlFor="review-session-notes"
-            className="block text-[10px] uppercase tracking-wider text-[#52525b] mb-1.5"
+            className="block text-[10px] uppercase tracking-wider text-zinc-500 dark:text-[#52525b] mb-1.5"
           >
             Local notes
           </label>
@@ -347,9 +347,9 @@ export default function ReviewSessionClient() {
             maxLength={NOTES_MAX}
             rows={3}
             placeholder="Session notes (saved locally on blur, max 500 chars)"
-            className="w-full rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3 py-2 text-xs text-[#e4e4e7] placeholder:text-[#52525b] focus:outline-none focus:border-[#3f3f46] resize-none"
+            className="w-full rounded-lg border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#0a0a0b] px-3 py-2 text-xs text-zinc-800 dark:text-[#e4e4e7] placeholder:text-zinc-500 dark:text-[#52525b] focus:outline-none focus:border-[#3f3f46] resize-none"
           />
-          <p className="mt-1 text-[10px] text-[#52525b] text-right">
+          <p className="mt-1 text-[10px] text-zinc-500 dark:text-[#52525b] text-right">
             {notesDraft.length}/{NOTES_MAX}
           </p>
         </div>
@@ -378,8 +378,8 @@ export default function ReviewSessionClient() {
           </button>
         </div>
 
-        <p className="text-[11px] text-[#71717a] leading-relaxed">
-          Local browser only — not synced until <code className="font-mono text-[10px] text-[#a1a1aa]">DATABASE_URL</code> is connected.
+        <p className="text-[11px] text-zinc-500 dark:text-[#71717a] leading-relaxed">
+          Local browser only — not synced until <code className="font-mono text-[10px] text-zinc-600 dark:text-[#a1a1aa]">DATABASE_URL</code> is connected.
         </p>
       </div>
     </AdminCard>
@@ -388,9 +388,9 @@ export default function ReviewSessionClient() {
 
 function StatTile({ label, value }: { label: string; value: number }) {
   return (
-    <div className="rounded-lg border border-[#1c1c1e] bg-[#111113] px-3 py-2">
-      <p className="font-mono text-base text-[#f5f5f5]">{value}</p>
-      <p className="mt-0.5 text-[10px] uppercase tracking-wider text-[#71717a]">
+    <div className="rounded-lg border border-zinc-200 dark:border-[#1c1c1e] bg-white dark:bg-[#111113] px-3 py-2">
+      <p className="font-mono text-base text-zinc-900 dark:text-[#f5f5f5]">{value}</p>
+      <p className="mt-0.5 text-[10px] uppercase tracking-wider text-zinc-500 dark:text-[#71717a]">
         {label}
       </p>
     </div>

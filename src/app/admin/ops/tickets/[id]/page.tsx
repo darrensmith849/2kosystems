@@ -62,8 +62,8 @@ export default async function TicketDetailPage({ params }: { params: Promise<{ i
           subtitle={
             <>
               <Link href="/admin/ops/tickets" className="text-emerald-300 hover:underline">← back to Tickets</Link>
-              <span className="ml-2 text-[#52525b]">·</span>
-              <span className="ml-2 text-[#71717a]">{ticket.kind}</span>
+              <span className="ml-2 text-zinc-500 dark:text-[#52525b]">·</span>
+              <span className="ml-2 text-zinc-500 dark:text-[#71717a]">{ticket.kind}</span>
             </>
           }
         />
@@ -82,10 +82,10 @@ export default async function TicketDetailPage({ params }: { params: Promise<{ i
           </div>
           <div className="space-y-4">
             <AdminCard title="Why this exists">
-              <p className="text-xs text-[#a1a1aa] leading-relaxed">{ctx?.why ?? 'Snapshot ticket — surfaced from the discovery work.'}</p>
+              <p className="text-xs text-zinc-600 dark:text-[#a1a1aa] leading-relaxed">{ctx?.why ?? 'Snapshot ticket — surfaced from the discovery work.'}</p>
             </AdminCard>
             <AdminCard title="Recommended next step">
-              <p className="text-xs text-[#e4e4e7] leading-relaxed">{ctx?.next ?? 'Review and assign once the Hetzner DB is connected.'}</p>
+              <p className="text-xs text-zinc-800 dark:text-[#e4e4e7] leading-relaxed">{ctx?.next ?? 'Review and assign once the Hetzner DB is connected.'}</p>
             </AdminCard>
             <AdminCard title="Blockers">
               <Row label="Needs human decision" value={ctx?.needsHuman ? <Badge text="yes" tone="amber" /> : <Badge text="no" tone="green" />} />

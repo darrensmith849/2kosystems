@@ -52,7 +52,7 @@ export default function ContactsPage() {
             <Badge text="Database required" tone="blue" />
             <Badge text="No private details stored" tone="green" />
           </div>
-          <p className="text-sm text-[#e4e4e7] leading-relaxed">
+          <p className="text-sm text-zinc-800 dark:text-[#e4e4e7] leading-relaxed">
             Contacts is a planned foundation. The dashboard expects to track who owns each
             client, who pays each supplier, who approves change requests, and who to call when
             an asset goes down. Real contact rows arrive once the database is connected — the
@@ -70,9 +70,9 @@ export default function ContactsPage() {
           {(Object.keys(CONTACT_ROLE_LABEL) as Array<keyof typeof CONTACT_ROLE_LABEL>).map((k) => (
             <li
               key={k}
-              className="flex items-center gap-2 rounded-xl border border-[#1c1c1e] bg-[#0e0e10] px-3 py-2 text-sm text-[#e4e4e7]"
+              className="flex items-center gap-2 rounded-xl border border-zinc-200 dark:border-[#1c1c1e] bg-zinc-50 dark:bg-[#0e0e10] px-3 py-2 text-sm text-zinc-800 dark:text-[#e4e4e7]"
             >
-              <span aria-hidden className="text-[#52525b]">·</span>
+              <span aria-hidden className="text-zinc-500 dark:text-[#52525b]">·</span>
               {CONTACT_ROLE_LABEL[k]}
             </li>
           ))}
@@ -81,7 +81,7 @@ export default function ContactsPage() {
 
       {/* Placeholder rows */}
       <AdminCard title="Preview rows">
-        <p className="mb-4 text-xs text-[#a1a1aa] leading-relaxed">
+        <p className="mb-4 text-xs text-zinc-600 dark:text-[#a1a1aa] leading-relaxed">
           Placeholder entries — these show what each role looks like. No real personal email
           addresses or phone numbers are stored here.
         </p>
@@ -89,15 +89,15 @@ export default function ContactsPage() {
           {SNAPSHOT_CONTACTS.map((c) => (
             <li
               key={c.id}
-              className="rounded-xl border border-[#1c1c1e] bg-[#0e0e10] p-3"
+              className="rounded-xl border border-zinc-200 dark:border-[#1c1c1e] bg-zinc-50 dark:bg-[#0e0e10] p-3"
             >
               <div className="flex flex-wrap items-center gap-2 mb-1">
-                <p className="text-sm font-medium text-[#f5f5f5]">{c.name}</p>
+                <p className="text-sm font-medium text-zinc-900 dark:text-[#f5f5f5]">{c.name}</p>
                 <Badge text={CONTACT_ROLE_LABEL[c.role]} tone="blue" />
                 <Badge text="placeholder" tone="neutral" />
               </div>
-              <p className="text-xs text-[#a1a1aa]">{c.organisation}</p>
-              <p className="text-xs text-[#a1a1aa] mt-1.5 leading-relaxed">{c.notes}</p>
+              <p className="text-xs text-zinc-600 dark:text-[#a1a1aa]">{c.organisation}</p>
+              <p className="text-xs text-zinc-600 dark:text-[#a1a1aa] mt-1.5 leading-relaxed">{c.notes}</p>
             </li>
           ))}
         </ul>
@@ -105,7 +105,7 @@ export default function ContactsPage() {
 
       {/* Future fields */}
       <AdminCard title="Future fields">
-        <p className="mb-3 text-xs text-[#a1a1aa] leading-relaxed">
+        <p className="mb-3 text-xs text-zinc-600 dark:text-[#a1a1aa] leading-relaxed">
           Live contacts will store the following fields. Editing activates after the database is
           connected.
         </p>
@@ -113,7 +113,7 @@ export default function ContactsPage() {
           {FUTURE_FIELDS.map((f) => (
             <li
               key={f}
-              className="rounded-md border border-[#1c1c1e] bg-[#0e0e10] px-2 py-1.5 text-xs text-[#a1a1aa]"
+              className="rounded-md border border-zinc-200 dark:border-[#1c1c1e] bg-zinc-50 dark:bg-[#0e0e10] px-2 py-1.5 text-xs text-zinc-600 dark:text-[#a1a1aa]"
             >
               {f}
             </li>
@@ -123,7 +123,7 @@ export default function ContactsPage() {
 
       {/* Safety */}
       <AdminCard title="What this page never does">
-        <ul className="space-y-2 text-xs text-[#a1a1aa] leading-relaxed">
+        <ul className="space-y-2 text-xs text-zinc-600 dark:text-[#a1a1aa] leading-relaxed">
           <li>· No real personal email addresses or phone numbers are committed to the repo.</li>
           <li>· No contact rows can be edited until the database is connected.</li>
           <li>· No emails are sent to contacts from this page.</li>

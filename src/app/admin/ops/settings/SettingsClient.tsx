@@ -70,16 +70,16 @@ function Action({
   onClick: () => void;
 }) {
   return (
-    <div className="flex items-start justify-between gap-3 border-b border-[#1c1c1e] pb-3 last:border-0 last:pb-0">
+    <div className="flex items-start justify-between gap-3 border-b border-zinc-200 dark:border-[#1c1c1e] pb-3 last:border-0 last:pb-0">
       <div className="flex-1">
-        <p className="text-sm text-[#f5f5f5]">{label}</p>
-        <p className="text-xs text-[#71717a] mt-0.5">{hint}</p>
+        <p className="text-sm text-zinc-900 dark:text-[#f5f5f5]">{label}</p>
+        <p className="text-xs text-zinc-500 dark:text-[#71717a] mt-0.5">{hint}</p>
       </div>
       <button
         type="button"
         onClick={onClick}
         disabled={busy}
-        className="shrink-0 rounded-full border border-[#27272a] hover:border-[#3f3f46] px-3 py-1 text-[11px] font-mono text-[#f5f5f5] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+        className="shrink-0 rounded-full border border-zinc-200 dark:border-[#27272a] hover:border-[#3f3f46] px-3 py-1 text-[11px] font-mono text-zinc-900 dark:text-[#f5f5f5] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
       >
         {busy ? 'Running…' : 'Run'}
       </button>
