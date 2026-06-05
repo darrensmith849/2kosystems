@@ -50,7 +50,7 @@ export function HandoverBuilder({ items }: { items: LocalAgentJob[] }) {
 
   if (items.length === 0) {
     return (
-      <div className="rounded-2xl border border-[#1c1c1e] bg-[#0d0d0f] px-5 py-6 text-center">
+      <div className="rounded-2xl border border-zinc-200 dark:border-[#1c1c1e] bg-[#0d0d0f] px-5 py-6 text-center">
         <p className="text-xs text-[#3f3f46]">
           No items in local history. Run analyses first — they will appear here for handover selection.
         </p>
@@ -61,13 +61,13 @@ export function HandoverBuilder({ items }: { items: LocalAgentJob[] }) {
   return (
     <div className="space-y-4">
       {/* Item selector */}
-      <div className="rounded-2xl border border-[#27272a] bg-[#111113] overflow-hidden">
-        <div className="flex items-center justify-between px-5 py-3 border-b border-[#1c1c1e]">
-          <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a]">
+      <div className="rounded-2xl border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#111113] overflow-hidden">
+        <div className="flex items-center justify-between px-5 py-3 border-b border-zinc-200 dark:border-[#1c1c1e]">
+          <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-zinc-700 dark:text-[#71717a]">
             Select leads to include
           </p>
           <div className="flex items-center gap-3">
-            <button type="button" onClick={toggleAll} className="text-[11px] text-[#71717a] hover:text-[#f5f5f5] transition-colors">
+            <button type="button" onClick={toggleAll} className="text-[11px] text-zinc-700 dark:text-[#71717a] hover:text-zinc-900 dark:text-[#f5f5f5] transition-colors">
               {selected.size === items.length ? 'Deselect all' : 'Select all'}
             </button>
             <span className="text-[10px] text-[#3f3f46]">{selected.size} selected</span>
@@ -94,7 +94,7 @@ export function HandoverBuilder({ items }: { items: LocalAgentJob[] }) {
                     <span className={`text-sm font-semibold tabular-nums ${scoreColor(item.leadScore)}`}>
                       {item.leadScore}
                     </span>
-                    <span className="text-xs text-[#a1a1aa]">{item.senderName ?? 'Unknown'}</span>
+                    <span className="text-xs text-zinc-700 dark:text-[#a1a1aa]">{item.senderName ?? 'Unknown'}</span>
                     <span className="text-[10px] text-[#3f3f46]">
                       {scoreLabel(item.leadScore)} · {statusLabel(item.localStatus)}
                     </span>
@@ -123,14 +123,14 @@ export function HandoverBuilder({ items }: { items: LocalAgentJob[] }) {
             <button
               type="button"
               onClick={() => copy(preview, 'handover-report')}
-              className="text-[11px] text-[#71717a] hover:text-[#f5f5f5] border border-[#27272a] rounded-full px-3 py-1 transition-colors"
+              className="text-[11px] text-zinc-700 dark:text-[#71717a] hover:text-zinc-900 dark:text-[#f5f5f5] border border-zinc-200 dark:border-[#27272a] rounded-full px-3 py-1 transition-colors"
             >
               {copiedKey === 'handover-report' ? '✓ Copied' : 'Copy markdown'}
             </button>
             <button
               type="button"
               onClick={handleDownload}
-              className="text-[11px] text-[#71717a] hover:text-[#f5f5f5] border border-[#27272a] rounded-full px-3 py-1 transition-colors"
+              className="text-[11px] text-zinc-700 dark:text-[#71717a] hover:text-zinc-900 dark:text-[#f5f5f5] border border-zinc-200 dark:border-[#27272a] rounded-full px-3 py-1 transition-colors"
             >
               ↓ Download
             </button>
@@ -140,11 +140,11 @@ export function HandoverBuilder({ items }: { items: LocalAgentJob[] }) {
 
       {/* Preview */}
       {preview && (
-        <div className="rounded-2xl border border-[#27272a] bg-[#0d0d0f] overflow-hidden">
-          <p className="px-5 py-3 text-[10px] font-mono uppercase tracking-[0.15em] text-[#71717a] border-b border-[#1c1c1e]">
+        <div className="rounded-2xl border border-zinc-200 dark:border-[#27272a] bg-[#0d0d0f] overflow-hidden">
+          <p className="px-5 py-3 text-[10px] font-mono uppercase tracking-[0.15em] text-zinc-700 dark:text-[#71717a] border-b border-zinc-200 dark:border-[#1c1c1e]">
             Handover report preview
           </p>
-          <pre className="px-5 py-4 text-[11px] font-mono text-[#71717a] whitespace-pre-wrap overflow-x-auto max-h-96 overflow-y-auto leading-relaxed">
+          <pre className="px-5 py-4 text-[11px] font-mono text-zinc-700 dark:text-[#71717a] whitespace-pre-wrap overflow-x-auto max-h-96 overflow-y-auto leading-relaxed">
             {preview}
           </pre>
         </div>

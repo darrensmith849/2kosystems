@@ -53,7 +53,7 @@ export function TestCaseEditor({
 }) {
   const [tc, setTc] = useState<TestCase>(() => initial ? { ...initial } : newCase());
 
-  const inputClass = 'w-full rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3 py-2 text-xs text-[#f5f5f5] placeholder:text-[#3f3f46] focus:border-[#0f7b3a]/50 focus:outline-none transition-colors';
+  const inputClass = 'w-full rounded-lg border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#0a0a0b] px-3 py-2 text-xs text-zinc-900 dark:text-[#f5f5f5] placeholder:text-[#3f3f46] focus:border-[#0f7b3a]/50 focus:outline-none transition-colors';
   const selectClass = inputClass;
 
   function set<K extends keyof TestCase>(k: K, v: TestCase[K]) {
@@ -66,8 +66,8 @@ export function TestCaseEditor({
   }
 
   return (
-    <div className="rounded-2xl border border-[#27272a] bg-[#111113] p-5 space-y-4">
-      <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-[#71717a]">
+    <div className="rounded-2xl border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#111113] p-5 space-y-4">
+      <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-zinc-700 dark:text-[#71717a]">
         {initial ? 'Edit test case' : 'New test case'}
       </p>
 
@@ -103,8 +103,8 @@ export function TestCaseEditor({
         <textarea value={tc.message} onChange={(e) => set('message', e.target.value)} rows={5} className={`${inputClass} resize-y`} placeholder="Paste the test enquiry message" />
       </div>
 
-      <div className="border-t border-[#1c1c1e] pt-4">
-        <p className="text-[10px] font-mono uppercase tracking-[0.12em] text-[#71717a] mb-3">Expected outcomes</p>
+      <div className="border-t border-zinc-200 dark:border-[#1c1c1e] pt-4">
+        <p className="text-[10px] font-mono uppercase tracking-[0.12em] text-zinc-700 dark:text-[#71717a] mb-3">Expected outcomes</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label className="block text-[10px] font-mono text-[#3f3f46] mb-1">Expected route</label>
@@ -144,7 +144,7 @@ export function TestCaseEditor({
         <button type="button" onClick={handleSave} disabled={!tc.title.trim() || !tc.message.trim()} className="rounded-full bg-[#0f7b3a] px-4 py-1.5 text-xs font-semibold text-white hover:bg-[#B8C4C8] hover:text-black transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
           {initial ? 'Save changes' : 'Add test case'}
         </button>
-        <button type="button" onClick={onCancel} className="text-xs text-[#71717a] hover:text-[#f5f5f5] transition-colors">Cancel</button>
+        <button type="button" onClick={onCancel} className="text-xs text-zinc-700 dark:text-[#71717a] hover:text-zinc-900 dark:text-[#f5f5f5] transition-colors">Cancel</button>
       </div>
     </div>
   );

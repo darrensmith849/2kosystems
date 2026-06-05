@@ -17,19 +17,19 @@ export function ContextCard({ context }: { context: AgentOutput['context'] }) {
       {context.enquirySummary && (
         <div className="pt-3">
           <p className="text-[10px] font-mono text-[#3f3f46] mb-1.5">Summary</p>
-          <p className="text-xs text-[#a1a1aa]">{context.enquirySummary}</p>
+          <p className="text-xs text-zinc-700 dark:text-[#a1a1aa]">{context.enquirySummary}</p>
         </div>
       )}
       {context.operationalPainPoint && (
         <div className="pt-3">
           <p className="text-[10px] font-mono text-[#3f3f46] mb-1.5">Pain point</p>
-          <p className="text-xs text-[#f5f5f5]">{context.operationalPainPoint}</p>
+          <p className="text-xs text-zinc-900 dark:text-[#f5f5f5]">{context.operationalPainPoint}</p>
         </div>
       )}
       {context.budgetSignal && (
         <div className="pt-3">
           <p className="text-[10px] font-mono text-[#3f3f46] mb-1.5">Budget signal</p>
-          <p className="text-xs text-[#a1a1aa]">{context.budgetSignal}</p>
+          <p className="text-xs text-zinc-700 dark:text-[#a1a1aa]">{context.budgetSignal}</p>
         </div>
       )}
       {context.missingInformation.length > 0 && (

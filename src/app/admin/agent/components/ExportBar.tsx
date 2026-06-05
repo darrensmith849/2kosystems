@@ -28,7 +28,7 @@ export function ExportBar({
           </p>
         </div>
       )}
-      <div className="rounded-2xl border border-[#27272a] bg-[#0d0d0f] px-5 py-3.5 flex flex-wrap items-center gap-2">
+      <div className="rounded-2xl border border-zinc-200 dark:border-[#27272a] bg-[#0d0d0f] px-5 py-3.5 flex flex-wrap items-center gap-2">
         <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-[#3f3f46] mr-1">
           Copy
         </p>
@@ -96,7 +96,7 @@ export function ExportBar({
               'application/json',
             )
           }
-          className="text-[11px] text-[#71717a] hover:text-[#f5f5f5] transition-colors border border-[#27272a] hover:border-[#3f3f46] rounded-full px-3 py-1 disabled:opacity-30 disabled:cursor-not-allowed"
+          className="text-[11px] text-zinc-700 dark:text-[#71717a] hover:text-zinc-900 dark:text-[#f5f5f5] transition-colors border border-zinc-200 dark:border-[#27272a] hover:border-[#3f3f46] rounded-full px-3 py-1 disabled:opacity-30 disabled:cursor-not-allowed"
         >
           ↓ JSON
         </button>
@@ -110,7 +110,7 @@ export function ExportBar({
               'text/markdown',
             )
           }
-          className="text-[11px] text-[#71717a] hover:text-[#f5f5f5] transition-colors border border-[#27272a] hover:border-[#3f3f46] rounded-full px-3 py-1 disabled:opacity-30 disabled:cursor-not-allowed"
+          className="text-[11px] text-zinc-700 dark:text-[#71717a] hover:text-zinc-900 dark:text-[#f5f5f5] transition-colors border border-zinc-200 dark:border-[#27272a] hover:border-[#3f3f46] rounded-full px-3 py-1 disabled:opacity-30 disabled:cursor-not-allowed"
         >
           ↓ Markdown
         </button>

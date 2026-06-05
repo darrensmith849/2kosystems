@@ -51,32 +51,32 @@ export function LocalStorageHealthPanel() {
   const backupWarning = !lastBackup || (Date.now() - new Date(lastBackup).getTime() > 7 * 24 * 60 * 60 * 1000);
 
   return (
-    <div className="rounded-2xl border border-[#27272a] bg-[#111113] p-5 space-y-4">
+    <div className="rounded-2xl border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#111113] p-5 space-y-4">
       <div>
-        <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a] mb-1">Local Storage Health</p>
+        <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-zinc-700 dark:text-[#71717a] mb-1">Local Storage Health</p>
         <p className="text-xs text-[#3f3f46]">All agent data lives in this browser only — not synced, not backed up automatically.</p>
       </div>
 
       <div className="space-y-2">
         {sections.map((s) => (
-          <div key={s.key} className="flex items-center justify-between py-1.5 border-b border-[#1c1c1e] last:border-0">
-            <span className="text-xs text-[#a1a1aa]">{s.label}</span>
+          <div key={s.key} className="flex items-center justify-between py-1.5 border-b border-zinc-200 dark:border-[#1c1c1e] last:border-0">
+            <span className="text-xs text-zinc-700 dark:text-[#a1a1aa]">{s.label}</span>
             <div className="flex items-center gap-4">
-              <span className="text-[11px] font-mono text-[#71717a]">{s.count} item{s.count !== 1 ? 's' : ''}</span>
+              <span className="text-[11px] font-mono text-zinc-700 dark:text-[#71717a]">{s.count} item{s.count !== 1 ? 's' : ''}</span>
               <span className="text-[11px] font-mono text-[#3f3f46] w-16 text-right">{bytesToKb(s.sizeBytes)}</span>
             </div>
           </div>
         ))}
         <div className="flex items-center justify-between pt-1">
           <span className="text-[11px] font-mono text-[#3f3f46]">Total</span>
-          <span className="text-[11px] font-mono text-[#71717a]">{bytesToKb(totalBytes)}</span>
+          <span className="text-[11px] font-mono text-zinc-700 dark:text-[#71717a]">{bytesToKb(totalBytes)}</span>
         </div>
       </div>
 
       <div className={`flex items-start gap-2 px-3 py-2.5 rounded-xl border text-[11px] ${
         backupWarning
           ? 'border-amber-400/25 bg-amber-400/5 text-amber-400'
-          : 'border-[#1c1c1e] bg-[#0d0d0f] text-[#71717a]'
+          : 'border-zinc-200 dark:border-[#1c1c1e] bg-[#0d0d0f] text-zinc-700 dark:text-[#71717a]'
       }`}>
         <span className="shrink-0 mt-0.5">{backupWarning ? '⚠' : '✓'}</span>
         <span>

@@ -76,11 +76,11 @@ export function AdminQuickStartPanel() {
   }
 
   return (
-    <div className="rounded-2xl border border-[#1c1c1e] bg-[#0d0d0f] overflow-hidden">
+    <div className="rounded-2xl border border-zinc-200 dark:border-[#1c1c1e] bg-[#0d0d0f] overflow-hidden">
       <button
         type="button"
         onClick={toggle}
-        className="w-full flex items-center justify-between px-5 py-3 hover:bg-[#111113] transition-colors"
+        className="w-full flex items-center justify-between px-5 py-3 hover:bg-white dark:bg-[#111113] transition-colors"
       >
         <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#3f3f46]">
           Quick start guide
@@ -89,15 +89,15 @@ export function AdminQuickStartPanel() {
       </button>
 
       {open && (
-        <div className="px-5 pb-5 border-t border-[#1c1c1e] pt-4 space-y-4">
+        <div className="px-5 pb-5 border-t border-zinc-200 dark:border-[#1c1c1e] pt-4 space-y-4">
           {STEPS.map((step) => (
             <div key={step.n} className="flex gap-3">
-              <span className="text-[10px] font-mono text-[#3f3f46] border border-[#27272a] rounded-full w-5 h-5 flex items-center justify-center shrink-0 mt-0.5">
+              <span className="text-[10px] font-mono text-[#3f3f46] border border-zinc-200 dark:border-[#27272a] rounded-full w-5 h-5 flex items-center justify-center shrink-0 mt-0.5">
                 {step.n}
               </span>
               <div>
-                <p className="text-xs font-medium text-[#a1a1aa] mb-0.5">{step.title}</p>
-                <p className="text-xs text-[#71717a]">{step.body}</p>
+                <p className="text-xs font-medium text-zinc-700 dark:text-[#a1a1aa] mb-0.5">{step.title}</p>
+                <p className="text-xs text-zinc-700 dark:text-[#71717a]">{step.body}</p>
               </div>
             </div>
           ))}

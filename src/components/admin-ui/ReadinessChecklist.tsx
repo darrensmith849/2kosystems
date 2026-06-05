@@ -65,14 +65,14 @@ export default function ReadinessChecklist() {
 
   return (
     <AdminCard title="Phase 2A — Migration readiness">
-      <p className="text-xs text-[#a1a1aa] mb-4 font-mono">
+      <p className="text-xs text-zinc-700 dark:text-[#a1a1aa] mb-4 font-mono">
         {doneCount} of {totalCount} ready
         {dbConfigured ? ' · DB connected' : ' · DB pending'}
       </p>
       <div className="space-y-5">
         {categories.map((cat) => (
           <div key={cat.heading}>
-            <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a] mb-2">
+            <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-zinc-700 dark:text-[#71717a] mb-2">
               {cat.heading}
             </p>
             <ul className="space-y-1.5">
@@ -80,14 +80,14 @@ export default function ReadinessChecklist() {
                 <li key={item.label} className="flex items-start gap-2 font-mono text-[11px] leading-relaxed">
                   <span
                     aria-hidden="true"
-                    className={item.done ? 'text-emerald-400' : 'text-[#52525b]'}
+                    className={item.done ? 'text-emerald-400' : 'text-zinc-500 dark:text-[#52525b]'}
                   >
                     {item.done ? '✓' : '○'}
                   </span>
                   <span className="flex-1">
-                    <span className={item.done ? 'text-[#e4e4e7]' : 'text-[#a1a1aa]'}>{item.label}</span>
+                    <span className={item.done ? 'text-zinc-900 dark:text-[#e4e4e7]' : 'text-zinc-700 dark:text-[#a1a1aa]'}>{item.label}</span>
                     {item.note ? (
-                      <em className="not-italic ml-2 text-[10px] italic text-[#71717a]">— {item.note}</em>
+                      <em className="not-italic ml-2 text-[10px] italic text-zinc-700 dark:text-[#71717a]">— {item.note}</em>
                     ) : null}
                   </span>
                 </li>

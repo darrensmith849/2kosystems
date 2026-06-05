@@ -41,7 +41,7 @@ export function AdminTabs({
   counts?: Partial<Record<AdminTab, number>>;
 }) {
   return (
-    <div className="flex items-end gap-0 border-b border-[#1c1c1e] overflow-x-auto">
+    <div className="flex items-end gap-0 border-b border-zinc-200 dark:border-[#1c1c1e] overflow-x-auto">
       {TABS.map((tab) => {
         const isActive = tab.id === active;
         const count = counts?.[tab.id];
@@ -52,13 +52,13 @@ export function AdminTabs({
             onClick={() => onChange(tab.id)}
             className={`relative px-4 py-2.5 text-xs font-medium whitespace-nowrap transition-colors shrink-0 ${
               isActive
-                ? 'text-[#f5f5f5]'
-                : 'text-[#71717a] hover:text-[#a1a1aa]'
+                ? 'text-zinc-900 dark:text-[#f5f5f5]'
+                : 'text-zinc-700 dark:text-[#71717a] hover:text-zinc-700 dark:text-[#a1a1aa]'
             }`}
           >
             {tab.label}
             {count !== undefined && count > 0 && (
-              <span className="ml-1.5 text-[9px] font-mono text-[#3f3f46] border border-[#27272a] rounded-full px-1.5 py-0.5">
+              <span className="ml-1.5 text-[9px] font-mono text-[#3f3f46] border border-zinc-200 dark:border-[#27272a] rounded-full px-1.5 py-0.5">
                 {count}
               </span>
             )}

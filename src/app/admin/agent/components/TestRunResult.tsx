@@ -28,7 +28,7 @@ function AssertionRow({ a }: { a: AssertionResult }) {
         {resultIcon(a.result)}
       </span>
       <div>
-        <span className="text-[#a1a1aa]">{a.label}</span>
+        <span className="text-zinc-700 dark:text-[#a1a1aa]">{a.label}</span>
         <span className="text-[#3f3f46] ml-2">({a.expected} → {a.actual})</span>
       </div>
     </div>
@@ -52,13 +52,13 @@ export function TestRunResult({
   const failCount = run.assertions.filter((a) => a.result === 'fail').length;
 
   return (
-    <div className="border-b border-[#1c1c1e] last:border-0">
+    <div className="border-b border-zinc-200 dark:border-[#1c1c1e] last:border-0">
       <div className="flex items-center gap-3 px-5 py-3 hover:bg-[#0d0d0f] transition-colors">
         <button type="button" onClick={() => setOpen((o) => !o)} className="flex-1 flex items-center gap-3 text-left min-w-0">
           <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full border shrink-0 ${resultColor(run.overallResult)}`}>
             {resultIcon(run.overallResult)} {run.overallResult.toUpperCase()}
           </span>
-          <span className="text-xs text-[#a1a1aa] truncate">{run.caseTitle}</span>
+          <span className="text-xs text-zinc-700 dark:text-[#a1a1aa] truncate">{run.caseTitle}</span>
           <span className="text-[10px] text-[#3f3f46] shrink-0">{fmtDateTime(run.createdAt)}</span>
           <span className="text-[10px] text-[#3f3f46] shrink-0">
             {passCount}✓ {warnCount > 0 && <span className="text-amber-400">{warnCount}⚠</span>} {failCount > 0 && <span className="text-rose-400">{failCount}✗</span>}
@@ -73,10 +73,10 @@ export function TestRunResult({
       {open && (
         <div className="px-5 pb-4 space-y-3">
           {/* Score + summary */}
-          <div className="flex items-center gap-4 text-xs text-[#71717a]">
-            <span>Score: <strong className="text-[#f5f5f5]">{run.output?.classification?.leadScore}/100</strong></span>
-            <span>Route: <strong className="text-[#f5f5f5]">{run.output?.route?.business?.replace(/_/g, ' ')}</strong></span>
-            <span>Type: <strong className="text-[#f5f5f5]">{run.output?.route?.enquiryType?.replace(/_/g, ' ')}</strong></span>
+          <div className="flex items-center gap-4 text-xs text-zinc-700 dark:text-[#71717a]">
+            <span>Score: <strong className="text-zinc-900 dark:text-[#f5f5f5]">{run.output?.classification?.leadScore}/100</strong></span>
+            <span>Route: <strong className="text-zinc-900 dark:text-[#f5f5f5]">{run.output?.route?.business?.replace(/_/g, ' ')}</strong></span>
+            <span>Type: <strong className="text-zinc-900 dark:text-[#f5f5f5]">{run.output?.route?.enquiryType?.replace(/_/g, ' ')}</strong></span>
           </div>
 
           {/* Assertions */}
@@ -86,9 +86,9 @@ export function TestRunResult({
 
           {/* Reply preview */}
           {run.output?.suggestedReply?.body && (
-            <div className="rounded-xl border border-[#1c1c1e] bg-[#0a0a0b] p-3">
+            <div className="rounded-xl border border-zinc-200 dark:border-[#1c1c1e] bg-white dark:bg-[#0a0a0b] p-3">
               <p className="text-[10px] font-mono text-[#3f3f46] mb-1.5">Reply preview</p>
-              <p className="text-[11px] text-[#71717a] line-clamp-3 whitespace-pre-wrap">{run.output.suggestedReply.body}</p>
+              <p className="text-[11px] text-zinc-700 dark:text-[#71717a] line-clamp-3 whitespace-pre-wrap">{run.output.suggestedReply.body}</p>
             </div>
           )}
 
@@ -100,7 +100,7 @@ export function TestRunResult({
               onChange={(e) => setNote(e.target.value)}
               onBlur={() => onUpdateNote(run.id, note)}
               rows={2}
-              className="w-full rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3 py-2 text-xs text-[#f5f5f5] placeholder:text-[#3f3f46] focus:border-[#0f7b3a]/50 focus:outline-none transition-colors resize-none"
+              className="w-full rounded-lg border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#0a0a0b] px-3 py-2 text-xs text-zinc-900 dark:text-[#f5f5f5] placeholder:text-[#3f3f46] focus:border-[#0f7b3a]/50 focus:outline-none transition-colors resize-none"
               placeholder="Add a note about this test run…"
             />
           </div>

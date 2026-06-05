@@ -39,25 +39,25 @@ export default function LoginGate() {
     <div className="min-h-screen flex items-center justify-center p-6">
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
-          <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#71717a] mb-3">
+          <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-700 dark:text-[#71717a] mb-3">
             2KO Systems
           </p>
-          <h1 className="text-xl font-semibold text-[#f5f5f5]">Agent Ops</h1>
-          <p className="mt-1.5 text-sm text-[#71717a]">Internal access only</p>
+          <h1 className="text-xl font-semibold text-zinc-900 dark:text-[#f5f5f5]">Agent Ops</h1>
+          <p className="mt-1.5 text-sm text-zinc-700 dark:text-[#71717a]">Internal access only</p>
         </div>
 
         <form
           onSubmit={handleSubmit}
-          className="rounded-2xl border border-[#27272a] bg-[#111113] p-6"
+          className="rounded-2xl border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#111113] p-6"
         >
-          <label className="block text-[10px] font-mono uppercase tracking-[0.15em] text-[#71717a] mb-2">
+          <label className="block text-[10px] font-mono uppercase tracking-[0.15em] text-zinc-700 dark:text-[#71717a] mb-2">
             Admin password
           </label>
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5] placeholder:text-[#3f3f46] focus:border-[#0f7b3a]/50 focus:outline-none transition-colors mb-5"
+            className="w-full rounded-lg border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-zinc-900 dark:text-[#f5f5f5] placeholder:text-[#3f3f46] focus:border-[#0f7b3a]/50 focus:outline-none transition-colors mb-5"
             placeholder="••••••••••••"
             autoFocus
             autoComplete="current-password"

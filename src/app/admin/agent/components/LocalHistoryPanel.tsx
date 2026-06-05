@@ -60,7 +60,7 @@ export function LocalHistoryPanel({
 
   if (items.length === 0) {
     return (
-      <div className="rounded-2xl border border-[#1c1c1e] bg-[#0d0d0f] px-5 py-4 space-y-1">
+      <div className="rounded-2xl border border-zinc-200 dark:border-[#1c1c1e] bg-[#0d0d0f] px-5 py-4 space-y-1">
         <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#3f3f46]">
           Local history
         </p>
@@ -75,7 +75,7 @@ export function LocalHistoryPanel({
   }
 
   return (
-    <div className="rounded-2xl border border-[#1c1c1e] bg-[#0d0d0f] overflow-hidden">
+    <div className="rounded-2xl border border-zinc-200 dark:border-[#1c1c1e] bg-[#0d0d0f] overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between px-5 py-3">
         <button
@@ -83,10 +83,10 @@ export function LocalHistoryPanel({
           onClick={() => setOpen((o) => !o)}
           className="flex items-center gap-2.5 hover:opacity-80 transition-opacity"
         >
-          <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a]">
+          <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-zinc-700 dark:text-[#71717a]">
             Local history
           </p>
-          <span className="text-[10px] font-mono text-[#3f3f46] border border-[#27272a] rounded-full px-2 py-0.5">
+          <span className="text-[10px] font-mono text-[#3f3f46] border border-zinc-200 dark:border-[#27272a] rounded-full px-2 py-0.5">
             {items.length}
           </span>
           {activeFilters && filtered.length !== items.length && (
@@ -111,9 +111,9 @@ export function LocalHistoryPanel({
       </div>
 
       {open && (
-        <div className="border-t border-[#1c1c1e]">
+        <div className="border-t border-zinc-200 dark:border-[#1c1c1e]">
           {/* Filter bar */}
-          <div className="px-5 py-3 border-b border-[#1c1c1e] space-y-2">
+          <div className="px-5 py-3 border-b border-zinc-200 dark:border-[#1c1c1e] space-y-2">
             <div className="flex flex-wrap gap-2 items-center">
               {/* Search */}
               <input
@@ -121,14 +121,14 @@ export function LocalHistoryPanel({
                 value={filters.query}
                 onChange={(e) => setFilter('query', e.target.value)}
                 placeholder="Search…"
-                className="rounded-lg border border-[#27272a] bg-[#111113] px-2.5 py-1 text-xs text-[#f5f5f5] placeholder:text-[#3f3f46] focus:border-[#0f7b3a]/50 focus:outline-none transition-colors w-40"
+                className="rounded-lg border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#111113] px-2.5 py-1 text-xs text-zinc-900 dark:text-[#f5f5f5] placeholder:text-[#3f3f46] focus:border-[#0f7b3a]/50 focus:outline-none transition-colors w-40"
               />
 
               {/* Status filter */}
               <select
                 value={filters.status}
                 onChange={(e) => setFilter('status', e.target.value as LocalStatus | '')}
-                className="rounded-lg border border-[#27272a] bg-[#111113] px-2 py-1 text-xs text-[#a1a1aa] focus:border-[#0f7b3a]/50 focus:outline-none transition-colors"
+                className="rounded-lg border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#111113] px-2 py-1 text-xs text-zinc-700 dark:text-[#a1a1aa] focus:border-[#0f7b3a]/50 focus:outline-none transition-colors"
               >
                 <option value="">All statuses</option>
                 {LOCAL_STATUSES.map((s) => (
@@ -142,7 +142,7 @@ export function LocalHistoryPanel({
               <select
                 value={filters.temperature}
                 onChange={(e) => setFilter('temperature', e.target.value)}
-                className="rounded-lg border border-[#27272a] bg-[#111113] px-2 py-1 text-xs text-[#a1a1aa] focus:border-[#0f7b3a]/50 focus:outline-none transition-colors"
+                className="rounded-lg border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#111113] px-2 py-1 text-xs text-zinc-700 dark:text-[#a1a1aa] focus:border-[#0f7b3a]/50 focus:outline-none transition-colors"
               >
                 <option value="">All temps</option>
                 <option value="hot">Hot</option>
@@ -154,7 +154,7 @@ export function LocalHistoryPanel({
               <select
                 value={filters.minScore}
                 onChange={(e) => setFilter('minScore', Number(e.target.value))}
-                className="rounded-lg border border-[#27272a] bg-[#111113] px-2 py-1 text-xs text-[#a1a1aa] focus:border-[#0f7b3a]/50 focus:outline-none transition-colors"
+                className="rounded-lg border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#111113] px-2 py-1 text-xs text-zinc-700 dark:text-[#a1a1aa] focus:border-[#0f7b3a]/50 focus:outline-none transition-colors"
               >
                 <option value={0}>Any score</option>
                 <option value={31}>≥ 31</option>
@@ -171,7 +171,7 @@ export function LocalHistoryPanel({
                     e.target.value as FilterState['followUpFilter'],
                   )
                 }
-                className="rounded-lg border border-[#27272a] bg-[#111113] px-2 py-1 text-xs text-[#a1a1aa] focus:border-[#0f7b3a]/50 focus:outline-none transition-colors"
+                className="rounded-lg border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#111113] px-2 py-1 text-xs text-zinc-700 dark:text-[#a1a1aa] focus:border-[#0f7b3a]/50 focus:outline-none transition-colors"
               >
                 <option value="all">All follow-ups</option>
                 <option value="overdue">Overdue</option>
@@ -184,7 +184,7 @@ export function LocalHistoryPanel({
               <select
                 value={filters.sortField}
                 onChange={(e) => setFilter('sortField', e.target.value as SortField)}
-                className="rounded-lg border border-[#27272a] bg-[#111113] px-2 py-1 text-xs text-[#a1a1aa] focus:border-[#0f7b3a]/50 focus:outline-none transition-colors"
+                className="rounded-lg border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#111113] px-2 py-1 text-xs text-zinc-700 dark:text-[#a1a1aa] focus:border-[#0f7b3a]/50 focus:outline-none transition-colors"
               >
                 {SORT_OPTIONS.map((o) => (
                   <option key={o.value} value={o.value}>
@@ -197,7 +197,7 @@ export function LocalHistoryPanel({
                 type="button"
                 onClick={toggleSortDir}
                 title={filters.sortDir === 'desc' ? 'Descending' : 'Ascending'}
-                className="text-[11px] text-[#71717a] hover:text-[#f5f5f5] border border-[#27272a] rounded-lg px-2 py-1 transition-colors"
+                className="text-[11px] text-zinc-700 dark:text-[#71717a] hover:text-zinc-900 dark:text-[#f5f5f5] border border-zinc-200 dark:border-[#27272a] rounded-lg px-2 py-1 transition-colors"
               >
                 {filters.sortDir === 'desc' ? '↓' : '↑'}
               </button>
@@ -215,7 +215,7 @@ export function LocalHistoryPanel({
           </div>
 
           {/* Disclaimer */}
-          <p className="px-5 py-2 text-[10px] text-[#3f3f46] border-b border-[#1c1c1e]">
+          <p className="px-5 py-2 text-[10px] text-[#3f3f46] border-b border-zinc-200 dark:border-[#1c1c1e]">
             Local history is stored only in this browser. Clearing browser data removes it. Not shared with other admins. Not saved to the 2KO backend. Export a backup before clearing browser data or switching devices.
           </p>
 

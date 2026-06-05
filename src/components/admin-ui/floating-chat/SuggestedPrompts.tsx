@@ -26,8 +26,8 @@ export function SuggestedPrompts({
   return (
     <div className="flex flex-col gap-4">
       {showWelcome && (
-        <div className="rounded-2xl border border-[#27272a] bg-[#111113] px-4 py-3">
-          <p className="text-sm text-[#e4e4e7] leading-relaxed">{welcomeText}</p>
+        <div className="rounded-2xl border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#111113] px-4 py-3">
+          <p className="text-sm text-zinc-900 dark:text-[#e4e4e7] leading-relaxed">{welcomeText}</p>
         </div>
       )}
       <div className="flex flex-wrap gap-2">
@@ -37,7 +37,7 @@ export function SuggestedPrompts({
             type="button"
             onClick={() => onPick(p)}
             disabled={disabled}
-            className="rounded-full border border-[#27272a] hover:border-emerald-400/40 hover:text-emerald-200 px-3 py-1.5 text-xs text-[#a1a1aa] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            className="rounded-full border border-zinc-200 dark:border-[#27272a] hover:border-emerald-400/40 hover:text-emerald-200 px-3 py-1.5 text-xs text-zinc-700 dark:text-[#a1a1aa] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
             {p}
           </button>

@@ -25,28 +25,28 @@ export function ResetLocalDataPanel({
 
   if (done) {
     return (
-      <div className="rounded-2xl border border-[#27272a] bg-[#111113] px-5 py-4">
+      <div className="rounded-2xl border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#111113] px-5 py-4">
         <p className="text-xs text-[#4ade80]">✓ Local agent data cleared.</p>
       </div>
     );
   }
 
   return (
-    <div className="rounded-2xl border border-[#27272a] bg-[#111113] overflow-hidden">
+    <div className="rounded-2xl border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#111113] overflow-hidden">
       <button
         type="button"
         onClick={() => setExpanded((o) => !o)}
         className="w-full flex items-center justify-between px-5 py-4 hover:bg-[#0d0d0f] transition-colors"
       >
         <div className="text-left">
-          <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a]">Reset Local Data</p>
+          <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-zinc-700 dark:text-[#71717a]">Reset Local Data</p>
           <p className="text-[11px] text-[#3f3f46] mt-0.5">Clear all workflow history, quality lab runs, and batch inbox items.</p>
         </div>
         <span className="text-[#3f3f46] text-[10px] shrink-0 ml-4">{expanded ? '▲' : '▼'}</span>
       </button>
 
       {expanded && (
-        <div className="border-t border-[#1c1c1e] px-5 py-4 space-y-3">
+        <div className="border-t border-zinc-200 dark:border-[#1c1c1e] px-5 py-4 space-y-3">
           <div className="rounded-xl border border-amber-400/20 bg-amber-400/5 px-4 py-3 space-y-1">
             <p className="text-[11px] font-semibold text-amber-400">Before you reset</p>
             <ul className="text-[11px] text-amber-400/80 space-y-0.5 list-disc list-inside">
@@ -58,14 +58,14 @@ export function ResetLocalDataPanel({
 
           <div>
             <label className="block text-[10px] font-mono text-[#3f3f46] mb-1.5">
-              Type <span className="text-[#a1a1aa]">{CONFIRM_PHRASE}</span> to confirm
+              Type <span className="text-zinc-700 dark:text-[#a1a1aa]">{CONFIRM_PHRASE}</span> to confirm
             </label>
             <input
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder={CONFIRM_PHRASE}
-              className="w-full rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3 py-2 text-xs text-[#f5f5f5] placeholder-[#3f3f46] focus:border-rose-500/40 focus:outline-none transition-colors font-mono"
+              className="w-full rounded-lg border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#0a0a0b] px-3 py-2 text-xs text-zinc-900 dark:text-[#f5f5f5] placeholder-[#3f3f46] focus:border-rose-500/40 focus:outline-none transition-colors font-mono"
             />
           </div>
 
@@ -81,7 +81,7 @@ export function ResetLocalDataPanel({
             <button
               type="button"
               onClick={() => { setExpanded(false); setInput(''); }}
-              className="text-xs text-[#71717a] hover:text-[#f5f5f5] transition-colors"
+              className="text-xs text-zinc-700 dark:text-[#71717a] hover:text-zinc-900 dark:text-[#f5f5f5] transition-colors"
             >
               Cancel
             </button>

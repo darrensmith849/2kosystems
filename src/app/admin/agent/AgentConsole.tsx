@@ -102,13 +102,13 @@ export default function AgentConsole() {
     <div className="min-h-screen overflow-y-auto">
 
       {/* Top bar */}
-      <div className="sticky top-0 z-10 border-b border-[#1c1c1e] bg-[#0a0a0b]/95 backdrop-blur-sm px-6 py-3.5 flex items-center justify-between">
+      <div className="sticky top-0 z-10 border-b border-zinc-200 dark:border-[#1c1c1e] bg-white dark:bg-[#0a0a0b]/95 backdrop-blur-sm px-6 py-3.5 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#71717a]">
+          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-700 dark:text-[#71717a]">
             2KO Systems
           </span>
           <span className="text-[#27272a]">|</span>
-          <span className="text-sm font-medium text-[#a1a1aa]">Agent Ops</span>
+          <span className="text-sm font-medium text-zinc-700 dark:text-[#a1a1aa]">Agent Ops</span>
           {process.env.NODE_ENV !== 'production' && (
             <span className="text-[10px] font-mono text-amber-500 border border-amber-500/30 rounded-full px-2 py-0.5">
               mock mode may be active
@@ -118,14 +118,14 @@ export default function AgentConsole() {
         <button
           type="button"
           onClick={handleLogout}
-          className="text-xs text-[#71717a] hover:text-[#f5f5f5] transition-colors"
+          className="text-xs text-zinc-700 dark:text-[#71717a] hover:text-zinc-900 dark:text-[#f5f5f5] transition-colors"
         >
           Sign out
         </button>
       </div>
 
       {/* Tab navigation */}
-      <div className="sticky top-[53px] z-10 bg-[#0a0a0b]/95 backdrop-blur-sm px-6">
+      <div className="sticky top-[53px] z-10 bg-white dark:bg-[#0a0a0b]/95 backdrop-blur-sm px-6">
         <AdminTabs
           active={activeTab}
           onChange={handleTabChange}
@@ -164,13 +164,13 @@ export default function AgentConsole() {
                 <SafetyPanel safety={result.safety} />
 
                 {/* Summary bar */}
-                <div className="rounded-2xl border border-[#27272a] bg-[#111113] px-5 py-4">
+                <div className="rounded-2xl border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#111113] px-5 py-4">
                   <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
                     <div>
-                      <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-[#71717a] mb-1">Lead score</p>
+                      <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-zinc-700 dark:text-[#71717a] mb-1">Lead score</p>
                       <p className={`text-2xl font-bold tabular-nums ${scoreColor(result.classification.leadScore)}`}>
                         {result.classification.leadScore}
-                        <span className="text-sm font-normal ml-1 text-[#71717a]">/100</span>
+                        <span className="text-sm font-normal ml-1 text-zinc-700 dark:text-[#71717a]">/100</span>
                       </p>
                       <p className={`text-[11px] mt-0.5 ${scoreColor(result.classification.leadScore)}`}>
                         {scoreLabel(result.classification.leadScore)}
@@ -178,13 +178,13 @@ export default function AgentConsole() {
                     </div>
                     <div className="h-10 w-px bg-[#27272a] hidden sm:block" />
                     <div>
-                      <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-[#71717a] mb-1.5">Route</p>
-                      <p className="text-sm text-[#f5f5f5]">{result.route.business.replace(/_/g, ' ')}</p>
+                      <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-zinc-700 dark:text-[#71717a] mb-1.5">Route</p>
+                      <p className="text-sm text-zinc-900 dark:text-[#f5f5f5]">{result.route.business.replace(/_/g, ' ')}</p>
                     </div>
                     <div className="h-10 w-px bg-[#27272a] hidden sm:block" />
                     <div>
-                      <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-[#71717a] mb-1.5">Enquiry type</p>
-                      <p className="text-sm text-[#f5f5f5]">{result.route.enquiryType.replace(/_/g, ' ')}</p>
+                      <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-zinc-700 dark:text-[#71717a] mb-1.5">Enquiry type</p>
+                      <p className="text-sm text-zinc-900 dark:text-[#f5f5f5]">{result.route.enquiryType.replace(/_/g, ' ')}</p>
                     </div>
                     <div className="h-10 w-px bg-[#27272a] hidden sm:block" />
                     <div className="flex gap-2 flex-wrap">
@@ -219,7 +219,7 @@ export default function AgentConsole() {
                       window.scrollTo({ top: 0, behavior: 'smooth' });
                       document.querySelector('textarea')?.focus();
                     }}
-                    className="text-sm text-[#71717a] hover:text-[#f5f5f5] transition-colors"
+                    className="text-sm text-zinc-700 dark:text-[#71717a] hover:text-zinc-900 dark:text-[#f5f5f5] transition-colors"
                   >
                     ↑ Run another analysis
                   </button>
@@ -284,7 +284,7 @@ export default function AgentConsole() {
             <LocalStorageHealthPanel />
             <LocalImportExport items={history.items} onImport={history.importItems} />
             <div>
-              <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a] mb-4">Handover report builder</p>
+              <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-zinc-700 dark:text-[#71717a] mb-4">Handover report builder</p>
               <HandoverBuilder items={history.items} />
             </div>
             <FutureDatabaseImportPreview items={history.items} />

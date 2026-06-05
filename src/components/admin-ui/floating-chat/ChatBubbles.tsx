@@ -63,7 +63,7 @@ function renderInline(text: string, keyHint: number): ReactNode {
       nodes.push(
         <strong
           key={`b-${keyHint}-${key++}`}
-          className="text-[#f5f5f5] font-medium"
+          className="text-zinc-900 dark:text-[#f5f5f5] font-medium"
         >
           {first.match[1]}
         </strong>,
@@ -72,7 +72,7 @@ function renderInline(text: string, keyHint: number): ReactNode {
       nodes.push(
         <em
           key={`i-${keyHint}-${key++}`}
-          className="text-[#a1a1aa] not-italic"
+          className="text-zinc-700 dark:text-[#a1a1aa] not-italic"
         >
           {first.match[1]}
         </em>,
@@ -81,7 +81,7 @@ function renderInline(text: string, keyHint: number): ReactNode {
       nodes.push(
         <code
           key={`c-${keyHint}-${key++}`}
-          className="px-1 py-0.5 rounded bg-[#1c1c1e] text-[12px] font-mono text-emerald-700 dark:text-emerald-300"
+          className="px-1 py-0.5 rounded bg-zinc-100 dark:bg-[#1c1c1e] text-[12px] font-mono text-emerald-700 dark:text-emerald-300"
         >
           {first.match[1]}
         </code>,
@@ -113,7 +113,7 @@ export function renderMarkdownLite(text: string): ReactNode {
     const bulletMatch = /^\s*[-*]\s+(.*)$/.exec(line);
     if (bulletMatch) {
       listBuffer.push(
-        <li key={`li-${idx}`} className="text-sm text-[#e4e4e7] leading-relaxed">
+        <li key={`li-${idx}`} className="text-sm text-zinc-900 dark:text-[#e4e4e7] leading-relaxed">
           {renderInline(bulletMatch[1], idx)}
         </li>,
       );
@@ -127,14 +127,14 @@ export function renderMarkdownLite(text: string): ReactNode {
     const heading = /^\*\*(.+)\*\*$/.exec(line);
     if (heading) {
       out.push(
-        <p key={`h-${idx}`} className="mt-3 text-xs font-medium text-[#a1a1aa]">
+        <p key={`h-${idx}`} className="mt-3 text-xs font-medium text-zinc-700 dark:text-[#a1a1aa]">
           {heading[1]}
         </p>,
       );
       return;
     }
     out.push(
-      <p key={`p-${idx}`} className="text-sm text-[#e4e4e7] leading-relaxed">
+      <p key={`p-${idx}`} className="text-sm text-zinc-900 dark:text-[#e4e4e7] leading-relaxed">
         {renderInline(line, idx)}
       </p>,
     );

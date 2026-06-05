@@ -42,13 +42,13 @@ export function FollowUpCard({
       {followUp.suggestedMessage && (
         <div className="pt-3">
           <p className="text-[10px] font-mono text-[#3f3f46] mb-1.5">Suggested message</p>
-          <p className="text-xs text-[#a1a1aa] italic">{followUp.suggestedMessage}</p>
+          <p className="text-xs text-zinc-700 dark:text-[#a1a1aa] italic">{followUp.suggestedMessage}</p>
         </div>
       )}
       {followUp.internalReason && (
         <div className="pt-3">
           <p className="text-[10px] font-mono text-[#3f3f46] mb-1.5">Internal reason</p>
-          <p className="text-xs text-[#71717a]">{followUp.internalReason}</p>
+          <p className="text-xs text-zinc-700 dark:text-[#71717a]">{followUp.internalReason}</p>
         </div>
       )}
     </AdminCard>

@@ -12,9 +12,9 @@ export function AdminCard({
   action?: React.ReactNode;
 }) {
   return (
-    <div className="rounded-2xl border border-[#27272a] bg-[#111113] p-5">
+    <div className="rounded-2xl border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#111113] p-5">
       <div className="flex items-center justify-between mb-4">
-        <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a]">{title}</p>
+        <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-zinc-700 dark:text-[#71717a]">{title}</p>
         {action}
       </div>
       {children}
@@ -25,9 +25,9 @@ export function AdminCard({
 export function Row({ label, value }: { label: string; value: React.ReactNode }) {
   if (!value && value !== 0) return null;
   return (
-    <div className="flex gap-3 py-1.5 border-b border-[#1c1c1e] last:border-0">
-      <span className="w-36 shrink-0 text-xs text-[#71717a]">{label}</span>
-      <span className="text-xs text-[#f5f5f5] flex-1">{value}</span>
+    <div className="flex gap-3 py-1.5 border-b border-zinc-200 dark:border-[#1c1c1e] last:border-0">
+      <span className="w-36 shrink-0 text-xs text-zinc-700 dark:text-[#71717a]">{label}</span>
+      <span className="text-xs text-zinc-900 dark:text-[#f5f5f5] flex-1">{value}</span>
     </div>
   );
 }
@@ -35,7 +35,7 @@ export function Row({ label, value }: { label: string; value: React.ReactNode })
 export function Badge({ text, className }: { text: string; className?: string }) {
   return (
     <span
-      className={`inline-block text-[10px] font-mono px-2 py-0.5 rounded-full border ${className ?? 'text-[#a1a1aa] border-[#27272a]'}`}
+      className={`inline-block text-[10px] font-mono px-2 py-0.5 rounded-full border ${className ?? 'text-zinc-700 dark:text-[#a1a1aa] border-zinc-200 dark:border-[#27272a]'}`}
     >
       {slug(text)}
     </span>
@@ -63,7 +63,7 @@ export function CopyBtn({
       type="button"
       onClick={() => !disabled && onCopy(text, id)}
       disabled={disabled}
-      className="text-[11px] text-[#71717a] hover:text-[#f5f5f5] transition-colors border border-[#27272a] hover:border-[#3f3f46] rounded-full px-3 py-1 disabled:opacity-30 disabled:cursor-not-allowed"
+      className="text-[11px] text-zinc-700 dark:text-[#71717a] hover:text-zinc-900 dark:text-[#f5f5f5] transition-colors border border-zinc-200 dark:border-[#27272a] hover:border-[#3f3f46] rounded-full px-3 py-1 disabled:opacity-30 disabled:cursor-not-allowed"
     >
       {copied ? '✓ Copied' : label}
     </button>

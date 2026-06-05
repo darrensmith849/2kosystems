@@ -23,10 +23,10 @@ export function AgentInputForm({
   onClear: () => void;
 }) {
   return (
-    <div className="rounded-2xl border border-[#27272a] bg-[#111113] p-5">
+    <div className="rounded-2xl border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#111113] p-5">
       {/* Presets */}
-      <div className="mb-5 pb-5 border-b border-[#1c1c1e]">
-        <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-[#71717a] mb-2.5">
+      <div className="mb-5 pb-5 border-b border-zinc-200 dark:border-[#1c1c1e]">
+        <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-zinc-700 dark:text-[#71717a] mb-2.5">
           Quick-fill presets
         </p>
         <div className="flex flex-wrap gap-2">
@@ -36,7 +36,7 @@ export function AgentInputForm({
               type="button"
               onClick={() => onPreset(p.form)}
               disabled={loading}
-              className="text-[11px] text-[#71717a] hover:text-[#f5f5f5] border border-[#27272a] hover:border-[#3f3f46] rounded-full px-3 py-1 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              className="text-[11px] text-zinc-700 dark:text-[#71717a] hover:text-zinc-900 dark:text-[#f5f5f5] border border-zinc-200 dark:border-[#27272a] hover:border-[#3f3f46] rounded-full px-3 py-1 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
             >
               {p.label}
             </button>
@@ -50,14 +50,14 @@ export function AgentInputForm({
       {/* Form */}
       <form onSubmit={onSubmit} className="space-y-4">
         <div>
-          <label className="block text-[10px] font-mono uppercase tracking-[0.15em] text-[#71717a] mb-1.5">
+          <label className="block text-[10px] font-mono uppercase tracking-[0.15em] text-zinc-700 dark:text-[#71717a] mb-1.5">
             Message <span className="text-rose-500">*</span>
           </label>
           <textarea
             value={form.message}
             onChange={onFieldChange('message')}
             rows={6}
-            className="w-full rounded-xl border border-[#27272a] bg-[#0a0a0b] px-3.5 py-3 text-sm text-[#f5f5f5] placeholder:text-[#3f3f46] focus:border-[#0f7b3a]/50 focus:outline-none transition-colors resize-y"
+            className="w-full rounded-xl border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#0a0a0b] px-3.5 py-3 text-sm text-zinc-900 dark:text-[#f5f5f5] placeholder:text-[#3f3f46] focus:border-[#0f7b3a]/50 focus:outline-none transition-colors resize-y"
             placeholder="Paste or type the raw enquiry message here…"
             disabled={loading}
           />
@@ -65,66 +65,66 @@ export function AgentInputForm({
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-[10px] font-mono uppercase tracking-[0.15em] text-[#71717a] mb-1.5">
+            <label className="block text-[10px] font-mono uppercase tracking-[0.15em] text-zinc-700 dark:text-[#71717a] mb-1.5">
               Subject
             </label>
             <input
               type="text"
               value={form.subject}
               onChange={onFieldChange('subject')}
-              className="w-full rounded-xl border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5] placeholder:text-[#3f3f46] focus:border-[#0f7b3a]/50 focus:outline-none transition-colors"
+              className="w-full rounded-xl border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-zinc-900 dark:text-[#f5f5f5] placeholder:text-[#3f3f46] focus:border-[#0f7b3a]/50 focus:outline-none transition-colors"
               placeholder="Email subject or enquiry topic"
               disabled={loading}
             />
           </div>
           <div>
-            <label className="block text-[10px] font-mono uppercase tracking-[0.15em] text-[#71717a] mb-1.5">
+            <label className="block text-[10px] font-mono uppercase tracking-[0.15em] text-zinc-700 dark:text-[#71717a] mb-1.5">
               Source
             </label>
             <input
               type="text"
               value={form.source}
               onChange={onFieldChange('source')}
-              className="w-full rounded-xl border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5] placeholder:text-[#3f3f46] focus:border-[#0f7b3a]/50 focus:outline-none transition-colors"
+              className="w-full rounded-xl border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-zinc-900 dark:text-[#f5f5f5] placeholder:text-[#3f3f46] focus:border-[#0f7b3a]/50 focus:outline-none transition-colors"
               placeholder="admin_ui"
               disabled={loading}
             />
           </div>
           <div>
-            <label className="block text-[10px] font-mono uppercase tracking-[0.15em] text-[#71717a] mb-1.5">
+            <label className="block text-[10px] font-mono uppercase tracking-[0.15em] text-zinc-700 dark:text-[#71717a] mb-1.5">
               Sender name
             </label>
             <input
               type="text"
               value={form.senderName}
               onChange={onFieldChange('senderName')}
-              className="w-full rounded-xl border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5] placeholder:text-[#3f3f46] focus:border-[#0f7b3a]/50 focus:outline-none transition-colors"
+              className="w-full rounded-xl border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-zinc-900 dark:text-[#f5f5f5] placeholder:text-[#3f3f46] focus:border-[#0f7b3a]/50 focus:outline-none transition-colors"
               placeholder="Full name"
               disabled={loading}
             />
           </div>
           <div>
-            <label className="block text-[10px] font-mono uppercase tracking-[0.15em] text-[#71717a] mb-1.5">
+            <label className="block text-[10px] font-mono uppercase tracking-[0.15em] text-zinc-700 dark:text-[#71717a] mb-1.5">
               Sender email
             </label>
             <input
               type="email"
               value={form.senderEmail}
               onChange={onFieldChange('senderEmail')}
-              className="w-full rounded-xl border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5] placeholder:text-[#3f3f46] focus:border-[#0f7b3a]/50 focus:outline-none transition-colors"
+              className="w-full rounded-xl border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-zinc-900 dark:text-[#f5f5f5] placeholder:text-[#3f3f46] focus:border-[#0f7b3a]/50 focus:outline-none transition-colors"
               placeholder="email@example.com"
               disabled={loading}
             />
           </div>
           <div>
-            <label className="block text-[10px] font-mono uppercase tracking-[0.15em] text-[#71717a] mb-1.5">
+            <label className="block text-[10px] font-mono uppercase tracking-[0.15em] text-zinc-700 dark:text-[#71717a] mb-1.5">
               Sender phone
             </label>
             <input
               type="tel"
               value={form.senderPhone}
               onChange={onFieldChange('senderPhone')}
-              className="w-full rounded-xl border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5] placeholder:text-[#3f3f46] focus:border-[#0f7b3a]/50 focus:outline-none transition-colors"
+              className="w-full rounded-xl border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-zinc-900 dark:text-[#f5f5f5] placeholder:text-[#3f3f46] focus:border-[#0f7b3a]/50 focus:outline-none transition-colors"
               placeholder="+27 00 000 0000"
               disabled={loading}
             />
@@ -138,9 +138,9 @@ export function AgentInputForm({
         )}
 
         {loading && (
-          <div className="rounded-xl border border-[#27272a] bg-[#0a0a0b] px-4 py-3 flex items-center gap-3">
+          <div className="rounded-xl border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#0a0a0b] px-4 py-3 flex items-center gap-3">
             <span className="inline-block w-3.5 h-3.5 rounded-full border-2 border-[#0f7b3a] border-t-transparent animate-spin shrink-0" />
-            <p className="text-sm text-[#71717a]">Analysing enquiry — this may take a moment</p>
+            <p className="text-sm text-zinc-700 dark:text-[#71717a]">Analysing enquiry — this may take a moment</p>
           </div>
         )}
 
@@ -156,7 +156,7 @@ export function AgentInputForm({
             <button
               type="button"
               onClick={onClear}
-              className="text-sm text-[#71717a] hover:text-[#f5f5f5] transition-colors"
+              className="text-sm text-zinc-700 dark:text-[#71717a] hover:text-zinc-900 dark:text-[#f5f5f5] transition-colors"
             >
               Clear
             </button>

@@ -35,7 +35,7 @@ function checkIcon(check: DiagnosticsCheck, label: string) {
   if (label === 'mockMode') {
     // Mock mode is always shown as neutral info
     return (
-      <span className="text-[10px] font-mono text-[#a1a1aa]">
+      <span className="text-[10px] font-mono text-zinc-700 dark:text-[#a1a1aa]">
         {check.valueLabel ?? (check.configured ? 'configured' : 'not set')}
       </span>
     );
@@ -55,7 +55,7 @@ function checkIcon(check: DiagnosticsCheck, label: string) {
     );
   }
   return (
-    <span className="text-[10px] font-mono text-[#71717a]">
+    <span className="text-[10px] font-mono text-zinc-700 dark:text-[#71717a]">
       {check.safeLabel ?? 'not set'}
     </span>
   );
@@ -88,9 +88,9 @@ export function DiagnosticsPanel() {
     <div className="space-y-4">
 
       {/* Header card */}
-      <div className="rounded-2xl border border-[#27272a] bg-[#111113] p-5">
+      <div className="rounded-2xl border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#111113] p-5">
         <div className="flex items-start justify-between gap-3 mb-1">
-          <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a]">
+          <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-zinc-700 dark:text-[#71717a]">
             Environment Diagnostics
           </p>
           {data && statusBadge(data.overallStatus)}
@@ -109,7 +109,7 @@ export function DiagnosticsPanel() {
           type="button"
           onClick={refresh}
           disabled={loading}
-          className="text-[11px] text-[#71717a] hover:text-[#f5f5f5] border border-[#27272a] hover:border-[#3f3f46] rounded-full px-4 py-1.5 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          className="text-[11px] text-zinc-700 dark:text-[#71717a] hover:text-zinc-900 dark:text-[#f5f5f5] border border-zinc-200 dark:border-[#27272a] hover:border-[#3f3f46] rounded-full px-4 py-1.5 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
         >
           {loading ? 'Loading…' : data ? 'Refresh diagnostics' : 'Load diagnostics'}
         </button>
@@ -123,16 +123,16 @@ export function DiagnosticsPanel() {
       {data && (
         <>
           {/* Env var checks */}
-          <div className="rounded-2xl border border-[#27272a] bg-[#111113] overflow-hidden">
-            <div className="px-5 py-3 border-b border-[#1c1c1e]">
-              <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a]">
+          <div className="rounded-2xl border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#111113] overflow-hidden">
+            <div className="px-5 py-3 border-b border-zinc-200 dark:border-[#1c1c1e]">
+              <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-zinc-700 dark:text-[#71717a]">
                 Environment variables
               </p>
             </div>
             <div className="divide-y divide-[#1c1c1e]">
               {Object.entries(data.checks).map(([key, check]) => (
                 <div key={key} className="px-5 py-3 flex items-center justify-between gap-3">
-                  <span className="text-xs text-[#a1a1aa] font-mono">{CHECK_LABELS[key] ?? key}</span>
+                  <span className="text-xs text-zinc-700 dark:text-[#a1a1aa] font-mono">{CHECK_LABELS[key] ?? key}</span>
                   {checkIcon(check as DiagnosticsCheck, key)}
                 </div>
               ))}
@@ -140,24 +140,24 @@ export function DiagnosticsPanel() {
           </div>
 
           {/* Runtime mode */}
-          <div className="rounded-2xl border border-[#27272a] bg-[#111113] px-5 py-4">
-            <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a] mb-2">
+          <div className="rounded-2xl border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#111113] px-5 py-4">
+            <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-zinc-700 dark:text-[#71717a] mb-2">
               Runtime mode
             </p>
-            <p className="text-sm text-[#f5f5f5] font-medium">
+            <p className="text-sm text-zinc-900 dark:text-[#f5f5f5] font-medium">
               {data.runtimeMode === 'mock' ? 'Mock mode' : 'Live LLM mode'}
             </p>
           </div>
 
           {/* Next steps */}
           {data.nextSteps.length > 0 && (
-            <div className="rounded-2xl border border-[#27272a] bg-[#111113] px-5 py-4">
-              <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a] mb-3">
+            <div className="rounded-2xl border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#111113] px-5 py-4">
+              <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-zinc-700 dark:text-[#71717a] mb-3">
                 Next steps
               </p>
               <ul className="space-y-1.5">
                 {data.nextSteps.map((step, i) => (
-                  <li key={i} className="text-xs text-[#a1a1aa] flex gap-2">
+                  <li key={i} className="text-xs text-zinc-700 dark:text-[#a1a1aa] flex gap-2">
                     <span className="text-[#3f3f46] shrink-0">→</span>
                     {step}
                   </li>
@@ -169,8 +169,8 @@ export function DiagnosticsPanel() {
       )}
 
       {/* Security confirmation checklist — hardcoded, always shown */}
-      <div className="rounded-2xl border border-[#1c1c1e] bg-[#0d0d0f] overflow-hidden">
-        <div className="px-5 py-3 border-b border-[#1c1c1e]">
+      <div className="rounded-2xl border border-zinc-200 dark:border-[#1c1c1e] bg-[#0d0d0f] overflow-hidden">
+        <div className="px-5 py-3 border-b border-zinc-200 dark:border-[#1c1c1e]">
           <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#3f3f46]">
             Security confirmation
           </p>
@@ -179,7 +179,7 @@ export function DiagnosticsPanel() {
           {SECURITY_CHECKLIST.map((item) => (
             <div key={item} className="flex items-start gap-2.5">
               <span className="text-[#4ade80] text-[10px] mt-0.5 shrink-0">✓</span>
-              <span className="text-xs text-[#71717a]">{item}</span>
+              <span className="text-xs text-zinc-700 dark:text-[#71717a]">{item}</span>
             </div>
           ))}
         </div>

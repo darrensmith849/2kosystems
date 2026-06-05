@@ -142,20 +142,20 @@ export function BatchInboxPanel({
     );
   }
 
-  const inputClass = 'w-full rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3 py-2 text-xs text-[#f5f5f5] placeholder:text-[#3f3f46] focus:border-[#0f7b3a]/50 focus:outline-none transition-colors';
+  const inputClass = 'w-full rounded-lg border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#0a0a0b] px-3 py-2 text-xs text-zinc-900 dark:text-[#f5f5f5] placeholder:text-[#3f3f46] focus:border-[#0f7b3a]/50 focus:outline-none transition-colors';
 
   return (
     <div className="space-y-4">
 
       {/* Header */}
-      <div className="rounded-2xl border border-[#27272a] bg-[#111113] p-5">
+      <div className="rounded-2xl border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#111113] p-5">
         <div className="flex items-start justify-between gap-3 mb-1">
-          <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a]">Batch Inbox</p>
+          <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-zinc-700 dark:text-[#71717a]">Batch Inbox</p>
           <div className="flex items-center gap-2">
-            <button type="button" onClick={() => { setManualOpen((o) => !o); setPasteOpen(false); }} className="text-[11px] text-[#71717a] hover:text-[#f5f5f5] border border-[#27272a] hover:border-[#3f3f46] rounded-full px-3 py-1 transition-colors">
+            <button type="button" onClick={() => { setManualOpen((o) => !o); setPasteOpen(false); }} className="text-[11px] text-zinc-700 dark:text-[#71717a] hover:text-zinc-900 dark:text-[#f5f5f5] border border-zinc-200 dark:border-[#27272a] hover:border-[#3f3f46] rounded-full px-3 py-1 transition-colors">
               + Add one
             </button>
-            <button type="button" onClick={() => { setPasteOpen((o) => !o); setManualOpen(false); }} className="text-[11px] text-[#71717a] hover:text-[#f5f5f5] border border-[#27272a] hover:border-[#3f3f46] rounded-full px-3 py-1 transition-colors">
+            <button type="button" onClick={() => { setPasteOpen((o) => !o); setManualOpen(false); }} className="text-[11px] text-zinc-700 dark:text-[#71717a] hover:text-zinc-900 dark:text-[#f5f5f5] border border-zinc-200 dark:border-[#27272a] hover:border-[#3f3f46] rounded-full px-3 py-1 transition-colors">
               Paste / import
             </button>
           </div>
@@ -165,7 +165,7 @@ export function BatchInboxPanel({
           Results save to workflow history. Nothing is sent or stored on the backend.
         </p>
         {items.length > 0 && (
-          <p className="text-[11px] text-[#71717a] mt-2">
+          <p className="text-[11px] text-zinc-700 dark:text-[#71717a] mt-2">
             {items.length} items · {queued} queued · {analysed} analysed
           </p>
         )}
@@ -173,8 +173,8 @@ export function BatchInboxPanel({
 
       {/* Manual add form */}
       {manualOpen && (
-        <div className="rounded-2xl border border-[#27272a] bg-[#111113] p-5 space-y-3">
-          <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-[#71717a]">Add single enquiry</p>
+        <div className="rounded-2xl border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#111113] p-5 space-y-3">
+          <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-zinc-700 dark:text-[#71717a]">Add single enquiry</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block text-[10px] font-mono text-[#3f3f46] mb-1">Subject</label>
@@ -203,17 +203,17 @@ export function BatchInboxPanel({
           </div>
           <div className="flex items-center gap-3">
             <button type="button" onClick={handleAddManual} disabled={!manual.message?.trim()} className="rounded-full bg-[#0f7b3a] px-4 py-1.5 text-xs font-semibold text-white hover:bg-[#B8C4C8] hover:text-black transition-colors disabled:opacity-40 disabled:cursor-not-allowed">Add to queue</button>
-            <button type="button" onClick={() => setManualOpen(false)} className="text-xs text-[#71717a] hover:text-[#f5f5f5] transition-colors">Cancel</button>
+            <button type="button" onClick={() => setManualOpen(false)} className="text-xs text-zinc-700 dark:text-[#71717a] hover:text-zinc-900 dark:text-[#f5f5f5] transition-colors">Cancel</button>
           </div>
         </div>
       )}
 
       {/* Paste / import */}
       {pasteOpen && (
-        <div className="rounded-2xl border border-[#27272a] bg-[#111113] p-5 space-y-3">
-          <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-[#71717a]">Paste batch input</p>
+        <div className="rounded-2xl border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#111113] p-5 space-y-3">
+          <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-zinc-700 dark:text-[#71717a]">Paste batch input</p>
           <p className="text-[11px] text-[#3f3f46]">
-            Paste a JSON array <code className="text-[#71717a]">[&#123;message, subject, senderName, ...&#125;]</code>, or plain text blocks separated by <code className="text-[#71717a]">---</code> or <code className="text-[#71717a]">###</code> on their own line.
+            Paste a JSON array <code className="text-zinc-700 dark:text-[#71717a]">[&#123;message, subject, senderName, ...&#125;]</code>, or plain text blocks separated by <code className="text-zinc-700 dark:text-[#71717a]">---</code> or <code className="text-zinc-700 dark:text-[#71717a]">###</code> on their own line.
           </p>
           <textarea
             value={pasteText}
@@ -225,21 +225,21 @@ export function BatchInboxPanel({
           {pasteError && <p className="text-xs text-rose-400">{pasteError}</p>}
           <div className="flex items-center gap-3">
             <button type="button" onClick={handleParse} disabled={!pasteText.trim()} className="rounded-full bg-[#0f7b3a] px-4 py-1.5 text-xs font-semibold text-white hover:bg-[#B8C4C8] hover:text-black transition-colors disabled:opacity-40 disabled:cursor-not-allowed">Parse and add to queue</button>
-            <button type="button" onClick={() => { setPasteOpen(false); setPasteText(''); setPasteError(null); }} className="text-xs text-[#71717a] hover:text-[#f5f5f5] transition-colors">Cancel</button>
+            <button type="button" onClick={() => { setPasteOpen(false); setPasteText(''); setPasteError(null); }} className="text-xs text-zinc-700 dark:text-[#71717a] hover:text-zinc-900 dark:text-[#f5f5f5] transition-colors">Cancel</button>
           </div>
         </div>
       )}
 
       {/* Queue */}
       {items.length > 0 && (
-        <div className="rounded-2xl border border-[#1c1c1e] bg-[#0d0d0f] overflow-hidden">
-          <div className="flex items-center justify-between px-5 py-3 border-b border-[#1c1c1e]">
-            <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-[#71717a]">Queue</p>
+        <div className="rounded-2xl border border-zinc-200 dark:border-[#1c1c1e] bg-[#0d0d0f] overflow-hidden">
+          <div className="flex items-center justify-between px-5 py-3 border-b border-zinc-200 dark:border-[#1c1c1e]">
+            <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-zinc-700 dark:text-[#71717a]">Queue</p>
             <div className="flex items-center gap-3">
               {analysed > 0 && (
                 <>
-                  <button type="button" onClick={handleExportMarkdown} className="text-[11px] text-[#71717a] hover:text-[#f5f5f5] transition-colors">↓ Handover MD</button>
-                  <button type="button" onClick={handleExportQueue} className="text-[11px] text-[#71717a] hover:text-[#f5f5f5] transition-colors">↓ JSON</button>
+                  <button type="button" onClick={handleExportMarkdown} className="text-[11px] text-zinc-700 dark:text-[#71717a] hover:text-zinc-900 dark:text-[#f5f5f5] transition-colors">↓ Handover MD</button>
+                  <button type="button" onClick={handleExportQueue} className="text-[11px] text-zinc-700 dark:text-[#71717a] hover:text-zinc-900 dark:text-[#f5f5f5] transition-colors">↓ JSON</button>
                 </>
               )}
               <button type="button" onClick={onClear} className="text-[11px] text-[#3f3f46] hover:text-rose-400 transition-colors">Clear all</button>

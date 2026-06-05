@@ -111,13 +111,13 @@ export function QualityLabPanel({
     <div className="space-y-4">
 
       {/* Header */}
-      <div className="rounded-2xl border border-[#27272a] bg-[#111113] p-5">
+      <div className="rounded-2xl border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#111113] p-5">
         <div className="flex items-start justify-between gap-3 mb-1">
-          <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a]">Quality Lab</p>
+          <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-zinc-700 dark:text-[#71717a]">Quality Lab</p>
           <button
             type="button"
             onClick={() => { setEditingCase(null); setShowEditor(true); }}
-            className="text-[11px] text-[#71717a] hover:text-[#f5f5f5] border border-[#27272a] hover:border-[#3f3f46] rounded-full px-3 py-1 transition-colors"
+            className="text-[11px] text-zinc-700 dark:text-[#71717a] hover:text-zinc-900 dark:text-[#f5f5f5] border border-zinc-200 dark:border-[#27272a] hover:border-[#3f3f46] rounded-full px-3 py-1 transition-colors"
           >
             + Custom test case
           </button>
@@ -144,14 +144,14 @@ export function QualityLabPanel({
       )}
 
       {/* Test case selector + run */}
-      <div className="rounded-2xl border border-[#27272a] bg-[#111113] p-5 space-y-4">
+      <div className="rounded-2xl border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#111113] p-5 space-y-4">
         <div className="flex items-center gap-3">
           <div className="flex-1">
-            <label className="block text-[10px] font-mono uppercase tracking-[0.12em] text-[#71717a] mb-1.5">Test case</label>
+            <label className="block text-[10px] font-mono uppercase tracking-[0.12em] text-zinc-700 dark:text-[#71717a] mb-1.5">Test case</label>
             <select
               value={selectedCaseId ?? ''}
               onChange={(e) => { setSelectedCaseId(e.target.value); setLatestRun(null); setRunError(null); }}
-              className="w-full rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3 py-2 text-xs text-[#f5f5f5] focus:border-[#0f7b3a]/50 focus:outline-none transition-colors"
+              className="w-full rounded-lg border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#0a0a0b] px-3 py-2 text-xs text-zinc-900 dark:text-[#f5f5f5] focus:border-[#0f7b3a]/50 focus:outline-none transition-colors"
             >
               <optgroup label="Built-in">
                 {allCases.filter((tc) => tc.isBuiltIn).map((tc) => (
@@ -183,7 +183,7 @@ export function QualityLabPanel({
             </button>
             {selectedCase && !selectedCase.isBuiltIn && (
               <>
-                <button type="button" onClick={() => { setEditingCase(selectedCase); setShowEditor(true); }} className="text-[11px] text-[#71717a] hover:text-[#f5f5f5] border border-[#27272a] rounded-full px-3 py-1.5 transition-colors">Edit</button>
+                <button type="button" onClick={() => { setEditingCase(selectedCase); setShowEditor(true); }} className="text-[11px] text-zinc-700 dark:text-[#71717a] hover:text-zinc-900 dark:text-[#f5f5f5] border border-zinc-200 dark:border-[#27272a] rounded-full px-3 py-1.5 transition-colors">Edit</button>
                 <button type="button" onClick={() => { onDeleteCustomCase(selectedCase.id); setSelectedCaseId(allCases[0]?.id ?? null); }} className="text-[11px] text-[#3f3f46] hover:text-rose-400 transition-colors">Delete</button>
               </>
             )}
@@ -192,35 +192,35 @@ export function QualityLabPanel({
 
         {/* Selected case details */}
         {selectedCase && (
-          <div className="border-t border-[#1c1c1e] pt-4 space-y-3">
+          <div className="border-t border-zinc-200 dark:border-[#1c1c1e] pt-4 space-y-3">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <p className="text-[10px] font-mono text-[#3f3f46] mb-1">Scenario type</p>
-                <p className="text-xs text-[#71717a]">{selectedCase.scenarioType || '—'}</p>
+                <p className="text-xs text-zinc-700 dark:text-[#71717a]">{selectedCase.scenarioType || '—'}</p>
               </div>
               <div>
                 <p className="text-[10px] font-mono text-[#3f3f46] mb-1">Expected route</p>
-                <p className="text-xs text-[#71717a]">{selectedCase.expectedRoute.replace(/_/g, ' ')}</p>
+                <p className="text-xs text-zinc-700 dark:text-[#71717a]">{selectedCase.expectedRoute.replace(/_/g, ' ')}</p>
               </div>
               <div>
                 <p className="text-[10px] font-mono text-[#3f3f46] mb-1">Expected enquiry type</p>
-                <p className="text-xs text-[#71717a]">{selectedCase.expectedEnquiryType.replace(/_/g, ' ')}</p>
+                <p className="text-xs text-zinc-700 dark:text-[#71717a]">{selectedCase.expectedEnquiryType.replace(/_/g, ' ')}</p>
               </div>
               <div>
                 <p className="text-[10px] font-mono text-[#3f3f46] mb-1">Expected score band</p>
-                <p className="text-xs text-[#71717a]">{selectedCase.expectedMinScore}–{selectedCase.expectedMaxScore}</p>
+                <p className="text-xs text-zinc-700 dark:text-[#71717a]">{selectedCase.expectedMinScore}–{selectedCase.expectedMaxScore}</p>
               </div>
               {selectedCase.expectedRecommendedOffer && (
                 <div>
                   <p className="text-[10px] font-mono text-[#3f3f46] mb-1">Expected offer</p>
-                  <p className="text-xs text-[#71717a]">{selectedCase.expectedRecommendedOffer.replace(/_/g, ' ')}</p>
+                  <p className="text-xs text-zinc-700 dark:text-[#71717a]">{selectedCase.expectedRecommendedOffer.replace(/_/g, ' ')}</p>
                 </div>
               )}
             </div>
             {selectedCase.notes && (
               <div>
                 <p className="text-[10px] font-mono text-[#3f3f46] mb-1">What good looks like</p>
-                <p className="text-xs text-[#71717a] italic">{selectedCase.notes}</p>
+                <p className="text-xs text-zinc-700 dark:text-[#71717a] italic">{selectedCase.notes}</p>
               </div>
             )}
             <div>
@@ -239,13 +239,13 @@ export function QualityLabPanel({
 
         {/* Latest run result */}
         {latestRun && (
-          <div className="border-t border-[#1c1c1e] pt-4">
-            <p className="text-[10px] font-mono uppercase tracking-[0.12em] text-[#71717a] mb-3">Latest test result</p>
+          <div className="border-t border-zinc-200 dark:border-[#1c1c1e] pt-4">
+            <p className="text-[10px] font-mono uppercase tracking-[0.12em] text-zinc-700 dark:text-[#71717a] mb-3">Latest test result</p>
             <div className="flex items-center gap-2 mb-3">
               <span className={`text-[11px] font-mono px-2.5 py-1 rounded-full border ${resultColor(latestRun.overallResult)}`}>
                 {resultIcon(latestRun.overallResult)} {latestRun.overallResult.toUpperCase()}
               </span>
-              <span className="text-xs text-[#71717a]">
+              <span className="text-xs text-zinc-700 dark:text-[#71717a]">
                 Score: {latestRun.output?.classification?.leadScore}/100 ·{' '}
                 {latestRun.assertions.filter((a) => a.result === 'pass').length} pass ·{' '}
                 {latestRun.assertions.filter((a) => a.result === 'warn').length} warn ·{' '}
@@ -266,7 +266,7 @@ export function QualityLabPanel({
                     {resultIcon(a.result)}
                   </span>
                   <div>
-                    <span className="text-[#a1a1aa]">{a.label}</span>
+                    <span className="text-zinc-700 dark:text-[#a1a1aa]">{a.label}</span>
                     <span className="text-[#3f3f46] ml-2">({a.expected} → {a.actual})</span>
                   </div>
                 </div>
@@ -277,11 +277,11 @@ export function QualityLabPanel({
       </div>
 
       {/* Test run history */}
-      <div className="rounded-2xl border border-[#1c1c1e] bg-[#0d0d0f] overflow-hidden">
+      <div className="rounded-2xl border border-zinc-200 dark:border-[#1c1c1e] bg-[#0d0d0f] overflow-hidden">
         <div className="flex items-center justify-between px-5 py-3">
           <button type="button" onClick={() => setHistoryOpen((o) => !o)} className="flex items-center gap-2.5 hover:opacity-80 transition-opacity">
-            <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a]">Test run history</p>
-            <span className="text-[10px] font-mono text-[#3f3f46] border border-[#27272a] rounded-full px-2 py-0.5">{testRuns.length}</span>
+            <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-zinc-700 dark:text-[#71717a]">Test run history</p>
+            <span className="text-[10px] font-mono text-[#3f3f46] border border-zinc-200 dark:border-[#27272a] rounded-full px-2 py-0.5">{testRuns.length}</span>
             {testRuns.length > 0 && (
               <>
                 <span className="text-[10px] font-mono text-[#4ade80]">{passCount}✓</span>
@@ -293,13 +293,13 @@ export function QualityLabPanel({
           </button>
           {testRuns.length > 0 && (
             <div className="flex items-center gap-3">
-              <button type="button" onClick={handleExportRuns} className="text-[11px] text-[#71717a] hover:text-[#f5f5f5] transition-colors">↓ Export</button>
+              <button type="button" onClick={handleExportRuns} className="text-[11px] text-zinc-700 dark:text-[#71717a] hover:text-zinc-900 dark:text-[#f5f5f5] transition-colors">↓ Export</button>
               <button type="button" onClick={onClearTestRuns} className="text-[11px] text-[#3f3f46] hover:text-rose-400 transition-colors">Clear all</button>
             </div>
           )}
         </div>
         {historyOpen && (
-          <div className="border-t border-[#1c1c1e]">
+          <div className="border-t border-zinc-200 dark:border-[#1c1c1e]">
             {testRuns.length === 0 ? (
               <p className="px-5 py-4 text-xs text-[#3f3f46]">No test runs yet. Select a test case above and click Run test.</p>
             ) : (
@@ -307,7 +307,7 @@ export function QualityLabPanel({
                 <TestRunResult key={run.id} run={run} onDelete={onDeleteTestRun} onUpdateNote={onUpdateTestRunNote} />
               ))
             )}
-            <p className="px-5 py-2 text-[10px] text-[#3f3f46] border-t border-[#1c1c1e]">localStorage only — max 20 runs. Not saved to backend.</p>
+            <p className="px-5 py-2 text-[10px] text-[#3f3f46] border-t border-zinc-200 dark:border-[#1c1c1e]">localStorage only — max 20 runs. Not saved to backend.</p>
           </div>
         )}
       </div>

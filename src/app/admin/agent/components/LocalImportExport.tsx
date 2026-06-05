@@ -61,7 +61,7 @@ export function LocalImportExport({
   }
 
   return (
-    <div className="px-5 py-3 border-t border-[#1c1c1e] space-y-2">
+    <div className="px-5 py-3 border-t border-zinc-200 dark:border-[#1c1c1e] space-y-2">
       <p className="text-[10px] text-[#3f3f46]">
         Local history is stored only in this browser. Clearing browser data removes it. Not shared with other admins. Not saved to the 2KO backend. Export a backup before clearing browser data or switching devices.
       </p>
@@ -71,11 +71,11 @@ export function LocalImportExport({
         type="button"
         onClick={handleExport}
         disabled={items.length === 0}
-        className="text-[11px] text-[#71717a] hover:text-[#f5f5f5] transition-colors border border-[#27272a] hover:border-[#3f3f46] rounded-full px-3 py-1 disabled:opacity-30 disabled:cursor-not-allowed"
+        className="text-[11px] text-zinc-700 dark:text-[#71717a] hover:text-zinc-900 dark:text-[#f5f5f5] transition-colors border border-zinc-200 dark:border-[#27272a] hover:border-[#3f3f46] rounded-full px-3 py-1 disabled:opacity-30 disabled:cursor-not-allowed"
       >
         ↓ Export history
       </button>
-      <label className="text-[11px] text-[#71717a] hover:text-[#f5f5f5] transition-colors border border-[#27272a] hover:border-[#3f3f46] rounded-full px-3 py-1 cursor-pointer">
+      <label className="text-[11px] text-zinc-700 dark:text-[#71717a] hover:text-zinc-900 dark:text-[#f5f5f5] transition-colors border border-zinc-200 dark:border-[#27272a] hover:border-[#3f3f46] rounded-full px-3 py-1 cursor-pointer">
         ↑ Import
         <input
           ref={fileRef}
@@ -95,13 +95,13 @@ export function LocalImportExport({
 
       {pendingItems && (
         <div className="w-full flex items-center gap-3 mt-1">
-          <span className="text-[11px] text-[#a1a1aa]">
+          <span className="text-[11px] text-zinc-700 dark:text-[#a1a1aa]">
             Found {pendingItems.length} item{pendingItems.length !== 1 ? 's' : ''} —
           </span>
           <button
             type="button"
             onClick={() => handleImport('merge')}
-            className="text-[11px] text-[#71717a] hover:text-[#f5f5f5] border border-[#27272a] rounded-full px-3 py-1 transition-colors"
+            className="text-[11px] text-zinc-700 dark:text-[#71717a] hover:text-zinc-900 dark:text-[#f5f5f5] border border-zinc-200 dark:border-[#27272a] rounded-full px-3 py-1 transition-colors"
           >
             Merge with existing
           </button>
@@ -115,7 +115,7 @@ export function LocalImportExport({
           <button
             type="button"
             onClick={() => setPendingItems(null)}
-            className="text-[11px] text-[#3f3f46] hover:text-[#71717a] transition-colors"
+            className="text-[11px] text-[#3f3f46] hover:text-zinc-700 dark:text-[#71717a] transition-colors"
           >
             Cancel
           </button>

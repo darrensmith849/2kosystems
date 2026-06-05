@@ -71,11 +71,11 @@ export function InternalNotesCard({
       {notes.suggestedDiscoveryAngle && (
         <>
           <p className="text-[10px] font-mono text-[#3f3f46] mb-1">Discovery angle</p>
-          <p className="text-xs text-[#a1a1aa] mb-4">{notes.suggestedDiscoveryAngle}</p>
+          <p className="text-xs text-zinc-700 dark:text-[#a1a1aa] mb-4">{notes.suggestedDiscoveryAngle}</p>
         </>
       )}
       <p className="text-[10px] font-mono text-[#3f3f46] mb-1">Next action</p>
-      <p className="text-xs text-[#f5f5f5]">{notes.recommendedNextAction}</p>
+      <p className="text-xs text-zinc-900 dark:text-[#f5f5f5]">{notes.recommendedNextAction}</p>
     </AdminCard>
   );
 }

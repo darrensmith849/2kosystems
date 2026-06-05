@@ -20,7 +20,7 @@ const ACCENT_TITLE: Record<Accent, string> = {
   emerald: 'text-emerald-300 hover:text-emerald-200',
   amber: 'text-amber-300 hover:text-amber-200',
   sky: 'text-sky-300 hover:text-sky-200',
-  neutral: 'text-[#f5f5f5] hover:text-white',
+  neutral: 'text-zinc-900 dark:text-[#f5f5f5] hover:text-white',
 };
 
 export default function QuickActionTile({
@@ -43,7 +43,7 @@ export default function QuickActionTile({
         >
           {title}
         </Link>
-        <p className="mt-2 text-xs text-[#a1a1aa] leading-relaxed">{description}</p>
+        <p className="mt-2 text-xs text-zinc-700 dark:text-[#a1a1aa] leading-relaxed">{description}</p>
       </AdminCard>
     </div>
   );

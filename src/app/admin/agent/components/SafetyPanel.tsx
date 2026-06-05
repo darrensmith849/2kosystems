@@ -14,8 +14,8 @@ function SafetyField({
 }) {
   const ok = value === expected;
   return (
-    <div className={`rounded-lg border ${ok ? 'border-[#27272a]' : 'border-rose-500/40'} p-2`}>
-      <p className="text-[10px] text-[#71717a] mb-0.5 font-mono">{label}</p>
+    <div className={`rounded-lg border ${ok ? 'border-zinc-200 dark:border-[#27272a]' : 'border-rose-500/40'} p-2`}>
+      <p className="text-[10px] text-zinc-700 dark:text-[#71717a] mb-0.5 font-mono">{label}</p>
       <p className={`text-xs font-mono ${ok ? 'text-[#4ade80]' : 'text-rose-400'}`}>{value}</p>
     </div>
   );
@@ -54,7 +54,7 @@ export function SafetyPanel({ safety }: { safety: AgentOutput['safety'] }) {
 
   return (
     <div className="rounded-2xl border border-[#1c4a2e] bg-[#0d1a11] p-5">
-      <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a] mb-3">
+      <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-zinc-700 dark:text-[#71717a] mb-3">
         Safety status
       </p>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
@@ -68,15 +68,15 @@ export function SafetyPanel({ safety }: { safety: AgentOutput['safety'] }) {
             key={label}
             className="rounded-xl border border-[#1c4a2e] bg-[#0a1410] p-3 text-center"
           >
-            <p className="text-[10px] font-mono text-[#71717a] mb-1">{label}</p>
+            <p className="text-[10px] font-mono text-zinc-700 dark:text-[#71717a] mb-1">{label}</p>
             <p className="text-sm font-semibold text-[#4ade80]">{value}</p>
           </div>
         ))}
       </div>
-      <div className="pt-3 border-t border-[#1c1c1e] grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div className="pt-3 border-t border-zinc-200 dark:border-[#1c1c1e] grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
           <p className="text-[10px] font-mono text-[#3f3f46] mb-1">What the agent did</p>
-          <p className="text-xs text-[#71717a]">{safety.whatAgentDid}</p>
+          <p className="text-xs text-zinc-700 dark:text-[#71717a]">{safety.whatAgentDid}</p>
         </div>
         <div>
           <p className="text-[10px] font-mono text-[#3f3f46] mb-1">What the agent did not do</p>
