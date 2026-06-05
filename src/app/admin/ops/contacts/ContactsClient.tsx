@@ -321,12 +321,12 @@ export default function ContactsClient({
       <AdminCard
         title="Required roles by area"
         action={
-          <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-zinc-500 dark:text-[#71717a]">
+          <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-zinc-700 dark:text-[#71717a]">
             {CONTACT_ROLES_REQUIRED.length - missingRoles.length}/{CONTACT_ROLES_REQUIRED.length} covered
           </span>
         }
       >
-        <p className="mb-3 text-xs text-zinc-600 dark:text-[#a1a1aa] leading-relaxed">
+        <p className="mb-3 text-xs text-zinc-700 dark:text-[#a1a1aa] leading-relaxed">
           Each row shows whether at least one placeholder or local draft exists for that role.
           A "covered" row only means the role is represented in this preview — not that real
           personal details have been entered.
@@ -352,7 +352,7 @@ export default function ContactsClient({
                 <span className="flex-1 text-sm text-zinc-800 dark:text-[#e4e4e7]">
                   {CONTACT_ROLE_LABEL_LOCAL[role]}
                 </span>
-                <span className="font-mono text-[10px] text-zinc-500 dark:text-[#71717a]">
+                <span className="font-mono text-[10px] text-zinc-700 dark:text-[#71717a]">
                   {c.snapshot} placeholder{c.snapshot === 1 ? '' : 's'}
                   {hydrated && c.drafts > 0 ? ` · ${c.drafts} draft${c.drafts === 1 ? '' : 's'}` : ''}
                 </span>
@@ -365,7 +365,7 @@ export default function ContactsClient({
       {/* Missing-contact list */}
       <AdminCard title="Missing contact roles">
         {missingRoles.length === 0 ? (
-          <p className="text-xs text-zinc-500 dark:text-[#71717a]">
+          <p className="text-xs text-zinc-700 dark:text-[#71717a]">
             All required roles have at least one placeholder or local draft.
           </p>
         ) : (
@@ -388,7 +388,7 @@ export default function ContactsClient({
         title="Local contact drafts"
         action={
           <div className="flex flex-wrap items-center gap-2">
-            <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-zinc-500 dark:text-[#71717a]">
+            <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-zinc-700 dark:text-[#71717a]">
               {hydrated ? `${drafts.length} saved` : 'loading…'}
             </span>
           </div>
@@ -442,7 +442,7 @@ export default function ContactsClient({
                   <button
                     type="button"
                     onClick={() => setConfirmClear(false)}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 dark:border-[#27272a] bg-zinc-50 dark:bg-[#0e0e10] px-3 py-1.5 text-xs text-zinc-600 dark:text-[#a1a1aa] hover:border-[#3f3f46] transition-colors"
+                    className="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 dark:border-[#27272a] bg-zinc-50 dark:bg-[#0e0e10] px-3 py-1.5 text-xs text-zinc-700 dark:text-[#a1a1aa] hover:border-[#3f3f46] transition-colors"
                   >
                     <IconX />
                     Cancel
@@ -452,7 +452,7 @@ export default function ContactsClient({
                 <button
                   type="button"
                   onClick={() => setConfirmClear(true)}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 dark:border-[#27272a] bg-zinc-50 dark:bg-[#0e0e10] px-3 py-1.5 text-xs text-zinc-600 dark:text-[#a1a1aa] hover:border-rose-400/40 hover:text-rose-200 transition-colors"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 dark:border-[#27272a] bg-zinc-50 dark:bg-[#0e0e10] px-3 py-1.5 text-xs text-zinc-700 dark:text-[#a1a1aa] hover:border-rose-400/40 hover:text-rose-200 transition-colors"
                 >
                   <IconTrash />
                   Clear all
@@ -474,7 +474,7 @@ export default function ContactsClient({
 
         {/* List */}
         {hydrated && drafts.length === 0 && !showForm && (
-          <p className="text-xs text-zinc-500 dark:text-[#71717a]">
+          <p className="text-xs text-zinc-700 dark:text-[#71717a]">
             No drafts yet. Click "Add draft contact" to capture a placeholder for review.
           </p>
         )}
@@ -502,31 +502,31 @@ export default function ContactsClient({
                     }
                   />
                 </div>
-                <p className="text-xs text-zinc-600 dark:text-[#a1a1aa]">
+                <p className="text-xs text-zinc-700 dark:text-[#a1a1aa]">
                   {d.organisation || '—'}
                 </p>
                 {(d.email || d.phone) && (
-                  <p className="mt-1 font-mono text-[11px] text-zinc-600 dark:text-[#a1a1aa]">
+                  <p className="mt-1 font-mono text-[11px] text-zinc-700 dark:text-[#a1a1aa]">
                     {d.email ?? ''}
                     {d.email && d.phone ? ' · ' : ''}
                     {d.phone ?? ''}
                   </p>
                 )}
                 {(d.linkedClient || d.linkedAsset) && (
-                  <p className="mt-1 text-[11px] text-zinc-500 dark:text-[#71717a]">
+                  <p className="mt-1 text-[11px] text-zinc-700 dark:text-[#71717a]">
                     {d.linkedClient && <>Client: {d.linkedClient}</>}
                     {d.linkedClient && d.linkedAsset ? ' · ' : ''}
                     {d.linkedAsset && <>Asset: {d.linkedAsset}</>}
                   </p>
                 )}
                 {d.notes && (
-                  <p className="mt-1.5 text-xs text-zinc-600 dark:text-[#a1a1aa] leading-relaxed">{d.notes}</p>
+                  <p className="mt-1.5 text-xs text-zinc-700 dark:text-[#a1a1aa] leading-relaxed">{d.notes}</p>
                 )}
                 <div className="mt-2 flex flex-wrap gap-2">
                   <button
                     type="button"
                     onClick={() => handleStartEdit(d)}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 dark:border-[#27272a] bg-zinc-50 dark:bg-[#0e0e10] px-2.5 py-1 text-[11px] text-zinc-600 dark:text-[#a1a1aa] hover:border-emerald-400/40 hover:text-emerald-200 transition-colors"
+                    className="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 dark:border-[#27272a] bg-zinc-50 dark:bg-[#0e0e10] px-2.5 py-1 text-[11px] text-zinc-700 dark:text-[#a1a1aa] hover:border-emerald-400/40 hover:text-emerald-200 transition-colors"
                   >
                     <IconEdit />
                     Edit
@@ -534,7 +534,7 @@ export default function ContactsClient({
                   <button
                     type="button"
                     onClick={() => handleDelete(d.id)}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 dark:border-[#27272a] bg-zinc-50 dark:bg-[#0e0e10] px-2.5 py-1 text-[11px] text-zinc-600 dark:text-[#a1a1aa] hover:border-rose-400/40 hover:text-rose-200 transition-colors"
+                    className="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 dark:border-[#27272a] bg-zinc-50 dark:bg-[#0e0e10] px-2.5 py-1 text-[11px] text-zinc-700 dark:text-[#a1a1aa] hover:border-rose-400/40 hover:text-rose-200 transition-colors"
                   >
                     <IconTrash />
                     Delete
@@ -567,7 +567,7 @@ function DraftForm({
   const canSave = form.name.trim().length > 0 || form.organisation.trim().length > 0;
   return (
     <div className="mb-4 rounded-xl border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#0a0a0b] p-4 space-y-3">
-      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-zinc-500 dark:text-[#71717a]">
+      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-zinc-700 dark:text-[#71717a]">
         {isEditing ? 'Edit draft' : 'New draft'}
       </p>
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
@@ -577,7 +577,7 @@ function DraftForm({
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
             placeholder="e.g. Internal billing, Acme client owner"
-            className="w-full rounded-md border border-zinc-200 dark:border-[#27272a] bg-zinc-50 dark:bg-[#0e0e10] px-2.5 py-1.5 text-xs text-zinc-900 dark:text-[#f5f5f5] placeholder:text-zinc-500 dark:text-[#52525b] focus:border-emerald-400/40 focus:outline-none"
+            className="w-full rounded-md border border-zinc-200 dark:border-[#27272a] bg-zinc-50 dark:bg-[#0e0e10] px-2.5 py-1.5 text-xs text-zinc-900 dark:text-[#f5f5f5] placeholder:text-zinc-600 dark:text-[#52525b] focus:border-emerald-400/40 focus:outline-none"
           />
         </Field>
         <Field label="Organisation">
@@ -586,7 +586,7 @@ function DraftForm({
             value={form.organisation}
             onChange={(e) => setForm({ ...form, organisation: e.target.value })}
             placeholder="e.g. 2KO Systems, Acme Ltd"
-            className="w-full rounded-md border border-zinc-200 dark:border-[#27272a] bg-zinc-50 dark:bg-[#0e0e10] px-2.5 py-1.5 text-xs text-zinc-900 dark:text-[#f5f5f5] placeholder:text-zinc-500 dark:text-[#52525b] focus:border-emerald-400/40 focus:outline-none"
+            className="w-full rounded-md border border-zinc-200 dark:border-[#27272a] bg-zinc-50 dark:bg-[#0e0e10] px-2.5 py-1.5 text-xs text-zinc-900 dark:text-[#f5f5f5] placeholder:text-zinc-600 dark:text-[#52525b] focus:border-emerald-400/40 focus:outline-none"
           />
         </Field>
         <Field label="Role">
@@ -621,7 +621,7 @@ function DraftForm({
             value={form.email}
             onChange={(e) => setForm({ ...form, email: e.target.value })}
             placeholder="optional"
-            className="w-full rounded-md border border-zinc-200 dark:border-[#27272a] bg-zinc-50 dark:bg-[#0e0e10] px-2.5 py-1.5 text-xs text-zinc-900 dark:text-[#f5f5f5] placeholder:text-zinc-500 dark:text-[#52525b] focus:border-emerald-400/40 focus:outline-none"
+            className="w-full rounded-md border border-zinc-200 dark:border-[#27272a] bg-zinc-50 dark:bg-[#0e0e10] px-2.5 py-1.5 text-xs text-zinc-900 dark:text-[#f5f5f5] placeholder:text-zinc-600 dark:text-[#52525b] focus:border-emerald-400/40 focus:outline-none"
           />
         </Field>
         <Field label="Phone (optional)">
@@ -630,7 +630,7 @@ function DraftForm({
             value={form.phone}
             onChange={(e) => setForm({ ...form, phone: e.target.value })}
             placeholder="optional"
-            className="w-full rounded-md border border-zinc-200 dark:border-[#27272a] bg-zinc-50 dark:bg-[#0e0e10] px-2.5 py-1.5 text-xs text-zinc-900 dark:text-[#f5f5f5] placeholder:text-zinc-500 dark:text-[#52525b] focus:border-emerald-400/40 focus:outline-none"
+            className="w-full rounded-md border border-zinc-200 dark:border-[#27272a] bg-zinc-50 dark:bg-[#0e0e10] px-2.5 py-1.5 text-xs text-zinc-900 dark:text-[#f5f5f5] placeholder:text-zinc-600 dark:text-[#52525b] focus:border-emerald-400/40 focus:outline-none"
           />
         </Field>
         <Field label="Linked client">
@@ -639,7 +639,7 @@ function DraftForm({
             value={form.linkedClient}
             onChange={(e) => setForm({ ...form, linkedClient: e.target.value })}
             placeholder="e.g. Impart Agency"
-            className="w-full rounded-md border border-zinc-200 dark:border-[#27272a] bg-zinc-50 dark:bg-[#0e0e10] px-2.5 py-1.5 text-xs text-zinc-900 dark:text-[#f5f5f5] placeholder:text-zinc-500 dark:text-[#52525b] focus:border-emerald-400/40 focus:outline-none"
+            className="w-full rounded-md border border-zinc-200 dark:border-[#27272a] bg-zinc-50 dark:bg-[#0e0e10] px-2.5 py-1.5 text-xs text-zinc-900 dark:text-[#f5f5f5] placeholder:text-zinc-600 dark:text-[#52525b] focus:border-emerald-400/40 focus:outline-none"
           />
         </Field>
         <Field label="Linked asset">
@@ -648,7 +648,7 @@ function DraftForm({
             value={form.linkedAsset}
             onChange={(e) => setForm({ ...form, linkedAsset: e.target.value })}
             placeholder="e.g. ma130-apps"
-            className="w-full rounded-md border border-zinc-200 dark:border-[#27272a] bg-zinc-50 dark:bg-[#0e0e10] px-2.5 py-1.5 text-xs text-zinc-900 dark:text-[#f5f5f5] placeholder:text-zinc-500 dark:text-[#52525b] focus:border-emerald-400/40 focus:outline-none"
+            className="w-full rounded-md border border-zinc-200 dark:border-[#27272a] bg-zinc-50 dark:bg-[#0e0e10] px-2.5 py-1.5 text-xs text-zinc-900 dark:text-[#f5f5f5] placeholder:text-zinc-600 dark:text-[#52525b] focus:border-emerald-400/40 focus:outline-none"
           />
         </Field>
       </div>
@@ -658,10 +658,10 @@ function DraftForm({
           onChange={(e) => setForm({ ...form, notes: e.target.value })}
           placeholder="Why this contact matters, what to confirm, etc."
           rows={3}
-          className="w-full rounded-md border border-zinc-200 dark:border-[#27272a] bg-zinc-50 dark:bg-[#0e0e10] px-2.5 py-1.5 text-xs text-zinc-900 dark:text-[#f5f5f5] placeholder:text-zinc-500 dark:text-[#52525b] focus:border-emerald-400/40 focus:outline-none"
+          className="w-full rounded-md border border-zinc-200 dark:border-[#27272a] bg-zinc-50 dark:bg-[#0e0e10] px-2.5 py-1.5 text-xs text-zinc-900 dark:text-[#f5f5f5] placeholder:text-zinc-600 dark:text-[#52525b] focus:border-emerald-400/40 focus:outline-none"
         />
       </Field>
-      <p className="text-[11px] text-zinc-500 dark:text-[#71717a]">
+      <p className="text-[11px] text-zinc-700 dark:text-[#71717a]">
         Avoid entering real personal email addresses or phone numbers here unless you intend to
         export and hand them off — drafts live only in this browser.
       </p>
@@ -678,7 +678,7 @@ function DraftForm({
         <button
           type="button"
           onClick={onCancel}
-          className="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 dark:border-[#27272a] bg-zinc-50 dark:bg-[#0e0e10] px-3 py-1.5 text-xs text-zinc-600 dark:text-[#a1a1aa] hover:border-[#3f3f46] transition-colors"
+          className="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 dark:border-[#27272a] bg-zinc-50 dark:bg-[#0e0e10] px-3 py-1.5 text-xs text-zinc-700 dark:text-[#a1a1aa] hover:border-[#3f3f46] transition-colors"
         >
           <IconX />
           Cancel
@@ -691,7 +691,7 @@ function DraftForm({
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="block">
-      <span className="mb-1 block font-mono text-[10px] uppercase tracking-[0.15em] text-zinc-500 dark:text-[#71717a]">
+      <span className="mb-1 block font-mono text-[10px] uppercase tracking-[0.15em] text-zinc-700 dark:text-[#71717a]">
         {label}
       </span>
       {children}

@@ -265,7 +265,7 @@ function SummaryTile({ label, value, tone }: { label: string; value: number; ton
             : 'border-white/[0.06] bg-white/[0.02]';
   return (
     <div className={`rounded-2xl border p-4 ${ring}`}>
-      <p className="mb-2 text-[11px] font-medium text-zinc-500">
+      <p className="mb-2 text-[11px] font-medium text-zinc-700 dark:text-zinc-500">
         {label}
       </p>
       <p className="text-2xl font-semibold text-zinc-900 dark:text-white">{value}</p>
@@ -288,7 +288,7 @@ function ChipRow<T extends string>({
 }) {
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <span className="text-[11px] font-medium text-zinc-500 inline-flex items-center gap-1">
+      <span className="text-[11px] font-medium text-zinc-700 dark:text-zinc-500 inline-flex items-center gap-1">
         <IconFilter />
         {label}
       </span>
@@ -399,7 +399,7 @@ export default function ServicesClient({ services }: { services: ServicesClientS
       <AdminCard
         title="Export current view"
         action={
-          <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-zinc-500 dark:text-[#71717a]">
+          <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-zinc-700 dark:text-[#71717a]">
             {filtered.length} services
           </span>
         }
@@ -422,7 +422,7 @@ export default function ServicesClient({ services }: { services: ServicesClientS
             Export Markdown
           </button>
         </div>
-        <p className="mt-2 text-[11px] text-zinc-500 dark:text-[#71717a] leading-relaxed">
+        <p className="mt-2 text-[11px] text-zinc-700 dark:text-[#71717a] leading-relaxed">
           Exports the services currently matching the filters above. No credentials or provider
           API keys are included — labels only.
         </p>
@@ -431,11 +431,11 @@ export default function ServicesClient({ services }: { services: ServicesClientS
       {/* Filtered services tiles */}
       {filtered.length === 0 ? (
         <AdminCard title="Filtered services">
-          <p className="text-xs text-zinc-500 dark:text-[#71717a]">No services match the current filters.</p>
+          <p className="text-xs text-zinc-700 dark:text-[#71717a]">No services match the current filters.</p>
         </AdminCard>
       ) : (
         <div className="space-y-3">
-          <p className="text-[11px] font-medium text-zinc-500">
+          <p className="text-[11px] font-medium text-zinc-700 dark:text-zinc-500">
             {filtered.length} service{filtered.length === 1 ? '' : 's'}
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">

@@ -174,7 +174,7 @@ function Chip({
         'rounded-full border px-2.5 py-0.5 text-[11px] font-mono transition-colors ' +
         (active
           ? 'border-emerald-400/40 bg-emerald-400/10 text-emerald-300'
-          : 'border-zinc-200 dark:border-[#27272a] text-zinc-600 dark:text-[#a1a1aa] hover:border-[#3f3f46] hover:text-zinc-900 dark:text-[#f5f5f5]')
+          : 'border-zinc-200 dark:border-[#27272a] text-zinc-700 dark:text-[#a1a1aa] hover:border-[#3f3f46] hover:text-zinc-900 dark:text-[#f5f5f5]')
       }
     >
       {children}
@@ -199,11 +199,11 @@ function BadgeGroup({
 }) {
   return (
     <div className="space-y-1.5">
-      <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-zinc-500 dark:text-[#71717a]">
+      <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-zinc-700 dark:text-[#71717a]">
         {label} ({items.length})
       </p>
       {items.length === 0 ? (
-        <p className="text-[11px] text-zinc-500 dark:text-[#52525b] font-mono">{emptyLabel}</p>
+        <p className="text-[11px] text-zinc-600 dark:text-[#52525b] font-mono">{emptyLabel}</p>
       ) : (
         <div className="flex flex-wrap gap-1.5">
           {items.map((it) => (
@@ -265,7 +265,7 @@ function ClientLineageCard({
             {c.url && (
               <Link
                 href={c.url}
-                className="ml-2 text-[10px] font-mono text-zinc-500 dark:text-[#52525b] hover:text-emerald-300"
+                className="ml-2 text-[10px] font-mono text-zinc-600 dark:text-[#52525b] hover:text-emerald-300"
               >
                 open
               </Link>
@@ -321,21 +321,21 @@ function AssetDetail({
           ) : (
             <p className="text-sm font-medium text-zinc-900 dark:text-[#f5f5f5]">{asset.title}</p>
           )}
-          <p className="mt-0.5 text-[11px] font-mono text-zinc-500 dark:text-[#71717a]">
+          <p className="mt-0.5 text-[11px] font-mono text-zinc-700 dark:text-[#71717a]">
             {asset.type}
             {asset.subtitle ? ` · ${asset.subtitle}` : ''}
             {asset.status ? ` · ${asset.status}` : ''}
           </p>
         </div>
         <div className="space-y-0">
-          <Row label="Body" value={<span className="text-xs text-zinc-600 dark:text-[#a1a1aa]">{asset.body}</span>} />
+          <Row label="Body" value={<span className="text-xs text-zinc-700 dark:text-[#a1a1aa]">{asset.body}</span>} />
           {asset.tags.length > 0 && (
             <Row
               label="Tags"
               value={
                 <div className="flex flex-wrap gap-1">
                   {asset.tags.slice(0, 12).map((t) => (
-                    <span key={t} className="text-[10px] font-mono text-zinc-500 dark:text-[#71717a] border border-zinc-200 dark:border-[#27272a] rounded-full px-1.5 py-0.5">
+                    <span key={t} className="text-[10px] font-mono text-zinc-700 dark:text-[#71717a] border border-zinc-200 dark:border-[#27272a] rounded-full px-1.5 py-0.5">
                       {t}
                     </span>
                   ))}
@@ -346,7 +346,7 @@ function AssetDetail({
         </div>
         {lineage && (
           <div className="space-y-3 border-t border-zinc-200 dark:border-[#1c1c1e] pt-3">
-            <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-zinc-500 dark:text-[#71717a]">
+            <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-zinc-700 dark:text-[#71717a]">
               Linked through {lineage.client.title}
             </p>
             <BadgeGroup label="Repos" items={lineage.repos} tone="neutral" onPick={onPickItem} />
@@ -374,7 +374,7 @@ function ClientDetail({ lineage }: { lineage: ClientLineage }) {
         ) : (
           <p className="text-sm font-medium text-zinc-900 dark:text-[#f5f5f5]">{c.title}</p>
         )}
-        <p className="text-[11px] font-mono text-zinc-500 dark:text-[#71717a]">
+        <p className="text-[11px] font-mono text-zinc-700 dark:text-[#71717a]">
           {c.subtitle ?? 'client'}
           {c.status ? ` · ${c.status}` : ''}
         </p>
@@ -389,7 +389,7 @@ function ClientDetail({ lineage }: { lineage: ClientLineage }) {
           <Row label="Renewals" value={<span className="text-xs text-zinc-800 dark:text-[#e4e4e7]">{lineage.renewals.length}</span>} />
           <Row label="Incidents" value={<span className="text-xs text-zinc-800 dark:text-[#e4e4e7]">{lineage.incidents.length}</span>} />
         </div>
-        {c.body && <p className="pt-2 text-xs text-zinc-600 dark:text-[#a1a1aa] leading-relaxed">{c.body}</p>}
+        {c.body && <p className="pt-2 text-xs text-zinc-700 dark:text-[#a1a1aa] leading-relaxed">{c.body}</p>}
       </div>
     </AdminCard>
   );
@@ -569,7 +569,7 @@ export default function MapClient({ initialItems }: { initialItems: IndexItem[] 
               setSelectedClientId(null);
               setSelectedAssetId(null);
             }}
-            className="w-full rounded-full border border-zinc-200 dark:border-[#27272a] hover:border-[#3f3f46] px-3 py-1.5 text-[11px] font-mono text-zinc-500 dark:text-[#71717a] hover:text-zinc-900 dark:text-[#f5f5f5] transition-colors"
+            className="w-full rounded-full border border-zinc-200 dark:border-[#27272a] hover:border-[#3f3f46] px-3 py-1.5 text-[11px] font-mono text-zinc-700 dark:text-[#71717a] hover:text-zinc-900 dark:text-[#f5f5f5] transition-colors"
           >
             Reset all
           </button>

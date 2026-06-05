@@ -73,7 +73,7 @@ export default function AuditsClient({ findings, isSnapshot = false }: { finding
           </button>
         }
       >
-        <p className="text-xs text-zinc-500 dark:text-[#71717a]">
+        <p className="text-xs text-zinc-700 dark:text-[#71717a]">
           Seeds the ~10 known operational issues from infra-handover/HISTORY.md (sixsigma2026 on Vercel, stranded xneelo zones,
           ma130-apps disk risk, duplicate repo clusters, etc.). Idempotent — running twice does nothing.
         </p>
@@ -92,7 +92,7 @@ export default function AuditsClient({ findings, isSnapshot = false }: { finding
               <div className="flex items-start justify-between gap-3 mb-2">
                 <div className="flex-1">
                   <p className="text-sm text-zinc-900 dark:text-[#f5f5f5] font-medium">{f.title}</p>
-                  {f.detail && <p className="mt-1 text-xs text-zinc-600 dark:text-[#a1a1aa] leading-relaxed">{f.detail}</p>}
+                  {f.detail && <p className="mt-1 text-xs text-zinc-700 dark:text-[#a1a1aa] leading-relaxed">{f.detail}</p>}
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
                   <Badge text={f.severity} tone={SEVERITY_TONES[f.severity] ?? 'neutral'} />
@@ -100,7 +100,7 @@ export default function AuditsClient({ findings, isSnapshot = false }: { finding
                 </div>
               </div>
               <div className="flex items-center justify-between mt-3">
-                <p className="text-[11px] font-mono text-zinc-500 dark:text-[#52525b]">
+                <p className="text-[11px] font-mono text-zinc-600 dark:text-[#52525b]">
                   {f.kind} · {f.entityType ?? '—'} · {f.entityRef ?? '—'}
                 </p>
                 <div className="flex items-center gap-1">
@@ -109,7 +109,7 @@ export default function AuditsClient({ findings, isSnapshot = false }: { finding
                       type="button"
                       onClick={() => setStatus(f.id, 'open')}
                       disabled={busy === f.id || isSnapshot}
-                      className="text-[11px] text-zinc-500 dark:text-[#71717a] hover:text-zinc-900 dark:text-[#f5f5f5] border border-zinc-200 dark:border-[#27272a] hover:border-[#3f3f46] rounded-full px-3 py-1"
+                      className="text-[11px] text-zinc-700 dark:text-[#71717a] hover:text-zinc-900 dark:text-[#f5f5f5] border border-zinc-200 dark:border-[#27272a] hover:border-[#3f3f46] rounded-full px-3 py-1"
                     >
                       Reopen
                     </button>
@@ -138,7 +138,7 @@ export default function AuditsClient({ findings, isSnapshot = false }: { finding
                         type="button"
                         onClick={() => setStatus(f.id, 'wontfix')}
                         disabled={busy === f.id || isSnapshot}
-                        className="text-[11px] text-zinc-500 dark:text-[#71717a] hover:text-zinc-900 dark:text-[#f5f5f5] border border-zinc-200 dark:border-[#27272a] hover:border-[#3f3f46] rounded-full px-3 py-1"
+                        className="text-[11px] text-zinc-700 dark:text-[#71717a] hover:text-zinc-900 dark:text-[#f5f5f5] border border-zinc-200 dark:border-[#27272a] hover:border-[#3f3f46] rounded-full px-3 py-1"
                       >
                         Won&apos;t fix
                       </button>

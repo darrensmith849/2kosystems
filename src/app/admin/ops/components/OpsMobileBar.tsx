@@ -109,7 +109,7 @@ export default function OpsMobileBar({ operatorSlug }: { operatorSlug: string })
           <div className="flex-1 min-h-0 overflow-y-auto px-3 py-3 space-y-4">
             {/* Admin consoles — always visible at top so cross-console jump is one tap. */}
             <div className="pb-3 border-b border-zinc-200 dark:border-white/[0.06]">
-              <p className="px-1 mb-1 text-[11px] font-medium text-zinc-500">
+              <p className="px-1 mb-1 text-[11px] font-medium text-zinc-700 dark:text-zinc-500">
                 {OPS_NAV_GROUPS[0].title}
               </p>
               <ul className="space-y-0.5">
@@ -142,7 +142,7 @@ export default function OpsMobileBar({ operatorSlug }: { operatorSlug: string })
                         {isExternalConsole && (
                           <span
                             aria-hidden="true"
-                            className="text-[10px] text-zinc-500"
+                            className="text-[10px] text-zinc-700 dark:text-zinc-500"
                           >
                             →
                           </span>
@@ -156,7 +156,7 @@ export default function OpsMobileBar({ operatorSlug }: { operatorSlug: string })
 
             {/* Pinned grid — top destinations as a 2-column tap grid. */}
             <div>
-              <p className="px-1 mb-1.5 text-[11px] font-medium text-zinc-500">
+              <p className="px-1 mb-1.5 text-[11px] font-medium text-zinc-700 dark:text-zinc-500">
                 Pinned
               </p>
               <div className="grid grid-cols-2 gap-1.5">
@@ -197,7 +197,7 @@ export default function OpsMobileBar({ operatorSlug }: { operatorSlug: string })
                 type="button"
                 aria-expanded={moreOpen}
                 onClick={() => setMoreOpen((v) => !v)}
-                className="w-full flex items-center justify-between px-1 mb-1.5 text-[11px] font-medium text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
+                className="w-full flex items-center justify-between px-1 mb-1.5 text-[11px] font-medium text-zinc-700 dark:text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
               >
                 <span>All sections</span>
                 <span
@@ -218,7 +218,7 @@ export default function OpsMobileBar({ operatorSlug }: { operatorSlug: string })
                     if (itemsToShow.length === 0) return null;
                     return (
                       <div key={group.title}>
-                        <p className="px-1 mb-1 text-[11px] font-medium text-zinc-500">
+                        <p className="px-1 mb-1 text-[11px] font-medium text-zinc-700 dark:text-zinc-500">
                           {group.title}
                         </p>
                         <ul className="space-y-0.5">

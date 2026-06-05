@@ -41,14 +41,14 @@ export default function OpsLoginGate() {
     <div className="min-h-screen flex items-center justify-center p-6">
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
-          <p className="text-[11px] uppercase tracking-wider text-zinc-500 dark:text-[#71717a] mb-3">
+          <p className="text-[11px] uppercase tracking-wider text-zinc-700 dark:text-[#71717a] mb-3">
             2KO Systems
           </p>
           <h1 className="text-xl font-medium text-zinc-900 dark:text-[#f5f5f5]">Ops Dashboard</h1>
-          <p className="mt-1.5 text-sm text-zinc-500 dark:text-[#71717a]">Internal access only</p>
+          <p className="mt-1.5 text-sm text-zinc-700 dark:text-[#71717a]">Internal access only</p>
         </div>
         <form onSubmit={handleSubmit} className="rounded-2xl border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#111113] p-6">
-          <label className="block text-xs uppercase tracking-wider text-zinc-500 dark:text-[#71717a] mb-2">
+          <label className="block text-xs uppercase tracking-wider text-zinc-700 dark:text-[#71717a] mb-2">
             Admin password
           </label>
           <input

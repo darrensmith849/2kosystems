@@ -84,8 +84,8 @@ export default async function AssetDetailPage({ params }: { params: Promise<{ id
         subtitle={
           <span>
             <Link href="/admin/ops/assets" className="text-emerald-300 hover:underline">← Assets</Link>
-            <span className="ml-2 text-zinc-500 dark:text-[#52525b]">·</span>
-            <span className="ml-2 text-zinc-500 dark:text-[#71717a]">{asset.type}</span>
+            <span className="ml-2 text-zinc-600 dark:text-[#52525b]">·</span>
+            <span className="ml-2 text-zinc-700 dark:text-[#71717a]">{asset.type}</span>
           </span>
         }
       />
@@ -115,7 +115,7 @@ export default async function AssetDetailPage({ params }: { params: Promise<{ id
               <Row label="Division" value={(asset as { division?: { name: string } | null }).division!.name} />
             )}
             {asset.techStack && asset.techStack.length > 0 && (
-              <Row label="Stack" value={<span className="font-mono text-[10px] text-zinc-600 dark:text-[#a1a1aa]">{asset.techStack.join(', ')}</span>} />
+              <Row label="Stack" value={<span className="font-mono text-[10px] text-zinc-700 dark:text-[#a1a1aa]">{asset.techStack.join(', ')}</span>} />
             )}
             {confidence && (
               <Row
@@ -142,7 +142,7 @@ export default async function AssetDetailPage({ params }: { params: Promise<{ id
       {!isSnap && <AssetLinksClient assetId={id} initialLinks={links} />}
       {isSnap && (
         <AdminCard title="Asset linking — read-only in snapshot mode">
-          <p className="text-xs text-zinc-600 dark:text-[#a1a1aa]">Linking to repos / projects / zones / servers / domains activates when <code className="text-emerald-300">DATABASE_URL</code> is set.</p>
+          <p className="text-xs text-zinc-700 dark:text-[#a1a1aa]">Linking to repos / projects / zones / servers / domains activates when <code className="text-emerald-300">DATABASE_URL</code> is set.</p>
         </AdminCard>
       )}
 

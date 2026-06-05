@@ -109,7 +109,7 @@ export default function AssetsClient({
     return (
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <p className="text-xs text-zinc-500">
+          <p className="text-xs text-zinc-700 dark:text-zinc-500">
             {initialAssets.length} {initialAssets.length === 1 ? 'asset' : 'assets'}
           </p>
         </div>
@@ -174,7 +174,7 @@ export default function AssetsClient({
         <EmptyState title="No assets yet" hint="Add assets to start linking clients to the websites, apps, and tools we manage for them." />
       ) : (
         <div className="space-y-3">
-          <p className="text-xs text-zinc-500">
+          <p className="text-xs text-zinc-700 dark:text-zinc-500">
             {initialAssets.length} {initialAssets.length === 1 ? 'asset' : 'assets'}
           </p>
           <AssetGrid assets={initialAssets} />

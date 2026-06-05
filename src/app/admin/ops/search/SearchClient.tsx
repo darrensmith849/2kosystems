@@ -177,7 +177,7 @@ function MultiSelect<T extends string>({
         onClick={() => setOpen((v) => !v)}
         className="flex items-center gap-2 rounded-lg border border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04] px-3 py-2 text-xs text-zinc-900 dark:text-zinc-100 transition-colors min-w-[160px]"
       >
-        <span className="text-xs text-zinc-500">{label}:</span>
+        <span className="text-xs text-zinc-700 dark:text-zinc-500">{label}:</span>
         <span className="text-sm text-zinc-900 dark:text-zinc-100 truncate">{summary}</span>
       </button>
       {open && (
@@ -187,7 +187,7 @@ function MultiSelect<T extends string>({
             <button
               type="button"
               onClick={() => onChange([])}
-              className="block w-full text-left px-2 py-1 text-xs text-zinc-500 hover:text-zinc-100 hover:bg-white/[0.04] rounded"
+              className="block w-full text-left px-2 py-1 text-xs text-zinc-700 dark:text-zinc-500 hover:text-zinc-100 hover:bg-white/[0.04] rounded"
             >
               Clear ({selected.length})
             </button>
@@ -386,7 +386,7 @@ export default function SearchClient({ initialItems }: { initialItems: IndexItem
             />
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs text-zinc-500">
+            <span className="text-xs text-zinc-700 dark:text-zinc-500">
               Try:
             </span>
             {EXAMPLES.map((ex) => (
@@ -443,7 +443,7 @@ export default function SearchClient({ initialItems }: { initialItems: IndexItem
                     onClick={() =>
                       setFilters({ q: '', types: [], sources: [], blockedBy: [] })
                     }
-                    className="rounded-md border border-white/[0.06] hover:bg-white/[0.04] hover:border-white/[0.12] px-3 py-1 text-xs text-zinc-500 hover:text-zinc-100 transition-colors"
+                    className="rounded-md border border-white/[0.06] hover:bg-white/[0.04] hover:border-white/[0.12] px-3 py-1 text-xs text-zinc-700 dark:text-zinc-500 hover:text-zinc-100 transition-colors"
                   >
                     Reset
                   </button>
@@ -459,7 +459,7 @@ export default function SearchClient({ initialItems }: { initialItems: IndexItem
               </div>
               {showSaveDialog && (
                 <div className="mt-3 rounded-lg border border-white/[0.06] bg-white/[0.02] p-3">
-                  <p className="text-xs font-medium text-zinc-500 mb-2">
+                  <p className="text-xs font-medium text-zinc-700 dark:text-zinc-500 mb-2">
                     Save search
                   </p>
                   <div className="flex flex-wrap items-center gap-2">
@@ -492,7 +492,7 @@ export default function SearchClient({ initialItems }: { initialItems: IndexItem
                         setShowSaveDialog(false);
                         setSaveName('');
                       }}
-                      className="rounded-md border border-white/[0.06] hover:bg-white/[0.04] hover:border-white/[0.12] px-3 py-1 text-xs text-zinc-500 hover:text-zinc-100 transition-colors"
+                      className="rounded-md border border-white/[0.06] hover:bg-white/[0.04] hover:border-white/[0.12] px-3 py-1 text-xs text-zinc-700 dark:text-zinc-500 hover:text-zinc-100 transition-colors"
                     >
                       Cancel
                     </button>
@@ -511,14 +511,14 @@ export default function SearchClient({ initialItems }: { initialItems: IndexItem
             <button
               type="button"
               onClick={handleClearAllSaved}
-              className="rounded-md border border-white/[0.06] hover:border-rose-400/40 px-2.5 py-1 text-xs text-zinc-500 hover:text-rose-300 transition-colors"
+              className="rounded-md border border-white/[0.06] hover:border-rose-400/40 px-2.5 py-1 text-xs text-zinc-700 dark:text-zinc-500 hover:text-rose-300 transition-colors"
             >
               Clear all saved
             </button>
           }
         >
           <div className="space-y-2">
-            <p className="text-xs text-zinc-500">
+            <p className="text-xs text-zinc-700 dark:text-zinc-500">
               Saved locally in this browser
             </p>
             <ul className="space-y-1.5">
@@ -535,7 +535,7 @@ export default function SearchClient({ initialItems }: { initialItems: IndexItem
                     <p className="text-xs text-zinc-900 dark:text-zinc-100 group-hover:text-emerald-300 transition-colors truncate">
                       {s.name}
                     </p>
-                    <p className="text-xs text-zinc-500 truncate">
+                    <p className="text-xs text-zinc-700 dark:text-zinc-500 truncate">
                       {summarizeSaved(s)}
                     </p>
                   </button>
@@ -543,7 +543,7 @@ export default function SearchClient({ initialItems }: { initialItems: IndexItem
                     type="button"
                     onClick={() => handleDeleteSaved(s.id)}
                     aria-label={`Delete ${s.name}`}
-                    className="shrink-0 rounded-md border border-white/[0.06] hover:border-rose-400/40 px-2 py-0.5 text-xs text-zinc-500 hover:text-rose-300 transition-colors"
+                    className="shrink-0 rounded-md border border-white/[0.06] hover:border-rose-400/40 px-2 py-0.5 text-xs text-zinc-700 dark:text-zinc-500 hover:text-rose-300 transition-colors"
                   >
                     ×
                   </button>
@@ -630,7 +630,7 @@ function ResultCard({
             </p>
           )}
           {item.subtitle && (
-            <p className="mt-0.5 text-xs text-zinc-500">{item.subtitle}</p>
+            <p className="mt-0.5 text-xs text-zinc-700 dark:text-zinc-500">{item.subtitle}</p>
           )}
         </div>
         <div className="shrink-0 flex flex-wrap items-center justify-end gap-1.5">
@@ -648,7 +648,7 @@ function ResultCard({
             type="button"
             onClick={onToggleWhy}
             aria-expanded={whyOpen}
-            className="text-xs text-zinc-500 hover:text-emerald-300 transition-colors"
+            className="text-xs text-zinc-700 dark:text-zinc-500 hover:text-emerald-300 transition-colors"
           >
             {whyOpen ? 'Hide why' : `Why? · ${reasons.length}`}
           </button>

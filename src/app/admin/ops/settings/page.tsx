@@ -86,7 +86,7 @@ function ProviderCard({
     >
       <Row label="Env" value={<code className="text-xs bg-white/[0.04] border border-white/[0.06] px-1.5 py-0.5 rounded text-zinc-800 dark:text-zinc-200 font-mono">{envVar}</code>} />
       <Row label="Reason" value={status.status === 'connected' ? 'token present' : `${status.reason}${status.detail ? ` — ${status.detail}` : ''}`} />
-      <Row label="Last checked" value={<span className="text-xs text-zinc-500">{status.checkedAt}</span>} />
+      <Row label="Last checked" value={<span className="text-xs text-zinc-700 dark:text-zinc-500">{status.checkedAt}</span>} />
     </AdminCard>
   );
 }

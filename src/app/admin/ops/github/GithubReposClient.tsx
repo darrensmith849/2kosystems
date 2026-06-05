@@ -92,7 +92,7 @@ export default function GithubReposClient({
         />
       ) : (
         <>
-          <p className="text-xs text-zinc-500">{visible.length} repos</p>
+          <p className="text-xs text-zinc-700 dark:text-zinc-500">{visible.length} repos</p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             {visible.map((repo) => (
               <Tile

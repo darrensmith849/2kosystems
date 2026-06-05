@@ -175,7 +175,7 @@ export function ChatBubbles({
         const isLast = idx === messages.length - 1;
         return (
           <div key={`a-${idx}-${m.ts}`} className="flex flex-col items-start">
-            <p className="text-xs text-zinc-500 mb-1 ml-1">
+            <p className="text-xs text-zinc-700 dark:text-zinc-500 mb-1 ml-1">
               2KO Ops Assistant
             </p>
             <div className="max-w-[92%] w-full rounded-2xl border border-white/[0.06] bg-white/[0.03] px-4 py-3">
@@ -204,7 +204,7 @@ export function ChatBubbles({
               {m.sources && <SourceCards sources={m.sources} />}
               {isLast && m.followUps && m.followUps.length > 0 && onFollowUpClick && (
                 <div className="mt-3 pt-3 border-t border-white/[0.06]">
-                  <p className="text-xs text-zinc-500 mb-2">
+                  <p className="text-xs text-zinc-700 dark:text-zinc-500 mb-2">
                     Try next
                   </p>
                   <div className="flex flex-wrap gap-2">
@@ -229,7 +229,7 @@ export function ChatBubbles({
 
       {busy && (
         <div className="flex flex-col items-start">
-          <p className="text-xs text-zinc-500 mb-1 ml-1">
+          <p className="text-xs text-zinc-700 dark:text-zinc-500 mb-1 ml-1">
             2KO Ops Assistant
           </p>
           <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] px-4 py-2.5">

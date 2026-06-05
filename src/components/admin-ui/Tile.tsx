@@ -47,7 +47,7 @@ export function Tile({
             {name}
           </p>
           {subtitle && (
-            <p className="mt-0.5 text-xs text-zinc-500 truncate">{subtitle}</p>
+            <p className="mt-0.5 text-xs text-zinc-700 dark:text-zinc-500 truncate">{subtitle}</p>
           )}
         </div>
       </div>

@@ -341,7 +341,7 @@ export default async function OpsOverviewPage() {
           title="Clients and assets"
           action={<CardLink href="/admin/ops/clients" label="View all" />}
           footerSlot={
-            <p className="text-xs text-zinc-500">
+            <p className="text-xs text-zinc-700 dark:text-zinc-500">
               {(summary.totals.clients || SNAPSHOT_COUNTS.clients)} clients ·{' '}
               {(summary.totals.assets || SNAPSHOT_COUNTS.assets)} assets ·{' '}
               {(summary.totals.divisions || SNAPSHOT_COUNTS.divisions)} divisions
@@ -349,7 +349,7 @@ export default async function OpsOverviewPage() {
           }
         >
           {topClients.length === 0 ? (
-            <p className="text-xs text-zinc-500">No client data available.</p>
+            <p className="text-xs text-zinc-700 dark:text-zinc-500">No client data available.</p>
           ) : (
             <ul className="space-y-2">
               {topClients.map((c) => (
@@ -367,7 +367,7 @@ export default async function OpsOverviewPage() {
           title="Infrastructure"
           action={<CardLink href="/admin/ops/infrastructure" label="View" />}
           footerSlot={
-            <p className="text-xs text-zinc-500">
+            <p className="text-xs text-zinc-700 dark:text-zinc-500">
               {summary.totals.cloudflareZones} Cloudflare zones managed
             </p>
           }
@@ -398,7 +398,7 @@ export default async function OpsOverviewPage() {
           <p className="text-sm text-zinc-800 dark:text-zinc-200">
             Service emails and client linkage planned.
           </p>
-          <p className="mt-1 text-xs text-zinc-500">
+          <p className="mt-1 text-xs text-zinc-700 dark:text-zinc-500">
             Local drafts and exports enabled in browser.
           </p>
         </GlassCard>
@@ -408,7 +408,7 @@ export default async function OpsOverviewPage() {
           title="Services"
           action={<CardLink href="/admin/ops/services" label="Open" />}
           footerSlot={
-            <p className="text-xs text-zinc-500">
+            <p className="text-xs text-zinc-700 dark:text-zinc-500">
               Catalogue · pricing · contact roles · readiness
             </p>
           }
@@ -435,14 +435,14 @@ export default async function OpsOverviewPage() {
           Icon={RocketIcon}
           title="Activation"
           action={<CardLink href="/admin/ops/activation" label="Open" />}
-          footerSlot={<p className="text-xs text-zinc-500">Commercial preflight inside.</p>}
+          footerSlot={<p className="text-xs text-zinc-700 dark:text-zinc-500">Commercial preflight inside.</p>}
         >
           <div className="flex items-center gap-2">
             <Badge
               text={`${summary.activationReadiness.ready}/${summary.activationReadiness.total} ready`}
               tone="amber"
             />
-            <span className="text-xs text-zinc-500">
+            <span className="text-xs text-zinc-700 dark:text-zinc-500">
               {summary.activationReadiness.pending} pending
             </span>
           </div>
@@ -477,7 +477,7 @@ export default async function OpsOverviewPage() {
           action={<CardLink href="/admin/ops/activation" label="Open" />}
         >
           {pendingSteps.length === 0 ? (
-            <p className="text-xs text-zinc-500">
+            <p className="text-xs text-zinc-700 dark:text-zinc-500">
               Nothing flagged. Snapshot data may not be loaded — connect DATABASE_URL or
               check the snapshot fixtures.
             </p>
@@ -596,10 +596,10 @@ function MetricCard({
     <div className="rounded-2xl border border-zinc-200 bg-white dark:border-white/[0.06] dark:bg-white/[0.02] p-4 transition-colors">
       <div className="flex items-center gap-2">
         {Icon && <Icon className="h-4 w-4 text-zinc-500 dark:text-zinc-400 shrink-0" />}
-        <p className="text-[11px] font-medium text-zinc-500">{title}</p>
+        <p className="text-[11px] font-medium text-zinc-700 dark:text-zinc-500">{title}</p>
       </div>
       <p className={`mt-2 text-2xl font-semibold ${valueColor}`}>{value}</p>
-      {hint && <p className="mt-1 text-xs text-zinc-500 leading-snug">{hint}</p>}
+      {hint && <p className="mt-1 text-xs text-zinc-700 dark:text-zinc-500 leading-snug">{hint}</p>}
       {sparklineSeed && (
         <div className="mt-2 -mx-1">
           <Sparkline seed={sparklineSeed} tone={sparklineTone} className="h-5 w-full" />

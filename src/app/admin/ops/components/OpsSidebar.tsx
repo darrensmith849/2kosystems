@@ -91,7 +91,7 @@ export default function OpsSidebar({ operatorSlug }: { operatorSlug: string }) {
     <aside className="hidden lg:flex lg:flex-col w-56 shrink-0 border-r border-zinc-200 dark:border-white/[0.06] bg-white dark:bg-[#0a0a0b]/95 backdrop-blur-sm sticky top-0 h-screen transition-colors">
       <div className="flex flex-col h-full min-h-0">
         <div className="px-4 pt-5 pb-4 border-b border-zinc-200 dark:border-white/[0.06]">
-          <p className="text-[11px] font-medium text-zinc-500">
+          <p className="text-[11px] font-medium text-zinc-700 dark:text-zinc-500">
             2KO Systems
           </p>
           <p className="mt-1 text-base font-medium text-zinc-900 dark:text-zinc-100">Ops Dashboard</p>
@@ -128,7 +128,7 @@ export default function OpsSidebar({ operatorSlug }: { operatorSlug: string }) {
                     aria-expanded={isOpen}
                     aria-controls={panelId}
                     onClick={() => toggleGroup(group.title)}
-                    className="w-full flex items-center justify-between px-3 mb-1.5 text-[11px] font-medium text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
+                    className="w-full flex items-center justify-between px-3 mb-1.5 text-[11px] font-medium text-zinc-700 dark:text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
                   >
                     <span>{group.title}</span>
                     <span
@@ -143,7 +143,7 @@ export default function OpsSidebar({ operatorSlug }: { operatorSlug: string }) {
                 ) : (
                   <p
                     id={headerId}
-                    className="px-3 mb-1.5 text-[11px] font-medium text-zinc-500"
+                    className="px-3 mb-1.5 text-[11px] font-medium text-zinc-700 dark:text-zinc-500"
                   >
                     {group.title}
                   </p>
@@ -195,7 +195,7 @@ export default function OpsSidebar({ operatorSlug }: { operatorSlug: string }) {
                             {isExternalConsole && (
                               <span
                                 aria-hidden="true"
-                                className="text-[10px] text-zinc-500"
+                                className="text-[10px] text-zinc-700 dark:text-zinc-500"
                               >
                                 →
                               </span>
@@ -213,7 +213,7 @@ export default function OpsSidebar({ operatorSlug }: { operatorSlug: string }) {
 
         <div className="shrink-0 px-4 py-4 border-t border-zinc-200 dark:border-white/[0.06] space-y-2 bg-white dark:bg-[#0a0a0b]/95 transition-colors">
           <div className="flex flex-col gap-1">
-            <span className="text-[11px] text-zinc-500">
+            <span className="text-[11px] text-zinc-700 dark:text-zinc-500">
               Signed in as
             </span>
             <button

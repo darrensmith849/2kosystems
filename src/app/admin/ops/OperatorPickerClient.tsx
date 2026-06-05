@@ -61,11 +61,11 @@ export default function OperatorPickerClient({
     <div className="min-h-screen flex items-center justify-center p-6">
       <div className="w-full max-w-md">
         <div className="mb-8 text-center">
-          <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-500 dark:text-[#71717a] mb-3">
+          <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-700 dark:text-[#71717a] mb-3">
             2KO Systems · Ops Dashboard
           </p>
           <h1 className="text-xl font-semibold text-zinc-900 dark:text-[#f5f5f5]">Who is using the dashboard?</h1>
-          <p className="mt-1.5 text-sm text-zinc-500 dark:text-[#71717a]">Every action you take will be recorded against this operator.</p>
+          <p className="mt-1.5 text-sm text-zinc-700 dark:text-[#71717a]">Every action you take will be recorded against this operator.</p>
         </div>
 
         {!dbConfigured && (
@@ -77,7 +77,7 @@ export default function OperatorPickerClient({
 
         {operators.length > 0 && (
           <form onSubmit={handleExisting} className="rounded-2xl border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#111113] p-5 mb-4">
-            <label className="block text-[10px] font-mono uppercase tracking-[0.15em] text-zinc-500 dark:text-[#71717a] mb-2">
+            <label className="block text-[10px] font-mono uppercase tracking-[0.15em] text-zinc-700 dark:text-[#71717a] mb-2">
               Existing operator
             </label>
             <select
@@ -103,7 +103,7 @@ export default function OperatorPickerClient({
         )}
 
         <form onSubmit={handleAdd} className="rounded-2xl border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#111113] p-5">
-          <label className="block text-[10px] font-mono uppercase tracking-[0.15em] text-zinc-500 dark:text-[#71717a] mb-2">
+          <label className="block text-[10px] font-mono uppercase tracking-[0.15em] text-zinc-700 dark:text-[#71717a] mb-2">
             New operator
           </label>
           <input

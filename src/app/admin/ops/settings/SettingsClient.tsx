@@ -73,7 +73,7 @@ function Action({
     <div className="flex items-start justify-between gap-3 border-b border-zinc-200 dark:border-[#1c1c1e] pb-3 last:border-0 last:pb-0">
       <div className="flex-1">
         <p className="text-sm text-zinc-900 dark:text-[#f5f5f5]">{label}</p>
-        <p className="text-xs text-zinc-500 dark:text-[#71717a] mt-0.5">{hint}</p>
+        <p className="text-xs text-zinc-700 dark:text-[#71717a] mt-0.5">{hint}</p>
       </div>
       <button
         type="button"

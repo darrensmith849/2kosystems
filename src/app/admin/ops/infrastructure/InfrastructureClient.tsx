@@ -110,7 +110,7 @@ export default function InfrastructureClient({
         <div className="flex items-baseline justify-between mb-3">
           <h3 className="text-sm font-medium text-zinc-900 dark:text-zinc-100">Hetzner servers</h3>
           {hetznerServers.length > 0 && (
-            <span className="text-[11px] font-medium text-zinc-500">
+            <span className="text-[11px] font-medium text-zinc-700 dark:text-zinc-500">
               {hetznerServers.length} server{hetznerServers.length === 1 ? '' : 's'}
             </span>
           )}
@@ -143,7 +143,7 @@ export default function InfrastructureClient({
         <div className="flex items-baseline justify-between mb-3">
           <h3 className="text-sm font-medium text-zinc-900 dark:text-zinc-100">Cloudflare zones</h3>
           {zones.length > 0 && (
-            <span className="text-[11px] font-medium text-zinc-500">
+            <span className="text-[11px] font-medium text-zinc-700 dark:text-zinc-500">
               {zones.length} zone{zones.length === 1 ? '' : 's'}
             </span>
           )}
@@ -176,7 +176,7 @@ export default function InfrastructureClient({
         <div className="flex items-baseline justify-between mb-3">
           <h3 className="text-sm font-medium text-zinc-900 dark:text-zinc-100">Cloudflare Pages projects</h3>
           {pagesProjects.length > 0 && (
-            <span className="text-[11px] font-medium text-zinc-500">
+            <span className="text-[11px] font-medium text-zinc-700 dark:text-zinc-500">
               {pagesProjects.length} project{pagesProjects.length === 1 ? '' : 's'}
             </span>
           )}

@@ -206,7 +206,7 @@ function renderInline(text: string, keyHint: number): React.ReactNode {
       );
     } else if (first.kind === 'italic') {
       nodes.push(
-        <em key={`i-${keyHint}-${key++}`} className="text-zinc-600 dark:text-[#a1a1aa] not-italic">
+        <em key={`i-${keyHint}-${key++}`} className="text-zinc-700 dark:text-[#a1a1aa] not-italic">
           {first.match[1]}
         </em>,
       );
@@ -250,7 +250,7 @@ function SourceCards({ sources }: { sources: AssistantSource[] }) {
   const showToggle = sources.length > SOURCE_CARDS_DEFAULT_VISIBLE;
   return (
     <div className="mt-3 rounded-xl border border-white/[0.06] bg-white/[0.02] px-3 py-2.5">
-      <p className="text-xs font-medium text-zinc-500 mb-2">
+      <p className="text-xs font-medium text-zinc-700 dark:text-zinc-500 mb-2">
         Related records ({sources.length})
       </p>
       <ul className="space-y-1">
@@ -526,7 +526,7 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
             type="button"
             onClick={() => setHelperDismissed(true)}
             aria-label="Dismiss"
-            className="text-zinc-500 hover:text-zinc-100 text-sm leading-none px-1 shrink-0"
+            className="text-zinc-700 dark:text-zinc-500 hover:text-zinc-100 text-sm leading-none px-1 shrink-0"
           >
             ×
           </button>
@@ -586,7 +586,7 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
                     setShowSaveDialog(false);
                     setSaveName('');
                   }}
-                  className="text-xs text-zinc-500 hover:text-zinc-100 px-2 py-1"
+                  className="text-xs text-zinc-700 dark:text-zinc-500 hover:text-zinc-100 px-2 py-1"
                 >
                   Cancel
                 </button>
@@ -603,7 +603,7 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
           )}
 
           {saved.length === 0 ? (
-            <p className="text-xs text-zinc-500">
+            <p className="text-xs text-zinc-700 dark:text-zinc-500">
               No saved questions yet. Type a question, then press &ldquo;Save current&rdquo;.
             </p>
           ) : (
@@ -625,7 +625,7 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
                     <span className="block text-xs text-zinc-900 dark:text-zinc-100 font-medium truncate">
                       {s.name}
                     </span>
-                    <span className="block text-xs italic text-zinc-500 break-words mt-0.5">
+                    <span className="block text-xs italic text-zinc-700 dark:text-zinc-500 break-words mt-0.5">
                       {s.question}
                     </span>
                   </button>
@@ -633,7 +633,7 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
                     type="button"
                     onClick={() => deleteSaved(s.id)}
                     aria-label={`Delete ${s.name}`}
-                    className="text-zinc-500 hover:text-rose-300 text-sm leading-none px-1"
+                    className="text-zinc-700 dark:text-zinc-500 hover:text-rose-300 text-sm leading-none px-1"
                   >
                     ×
                   </button>
@@ -654,7 +654,7 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
             {/* Welcome bubble */}
             <div className="max-w-xl w-full">
               <div className="flex justify-start flex-col items-start">
-                <p className="text-xs text-zinc-500 mb-1 ml-1">2KO Ops Assistant</p>
+                <p className="text-xs text-zinc-700 dark:text-zinc-500 mb-1 ml-1">2KO Ops Assistant</p>
                 <div className="max-w-full rounded-2xl border border-white/[0.06] bg-white/[0.03] px-5 py-4 text-left">
                   <p className="text-sm text-zinc-700 dark:text-zinc-300 leading-relaxed">{WELCOME_COPY}</p>
                 </div>
@@ -663,7 +663,7 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
 
             {/* Suggested prompt chips */}
             <div className="space-y-3 max-w-2xl">
-              <p className="text-xs text-zinc-500">Try one of these to get started:</p>
+              <p className="text-xs text-zinc-700 dark:text-zinc-500">Try one of these to get started:</p>
               <div className="flex flex-wrap justify-center gap-2">
                 {SUGGESTIONS.map((s) => (
                   <button
@@ -696,7 +696,7 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
               const isLast = idx === messages.length - 1;
               return (
                 <div key={`a-${idx}-${m.ts}`} className="flex flex-col items-start">
-                  <p className="text-xs text-zinc-500 mb-1 ml-1">2KO Ops Assistant</p>
+                  <p className="text-xs text-zinc-700 dark:text-zinc-500 mb-1 ml-1">2KO Ops Assistant</p>
                   <div className="max-w-[92%] w-full rounded-2xl border border-white/[0.06] bg-white/[0.03] px-4 py-3">
                     {(m.mode || (m.warnings && m.warnings.length > 0)) && (
                       <div className="flex flex-wrap items-center gap-1.5 mb-2">
@@ -723,7 +723,7 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
                     {m.sources && <SourceCards sources={m.sources} />}
                     {isLast && m.followUps && m.followUps.length > 0 && (
                       <div className="mt-3 pt-3 border-t border-white/[0.06]">
-                        <p className="text-xs text-zinc-500 mb-2">Try next</p>
+                        <p className="text-xs text-zinc-700 dark:text-zinc-500 mb-2">Try next</p>
                         <div className="flex flex-wrap gap-2">
                           {m.followUps.map((f) => (
                             <button
@@ -746,7 +746,7 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
 
             {busy && (
               <div className="flex flex-col items-start">
-                <p className="text-xs text-zinc-500 mb-1 ml-1">2KO Ops Assistant</p>
+                <p className="text-xs text-zinc-700 dark:text-zinc-500 mb-1 ml-1">2KO Ops Assistant</p>
                 <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] px-4 py-2.5">
                   <p className="text-xs text-zinc-600 dark:text-zinc-400 flex items-center gap-2">
                     <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
@@ -780,7 +780,7 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
           className="w-full resize-none bg-transparent text-sm text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-500 focus:outline-none disabled:opacity-50"
         />
         <div className="flex items-center justify-between gap-3">
-          <span className="text-xs text-zinc-500">
+          <span className="text-xs text-zinc-700 dark:text-zinc-500">
             Enter to send · Shift + Enter for new line · Read-only · No secrets shared
           </span>
           <button

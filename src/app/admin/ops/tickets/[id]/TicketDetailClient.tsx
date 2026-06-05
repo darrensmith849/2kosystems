@@ -142,8 +142,8 @@ export default function TicketDetailClient({
         subtitle={
           <span>
             <Link href="/admin/ops/tickets" className="text-emerald-700 dark:text-emerald-300 hover:underline">← Tickets</Link>
-            <span className="ml-2 text-zinc-500 dark:text-[#52525b]">·</span>
-            <span className="ml-2 text-zinc-500 dark:text-[#71717a]">{ticket.kind}</span>
+            <span className="ml-2 text-zinc-600 dark:text-[#52525b]">·</span>
+            <span className="ml-2 text-zinc-700 dark:text-[#71717a]">{ticket.kind}</span>
           </span>
         }
         action={
@@ -186,7 +186,7 @@ export default function TicketDetailClient({
         <AdminCard title="Manage">
           <div className="space-y-3">
             <label className="block">
-              <span className="block text-[10px] font-mono uppercase tracking-[0.18em] text-zinc-500 dark:text-[#71717a] mb-1">Status</span>
+              <span className="block text-[10px] font-mono uppercase tracking-[0.18em] text-zinc-700 dark:text-[#71717a] mb-1">Status</span>
               <select
                 value={ticket.status}
                 onChange={handleStatus}
@@ -199,7 +199,7 @@ export default function TicketDetailClient({
               </select>
             </label>
             <label className="block">
-              <span className="block text-[10px] font-mono uppercase tracking-[0.18em] text-zinc-500 dark:text-[#71717a] mb-1">Priority</span>
+              <span className="block text-[10px] font-mono uppercase tracking-[0.18em] text-zinc-700 dark:text-[#71717a] mb-1">Priority</span>
               <select
                 value={ticket.priority}
                 onChange={handlePriority}
@@ -212,7 +212,7 @@ export default function TicketDetailClient({
               </select>
             </label>
             <label className="block">
-              <span className="block text-[10px] font-mono uppercase tracking-[0.18em] text-zinc-500 dark:text-[#71717a] mb-1">Assignee</span>
+              <span className="block text-[10px] font-mono uppercase tracking-[0.18em] text-zinc-700 dark:text-[#71717a] mb-1">Assignee</span>
               <select
                 value={ticket.assigneeOperatorId ?? ''}
                 onChange={handleAssignee}
@@ -226,7 +226,7 @@ export default function TicketDetailClient({
               </select>
             </label>
             <label className="block">
-              <span className="block text-[10px] font-mono uppercase tracking-[0.18em] text-zinc-500 dark:text-[#71717a] mb-1">Billing</span>
+              <span className="block text-[10px] font-mono uppercase tracking-[0.18em] text-zinc-700 dark:text-[#71717a] mb-1">Billing</span>
               <select
                 value={ticket.billingStatus}
                 onChange={handleBilling}
@@ -239,7 +239,7 @@ export default function TicketDetailClient({
               </select>
             </label>
             <form onSubmit={handleTimeSave} className="space-y-1">
-              <span className="block text-[10px] font-mono uppercase tracking-[0.18em] text-zinc-500 dark:text-[#71717a]">Time logged (min)</span>
+              <span className="block text-[10px] font-mono uppercase tracking-[0.18em] text-zinc-700 dark:text-[#71717a]">Time logged (min)</span>
               <div className="flex gap-2">
                 <input
                   type="number"
@@ -266,14 +266,14 @@ export default function TicketDetailClient({
 
       {(ticket.client || ticket.asset) && (
         <div className="mb-5">
-          <h3 className="text-xs font-mono uppercase tracking-[0.18em] text-zinc-500 dark:text-[#71717a] mb-2">Related</h3>
+          <h3 className="text-xs font-mono uppercase tracking-[0.18em] text-zinc-700 dark:text-[#71717a] mb-2">Related</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {ticket.client && (
               <Link
                 href={`/admin/ops/clients/${ticket.client.id}`}
                 className="block rounded-2xl border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#111113] p-4 hover:border-[#3f3f46] transition-colors"
               >
-                <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-zinc-500 dark:text-[#71717a] mb-1">Client</p>
+                <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-zinc-700 dark:text-[#71717a] mb-1">Client</p>
                 <p className="text-sm text-zinc-900 dark:text-[#f5f5f5]">{ticket.client.name}</p>
               </Link>
             )}
@@ -282,7 +282,7 @@ export default function TicketDetailClient({
                 href={`/admin/ops/assets/${ticket.asset.id}`}
                 className="block rounded-2xl border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#111113] p-4 hover:border-[#3f3f46] transition-colors"
               >
-                <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-zinc-500 dark:text-[#71717a] mb-1">Asset</p>
+                <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-zinc-700 dark:text-[#71717a] mb-1">Asset</p>
                 <p className="text-sm text-zinc-900 dark:text-[#f5f5f5]">{ticket.asset.name}</p>
               </Link>
             )}
@@ -291,7 +291,7 @@ export default function TicketDetailClient({
       )}
 
       <div className="space-y-3 mb-5">
-        <h3 className="text-xs font-mono uppercase tracking-[0.18em] text-zinc-500 dark:text-[#71717a]">
+        <h3 className="text-xs font-mono uppercase tracking-[0.18em] text-zinc-700 dark:text-[#71717a]">
           Comments · {comments.length}
         </h3>
         {comments.length === 0 ? (
@@ -306,11 +306,11 @@ export default function TicketDetailClient({
                       text={c.internal ? 'internal' : 'external'}
                       tone={c.internal ? 'amber' : 'blue'}
                     />
-                    <span className="text-[11px] font-mono text-zinc-600 dark:text-[#a1a1aa]">
+                    <span className="text-[11px] font-mono text-zinc-700 dark:text-[#a1a1aa]">
                       {c.authorOperatorSlug ?? 'unknown'}
                     </span>
                   </div>
-                  <span className="text-[10px] font-mono text-zinc-500 dark:text-[#52525b]">{relativeTime(c.createdAt)}</span>
+                  <span className="text-[10px] font-mono text-zinc-600 dark:text-[#52525b]">{relativeTime(c.createdAt)}</span>
                 </div>
                 <p className="text-xs text-zinc-800 dark:text-[#e4e4e7] whitespace-pre-wrap leading-relaxed">{c.body}</p>
               </div>
@@ -330,7 +330,7 @@ export default function TicketDetailClient({
             className="w-full rounded-lg border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-zinc-900 dark:text-[#f5f5f5] placeholder:text-[#3f3f46] focus:border-[#0f7b3a]/50 focus:outline-none"
           />
           <div className="flex items-center justify-between gap-3">
-            <label className="flex items-center gap-2 text-xs text-zinc-600 dark:text-[#a1a1aa] cursor-pointer">
+            <label className="flex items-center gap-2 text-xs text-zinc-700 dark:text-[#a1a1aa] cursor-pointer">
               <input
                 type="checkbox"
                 checked={commentInternal}

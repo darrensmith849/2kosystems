@@ -137,13 +137,13 @@ export default function AssetLinksClient({
           </button>
         </form>
         {error && <p className="mt-3 text-sm text-rose-400">{error}</p>}
-        <p className="mt-3 text-[11px] text-zinc-500 dark:text-[#52525b]">
+        <p className="mt-3 text-[11px] text-zinc-600 dark:text-[#52525b]">
           Candidates are populated from the relevant sync tables. If nothing shows, run that provider&apos;s sync first.
         </p>
       </AdminCard>
 
       <div>
-        <h3 className="text-xs font-mono uppercase tracking-[0.18em] text-zinc-500 dark:text-[#71717a] mb-3">Current links</h3>
+        <h3 className="text-xs font-mono uppercase tracking-[0.18em] text-zinc-700 dark:text-[#71717a] mb-3">Current links</h3>
         {initialLinks.length === 0 ? (
           <EmptyState
             title="No links yet"

@@ -267,7 +267,7 @@ export default function RenewalsClient({
           {/* Subject picker */}
           <div className="lg:col-span-6 rounded-lg border border-white/[0.06] bg-white/[0.02] p-3 space-y-2">
             <div className="flex flex-wrap items-center gap-3">
-              <p className="text-[11px] font-medium text-zinc-500">Subject</p>
+              <p className="text-[11px] font-medium text-zinc-700 dark:text-zinc-500">Subject</p>
               {(['none', 'asset', 'domain', 'service'] as SubjectKind[]).map((opt) => (
                 <label key={opt} className="flex items-center gap-1.5 text-xs text-zinc-700 dark:text-zinc-300">
                   <input
@@ -297,7 +297,7 @@ export default function RenewalsClient({
               </select>
             )}
             {subjectPickerHint && (
-              <p className="text-xs text-zinc-500">{subjectPickerHint}</p>
+              <p className="text-xs text-zinc-700 dark:text-zinc-500">{subjectPickerHint}</p>
             )}
           </div>
 
@@ -317,7 +317,7 @@ export default function RenewalsClient({
       <AdminCard title="Filters">
         <div className="space-y-3">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[11px] font-medium text-zinc-500 mr-1">
+            <span className="text-[11px] font-medium text-zinc-700 dark:text-zinc-500 mr-1">
               Kind
             </span>
             {(['all', ...KINDS] as KindFilter[]).map((k) => {
@@ -340,7 +340,7 @@ export default function RenewalsClient({
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[11px] font-medium text-zinc-500 mr-1">
+            <span className="text-[11px] font-medium text-zinc-700 dark:text-zinc-500 mr-1">
               Window
             </span>
             {(
@@ -370,7 +370,7 @@ export default function RenewalsClient({
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[11px] font-medium text-zinc-500 mr-1">
+            <span className="text-[11px] font-medium text-zinc-700 dark:text-zinc-500 mr-1">
               Client
             </span>
             <select
@@ -407,7 +407,7 @@ export default function RenewalsClient({
         />
       ) : (
         <div className="space-y-3">
-          <p className="text-[11px] font-medium text-zinc-500">
+          <p className="text-[11px] font-medium text-zinc-700 dark:text-zinc-500">
             {filtered.length} renewal{filtered.length === 1 ? '' : 's'}
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">

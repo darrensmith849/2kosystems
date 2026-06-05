@@ -84,9 +84,9 @@ export default function OpsTopBar({ operatorSlug }: { operatorSlug: string }) {
           className="flex items-center gap-2 w-72 rounded-lg border border-zinc-200 bg-zinc-100 hover:bg-zinc-200 dark:border-white/[0.06] dark:bg-white/[0.04] dark:hover:bg-white/[0.06] px-3 py-1.5 text-xs text-zinc-600 dark:text-zinc-400 transition-colors"
           aria-label="Open search"
         >
-          <SearchIcon className="h-3.5 w-3.5 text-zinc-500" />
+          <SearchIcon className="h-3.5 w-3.5 text-zinc-700 dark:text-zinc-500" />
           <span className="flex-1 truncate">Quick search</span>
-          <kbd className="text-[11px] text-zinc-500 border border-zinc-300 dark:border-white/[0.06] rounded px-1.5 py-0.5 leading-none">
+          <kbd className="text-[11px] text-zinc-700 dark:text-zinc-500 border border-zinc-300 dark:border-white/[0.06] rounded px-1.5 py-0.5 leading-none">
             ⌘K
           </kbd>
         </Link>

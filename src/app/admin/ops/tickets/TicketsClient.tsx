@@ -220,7 +220,7 @@ export default function TicketsClient({
       <AdminCard title="Filters">
         <div className="space-y-3">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[11px] font-medium text-zinc-500 mr-1">Client</span>
+            <span className="text-[11px] font-medium text-zinc-700 dark:text-zinc-500 mr-1">Client</span>
             <select
               value={clientFilter}
               onChange={(e) => setClientFilter(e.target.value)}
@@ -233,7 +233,7 @@ export default function TicketsClient({
             </select>
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[11px] font-medium text-zinc-500 mr-1">Status</span>
+            <span className="text-[11px] font-medium text-zinc-700 dark:text-zinc-500 mr-1">Status</span>
             <Chip active={statusFilter === 'all'} onClick={() => setStatusFilter('all')}>All</Chip>
             {STATUS_OPTIONS.map((s) => (
               <Chip key={s} active={statusFilter === s} onClick={() => setStatusFilter(s)}>
@@ -242,7 +242,7 @@ export default function TicketsClient({
             ))}
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[11px] font-medium text-zinc-500 mr-1">Priority</span>
+            <span className="text-[11px] font-medium text-zinc-700 dark:text-zinc-500 mr-1">Priority</span>
             <Chip active={priorityFilter === 'all'} onClick={() => setPriorityFilter('all')}>All</Chip>
             {PRIORITY_FILTERS.map((p) => (
               <Chip key={p} active={priorityFilter === p} onClick={() => setPriorityFilter(p)}>
@@ -264,7 +264,7 @@ export default function TicketsClient({
         />
       ) : (
         <>
-          <p className="text-xs text-zinc-500">{filteredTickets.length} tickets</p>
+          <p className="text-xs text-zinc-700 dark:text-zinc-500">{filteredTickets.length} tickets</p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             {filteredTickets.map((t) => {
               const status = t.status;

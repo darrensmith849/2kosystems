@@ -610,7 +610,7 @@ export default function ActivationPage() {
                 key={step.n}
                 className="flex gap-4 rounded-xl border border-white/[0.06] bg-white/[0.02] p-4"
               >
-                <span className="w-8 shrink-0 text-right font-mono text-xs text-zinc-500">
+                <span className="w-8 shrink-0 text-right font-mono text-xs text-zinc-700 dark:text-zinc-500">
                   {String(step.n).padStart(2, '0')}
                 </span>
                 <div className="flex-1 min-w-0">
@@ -629,13 +629,13 @@ export default function ActivationPage() {
                     {step.description}
                   </p>
                   <p className="mt-2 text-xs text-zinc-600 dark:text-zinc-400">
-                    <span className="text-xs font-medium text-zinc-500">
+                    <span className="text-xs font-medium text-zinc-700 dark:text-zinc-500">
                       Where ·{' '}
                     </span>
                     {step.where}
                   </p>
                   <p className="mt-1 text-xs text-zinc-600 dark:text-zinc-400">
-                    <span className="text-xs font-medium text-zinc-500">
+                    <span className="text-xs font-medium text-zinc-700 dark:text-zinc-500">
                       Runbook ·{' '}
                     </span>
                     <code className="text-xs bg-white/[0.04] border border-white/[0.06] px-1.5 py-0.5 rounded text-zinc-800 dark:text-zinc-200 font-mono">{step.runbook}</code>
@@ -670,13 +670,13 @@ export default function ActivationPage() {
               .map((k) => (
                 <li key={k} className="flex justify-between gap-3">
                   <span className="text-zinc-800 dark:text-zinc-200">{VALIDATION_CATEGORY_LABEL[k]}</span>
-                  <span className="text-xs text-zinc-500">
+                  <span className="text-xs text-zinc-700 dark:text-zinc-500">
                     {validation.byCategory[k].length} item{validation.byCategory[k].length === 1 ? '' : 's'}
                   </span>
                 </li>
               ))}
           </ul>
-          <p className="mt-3 text-xs text-zinc-500">
+          <p className="mt-3 text-xs text-zinc-700 dark:text-zinc-500">
             Full per-finding detail is on the Review page under &ldquo;Validation findings&rdquo;.
           </p>
         </AdminCard>
@@ -691,27 +691,27 @@ export default function ActivationPage() {
           </p>
           <ol className="space-y-2 text-xs text-zinc-800 dark:text-zinc-200">
             <li>
-              <span className="text-zinc-500">1.</span> Pick the email linking approach — manual
+              <span className="text-zinc-700 dark:text-zinc-500">1.</span> Pick the email linking approach — manual
               references first; Gmail or Outlook integration only as a later, separately approved
               phase.
             </li>
             <li>
-              <span className="text-zinc-500">2.</span> After the database is connected, open the
+              <span className="text-zinc-700 dark:text-zinc-500">2.</span> After the database is connected, open the
               manual email-reference form and start filing billing, renewal, support, and approval
               emails.
             </li>
             <li>
-              <span className="text-zinc-500">3.</span> If Gmail or Outlook integration is later
+              <span className="text-zinc-700 dark:text-zinc-500">3.</span> If Gmail or Outlook integration is later
               approved, add it behind explicit opt-in. Read access only — no archiving, deleting,
               or labelling.
             </li>
             <li>
-              <span className="text-zinc-500">4.</span> Set{' '}
+              <span className="text-zinc-700 dark:text-zinc-500">4.</span> Set{' '}
               <code className="text-xs bg-white/[0.04] border border-white/[0.06] px-1.5 py-0.5 rounded text-zinc-800 dark:text-zinc-200 font-mono">BREVO_OPS_DIGEST_TO</code> so the daily renewal
               digest has a recipient.
             </li>
             <li>
-              <span className="text-zinc-500">5.</span> Confirm on the Health page that no inbox
+              <span className="text-zinc-700 dark:text-zinc-500">5.</span> Confirm on the Health page that no inbox
               reads are active until explicitly approved.
             </li>
           </ol>
@@ -756,13 +756,13 @@ function StatusCard({
           : 'border-sky-400/20 bg-sky-400/[0.04]';
   return (
     <div className={`rounded-2xl border p-4 ${ring}`}>
-      <p className="mb-2 text-[11px] font-medium text-zinc-500">
+      <p className="mb-2 text-[11px] font-medium text-zinc-700 dark:text-zinc-500">
         {label}
       </p>
       <div className="mb-2 flex items-baseline gap-3">
         <p className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">{value}</p>
       </div>
-      {hint && <p className="text-xs text-zinc-500">{hint}</p>}
+      {hint && <p className="text-xs text-zinc-700 dark:text-zinc-500">{hint}</p>}
     </div>
   );
 }
@@ -790,7 +790,7 @@ function PreflightCard({
           : 'border-sky-400/20 bg-sky-400/[0.04]';
   return (
     <div className={`rounded-2xl border p-4 ${ring}`}>
-      <p className="mb-3 text-[11px] font-medium text-zinc-500">{title}</p>
+      <p className="mb-3 text-[11px] font-medium text-zinc-700 dark:text-zinc-500">{title}</p>
       {bullets && (
         <ul className="space-y-1.5 text-[12px] leading-relaxed text-zinc-800 dark:text-zinc-200">
           {bullets.map((b, i) => (
@@ -852,12 +852,12 @@ function ProgressTile({
           : 'border-sky-400/20 bg-sky-400/[0.04] text-sky-700 dark:text-sky-200';
   return (
     <div className={`rounded-2xl border p-3 ${ring}`}>
-      <p className="mb-1 text-[11px] font-medium text-zinc-500">
+      <p className="mb-1 text-[11px] font-medium text-zinc-700 dark:text-zinc-500">
         {label}
       </p>
       <p className="text-base font-semibold">
         {value}
-        <span className="text-zinc-500 text-xs"> / {total}</span>
+        <span className="text-zinc-700 dark:text-zinc-500 text-xs"> / {total}</span>
       </p>
     </div>
   );

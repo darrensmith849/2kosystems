@@ -169,7 +169,7 @@ export default async function HealthPage() {
                 ) : (
                   <span className="inline-flex items-center gap-2">
                     <StatusPill status="failed" />
-                    <span className="text-xs text-zinc-500">{pingError}</span>
+                    <span className="text-xs text-zinc-700 dark:text-zinc-500">{pingError}</span>
                   </span>
                 )
               ) : (
@@ -481,7 +481,7 @@ function HealthSection({
       <div className="mb-3">
         <h2 className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{title}</h2>
         {subtitle && (
-          <p className="mt-1 text-xs text-zinc-500">{subtitle}</p>
+          <p className="mt-1 text-xs text-zinc-700 dark:text-zinc-500">{subtitle}</p>
         )}
       </div>
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">{children}</div>

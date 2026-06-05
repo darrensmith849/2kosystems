@@ -52,7 +52,7 @@ export default function WaitingForDb({
             key={item}
             className="flex items-start gap-2 text-xs text-zinc-700 dark:text-zinc-300 leading-relaxed"
           >
-            <span aria-hidden="true" className="text-zinc-500 mt-[1px]">
+            <span aria-hidden="true" className="text-zinc-700 dark:text-zinc-500 mt-[1px]">
               ·
             </span>
             <span className="flex-1">{item}</span>

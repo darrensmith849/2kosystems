@@ -183,7 +183,7 @@ export function ChatPanel({
           </div>
           <p className="mt-0.5 text-xs text-zinc-600 dark:text-zinc-400 truncate">{subtitle}</p>
           {pageContext && (
-            <p className="mt-1 text-xs text-zinc-500 truncate">
+            <p className="mt-1 text-xs text-zinc-700 dark:text-zinc-500 truncate">
               Context · {pageContext.sectionTitle}
             </p>
           )}
@@ -228,7 +228,7 @@ export function ChatPanel({
             <button
               type="button"
               onClick={dismissBanner}
-              className="text-zinc-500 hover:text-zinc-100 text-xs leading-none px-1 shrink-0"
+              className="text-zinc-700 dark:text-zinc-500 hover:text-zinc-100 text-xs leading-none px-1 shrink-0"
               aria-label="Dismiss search-mode notice"
             >
               ×

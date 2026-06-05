@@ -42,11 +42,11 @@ export function MetricCard({
       className={`rounded-2xl border border-zinc-200 dark:border-white/[0.06] bg-white dark:bg-white/[0.02] p-4 transition-colors ${accent[tone]}`}
     >
       <div className="flex items-center gap-2 mb-3">
-        {icon && <span className="text-zinc-500">{icon}</span>}
-        <span className="text-xs font-medium text-zinc-500">{title}</span>
+        {icon && <span className="text-zinc-700 dark:text-zinc-500">{icon}</span>}
+        <span className="text-xs font-medium text-zinc-700 dark:text-zinc-500">{title}</span>
       </div>
       <p className="text-2xl font-semibold text-zinc-900 dark:text-white tabular-nums">{value}</p>
-      {hint && <p className="mt-1 text-xs text-zinc-500">{hint}</p>}
+      {hint && <p className="mt-1 text-xs text-zinc-700 dark:text-zinc-500">{hint}</p>}
       {sparklineSeed && (
         <div className="mt-2 -mx-1">
           <Sparkline seed={sparklineSeed} tone={effectiveSparkTone} className="h-5 w-full" />

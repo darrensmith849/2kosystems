@@ -35,8 +35,8 @@ export default async function ReviewPage() {
       />
       {snapshot ? <SnapshotBanner area="Review & decisions" /> : <NotConnectedBanner />}
 
-      <nav className="mb-6 hidden flex-wrap gap-3 rounded-2xl border border-zinc-200 dark:border-[#1c1c1e] bg-white dark:bg-[#0a0a0b]/60 px-4 py-3 text-[11px] text-zinc-600 dark:text-[#a1a1aa] sm:flex">
-        <span className="font-mono uppercase tracking-[0.18em] text-[10px] text-zinc-500 dark:text-[#52525b]">
+      <nav className="mb-6 hidden flex-wrap gap-3 rounded-2xl border border-zinc-200 dark:border-[#1c1c1e] bg-white dark:bg-[#0a0a0b]/60 px-4 py-3 text-[11px] text-zinc-700 dark:text-[#a1a1aa] sm:flex">
+        <span className="font-mono uppercase tracking-[0.18em] text-[10px] text-zinc-600 dark:text-[#52525b]">
           Jump to
         </span>
         <a href="#step-1" className="hover:text-emerald-300">
@@ -105,7 +105,7 @@ export default async function ReviewPage() {
 
       <div className="mt-8">
         <AdminCard title="Scope and limits">
-          <ul className="space-y-1.5 text-xs text-zinc-600 dark:text-[#a1a1aa] leading-relaxed">
+          <ul className="space-y-1.5 text-xs text-zinc-700 dark:text-[#a1a1aa] leading-relaxed">
             <li className="flex gap-2">
               <span className="mt-1.5 inline-block size-1 shrink-0 rounded-full bg-[#52525b]" />
               <span>Read-only preview of the import.</span>

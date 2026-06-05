@@ -127,8 +127,8 @@ export default async function ClientDetailPage({
             <Link href="/admin/ops/clients" className="text-emerald-300 hover:underline">
               ← back to Clients
             </Link>
-            <span className="ml-2 text-zinc-500 dark:text-[#52525b]">·</span>
-            <span className="ml-2 text-zinc-500 dark:text-[#71717a]">{client.status}</span>
+            <span className="ml-2 text-zinc-600 dark:text-[#52525b]">·</span>
+            <span className="ml-2 text-zinc-700 dark:text-[#71717a]">{client.status}</span>
           </>
         }
       />
@@ -174,7 +174,7 @@ export default async function ClientDetailPage({
             />
           )}
           {client.tags && client.tags.length > 0 && (
-            <Row label="Tags" value={<span className="font-mono text-[10px] text-zinc-600 dark:text-[#a1a1aa]">{client.tags.join(', ')}</span>} />
+            <Row label="Tags" value={<span className="font-mono text-[10px] text-zinc-700 dark:text-[#a1a1aa]">{client.tags.join(', ')}</span>} />
           )}
           <Row label="Notes" value={client.notes ?? null} />
         </AdminCard>
@@ -194,7 +194,7 @@ export default async function ClientDetailPage({
                     {c.role && <Badge text={c.role} />}
                     {c.isPrimary === 'true' && <Badge text="primary" tone="green" />}
                   </div>
-                  <div className="flex flex-wrap gap-3 text-[11px] text-zinc-600 dark:text-[#a1a1aa]">
+                  <div className="flex flex-wrap gap-3 text-[11px] text-zinc-700 dark:text-[#a1a1aa]">
                     {c.email && <span>{c.email}</span>}
                     {c.phone && <span>{c.phone}</span>}
                   </div>

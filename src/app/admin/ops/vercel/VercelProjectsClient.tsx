@@ -104,7 +104,7 @@ export default function VercelProjectsClient({
         />
       ) : (
         <>
-          <p className="text-xs text-zinc-500">{filtered.length} projects</p>
+          <p className="text-xs text-zinc-700 dark:text-zinc-500">{filtered.length} projects</p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             {filtered.map((project) => {
               const state = project.state;

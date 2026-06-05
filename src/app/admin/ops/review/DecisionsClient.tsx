@@ -208,7 +208,7 @@ export default function DecisionsClient({
       </div>
 
       <div className="mb-4 rounded-2xl border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#111113] p-4">
-        <p className="text-[10px] uppercase tracking-wider text-zinc-500 dark:text-[#52525b] mb-2">Summary</p>
+        <p className="text-[10px] uppercase tracking-wider text-zinc-600 dark:text-[#52525b] mb-2">Summary</p>
         <div className="flex flex-wrap gap-2 text-xs">
           {STATUS_ORDER.map((s) => (
             <Badge
@@ -231,7 +231,7 @@ export default function DecisionsClient({
               className={`text-[10px] font-mono uppercase tracking-[0.15em] px-3 py-1.5 rounded-full border transition-colors ${
                 active
                   ? 'border-[#f5f5f5] bg-[#f5f5f5] text-[#0a0a0b]'
-                  : 'border-zinc-200 dark:border-[#27272a] text-zinc-600 dark:text-[#a1a1aa] hover:bg-zinc-100 dark:bg-[#1c1c1e]'
+                  : 'border-zinc-200 dark:border-[#27272a] text-zinc-700 dark:text-[#a1a1aa] hover:bg-zinc-100 dark:bg-[#1c1c1e]'
               }`}
             >
               {f.label}
@@ -242,14 +242,14 @@ export default function DecisionsClient({
 
       {!hasAnyVisible && (
         <div className="rounded-2xl border border-dashed border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#0a0a0b] p-8 text-center mb-6">
-          <p className="text-sm text-zinc-600 dark:text-[#a1a1aa]">No decisions match this filter.</p>
-          <p className="mt-1 text-xs text-zinc-500 dark:text-[#52525b]">Switch to &ldquo;All&rdquo; to see every item.</p>
+          <p className="text-sm text-zinc-700 dark:text-[#a1a1aa]">No decisions match this filter.</p>
+          <p className="mt-1 text-xs text-zinc-600 dark:text-[#52525b]">Switch to &ldquo;All&rdquo; to see every item.</p>
         </div>
       )}
 
       {CLUSTER_ORDER.filter((c) => grouped[c] && grouped[c].length > 0).map((cluster) => (
         <section key={cluster} className="mb-8">
-          <h3 className="text-xs uppercase tracking-wider text-zinc-500 dark:text-[#71717a] mb-3">
+          <h3 className="text-xs uppercase tracking-wider text-zinc-700 dark:text-[#71717a] mb-3">
             {CLUSTER_LABEL[cluster]} · {grouped[cluster].length}
           </h3>
           <div className="space-y-3">
@@ -303,7 +303,7 @@ function DecisionCard({
       <div className="flex items-start justify-between gap-3 mb-3">
         <div className="flex-1">
           <p className="text-sm font-medium text-zinc-900 dark:text-[#f5f5f5]">{d.title}</p>
-          <p className="mt-1 text-xs text-zinc-600 dark:text-[#a1a1aa] leading-relaxed">{d.context}</p>
+          <p className="mt-1 text-xs text-zinc-700 dark:text-[#a1a1aa] leading-relaxed">{d.context}</p>
         </div>
         <div className="flex flex-col items-end gap-1 shrink-0">
           <Badge text={`risk: ${d.risk}`} tone={RISK_TONE[d.risk]} />
@@ -316,7 +316,7 @@ function DecisionCard({
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
         <div>
-          <p className="text-[10px] uppercase tracking-wider text-zinc-500 dark:text-[#52525b] mb-1.5">Options</p>
+          <p className="text-[10px] uppercase tracking-wider text-zinc-600 dark:text-[#52525b] mb-1.5">Options</p>
           <ul className="space-y-1">
             {d.options.map((o) => (
               <li
@@ -324,7 +324,7 @@ function DecisionCard({
                 className={`text-xs rounded-md border px-3 py-1.5 ${
                   o.recommended
                     ? 'border-emerald-400/40 bg-emerald-400/5 text-emerald-200'
-                    : 'border-zinc-200 dark:border-[#27272a] text-zinc-600 dark:text-[#a1a1aa]'
+                    : 'border-zinc-200 dark:border-[#27272a] text-zinc-700 dark:text-[#a1a1aa]'
                 }`}
               >
                 {o.recommended && (
@@ -341,12 +341,12 @@ function DecisionCard({
           <Row label="Recommendation" value={<span className="text-zinc-800 dark:text-[#e4e4e7]">{d.recommendation}</span>} />
           <Row
             label="Action"
-            value={<code className="font-mono text-[10px] text-zinc-600 dark:text-[#a1a1aa] break-all">{d.action}</code>}
+            value={<code className="font-mono text-[10px] text-zinc-700 dark:text-[#a1a1aa] break-all">{d.action}</code>}
           />
           <Row
             label="Blocked by"
             value={
-              <span className="text-[11px] text-zinc-600 dark:text-[#a1a1aa]">
+              <span className="text-[11px] text-zinc-700 dark:text-[#a1a1aa]">
                 {d.blockedBy.includes('none')
                   ? 'no provider blockers — operator decision only'
                   : d.blockedBy.join(', ')}
@@ -357,7 +357,7 @@ function DecisionCard({
       </div>
 
       <div className="mt-4 pt-3 border-t border-zinc-200 dark:border-[#1c1c1e]">
-        <p className="text-[10px] uppercase tracking-wider text-zinc-500 dark:text-[#52525b] mb-2">Your call</p>
+        <p className="text-[10px] uppercase tracking-wider text-zinc-600 dark:text-[#52525b] mb-2">Your call</p>
         <div className="flex flex-wrap gap-1.5">
           {STATUS_ORDER.map((s) => {
             const active = entry.status === s;
@@ -369,7 +369,7 @@ function DecisionCard({
                 className={`text-[10px] font-mono uppercase tracking-[0.12em] px-2.5 py-1 rounded-full border transition-colors ${
                   active
                     ? 'border-[#f5f5f5] bg-[#f5f5f5] text-[#0a0a0b]'
-                    : 'border-zinc-200 dark:border-[#27272a] text-zinc-600 dark:text-[#a1a1aa] hover:bg-zinc-100 dark:bg-[#1c1c1e]'
+                    : 'border-zinc-200 dark:border-[#27272a] text-zinc-700 dark:text-[#a1a1aa] hover:bg-zinc-100 dark:bg-[#1c1c1e]'
                 }`}
               >
                 {REVIEW_STATUS_LABEL[s]}
@@ -385,15 +385,15 @@ function DecisionCard({
           maxLength={500}
           rows={2}
           placeholder="Note (saved locally on blur, max 500 chars)"
-          className="mt-3 w-full rounded-lg border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#0a0a0b] px-3 py-2 text-xs text-zinc-800 dark:text-[#e4e4e7] placeholder:text-zinc-500 dark:text-[#52525b] focus:outline-none focus:border-[#3f3f46] resize-none"
+          className="mt-3 w-full rounded-lg border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#0a0a0b] px-3 py-2 text-xs text-zinc-800 dark:text-[#e4e4e7] placeholder:text-zinc-600 dark:text-[#52525b] focus:outline-none focus:border-[#3f3f46] resize-none"
         />
 
         <div className="mt-2 flex items-center justify-between gap-2">
-          <span className="text-[10px] text-zinc-500 dark:text-[#52525b]">
+          <span className="text-[10px] text-zinc-600 dark:text-[#52525b]">
             {noteDraft.length}/500
           </span>
           {entry.updatedAt && (
-            <span className="text-[10px] text-zinc-500 dark:text-[#52525b]">
+            <span className="text-[10px] text-zinc-600 dark:text-[#52525b]">
               Updated {relativeTime(entry.updatedAt)}
             </span>
           )}

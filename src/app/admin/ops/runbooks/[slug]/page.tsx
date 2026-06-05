@@ -259,7 +259,7 @@ function renderBlock(block: Block, idx: number): React.ReactNode {
       );
     case 'raw':
       return (
-        <p key={key} className="text-xs font-mono text-zinc-600 dark:text-[#a1a1aa] my-2 whitespace-pre-wrap break-words">
+        <p key={key} className="text-xs font-mono text-zinc-700 dark:text-[#a1a1aa] my-2 whitespace-pre-wrap break-words">
           {block.text}
         </p>
       );
@@ -300,7 +300,7 @@ export default async function RunbookViewerPage({
       />
 
       <div className="rounded-2xl border border-zinc-200 dark:border-[#27272a] bg-white dark:bg-[#111113] p-6">
-        <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-zinc-500 dark:text-[#71717a] mb-4">
+        <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-zinc-700 dark:text-[#71717a] mb-4">
           {entry.path}
         </p>
         <article className="max-w-none">

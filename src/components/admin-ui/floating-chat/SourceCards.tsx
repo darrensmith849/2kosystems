@@ -36,7 +36,7 @@ export function SourceCards({ sources }: { sources: AssistantSource[] }) {
   const showToggle = sources.length > DEFAULT_VISIBLE;
   return (
     <div className="mt-3 rounded-xl border border-white/[0.06] bg-white/[0.02] px-3 py-2.5">
-      <p className="text-xs font-medium text-zinc-500 mb-2">
+      <p className="text-xs font-medium text-zinc-700 dark:text-zinc-500 mb-2">
         Related records ({sources.length})
       </p>
       <ul className="space-y-1">

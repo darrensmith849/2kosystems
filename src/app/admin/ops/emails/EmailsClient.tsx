@@ -394,7 +394,7 @@ export default function EmailsClient({ snapshotRefs }: { snapshotRefs: SnapshotE
             database is connected, the same fields will migrate to a real backend record — the
             shape stays the same.
           </p>
-          <p className="text-xs text-zinc-600 dark:text-[#a1a1aa] leading-relaxed">
+          <p className="text-xs text-zinc-700 dark:text-[#a1a1aa] leading-relaxed">
             Storage key: <span className="font-mono text-zinc-900 dark:text-[#f5f5f5]">2ko_ops_local_email_refs_v1</span>{' '}
             · {hydrated ? `${totalLocal} local reference${totalLocal === 1 ? '' : 's'}` : 'loading…'}
           </p>
@@ -604,12 +604,12 @@ export default function EmailsClient({ snapshotRefs }: { snapshotRefs: SnapshotE
               <button
                 type="button"
                 onClick={cancelForm}
-                className="inline-flex items-center gap-2 rounded-md border border-zinc-200 dark:border-[#27272a] bg-[#18181b] px-3 py-2 text-xs text-zinc-600 dark:text-[#a1a1aa] hover:bg-[#1f1f23]"
+                className="inline-flex items-center gap-2 rounded-md border border-zinc-200 dark:border-[#27272a] bg-[#18181b] px-3 py-2 text-xs text-zinc-700 dark:text-[#a1a1aa] hover:bg-[#1f1f23]"
               >
                 <XIcon />
                 Cancel
               </button>
-              <span className="text-[11px] text-zinc-500 dark:text-[#71717a]">
+              <span className="text-[11px] text-zinc-700 dark:text-[#71717a]">
                 Saved only in this browser. No email body content stored.
               </span>
             </div>
@@ -620,9 +620,9 @@ export default function EmailsClient({ snapshotRefs }: { snapshotRefs: SnapshotE
       {/* 3. List of local refs grouped by category */}
       <AdminCard title="Saved references (this browser)">
         {!hydrated ? (
-          <p className="text-xs text-zinc-500 dark:text-[#71717a]">Loading…</p>
+          <p className="text-xs text-zinc-700 dark:text-[#71717a]">Loading…</p>
         ) : totalLocal === 0 ? (
-          <p className="text-sm text-zinc-600 dark:text-[#a1a1aa] leading-relaxed">
+          <p className="text-sm text-zinc-700 dark:text-[#a1a1aa] leading-relaxed">
             No local references yet. Use{' '}
             <span className="text-zinc-900 dark:text-[#f5f5f5]">New reference</span> to file one — it stays in this
             browser only.
@@ -646,7 +646,7 @@ export default function EmailsClient({ snapshotRefs }: { snapshotRefs: SnapshotE
                     <span className="flex items-center gap-2 text-sm font-medium text-zinc-900 dark:text-zinc-100">
                       <MailIcon className="h-4 w-4 shrink-0 text-zinc-600 dark:text-zinc-400" />
                       {EMAIL_CATEGORY_LABEL[cat]}
-                      <span className="text-xs text-zinc-500">({inCat.length})</span>
+                      <span className="text-xs text-zinc-700 dark:text-zinc-500">({inCat.length})</span>
                     </span>
                     <ChevronIcon open={!collapsed} className="h-4 w-4 text-zinc-600 dark:text-zinc-400" />
                   </button>
@@ -669,12 +669,12 @@ export default function EmailsClient({ snapshotRefs }: { snapshotRefs: SnapshotE
                           </div>
                           <p className="text-sm font-medium text-zinc-900 dark:text-[#f5f5f5]">{r.subject}</p>
                           {(r.fromName || r.fromEmail) && (
-                            <p className="text-xs text-zinc-600 dark:text-[#a1a1aa] mt-0.5">
+                            <p className="text-xs text-zinc-700 dark:text-[#a1a1aa] mt-0.5">
                               from {r.fromName || 'unknown'}
                               {r.fromEmail && (
                                 <>
                                   {' '}
-                                  <span className="text-zinc-500 dark:text-[#52525b]">
+                                  <span className="text-zinc-600 dark:text-[#52525b]">
                                     &lt;{r.fromEmail}&gt;
                                   </span>
                                 </>
@@ -682,7 +682,7 @@ export default function EmailsClient({ snapshotRefs }: { snapshotRefs: SnapshotE
                             </p>
                           )}
                           {r.notes && (
-                            <p className="text-xs text-zinc-600 dark:text-[#a1a1aa] mt-1.5 leading-relaxed">
+                            <p className="text-xs text-zinc-700 dark:text-[#a1a1aa] mt-1.5 leading-relaxed">
                               {r.notes}
                             </p>
                           )}
@@ -717,7 +717,7 @@ export default function EmailsClient({ snapshotRefs }: { snapshotRefs: SnapshotE
 
       {/* 4. Planned categories recap — snapshot preview rows from props */}
       <AdminCard title="Planned categories recap (preview)">
-        <p className="mb-3 text-xs text-zinc-600 dark:text-[#a1a1aa] leading-relaxed">
+        <p className="mb-3 text-xs text-zinc-700 dark:text-[#a1a1aa] leading-relaxed">
           Reference how each category is meant to look when used. These rows come from the planned
           snapshot data — they are not editable here.
         </p>
@@ -746,7 +746,7 @@ export default function EmailsClient({ snapshotRefs }: { snapshotRefs: SnapshotE
 
       {/* 5. Disabled future shared form hint */}
       <AdminCard title="Future shared form">
-        <p className="text-xs text-zinc-600 dark:text-[#a1a1aa] leading-relaxed">
+        <p className="text-xs text-zinc-700 dark:text-[#a1a1aa] leading-relaxed">
           A shared, multi-operator email reference form will activate once the database is
           connected. Until then, the form above is browser-only — references created here stay on
           this device. The same fields will move 1:1 to the shared form, so anything captured now

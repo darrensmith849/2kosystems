@@ -65,7 +65,7 @@ export function ChatComposer({
         className="w-full resize-none bg-transparent text-sm text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-500 focus:outline-none disabled:opacity-50"
       />
       <div className="flex items-center justify-between gap-3">
-        <span className="text-xs text-zinc-500 leading-tight">{hint}</span>
+        <span className="text-xs text-zinc-700 dark:text-zinc-500 leading-tight">{hint}</span>
         <button
           type="submit"
           disabled={busy || value.trim().length === 0}

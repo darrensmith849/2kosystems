@@ -35,7 +35,7 @@ export function Row({ label, value }: { label: string; value: React.ReactNode })
   if (value === null || value === undefined || value === '') return null;
   return (
     <div className="flex gap-3 py-1.5 border-b border-zinc-100 dark:border-white/[0.04] last:border-0">
-      <span className="w-40 shrink-0 text-xs text-zinc-500">{label}</span>
+      <span className="w-40 shrink-0 text-xs text-zinc-700 dark:text-zinc-500">{label}</span>
       <span className="text-xs text-zinc-900 dark:text-zinc-100 flex-1 break-words">{value}</span>
     </div>
   );
@@ -82,7 +82,7 @@ export function EmptyState({ title, hint, action }: { title: string; hint?: stri
   return (
     <div className="rounded-2xl border border-dashed border-zinc-300 bg-white dark:border-white/[0.06] dark:bg-white/[0.02] p-10 text-center transition-colors">
       <p className="text-sm text-zinc-700 dark:text-zinc-300">{title}</p>
-      {hint && <p className="mt-2 text-xs text-zinc-500 max-w-md mx-auto">{hint}</p>}
+      {hint && <p className="mt-2 text-xs text-zinc-700 dark:text-zinc-500 max-w-md mx-auto">{hint}</p>}
       {action && <div className="mt-4 inline-flex">{action}</div>}
     </div>
   );
@@ -120,7 +120,7 @@ export function DataTable<T extends { id: string | number }>({
             {columns.map((c) => (
               <th
                 key={c.key}
-                className={`px-4 py-3 text-xs font-medium text-zinc-500 ${c.className ?? ''}`}
+                className={`px-4 py-3 text-xs font-medium text-zinc-700 dark:text-zinc-500 ${c.className ?? ''}`}
               >
                 {c.header}
               </th>

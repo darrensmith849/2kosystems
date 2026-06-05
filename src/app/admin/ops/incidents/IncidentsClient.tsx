@@ -217,7 +217,7 @@ export default function IncidentsClient({
 
       <div className="flex flex-col gap-3 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-4 md:flex-row md:items-center md:justify-between">
         <div className="flex flex-col gap-2">
-          <p className="text-[11px] font-medium text-zinc-500">Severity</p>
+          <p className="text-[11px] font-medium text-zinc-700 dark:text-zinc-500">Severity</p>
           <div className="flex flex-wrap gap-2">
             <button
               type="button"
@@ -239,7 +239,7 @@ export default function IncidentsClient({
           </div>
         </div>
         <div className="flex flex-col gap-2">
-          <p className="text-[11px] font-medium text-zinc-500">Status</p>
+          <p className="text-[11px] font-medium text-zinc-700 dark:text-zinc-500">Status</p>
           <div className="flex flex-wrap gap-2">
             <button
               type="button"
@@ -272,7 +272,7 @@ export default function IncidentsClient({
               ? 'No incidents logged.'
               : 'No incidents match the current filters.'}
           </p>
-          <p className="mt-2 text-xs text-zinc-500 max-w-md mx-auto">
+          <p className="mt-2 text-xs text-zinc-700 dark:text-zinc-500 max-w-md mx-auto">
             {initialIncidents.length === 0
               ? 'Log incidents manually for now. BetterStack auto-ingestion lands in Phase 2B.'
               : 'Clear or adjust the severity/status chips to widen the view.'}
@@ -280,7 +280,7 @@ export default function IncidentsClient({
         </div>
       ) : (
         <div className="space-y-3">
-          <p className="text-[11px] font-medium text-zinc-500">
+          <p className="text-[11px] font-medium text-zinc-700 dark:text-zinc-500">
             {rows.length} incident{rows.length === 1 ? '' : 's'}
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
