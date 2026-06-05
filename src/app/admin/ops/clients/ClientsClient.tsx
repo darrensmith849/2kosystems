@@ -2,14 +2,38 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { AdminCard, Badge, DataTable, EmptyState } from '@/components/admin-ui';
+import { AdminCard, EmptyState, Tile, type TileStatus, type SparklineTone } from '@/components/admin-ui';
 import type { ClientWithDivision } from '@/lib/ops/clients-service';
-import { CLIENT_STATUS_LABEL, labelFor } from '@/lib/ops/labels';
 
-const STATUS_TONES: Record<string, 'neutral' | 'green' | 'amber' | 'rose' | 'blue'> = {
-  active: 'green', lead: 'blue', paused: 'amber', archived: 'neutral', former: 'rose',
-};
+function statusFor(status: string): TileStatus {
+  switch (status) {
+    case 'active':
+      return 'ok';
+    case 'lead':
+    case 'paused':
+      return 'warn';
+    case 'former':
+    case 'archived':
+      return 'neutral';
+    default:
+      return 'neutral';
+  }
+}
+
+function toneFor(status: string): SparklineTone {
+  switch (status) {
+    case 'active':
+      return 'good';
+    case 'lead':
+    case 'paused':
+      return 'warn';
+    case 'former':
+    case 'archived':
+      return 'neutral';
+    default:
+      return 'neutral';
+  }
+}
 
 export default function ClientsClient({
   initialClients,
@@ -52,7 +76,7 @@ export default function ClientsClient({
   if (isSnapshot) {
     return (
       <div className="space-y-5">
-        <SnapshotTable rows={initialClients} />
+        <ClientsGrid rows={initialClients} />
       </div>
     );
   }
@@ -95,47 +119,32 @@ export default function ClientsClient({
       {initialClients.length === 0 ? (
         <EmptyState title="No clients yet" hint="Add your first client above. Importing from the inventory and CRM is planned for a later step." />
       ) : (
-        <DataTable
-          rows={initialClients}
-          columns={[
-            { key: 'name', header: 'Name', render: (c) => (
-              <Link href={`/admin/ops/clients/${c.id}`} className="font-medium text-zinc-100 hover:text-zinc-50 transition-colors">
-                {c.name}
-              </Link>
-            ) },
-            { key: 'division', header: 'Division', render: (c) => c.division?.name ?? <span className="text-zinc-500">—</span> },
-            { key: 'status', header: 'Status', render: (c) => <Badge text={labelFor(CLIENT_STATUS_LABEL, c.status)} tone={STATUS_TONES[c.status] ?? 'neutral'} /> },
-            { key: 'updated', header: 'Updated', render: (c) => fmtDate(c.updatedAt) },
-          ]}
-        />
+        <ClientsGrid rows={initialClients} />
       )}
     </div>
   );
 }
 
-function fmtDate(d: Date | null): string {
-  if (!d) return '—';
-  return new Date(d).toISOString().slice(0, 10);
-}
-
-function SnapshotTable({ rows }: { rows: ClientWithDivision[] }) {
+function ClientsGrid({ rows }: { rows: ClientWithDivision[] }) {
   if (rows.length === 0) {
     return <EmptyState title="Sample data is empty" hint="Edit src/lib/ops/ops-snapshot-data.ts to seed more sample entries." />;
   }
   return (
-    <DataTable
-      rows={rows}
-      columns={[
-        { key: 'name', header: 'Name', render: (c) => (
-          <Link href={`/admin/ops/clients/${c.id}`} className="font-medium text-zinc-100 hover:text-zinc-50 transition-colors">
-            {c.name}
-          </Link>
-        ) },
-        { key: 'division', header: 'Division', render: (c) => c.division?.name ?? <span className="text-zinc-500">—</span> },
-        { key: 'status', header: 'Status', render: (c) => <Badge text={labelFor(CLIENT_STATUS_LABEL, c.status)} tone={STATUS_TONES[c.status] ?? 'neutral'} /> },
-        { key: 'tags', header: 'Tags', render: (c) => c.tags.length > 0 ? <span className="font-mono text-[10px] text-zinc-400">{c.tags.join(', ')}</span> : <span className="text-zinc-500">—</span> },
-        { key: 'notes', header: 'Notes', render: (c) => c.notes ? <span className="text-xs text-zinc-400">{c.notes}</span> : <span className="text-zinc-500">—</span> },
-      ]}
-    />
+    <div className="space-y-3">
+      <p className="text-xs text-zinc-500">{rows.length} clients</p>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+        {rows.map((c) => (
+          <Tile
+            key={c.id}
+            href={`/admin/ops/clients/${c.id}`}
+            name={c.name}
+            subtitle={c.division?.name ?? '—'}
+            sparklineSeed={c.id}
+            sparklineTone={toneFor(c.status)}
+            status={statusFor(c.status)}
+          />
+        ))}
+      </div>
+    </div>
   );
 }

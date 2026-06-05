@@ -2,23 +2,9 @@
 
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { AdminCard, Badge, DataTable, EmptyState, StatusPill } from '@/components/admin-ui';
+import { AdminCard, EmptyState, StatusPill, Tile } from '@/components/admin-ui';
 import type { GithubRepoRow } from '@/lib/ops/github-service';
 import type { IntegrationConnectivity } from '@/lib/integrations/types';
-import { REPO_CATEGORY_LABEL, labelFor } from '@/lib/ops/labels';
-
-const CATEGORY_TONES: Record<string, 'neutral' | 'green' | 'amber' | 'rose' | 'blue'> = {
-  '2ko_africa': 'green',
-  '2ko_systems': 'green',
-  'six_sigma': 'green',
-  'sigmaphi_portal': 'green',
-  'sigmaphi_stats': 'green',
-  'shared_internal': 'blue',
-  'external_client': 'amber',
-  'personal_excluded': 'neutral',
-  'legacy_stale': 'neutral',
-  'unknown_unmapped': 'rose',
-};
 
 export default function GithubReposClient({
   repos,
@@ -105,28 +91,23 @@ export default function GithubReposClient({
           hint="If GitHub is connected, run a sync. Otherwise add a GitHub access token in Settings and try again."
         />
       ) : (
-        <DataTable
-          rows={visible}
-          columns={[
-            { key: 'name', header: 'Name', render: (r) => (
-              <span>
-                <span className="text-zinc-500">{r.owner}/</span>
-                <span className="font-medium text-zinc-100">{r.name}</span>
-                {r.isArchived && <span className="ml-2 text-[10px] text-amber-300">archived</span>}
-              </span>
-            )},
-            { key: 'visibility', header: 'Visibility', render: (r) => <Badge text={r.visibility[0].toUpperCase() + r.visibility.slice(1)} tone={r.visibility === 'private' ? 'neutral' : 'blue'} /> },
-            { key: 'category', header: 'Category', render: (r) => <Badge text={labelFor(REPO_CATEGORY_LABEL, r.category)} tone={CATEGORY_TONES[r.category] ?? 'neutral'} /> },
-            { key: 'language', header: 'Language', render: (r) => r.language ?? <span className="text-zinc-500">—</span> },
-            { key: 'pushed', header: 'Last push', render: (r) => fmtDate(r.pushedAt) },
-          ]}
-        />
+        <>
+          <p className="text-xs text-zinc-500">{visible.length} repos</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {visible.map((repo) => (
+              <Tile
+                key={repo.id}
+                href="/admin/ops/github"
+                name={repo.name}
+                subtitle={`${repo.category} · ${repo.language ?? '—'}`}
+                sparklineSeed={repo.id}
+                sparklineTone={repo.isArchived ? 'neutral' : 'good'}
+                status={repo.isArchived ? 'neutral' : 'ok'}
+              />
+            ))}
+          </div>
+        </>
       )}
     </div>
   );
-}
-
-function fmtDate(d: Date | null): string {
-  if (!d) return '—';
-  return new Date(d).toISOString().slice(0, 10);
 }

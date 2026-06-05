@@ -2,7 +2,8 @@
 
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { AdminCard, Badge, DataTable, EmptyState } from '@/components/admin-ui';
+import { AdminCard, EmptyState, Tile, type TileStatus } from '@/components/admin-ui';
+import type { SparklineTone } from '@/components/admin-ui';
 import type { RenewalWithRefs } from '@/lib/ops/renewals-service';
 import {
   computeRenewalWindow,
@@ -21,58 +22,38 @@ const KINDS = [
 
 const PERIODS = ['monthly', 'annual', 'one_off'] as const;
 
-const REMINDER_CYCLE: ReminderState[] = [
-  'none',
-  'notified_60',
-  'notified_30',
-  'notified_14',
-  'notified_7',
-  'due',
-  'overdue',
-];
-
-const WINDOW_TONE: Record<RenewalWindow, 'rose' | 'amber' | 'blue' | 'neutral'> = {
-  overdue: 'rose',
-  due: 'rose',
-  within_7: 'amber',
-  within_14: 'amber',
-  within_30: 'blue',
-  within_60: 'neutral',
-  future: 'neutral',
-};
-
 type KindFilter = 'all' | (typeof KINDS)[number];
 type WindowFilter = 'all' | 'attention' | 'next_7' | 'next_30';
 type SubjectKind = 'none' | 'asset' | 'domain' | 'service';
 
-function formatDate(d: Date | string): string {
-  const dt = d instanceof Date ? d : new Date(d);
-  if (Number.isNaN(dt.getTime())) return '—';
-  const y = dt.getUTCFullYear();
-  const m = String(dt.getUTCMonth() + 1).padStart(2, '0');
-  const day = String(dt.getUTCDate()).padStart(2, '0');
-  return `${y}-${m}-${day}`;
-}
-
-function formatAmount(amount: string | null, currency: string): string {
-  if (amount === null || amount === undefined || amount === '') return '—';
-  const n = Number(amount);
-  if (Number.isNaN(n)) return amount;
-  try {
-    return new Intl.NumberFormat('en-ZA', {
-      style: 'currency',
-      currency: currency || 'ZAR',
-      maximumFractionDigits: 2,
-    }).format(n);
-  } catch {
-    return `${currency} ${n.toFixed(2)}`;
+function sparklineToneFor(state: ReminderState, window: RenewalWindow): SparklineTone {
+  if (
+    state === 'overdue' ||
+    state === 'due' ||
+    window === 'overdue' ||
+    window === 'due' ||
+    window === 'within_7' ||
+    window === 'within_14'
+  ) {
+    return 'warn';
   }
+  if (window === 'future') return 'good';
+  return 'neutral';
 }
 
-function nextReminderState(current: string): ReminderState {
-  const idx = REMINDER_CYCLE.indexOf(current as ReminderState);
-  if (idx === -1) return REMINDER_CYCLE[1]; // 'notified_60'
-  return REMINDER_CYCLE[(idx + 1) % REMINDER_CYCLE.length];
+function tileStatusFor(state: ReminderState, window: RenewalWindow): TileStatus {
+  if (
+    state === 'overdue' ||
+    state === 'due' ||
+    window === 'overdue' ||
+    window === 'due' ||
+    window === 'within_7' ||
+    window === 'within_14'
+  ) {
+    return 'warn';
+  }
+  if (window === 'future') return 'ok';
+  return 'neutral';
 }
 
 type PickerOption = { id: string; name: string };
@@ -102,7 +83,6 @@ export default function RenewalsClient({
   const [subjectId, setSubjectId] = useState<string>('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [rowBusyId, setRowBusyId] = useState<string | null>(null);
 
   // Filter state
   const [kindFilter, setKindFilter] = useState<KindFilter>('all');
@@ -154,7 +134,7 @@ export default function RenewalsClient({
         }
       }
       return true;
-    }).map((a) => a.row);
+    });
   }, [annotated, kindFilter, clientFilter, windowFilter]);
 
   function handleSubjectKindChange(next: SubjectKind) {
@@ -204,27 +184,6 @@ export default function RenewalsClient({
       setError(err instanceof Error ? err.message : 'Network error');
     } finally {
       setBusy(false);
-    }
-  }
-
-  async function patchRenewal(id: string, body: Record<string, unknown>) {
-    setRowBusyId(id);
-    try {
-      const res = await fetch(`/api/admin/ops/renewals/${id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      });
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        setError((data as { error?: string }).error ?? `HTTP ${res.status}`);
-        return;
-      }
-      router.refresh();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Network error');
-    } finally {
-      setRowBusyId(null);
     }
   }
 
@@ -447,80 +406,32 @@ export default function RenewalsClient({
           hint="Try resetting filters or widening the window."
         />
       ) : (
-        <DataTable
-          rows={filtered}
-          columns={[
-            {
-              key: 'name',
-              header: 'Name',
-              render: (r) => (
-                <div className="flex flex-col">
-                  <span className="font-medium text-zinc-100">{r.name}</span>
-                  <span className="text-xs text-zinc-500">{r.kind.replace('_', ' ')}</span>
-                </div>
-              ),
-            },
-            {
-              key: 'window',
-              header: 'Window',
-              render: (r) => {
-                const w = computeRenewalWindow(r.nextDueAt);
-                return <Badge text={w.replace('_', ' ')} tone={WINDOW_TONE[w]} />;
-              },
-            },
-            {
-              key: 'nextDueAt',
-              header: 'Next due',
-              render: (r) => <span className="font-mono text-[11px]">{formatDate(r.nextDueAt)}</span>,
-            },
-            {
-              key: 'amount',
-              header: 'Amount',
-              render: (r) => <span className="font-mono text-[11px]">{formatAmount(r.amount, r.currency)}</span>,
-            },
-            {
-              key: 'client',
-              header: 'Client',
-              render: (r) => r.client?.name ?? <span className="text-zinc-500">—</span>,
-            },
-            {
-              key: 'autoRenew',
-              header: 'Auto-renew',
-              render: (r) =>
-                r.autoRenew === null || r.autoRenew === undefined
-                  ? <span className="text-zinc-500">—</span>
-                  : <Badge text={r.autoRenew ? 'Y' : 'N'} tone={r.autoRenew ? 'green' : 'neutral'} />,
-            },
-            {
-              key: 'actions',
-              header: 'Actions',
-              render: (r) => {
-                const disabled = rowBusyId === r.id;
-                return (
-                  <div className="flex gap-2">
-                    <button
-                      type="button"
-                      onClick={() => patchRenewal(r.id, { reminderState: nextReminderState(r.reminderState) })}
-                      disabled={disabled}
-                      className="text-xs font-medium px-2.5 py-1 rounded-full border border-emerald-400/20 text-emerald-300 hover:bg-emerald-400/[0.08] disabled:opacity-40"
-                      title={`Current: ${r.reminderState}`}
-                    >
-                      Mark reminded
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => patchRenewal(r.id, { reminderState: 'none' })}
-                      disabled={disabled}
-                      className="text-xs font-medium px-2.5 py-1 rounded-full border border-white/[0.08] text-zinc-400 hover:bg-white/[0.04] hover:text-zinc-100 disabled:opacity-40"
-                    >
-                      Snooze
-                    </button>
-                  </div>
-                );
-              },
-            },
-          ]}
-        />
+        <div className="space-y-3">
+          <p className="text-[11px] font-medium text-zinc-500">
+            {filtered.length} renewal{filtered.length === 1 ? '' : 's'}
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {filtered.map(({ row: r, window }) => {
+              const due = r.nextDueAt
+                ? ` · due ${r.nextDueAt.toISOString().slice(0, 10)}`
+                : '';
+              const subtitle = `${r.kind} · ${r.client?.name ?? '—'}${due}`;
+              const tone = sparklineToneFor(r.reminderState as ReminderState, window);
+              const status = tileStatusFor(r.reminderState as ReminderState, window);
+              return (
+                <Tile
+                  key={r.id}
+                  href={`/admin/ops/renewals/${r.id}`}
+                  name={r.name}
+                  subtitle={subtitle}
+                  sparklineSeed={r.id}
+                  sparklineTone={tone}
+                  status={status}
+                />
+              );
+            })}
+          </div>
+        </div>
       )}
     </div>
   );

@@ -2,7 +2,8 @@
 
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { AdminCard, Badge, DataTable } from '@/components/admin-ui';
+import { AdminCard, Tile, type TileStatus } from '@/components/admin-ui';
+import type { SparklineTone } from '@/components/admin-ui';
 import type { IncidentWithRefs } from '@/lib/ops/incidents-service';
 
 const SEVERITIES = ['info', 'minor', 'major', 'critical'] as const;
@@ -34,26 +35,18 @@ function nowDatetimeLocalValue(): string {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
-function formatDuration(startedAt: Date | string, endedAt: Date | string | null): string {
-  const start = new Date(startedAt).getTime();
-  if (!endedAt) return 'ongoing';
-  const end = new Date(endedAt).getTime();
-  const ms = Math.max(0, end - start);
-  const mins = Math.floor(ms / 60000);
-  if (mins < 60) return `${mins}m`;
-  const hours = Math.floor(mins / 60);
-  const remMins = mins % 60;
-  if (hours < 24) return `${hours}h ${remMins}m`;
-  const days = Math.floor(hours / 24);
-  const remHours = hours % 24;
-  return `${days}d ${remHours}h`;
+function sparklineToneForIncident(severity: string, status: string): SparklineTone {
+  if (severity === 'critical') return 'risk';
+  if (severity === 'major') return 'warn';
+  if (status === 'resolved') return 'good';
+  return 'neutral';
 }
 
-function formatStarted(startedAt: Date | string): string {
-  const d = new Date(startedAt);
-  return d.toLocaleString(undefined, {
-    year: 'numeric', month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit',
-  });
+function tileStatusForIncident(severity: string, status: string): TileStatus {
+  if (severity === 'critical') return 'risk';
+  if (severity === 'major') return 'warn';
+  if (status === 'resolved') return 'ok';
+  return 'neutral';
 }
 
 function chipClass(active: boolean, tone: Tone): string {
@@ -96,16 +89,11 @@ export default function IncidentsClient({
   const [clientId, setClientId] = useState('');
   const [startedAtLocal, setStartedAtLocal] = useState<string>(() => nowDatetimeLocalValue());
   const [busy, setBusy] = useState(false);
-  const [rowBusy, setRowBusy] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   // Filters
   const [severityFilter, setSeverityFilter] = useState<Severity | 'all'>('all');
   const [statusFilter, setStatusFilter] = useState<Status | 'all'>('all');
-
-  // Inline root-cause editor state
-  const [editingRootCause, setEditingRootCause] = useState<string | null>(null);
-  const [rootCauseDraft, setRootCauseDraft] = useState<string>('');
 
   const rows = useMemo(() => {
     return initialIncidents.filter((i) => {
@@ -150,56 +138,6 @@ export default function IncidentsClient({
       setError(err instanceof Error ? err.message : 'Network error');
     } finally {
       setBusy(false);
-    }
-  }
-
-  async function patchIncident(id: string, patch: Record<string, unknown>) {
-    setRowBusy(id);
-    setError(null);
-    try {
-      const res = await fetch(`/api/admin/ops/incidents/${id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(patch),
-      });
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        setError((data as { error?: string }).error ?? `HTTP ${res.status}`);
-        return false;
-      }
-      router.refresh();
-      return true;
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Network error');
-      return false;
-    } finally {
-      setRowBusy(null);
-    }
-  }
-
-  async function setStatus(id: string, status: Status) {
-    await patchIncident(id, { status });
-  }
-
-  async function toggleFollowup(id: string, current: boolean) {
-    await patchIncident(id, { followupRequired: !current });
-  }
-
-  function beginEditRootCause(i: IncidentWithRefs) {
-    setEditingRootCause(i.id);
-    setRootCauseDraft(i.rootCause ?? '');
-  }
-
-  function cancelEditRootCause() {
-    setEditingRootCause(null);
-    setRootCauseDraft('');
-  }
-
-  async function saveRootCause(id: string) {
-    const ok = await patchIncident(id, { rootCause: rootCauseDraft.trim() || null });
-    if (ok) {
-      setEditingRootCause(null);
-      setRootCauseDraft('');
     }
   }
 
@@ -327,156 +265,43 @@ export default function IncidentsClient({
         </div>
       </div>
 
-      <DataTable
-        rows={rows}
-        columns={[
-          {
-            key: 'summary',
-            header: 'Summary',
-            render: (i) => (
-              <div className="max-w-md">
-                <p className="font-medium text-zinc-100">{i.summary}</p>
-                {i.client && (
-                  <p className="mt-0.5 text-xs text-zinc-500">
-                    {i.client.name}
-                  </p>
-                )}
-                {(i.status === 'resolved' || i.status === 'postmortem_done') && (
-                  <div className="mt-2">
-                    {editingRootCause === i.id ? (
-                      <div className="flex flex-col gap-1.5">
-                        <input
-                          type="text"
-                          value={rootCauseDraft}
-                          onChange={(e) => setRootCauseDraft(e.target.value)}
-                          placeholder="Root cause…"
-                          className="w-full rounded-md border border-white/[0.06] bg-white/[0.02] px-2 py-1 text-[11px] text-zinc-100 placeholder:text-zinc-500 focus:border-white/[0.12] focus:outline-none"
-                          disabled={rowBusy === i.id}
-                          autoFocus
-                        />
-                        <div className="flex gap-2">
-                          <button
-                            type="button"
-                            onClick={() => saveRootCause(i.id)}
-                            disabled={rowBusy === i.id}
-                            className="rounded-md bg-emerald-400/[0.08] border border-emerald-400/20 px-2.5 py-0.5 text-xs font-medium text-emerald-300 hover:bg-emerald-400/[0.12] hover:border-emerald-400/40 disabled:opacity-40 transition-colors"
-                          >
-                            Save
-                          </button>
-                          <button
-                            type="button"
-                            onClick={cancelEditRootCause}
-                            disabled={rowBusy === i.id}
-                            className="rounded-md border border-white/[0.08] px-2.5 py-0.5 text-xs font-medium text-zinc-400 hover:bg-white/[0.04] hover:text-zinc-100 disabled:opacity-40"
-                          >
-                            Cancel
-                          </button>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="flex flex-wrap items-center gap-2">
-                        {i.rootCause ? (
-                          <span className="text-[11px] text-zinc-400 italic">{i.rootCause}</span>
-                        ) : (
-                          <span className="text-xs text-zinc-500">
-                            No root cause
-                          </span>
-                        )}
-                        <button
-                          type="button"
-                          onClick={() => beginEditRootCause(i)}
-                          className="text-xs text-zinc-500 hover:text-zinc-100 underline-offset-2 hover:underline"
-                        >
-                          {i.rootCause ? 'Edit' : 'Add'} root cause
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            ),
-          },
-          {
-            key: 'severity',
-            header: 'Severity',
-            render: (i) => <Badge text={i.severity[0].toUpperCase() + i.severity.slice(1)} tone={SEVERITY_TONES[i.severity] ?? 'neutral'} />,
-          },
-          {
-            key: 'status',
-            header: 'Status',
-            render: (i) => {
-              const statusLabel = i.status.replace('_', ' ');
+      {rows.length === 0 ? (
+        <div className="rounded-2xl border border-dashed border-white/[0.06] bg-white/[0.02] p-10 text-center">
+          <p className="text-sm text-zinc-300">
+            {initialIncidents.length === 0
+              ? 'No incidents logged.'
+              : 'No incidents match the current filters.'}
+          </p>
+          <p className="mt-2 text-xs text-zinc-500 max-w-md mx-auto">
+            {initialIncidents.length === 0
+              ? 'Log incidents manually for now. BetterStack auto-ingestion lands in Phase 2B.'
+              : 'Clear or adjust the severity/status chips to widen the view.'}
+          </p>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          <p className="text-[11px] font-medium text-zinc-500">
+            {rows.length} incident{rows.length === 1 ? '' : 's'}
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {rows.map((i) => {
+              const who = i.client?.name ?? i.asset?.name ?? '—';
+              const subtitle = `${i.severity} · ${i.status} · ${who}`;
               return (
-                <div className="flex flex-col gap-1.5">
-                  <Badge text={statusLabel[0].toUpperCase() + statusLabel.slice(1)} tone={STATUS_TONES[i.status] ?? 'neutral'} />
-                  <select
-                    value={i.status}
-                    onChange={(e) => setStatus(i.id, e.target.value as Status)}
-                    disabled={rowBusy === i.id}
-                    className="rounded-md border border-white/[0.06] bg-white/[0.02] px-2 py-1 text-[10px] text-zinc-400 focus:border-white/[0.12] focus:outline-none disabled:opacity-50"
-                  >
-                    {STATUSES.map((s) => (
-                      <option key={s} value={s}>{s}</option>
-                    ))}
-                  </select>
-                </div>
+                <Tile
+                  key={i.id}
+                  href={`/admin/ops/incidents/${i.id}`}
+                  name={i.summary}
+                  subtitle={subtitle}
+                  sparklineSeed={i.id}
+                  sparklineTone={sparklineToneForIncident(i.severity, i.status)}
+                  status={tileStatusForIncident(i.severity, i.status)}
+                />
               );
-            },
-          },
-          {
-            key: 'followup',
-            header: 'Follow-up',
-            render: (i) => (
-              <button
-                type="button"
-                onClick={() => toggleFollowup(i.id, i.followupRequired)}
-                disabled={rowBusy === i.id}
-                className={chipClass(i.followupRequired, i.followupRequired ? 'amber' : 'neutral')}
-                title="Toggle follow-up required"
-              >
-                {i.followupRequired ? 'Required' : 'None'}
-              </button>
-            ),
-          },
-          {
-            key: 'asset',
-            header: 'Asset',
-            render: (i) => i.asset?.name ?? <span className="text-zinc-500">—</span>,
-          },
-          {
-            key: 'started',
-            header: 'Started',
-            render: (i) => (
-              <span className="text-[11px] font-mono text-zinc-400 whitespace-nowrap">
-                {formatStarted(i.startedAt)}
-              </span>
-            ),
-          },
-          {
-            key: 'duration',
-            header: 'Duration',
-            render: (i) => (
-              <span className="text-[11px] font-mono text-zinc-400">
-                {formatDuration(i.startedAt, i.endedAt ?? i.resolvedAt)}
-              </span>
-            ),
-          },
-        ]}
-        empty={
-          <div className="rounded-2xl border border-dashed border-white/[0.06] bg-white/[0.02] p-10 text-center">
-            <p className="text-sm text-zinc-300">
-              {initialIncidents.length === 0
-                ? 'No incidents logged.'
-                : 'No incidents match the current filters.'}
-            </p>
-            <p className="mt-2 text-xs text-zinc-500 max-w-md mx-auto">
-              {initialIncidents.length === 0
-                ? 'Log incidents manually for now. BetterStack auto-ingestion lands in Phase 2B.'
-                : 'Clear or adjust the severity/status chips to widen the view.'}
-            </p>
+            })}
           </div>
-        }
-      />
+        </div>
+      )}
     </div>
   );
 }

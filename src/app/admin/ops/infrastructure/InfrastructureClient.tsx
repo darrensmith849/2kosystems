@@ -2,14 +2,18 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { AdminCard, Badge, DataTable, EmptyState, StatusPill } from '@/components/admin-ui';
+import { AdminCard, EmptyState, StatusPill, Tile, type TileStatus } from '@/components/admin-ui';
+import type { SparklineTone } from '@/components/admin-ui';
 import type { CloudflareZone, CloudflarePagesProject, HetznerServer } from '@/lib/db/schema/infra';
 import type { IntegrationConnectivity } from '@/lib/integrations/types';
-import { SYNC_STATE_LABEL, labelFor } from '@/lib/ops/labels';
 
-const STATE_TONES: Record<string, 'green' | 'amber' | 'rose' | 'neutral'> = {
-  seen: 'green', vanished: 'rose',
-};
+function infraTone(active: boolean): SparklineTone {
+  return active ? 'good' : 'neutral';
+}
+
+function infraStatus(active: boolean): TileStatus {
+  return active ? 'ok' : 'neutral';
+}
 
 export default function InfrastructureClient({
   cloudflareStatus,
@@ -103,56 +107,101 @@ export default function InfrastructureClient({
       {error && <p className="text-xs text-rose-400">{error}</p>}
 
       <div>
-        <h3 className="text-sm font-medium text-zinc-100 mb-3">Hetzner servers</h3>
+        <div className="flex items-baseline justify-between mb-3">
+          <h3 className="text-sm font-medium text-zinc-100">Hetzner servers</h3>
+          {hetznerServers.length > 0 && (
+            <span className="text-[11px] font-medium text-zinc-500">
+              {hetznerServers.length} server{hetznerServers.length === 1 ? '' : 's'}
+            </span>
+          )}
+        </div>
         {hetznerServers.length === 0 ? (
           <EmptyState title="No Hetzner servers yet" hint="Connect Hetzner in Settings and click Run sync." />
         ) : (
-          <DataTable
-            rows={hetznerServers}
-            columns={[
-              { key: 'name', header: 'Name', render: (s) => <span className="font-medium text-zinc-100">{s.name}</span> },
-              { key: 'type', header: 'Type', render: (s) => s.serverType ?? <span className="text-zinc-500">—</span> },
-              { key: 'location', header: 'Location', render: (s) => s.location ?? <span className="text-zinc-500">—</span> },
-              { key: 'status', header: 'Status', render: (s) => <Badge text={s.status ?? 'unknown'} tone={s.status === 'running' ? 'green' : 'neutral'} /> },
-              { key: 'ipv4', header: 'IPv4', render: (s) => <span className="font-mono text-[10px]">{s.publicIpv4 ?? '—'}</span> },
-              { key: 'state', header: 'Sync state', render: (s) => <Badge text={labelFor(SYNC_STATE_LABEL, s.state)} tone={STATE_TONES[s.state] ?? 'neutral'} /> },
-            ]}
-          />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {hetznerServers.map((s) => {
+              const active = s.status === 'running';
+              const parts = [s.serverType, s.location].filter(Boolean) as string[];
+              const subtitle = parts.length > 0 ? parts.join(' · ') : (s.status ?? '—');
+              return (
+                <Tile
+                  key={s.id}
+                  href="/admin/ops/infrastructure"
+                  name={s.name}
+                  subtitle={subtitle}
+                  sparklineSeed={s.id}
+                  sparklineTone={infraTone(active)}
+                  status={infraStatus(active)}
+                />
+              );
+            })}
+          </div>
         )}
       </div>
 
       <div>
-        <h3 className="text-sm font-medium text-zinc-100 mb-3">Cloudflare zones</h3>
+        <div className="flex items-baseline justify-between mb-3">
+          <h3 className="text-sm font-medium text-zinc-100">Cloudflare zones</h3>
+          {zones.length > 0 && (
+            <span className="text-[11px] font-medium text-zinc-500">
+              {zones.length} zone{zones.length === 1 ? '' : 's'}
+            </span>
+          )}
+        </div>
         {zones.length === 0 ? (
           <EmptyState title="No Cloudflare zones yet" hint="Connect Cloudflare in Settings and click Run sync." />
         ) : (
-          <DataTable
-            rows={zones}
-            columns={[
-              { key: 'name', header: 'Name', render: (z) => <span className="font-medium text-zinc-100">{z.name}</span> },
-              { key: 'status', header: 'Status', render: (z) => <Badge text={z.status ?? 'unknown'} tone={z.status === 'active' ? 'green' : 'neutral'} /> },
-              { key: 'plan', header: 'Plan', render: (z) => z.plan ?? <span className="text-zinc-500">—</span> },
-              { key: 'state', header: 'Sync state', render: (z) => <Badge text={labelFor(SYNC_STATE_LABEL, z.state)} tone={STATE_TONES[z.state] ?? 'neutral'} /> },
-            ]}
-          />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {zones.map((z) => {
+              const active = z.status === 'active';
+              const parts = [z.status ?? 'unknown', z.plan].filter(Boolean) as string[];
+              const subtitle = `zone · ${parts.join(' · ')}`;
+              return (
+                <Tile
+                  key={z.id}
+                  href="/admin/ops/infrastructure"
+                  name={z.name}
+                  subtitle={subtitle}
+                  sparklineSeed={z.id}
+                  sparklineTone={infraTone(active)}
+                  status={infraStatus(active)}
+                />
+              );
+            })}
+          </div>
         )}
       </div>
 
       <div>
-        <h3 className="text-sm font-medium text-zinc-100 mb-3">Cloudflare Pages projects</h3>
+        <div className="flex items-baseline justify-between mb-3">
+          <h3 className="text-sm font-medium text-zinc-100">Cloudflare Pages projects</h3>
+          {pagesProjects.length > 0 && (
+            <span className="text-[11px] font-medium text-zinc-500">
+              {pagesProjects.length} project{pagesProjects.length === 1 ? '' : 's'}
+            </span>
+          )}
+        </div>
         {pagesProjects.length === 0 ? (
           <EmptyState title="No Cloudflare Pages projects yet" hint="Sync runs surface CF Pages projects here." />
         ) : (
-          <DataTable
-            rows={pagesProjects}
-            columns={[
-              { key: 'name', header: 'Name', render: (p) => <span className="font-medium text-zinc-100">{p.name}</span> },
-              { key: 'branch', header: 'Branch', render: (p) => p.productionBranch ?? <span className="text-zinc-500">—</span> },
-              { key: 'status', header: 'Latest deploy', render: (p) => p.latestDeploymentStatus ?? <span className="text-zinc-500">—</span> },
-              { key: 'domains', header: 'Custom domains', render: (p) => p.customDomains.length > 0 ? <span className="font-mono text-[10px]">{p.customDomains.join(', ')}</span> : <span className="text-zinc-500">—</span> },
-              { key: 'state', header: 'Sync state', render: (p) => <Badge text={labelFor(SYNC_STATE_LABEL, p.state)} tone={STATE_TONES[p.state] ?? 'neutral'} /> },
-            ]}
-          />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {pagesProjects.map((p) => {
+              const active = p.latestDeploymentStatus === 'success';
+              const branch = p.productionBranch ?? '—';
+              const subtitle = `pages · ${branch}${p.latestDeploymentStatus ? ` · ${p.latestDeploymentStatus}` : ''}`;
+              return (
+                <Tile
+                  key={p.id}
+                  href="/admin/ops/infrastructure"
+                  name={p.name}
+                  subtitle={subtitle}
+                  sparklineSeed={p.id}
+                  sparklineTone={infraTone(active)}
+                  status={infraStatus(active)}
+                />
+              );
+            })}
+          </div>
         )}
       </div>
     </div>

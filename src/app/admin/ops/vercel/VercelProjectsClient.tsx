@@ -2,18 +2,9 @@
 
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { AdminCard, Badge, DataTable, EmptyState, StatusPill } from '@/components/admin-ui';
+import { AdminCard, EmptyState, StatusPill, Tile } from '@/components/admin-ui';
 import type { VercelProject } from '@/lib/db/schema/infra';
 import type { IntegrationConnectivity } from '@/lib/integrations/types';
-import { VERCEL_STATE_LABEL, labelFor } from '@/lib/ops/labels';
-
-const STATE_TONES: Record<string, 'green' | 'amber' | 'blue' | 'neutral' | 'rose'> = {
-  live: 'green',
-  migrated_to_hetzner: 'blue',
-  dormant: 'amber',
-  deleted: 'rose',
-  unknown: 'neutral',
-};
 
 export default function VercelProjectsClient({
   projects,
@@ -112,21 +103,27 @@ export default function VercelProjectsClient({
           hint="Connect Vercel in Settings and run a sync, or change the filters."
         />
       ) : (
-        <DataTable
-          rows={filtered}
-          columns={[
-            { key: 'name', header: 'Name', render: (p) => <span className="font-medium text-zinc-100">{p.name}</span> },
-            { key: 'team', header: 'Team', render: (p) => <Badge text={p.teamSlug} /> },
-            { key: 'state', header: 'Status', render: (p) => <Badge text={labelFor(VERCEL_STATE_LABEL, p.state)} tone={STATE_TONES[p.state] ?? 'neutral'} /> },
-            { key: 'url', header: 'Production URL', render: (p) =>
-              p.productionUrl
-                ? <a href={p.productionUrl.startsWith('http') ? p.productionUrl : `https://${p.productionUrl}`} target="_blank" rel="noreferrer" className="text-emerald-300 hover:underline">{p.productionUrl}</a>
-                : <span className="text-zinc-500">—</span>
-            },
-            { key: 'repo', header: 'Linked repo', render: (p) => p.linkedRepo ?? <span className="text-zinc-500">—</span> },
-            { key: 'node', header: 'Node', render: (p) => p.nodeVersion ?? <span className="text-zinc-500">—</span> },
-          ]}
-        />
+        <>
+          <p className="text-xs text-zinc-500">{filtered.length} projects</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {filtered.map((project) => {
+              const state = project.state;
+              const sparklineTone = state === 'live' ? 'good' : state === 'dormant' ? 'warn' : 'neutral';
+              const status = state === 'live' ? 'ok' : state === 'dormant' ? 'warn' : 'neutral';
+              return (
+                <Tile
+                  key={project.id}
+                  href="/admin/ops/vercel"
+                  name={project.name}
+                  subtitle={`${project.teamSlug ?? '—'} · ${project.state}`}
+                  sparklineSeed={project.id}
+                  sparklineTone={sparklineTone}
+                  status={status}
+                />
+              );
+            })}
+          </div>
+        </>
       )}
     </div>
   );

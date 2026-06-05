@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { isDbConfigured } from '@/lib/db/client';
-import { AdminCard, SectionHeader, Badge } from '@/components/admin-ui';
+import { AdminCard, SectionHeader, Badge, Sparkline } from '@/components/admin-ui';
 import ActivationReadiness from '@/components/admin-ui/ActivationReadiness';
 import SnapshotBanner from '@/components/admin-ui/SnapshotBanner';
 import {
@@ -293,24 +293,28 @@ export default async function OpsOverviewPage() {
           value={summary.totals.clients || SNAPSHOT_COUNTS.clients}
           Icon={BuildingIcon}
           hint={`${clientInternal} internal · ${clientExternal} external · ${clientUnmapped} unmapped`}
+          sparklineSeed="metric-clients"
         />
         <MetricCard
           title="Assets"
           value={summary.totals.assets || SNAPSHOT_COUNTS.assets}
           Icon={BoxesIcon}
           hint={assetTypeTopline || undefined}
+          sparklineSeed="metric-assets"
         />
         <MetricCard
           title="Repos"
           value={summary.totals.repos || SNAPSHOT_COUNTS.repos}
           Icon={CodeIcon}
           hint={`${repoTwoKo} 2KO · ${repoExternal} external`}
+          sparklineSeed="metric-repos"
         />
         <MetricCard
           title="Services"
           value={servicesTotal}
           Icon={CreditCardIcon}
           hint="Catalogue · pricing · contacts"
+          sparklineSeed="metric-services"
         />
         <MetricCard
           title="Incidents"
@@ -318,6 +322,7 @@ export default async function OpsOverviewPage() {
           Icon={AlertTriangleIcon}
           hint={`${incidentCritical} critical · ${incidentMajor} major · ${incidentMinor} minor`}
           tone={summary.totals.openIncidents > 0 ? 'warn' : 'neutral'}
+          sparklineSeed="metric-incidents"
         />
         <MetricCard
           title="Review decisions"
@@ -325,6 +330,7 @@ export default async function OpsOverviewPage() {
           Icon={EyeIcon}
           hint={`${decisionsHigh} high · ${decisionsMed} med · ${decisionsLow} low`}
           tone={decisionsHigh > 0 ? 'warn' : 'neutral'}
+          sparklineSeed="metric-decisions"
         />
       </div>
 
@@ -567,12 +573,14 @@ function MetricCard({
   hint,
   Icon,
   tone = 'neutral',
+  sparklineSeed,
 }: {
   title: string;
   value: React.ReactNode;
   hint?: string;
   Icon?: IconComponent;
   tone?: Tone;
+  sparklineSeed?: string;
 }) {
   const valueColor =
     tone === 'good'
@@ -582,6 +590,8 @@ function MetricCard({
         : tone === 'risk'
           ? 'text-rose-200'
           : 'text-white';
+  const sparklineTone =
+    tone === 'good' ? 'good' : tone === 'warn' ? 'warn' : tone === 'risk' ? 'risk' : 'good';
   return (
     <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-4">
       <div className="flex items-center gap-2">
@@ -590,6 +600,11 @@ function MetricCard({
       </div>
       <p className={`mt-2 text-2xl font-semibold ${valueColor}`}>{value}</p>
       {hint && <p className="mt-1 text-xs text-zinc-500 leading-snug">{hint}</p>}
+      {sparklineSeed && (
+        <div className="mt-2 -mx-1">
+          <Sparkline seed={sparklineSeed} tone={sparklineTone} className="h-5 w-full" />
+        </div>
+      )}
     </div>
   );
 }

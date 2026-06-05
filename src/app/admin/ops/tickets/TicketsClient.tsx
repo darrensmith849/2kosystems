@@ -2,8 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { AdminCard, Badge, DataTable, EmptyState } from '@/components/admin-ui';
+import { AdminCard, EmptyState, Tile } from '@/components/admin-ui';
 import type { TicketWithRefs } from '@/lib/ops/tickets-service';
 import {
   TICKET_KIND_LABEL,
@@ -18,25 +17,6 @@ const STATUS_OPTIONS = [
   'new', 'triage', 'in_progress', 'waiting_client', 'blocked', 'review', 'completed', 'archived',
 ] as const;
 const PRIORITY_FILTERS = ['urgent', 'high', 'med', 'low'] as const;
-const CLOSED_STATUSES = new Set(['completed', 'archived']);
-
-const STATUS_TONES: Record<string, 'green' | 'amber' | 'rose' | 'blue' | 'neutral'> = {
-  completed: 'green',
-  archived: 'neutral',
-  blocked: 'rose',
-  waiting_client: 'blue',
-  new: 'amber',
-  triage: 'amber',
-  in_progress: 'amber',
-  review: 'amber',
-};
-
-const PRIORITY_TONES: Record<string, 'green' | 'amber' | 'rose' | 'blue' | 'neutral'> = {
-  urgent: 'rose',
-  high: 'amber',
-  med: 'neutral',
-  low: 'blue',
-};
 
 function Chip({
   active,
@@ -142,8 +122,6 @@ export default function TicketsClient({
       setBusy(false);
     }
   }
-
-  const nowMs = Date.now();
 
   return (
     <div className="space-y-5">
@@ -285,62 +263,30 @@ export default function TicketsClient({
           }
         />
       ) : (
-        <DataTable
-          rows={filteredTickets}
-          columns={[
-            {
-              key: 'title',
-              header: 'Title',
-              render: (t) => (
-                <Link href={`/admin/ops/tickets/${t.id}`} className="font-medium text-zinc-100 hover:text-zinc-50 transition-colors">
-                  {t.title}
-                </Link>
-              ),
-            },
-            { key: 'kind', header: 'Kind', render: (t) => <Badge text={labelFor(TICKET_KIND_LABEL, t.kind)} /> },
-            {
-              key: 'status',
-              header: 'Status',
-              render: (t) => <Badge text={labelFor(TICKET_STATUS_LABEL, t.status)} tone={STATUS_TONES[t.status] ?? 'amber'} />,
-            },
-            {
-              key: 'priority',
-              header: 'Priority',
-              render: (t) => <Badge text={labelFor(TICKET_PRIORITY_LABEL, t.priority)} tone={PRIORITY_TONES[t.priority] ?? 'neutral'} />,
-            },
-            {
-              key: 'client',
-              header: 'Client',
-              render: (t) => t.client?.name ?? <span className="text-zinc-500">—</span>,
-            },
-            {
-              key: 'due',
-              header: 'Due',
-              render: (t) => {
-                if (!t.dueAt) return <span className="text-zinc-500">—</span>;
-                const dueMs = t.dueAt.getTime();
-                const overdue = dueMs < nowMs && !CLOSED_STATUSES.has(t.status);
-                return (
-                  <div className="flex items-center gap-2">
-                    <span className="font-mono text-[10px] text-zinc-400">
-                      {t.dueAt.toISOString().slice(0, 10)}
-                    </span>
-                    {overdue && <Badge text="Overdue" tone="rose" />}
-                  </div>
-                );
-              },
-            },
-            {
-              key: 'updated',
-              header: 'Updated',
-              render: (t) => (
-                <span className="font-mono text-[10px] text-zinc-500">
-                  {t.updatedAt?.toISOString().slice(0, 16) ?? '—'}
-                </span>
-              ),
-            },
-          ]}
-        />
+        <>
+          <p className="text-xs text-zinc-500">{filteredTickets.length} tickets</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {filteredTickets.map((t) => {
+              const status = t.status;
+              const priority = t.priority;
+              const closed = status === 'resolved' || status === 'closed';
+              const hot = priority === 'high' || priority === 'critical';
+              const tone = closed ? 'good' : hot ? 'warn' : 'neutral';
+              const dotStatus = closed ? 'ok' : hot ? 'warn' : 'neutral';
+              return (
+                <Tile
+                  key={t.id}
+                  href={`/admin/ops/tickets/${t.id}`}
+                  name={t.title}
+                  subtitle={`${t.kind} · ${t.priority} · ${t.client?.name ?? '—'}`}
+                  sparklineSeed={t.id}
+                  sparklineTone={tone}
+                  status={dotStatus}
+                />
+              );
+            })}
+          </div>
+        </>
       )}
     </div>
   );

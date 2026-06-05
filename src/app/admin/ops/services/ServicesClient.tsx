@@ -1,7 +1,8 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { AdminCard, Badge } from '@/components/admin-ui';
+import { AdminCard, Tile, type TileStatus } from '@/components/admin-ui';
+import type { SparklineTone } from '@/components/admin-ui';
 
 // Track C — ServicesClient
 //
@@ -90,12 +91,33 @@ const STATUS_LABEL: Record<ServiceStatus, string> = {
   blocked: 'Blocked',
 };
 
-const STATUS_TONE: Record<ServiceStatus, 'green' | 'blue' | 'amber' | 'rose'> = {
-  active: 'green',
-  planned: 'blue',
-  needs_review: 'amber',
-  blocked: 'rose',
-};
+function sparklineToneForService(status: ServiceStatus): SparklineTone {
+  switch (status) {
+    case 'active':
+      return 'good';
+    case 'needs_review':
+    case 'planned':
+      return 'warn';
+    case 'blocked':
+      return 'risk';
+    default:
+      return 'neutral';
+  }
+}
+
+function tileStatusForService(status: ServiceStatus): TileStatus {
+  switch (status) {
+    case 'active':
+      return 'ok';
+    case 'needs_review':
+    case 'planned':
+      return 'warn';
+    case 'blocked':
+      return 'risk';
+    default:
+      return 'neutral';
+  }
+}
 
 // Plain-business label for the "token" blocker.
 const BLOCKER_LABEL: Record<ServiceBlocker, string> = {
@@ -156,25 +178,6 @@ function IconBase({
       <path d={d} />
     </svg>
   );
-}
-
-function CategoryIcon({ category, className }: { category: ServiceCategory; className?: string }) {
-  // Single-glyph hint per category; intentionally minimal.
-  const d: Record<ServiceCategory, string> = {
-    infrastructure: 'M2 4h12v4H2zM2 8h12v4H2zM5 6h.01M5 10h.01',
-    dns: 'M8 2v12M2 8h12M3.5 4.5a8 8 0 0 1 9 0M3.5 11.5a8 8 0 0 0 9 0',
-    runtime: 'M3 3h10v10H3zM6 6l4 2-4 2z',
-    source_control: 'M5 3v6a2 2 0 0 0 2 2h2M5 11a1.5 1.5 0 1 1 0 .01M11 5a1.5 1.5 0 1 1 0 .01M11 11a1.5 1.5 0 1 1 0 .01',
-    email_sending: 'M2 4h12v8H2zM2 4l6 5 6-5',
-    workspace_email: 'M2 4h12v8H2zM2 4l6 5 6-5',
-    monitoring: 'M2 8h3l2-4 2 8 2-4h3',
-    registrar: 'M3 13V5l5-3 5 3v8M6 13V9h4v4',
-    analytics: 'M2 13V3M2 13h12M5 11V7M8 11V4M11 11V8',
-    ai: 'M8 2v2M8 12v2M2 8h2M12 8h2M4 4l1.5 1.5M10.5 10.5L12 12M4 12l1.5-1.5M10.5 5.5L12 4M8 6a2 2 0 1 0 0 4 2 2 0 0 0 0-4z',
-    support_saas: 'M3 13a5 5 0 0 1 10 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4z',
-    other: 'M5 8h6M8 5v6',
-  };
-  return <IconBase d={d[category]} className={className} />;
 }
 
 function IconDownload({ className = 'h-3.5 w-3.5' }: { className?: string }) {
@@ -425,66 +428,31 @@ export default function ServicesClient({ services }: { services: ServicesClientS
         </p>
       </AdminCard>
 
-      {/* Filtered service cards */}
-      <AdminCard title="Filtered services">
-        {filtered.length === 0 ? (
+      {/* Filtered services tiles */}
+      {filtered.length === 0 ? (
+        <AdminCard title="Filtered services">
           <p className="text-xs text-[#71717a]">No services match the current filters.</p>
-        ) : (
-          <ul className="space-y-3">
-            {filtered.map((s) => {
-              const blockers = s.blockers.filter((b) => b !== 'none');
-              const ownerMissing = isMissingOwner(s.billingOwner);
-              return (
-                <li
-                  key={s.id}
-                  className="rounded-xl border border-[#1c1c1e] bg-[#0e0e10] p-4"
-                >
-                  <div className="flex items-start gap-3">
-                    <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[#27272a] bg-[#111113] text-[#a1a1aa]">
-                      <CategoryIcon category={s.category} className="h-4 w-4" />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="flex flex-wrap items-center gap-2 mb-2">
-                        <p className="text-sm font-semibold text-[#f5f5f5]">{s.name}</p>
-                        <Badge text={STATUS_LABEL[s.status]} tone={STATUS_TONE[s.status]} />
-                        <Badge text={CATEGORY_LABEL[s.category]} tone="neutral" />
-                        {ownerMissing && (
-                          <Badge text="Owner needs review" tone="amber" />
-                        )}
-                      </div>
-                      <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-[140px_1fr] text-xs">
-                        <span className="text-[#71717a]">Provider</span>
-                        <span className="text-[#e4e4e7]">{s.provider}</span>
-
-                        <span className="text-[#71717a]">Linked scope</span>
-                        <span className="text-[#e4e4e7]">{s.linkedScope}</span>
-
-                        <span className="text-[#71717a]">Billing owner</span>
-                        <span className="text-[#e4e4e7]">{s.billingOwner}</span>
-
-                        <span className="text-[#71717a]">Cadence</span>
-                        <span className="text-[#e4e4e7]">{s.cadence}</span>
-
-                        {blockers.length > 0 && (
-                          <>
-                            <span className="text-[#71717a]">Blockers</span>
-                            <span className="text-[#e4e4e7]">
-                              {blockers.map((b) => BLOCKER_LABEL[b]).join(', ')}
-                            </span>
-                          </>
-                        )}
-
-                        <span className="text-[#71717a]">Notes</span>
-                        <span className="text-[#a1a1aa] leading-relaxed">{s.notes}</span>
-                      </div>
-                    </div>
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
-        )}
-      </AdminCard>
+        </AdminCard>
+      ) : (
+        <div className="space-y-3">
+          <p className="text-[11px] font-medium text-zinc-500">
+            {filtered.length} service{filtered.length === 1 ? '' : 's'}
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {filtered.map((s) => (
+              <Tile
+                key={s.id}
+                href="/admin/ops/services"
+                name={s.name}
+                subtitle={`${s.provider} · ${CATEGORY_LABEL[s.category]}`}
+                sparklineSeed={s.id}
+                sparklineTone={sparklineToneForService(s.status)}
+                status={tileStatusForService(s.status)}
+              />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

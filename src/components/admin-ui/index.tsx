@@ -7,6 +7,8 @@
 export { MetricCard } from './MetricCard';
 export { StatusDot } from './StatusDot';
 export { GlassCard } from './GlassCard';
+export { Sparkline, type SparklineTone } from './Sparkline';
+export { Tile, type TileStatus, type TileProps } from './Tile';
 
 export function AdminCard({
   title,

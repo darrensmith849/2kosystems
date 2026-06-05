@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { AdminCard, Badge, EmptyState } from '@/components/admin-ui';
+import { AdminCard, EmptyState, Tile, type TileStatus } from '@/components/admin-ui';
+import type { SparklineTone } from '@/components/admin-ui';
 import type { AssetWithRefs } from '@/lib/ops/assets-service';
 import { ASSET_TYPE_LABEL, labelFor } from '@/lib/ops/labels';
 
@@ -11,24 +11,22 @@ const ASSET_TYPES = [
   'website', 'saas_app', 'portal', 'api', 'landing', 'internal_tool', 'database', 'service',
 ];
 
-// Compact card-grid renderer modeled on the Cloudflare "Domains" / "Workers"
-// tiles in the account home: one tile per asset, name bold, small subtitle,
-// status dot on the right. No multi-column wide table. Long info (stack,
-// notes, live URL) lives on the per-asset detail page reachable by clicking
-// the tile.
+// Cloudflare-style tile grid: one tile per asset, name + subtitle + sparkline
+// + status dot. Long info (stack, notes, live URL) lives on the per-asset
+// detail page reachable by clicking the tile.
 
-function statusDot(status: string | null | undefined): { color: string; label: string } {
+function statusFor(status: string | null | undefined): { status: TileStatus; tone: SparklineTone } {
   switch (status) {
     case 'active':
-      return { color: 'bg-emerald-400', label: 'Active' };
-    case 'archived':
-      return { color: 'bg-zinc-500', label: 'Archived' };
+      return { status: 'ok', tone: 'good' };
     case 'paused':
-      return { color: 'bg-amber-400', label: 'Paused' };
+      return { status: 'warn', tone: 'warn' };
+    case 'archived':
+      return { status: 'neutral', tone: 'neutral' };
     case 'planned':
-      return { color: 'bg-sky-400', label: 'Planned' };
+      return { status: 'neutral', tone: 'neutral' };
     default:
-      return { color: 'bg-zinc-500', label: status ?? '—' };
+      return { status: 'neutral', tone: 'neutral' };
   }
 }
 
@@ -36,7 +34,7 @@ function AssetGrid({ assets }: { assets: AssetWithRefs[] }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
       {assets.map((a) => {
-        const dot = statusDot(a.status);
+        const { status, tone } = statusFor(a.status);
         const subtitle = [
           labelFor(ASSET_TYPE_LABEL, a.type),
           a.client?.name,
@@ -44,24 +42,15 @@ function AssetGrid({ assets }: { assets: AssetWithRefs[] }) {
           .filter(Boolean)
           .join(' · ');
         return (
-          <Link
+          <Tile
             key={a.id}
             href={`/admin/ops/assets/${a.id}`}
-            className="group rounded-2xl border border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/[0.10] transition-colors px-4 py-3.5 flex items-center justify-between gap-3"
-          >
-            <div className="min-w-0 flex-1">
-              <p className="text-sm font-medium text-zinc-100 truncate group-hover:text-white">
-                {a.name}
-              </p>
-              <p className="mt-0.5 text-xs text-zinc-500 truncate">
-                {subtitle || '—'}
-              </p>
-            </div>
-            <span className="flex items-center gap-1.5 shrink-0">
-              <span aria-hidden className={`h-1.5 w-1.5 rounded-full ${dot.color}`} />
-              <span className="text-xs text-zinc-400">{dot.label}</span>
-            </span>
-          </Link>
+            name={a.name}
+            subtitle={subtitle || '—'}
+            sparklineSeed={a.id}
+            sparklineTone={tone}
+            status={status}
+          />
         );
       })}
     </div>
