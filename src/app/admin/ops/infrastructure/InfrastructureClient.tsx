@@ -58,7 +58,7 @@ export default function InfrastructureClient({
                 type="button"
                 onClick={() => runSync('cloudflare')}
                 disabled={busy !== null || cloudflareStatus.status !== 'connected'}
-                className="rounded-full border border-[#27272a] hover:border-[#3f3f46] px-3 py-1 text-[11px] font-mono text-[#f5f5f5] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                className="rounded-md border border-white/[0.08] hover:bg-white/[0.04] px-2.5 py-1 text-xs font-medium text-zinc-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 {busy === 'cloudflare' ? 'Syncing…' : 'Run sync now'}
               </button>
@@ -66,7 +66,7 @@ export default function InfrastructureClient({
           }
         >
           {cloudflareStatus.status === 'connected' ? (
-            <p className="text-xs text-[#71717a]">
+            <p className="text-xs text-zinc-400">
               Sync reads DNS zones, DNS records, and Pages projects. Read-only — nothing is deleted. Rows that disappear upstream are marked Missing.
             </p>
           ) : (
@@ -83,7 +83,7 @@ export default function InfrastructureClient({
                 type="button"
                 onClick={() => runSync('hetzner')}
                 disabled={busy !== null || hetznerStatus.status !== 'connected'}
-                className="rounded-full border border-[#27272a] hover:border-[#3f3f46] px-3 py-1 text-[11px] font-mono text-[#f5f5f5] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                className="rounded-md border border-white/[0.08] hover:bg-white/[0.04] px-2.5 py-1 text-xs font-medium text-zinc-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 {busy === 'hetzner' ? 'Syncing…' : 'Run sync now'}
               </button>
@@ -91,7 +91,7 @@ export default function InfrastructureClient({
           }
         >
           {hetznerStatus.status === 'connected' ? (
-            <p className="text-xs text-[#71717a]">
+            <p className="text-xs text-zinc-400">
               Sync reads servers, labels, and IP addresses. Read-only. Metrics and backup status come in a later step.
             </p>
           ) : (
@@ -103,54 +103,54 @@ export default function InfrastructureClient({
       {error && <p className="text-xs text-rose-400">{error}</p>}
 
       <div>
-        <h3 className="text-xs font-mono uppercase tracking-[0.18em] text-[#71717a] mb-3">Hetzner servers</h3>
+        <h3 className="text-sm font-medium text-zinc-100 mb-3">Hetzner servers</h3>
         {hetznerServers.length === 0 ? (
           <EmptyState title="No Hetzner servers yet" hint="Connect Hetzner in Settings and click Run sync." />
         ) : (
           <DataTable
             rows={hetznerServers}
             columns={[
-              { key: 'name', header: 'Name', render: (s) => <span className="font-medium text-[#f5f5f5]">{s.name}</span> },
-              { key: 'type', header: 'Type', render: (s) => s.serverType ?? <span className="text-[#52525b]">—</span> },
-              { key: 'location', header: 'Location', render: (s) => s.location ?? <span className="text-[#52525b]">—</span> },
+              { key: 'name', header: 'Name', render: (s) => <span className="font-medium text-zinc-100">{s.name}</span> },
+              { key: 'type', header: 'Type', render: (s) => s.serverType ?? <span className="text-zinc-500">—</span> },
+              { key: 'location', header: 'Location', render: (s) => s.location ?? <span className="text-zinc-500">—</span> },
               { key: 'status', header: 'Status', render: (s) => <Badge text={s.status ?? 'unknown'} tone={s.status === 'running' ? 'green' : 'neutral'} /> },
               { key: 'ipv4', header: 'IPv4', render: (s) => <span className="font-mono text-[10px]">{s.publicIpv4 ?? '—'}</span> },
-              { key: 'state', header: 'Status', render: (s) => <Badge text={labelFor(SYNC_STATE_LABEL, s.state)} tone={STATE_TONES[s.state] ?? 'neutral'} /> },
+              { key: 'state', header: 'Sync state', render: (s) => <Badge text={labelFor(SYNC_STATE_LABEL, s.state)} tone={STATE_TONES[s.state] ?? 'neutral'} /> },
             ]}
           />
         )}
       </div>
 
       <div>
-        <h3 className="text-xs font-mono uppercase tracking-[0.18em] text-[#71717a] mb-3">Cloudflare zones</h3>
+        <h3 className="text-sm font-medium text-zinc-100 mb-3">Cloudflare zones</h3>
         {zones.length === 0 ? (
           <EmptyState title="No Cloudflare zones yet" hint="Connect Cloudflare in Settings and click Run sync." />
         ) : (
           <DataTable
             rows={zones}
             columns={[
-              { key: 'name', header: 'Name', render: (z) => <span className="font-medium text-[#f5f5f5]">{z.name}</span> },
+              { key: 'name', header: 'Name', render: (z) => <span className="font-medium text-zinc-100">{z.name}</span> },
               { key: 'status', header: 'Status', render: (z) => <Badge text={z.status ?? 'unknown'} tone={z.status === 'active' ? 'green' : 'neutral'} /> },
-              { key: 'plan', header: 'Plan', render: (z) => z.plan ?? <span className="text-[#52525b]">—</span> },
-              { key: 'state', header: 'Status', render: (z) => <Badge text={labelFor(SYNC_STATE_LABEL, z.state)} tone={STATE_TONES[z.state] ?? 'neutral'} /> },
+              { key: 'plan', header: 'Plan', render: (z) => z.plan ?? <span className="text-zinc-500">—</span> },
+              { key: 'state', header: 'Sync state', render: (z) => <Badge text={labelFor(SYNC_STATE_LABEL, z.state)} tone={STATE_TONES[z.state] ?? 'neutral'} /> },
             ]}
           />
         )}
       </div>
 
       <div>
-        <h3 className="text-xs font-mono uppercase tracking-[0.18em] text-[#71717a] mb-3">Cloudflare Pages projects</h3>
+        <h3 className="text-sm font-medium text-zinc-100 mb-3">Cloudflare Pages projects</h3>
         {pagesProjects.length === 0 ? (
           <EmptyState title="No Cloudflare Pages projects yet" hint="Sync runs surface CF Pages projects here." />
         ) : (
           <DataTable
             rows={pagesProjects}
             columns={[
-              { key: 'name', header: 'Name', render: (p) => <span className="font-medium text-[#f5f5f5]">{p.name}</span> },
-              { key: 'branch', header: 'Branch', render: (p) => p.productionBranch ?? <span className="text-[#52525b]">—</span> },
-              { key: 'status', header: 'Latest deploy', render: (p) => p.latestDeploymentStatus ?? <span className="text-[#52525b]">—</span> },
-              { key: 'domains', header: 'Custom domains', render: (p) => p.customDomains.length > 0 ? <span className="font-mono text-[10px]">{p.customDomains.join(', ')}</span> : <span className="text-[#52525b]">—</span> },
-              { key: 'state', header: 'Status', render: (p) => <Badge text={labelFor(SYNC_STATE_LABEL, p.state)} tone={STATE_TONES[p.state] ?? 'neutral'} /> },
+              { key: 'name', header: 'Name', render: (p) => <span className="font-medium text-zinc-100">{p.name}</span> },
+              { key: 'branch', header: 'Branch', render: (p) => p.productionBranch ?? <span className="text-zinc-500">—</span> },
+              { key: 'status', header: 'Latest deploy', render: (p) => p.latestDeploymentStatus ?? <span className="text-zinc-500">—</span> },
+              { key: 'domains', header: 'Custom domains', render: (p) => p.customDomains.length > 0 ? <span className="font-mono text-[10px]">{p.customDomains.join(', ')}</span> : <span className="text-zinc-500">—</span> },
+              { key: 'state', header: 'Sync state', render: (p) => <Badge text={labelFor(SYNC_STATE_LABEL, p.state)} tone={STATE_TONES[p.state] ?? 'neutral'} /> },
             ]}
           />
         )}

@@ -62,29 +62,23 @@ export default function AssetsClient({
   if (isSnapshot) {
     return (
       <div className="space-y-5">
-        <AdminCard title="Add asset — read-only in preview mode">
-          <p className="text-xs text-[#a1a1aa]">
-            Adding assets turns on once the production database is connected. The rows below are the saved sample data.
-          </p>
-        </AdminCard>
         <DataTable
           rows={initialAssets}
           columns={[
             { key: 'name', header: 'Name', render: (a) => (
-              <Link href={`/admin/ops/assets/${a.id}`} className="font-medium text-[#f5f5f5] hover:text-emerald-300 transition-colors">
+              <Link href={`/admin/ops/assets/${a.id}`} className="font-medium text-zinc-100 hover:text-zinc-50 transition-colors">
                 {a.name}
-                <span className="ml-2 inline-block text-[9px] uppercase tracking-wider text-emerald-300/80 border border-emerald-400/30 rounded-full px-1.5 py-0.5 align-middle">snapshot</span>
               </Link>
             ) },
             { key: 'type', header: 'Type', render: (a) => <Badge text={labelFor(ASSET_TYPE_LABEL, a.type)} /> },
-            { key: 'client', header: 'Client', render: (a) => a.client?.name ?? <span className="text-[#52525b]">—</span> },
+            { key: 'client', header: 'Client', render: (a) => a.client?.name ?? <span className="text-zinc-500">—</span> },
             { key: 'url', header: 'Live URL', render: (a) =>
               a.liveUrl
                 ? <a href={a.liveUrl} target="_blank" rel="noreferrer" className="text-emerald-300 hover:underline">{a.liveUrl}</a>
-                : <span className="text-[#52525b]">—</span>
+                : <span className="text-zinc-500">—</span>
             },
-            { key: 'tech', header: 'Stack', render: (a) => a.techStack && a.techStack.length > 0 ? <span className="font-mono text-[10px] text-[#a1a1aa]">{a.techStack.join(', ')}</span> : <span className="text-[#52525b]">—</span> },
-            { key: 'notes', header: 'Notes', render: (a) => a.notes ? <span className="text-[11px] text-[#a1a1aa]">{a.notes}</span> : <span className="text-[#52525b]">—</span> },
+            { key: 'tech', header: 'Stack', render: (a) => a.techStack && a.techStack.length > 0 ? <span className="font-mono text-[10px] text-zinc-400">{a.techStack.join(', ')}</span> : <span className="text-zinc-500">—</span> },
+            { key: 'notes', header: 'Notes', render: (a) => a.notes ? <span className="text-xs text-zinc-400">{a.notes}</span> : <span className="text-zinc-500">—</span> },
           ]}
         />
       </div>
@@ -100,13 +94,13 @@ export default function AssetsClient({
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Asset name"
-            className="rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5] placeholder:text-[#3f3f46] focus:border-[#0f7b3a]/50 focus:outline-none lg:col-span-1"
+            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-500 focus:border-white/[0.12] focus:outline-none lg:col-span-1"
             disabled={busy}
           />
           <select
             value={type}
             onChange={(e) => setType(e.target.value)}
-            className="rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5]"
+            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-100"
             disabled={busy}
           >
             {ASSET_TYPES.map((t) => (
@@ -118,13 +112,13 @@ export default function AssetsClient({
             value={liveUrl}
             onChange={(e) => setLiveUrl(e.target.value)}
             placeholder="https://example.com"
-            className="rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5] placeholder:text-[#3f3f46] focus:border-[#0f7b3a]/50 focus:outline-none lg:col-span-2"
+            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-500 focus:border-white/[0.12] focus:outline-none lg:col-span-2"
             disabled={busy}
           />
           <select
             value={clientId}
             onChange={(e) => setClientId(e.target.value)}
-            className="rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5]"
+            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-100"
             disabled={busy}
           >
             <option value="">No client</option>
@@ -150,16 +144,16 @@ export default function AssetsClient({
           rows={initialAssets}
           columns={[
             { key: 'name', header: 'Name', render: (a) => (
-              <Link href={`/admin/ops/assets/${a.id}`} className="font-medium text-[#f5f5f5] hover:text-emerald-300 transition-colors">
+              <Link href={`/admin/ops/assets/${a.id}`} className="font-medium text-zinc-100 hover:text-zinc-50 transition-colors">
                 {a.name}
               </Link>
             ) },
             { key: 'type', header: 'Type', render: (a) => <Badge text={labelFor(ASSET_TYPE_LABEL, a.type)} /> },
-            { key: 'client', header: 'Client', render: (a) => a.client?.name ?? <span className="text-[#52525b]">—</span> },
+            { key: 'client', header: 'Client', render: (a) => a.client?.name ?? <span className="text-zinc-500">—</span> },
             { key: 'url', header: 'Live URL', render: (a) =>
               a.liveUrl
                 ? <a href={a.liveUrl} target="_blank" rel="noreferrer" className="text-emerald-300 hover:underline">{a.liveUrl}</a>
-                : <span className="text-[#52525b]">—</span>
+                : <span className="text-zinc-500">—</span>
             },
             { key: 'status', header: 'Status', render: (a) => <Badge text={a.status[0].toUpperCase() + a.status.slice(1)} tone={a.status === 'active' ? 'green' : 'neutral'} /> },
           ]}

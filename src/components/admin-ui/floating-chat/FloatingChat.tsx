@@ -87,7 +87,7 @@ export function FloatingChat() {
           type="button"
           onClick={() => setOpen(true)}
           aria-label="Open 2KO Ops Assistant"
-          className="fixed bottom-6 right-6 z-50 inline-flex items-center gap-2 rounded-full border border-[#27272a] bg-[#111113] px-4 py-2.5 text-sm font-medium text-[#f5f5f5] shadow-lg shadow-black/40 ring-1 ring-emerald-400/20 hover:border-emerald-400/40 hover:text-emerald-200 transition-colors"
+          className="fixed bottom-6 right-6 z-50 inline-flex items-center gap-2 rounded-full bg-white/[0.06] backdrop-blur-md border border-white/[0.08] hover:bg-white/[0.10] hover:border-white/[0.14] px-4 py-2 text-sm text-zinc-100 shadow-lg shadow-black/30 transition-colors"
           style={{
             fontFamily:
               'var(--font-roboto), Roboto, system-ui, -apple-system, "Segoe UI", sans-serif',
@@ -95,7 +95,7 @@ export function FloatingChat() {
         >
           <span
             aria-hidden
-            className="inline-block h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.7)]"
+            className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400"
           />
           <span>Ask 2KO</span>
         </button>
@@ -123,7 +123,7 @@ export function FloatingChat() {
             'var(--font-roboto), Roboto, system-ui, -apple-system, "Segoe UI", sans-serif',
         }}
       >
-        <div className="h-full overflow-hidden rounded-2xl border border-[#27272a] bg-[#0a0a0b] shadow-2xl shadow-black/60">
+        <div className="h-full overflow-hidden rounded-2xl border border-white/[0.06] bg-[#0a0a0b]/95 backdrop-blur-xl shadow-2xl shadow-black/60">
           <ChatPanel
             storageKey={STORAGE_KEY}
             pageContext={pageContext}

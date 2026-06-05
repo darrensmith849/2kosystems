@@ -59,22 +59,22 @@ function formatStarted(startedAt: Date | string): string {
 function chipClass(active: boolean, tone: Tone): string {
   const palette: Record<Tone, string> = {
     neutral: active
-      ? 'border-[#52525b] bg-[#1c1c1e] text-[#f5f5f5]'
-      : 'border-[#27272a] bg-transparent text-[#a1a1aa] hover:text-[#e4e4e7]',
+      ? 'border-white/[0.12] bg-white/[0.06] text-zinc-100'
+      : 'border-white/[0.08] bg-transparent text-zinc-400 hover:bg-white/[0.04] hover:text-zinc-100',
     green: active
-      ? 'border-emerald-400/60 bg-emerald-400/10 text-emerald-200'
-      : 'border-[#27272a] bg-transparent text-[#a1a1aa] hover:text-emerald-200',
+      ? 'border-emerald-400/30 bg-emerald-400/[0.08] text-emerald-200'
+      : 'border-white/[0.08] bg-transparent text-zinc-400 hover:bg-white/[0.04] hover:text-emerald-200',
     amber: active
-      ? 'border-amber-400/60 bg-amber-400/10 text-amber-200'
-      : 'border-[#27272a] bg-transparent text-[#a1a1aa] hover:text-amber-200',
+      ? 'border-amber-400/30 bg-amber-400/[0.08] text-amber-200'
+      : 'border-white/[0.08] bg-transparent text-zinc-400 hover:bg-white/[0.04] hover:text-amber-200',
     rose: active
-      ? 'border-rose-400/60 bg-rose-400/10 text-rose-200'
-      : 'border-[#27272a] bg-transparent text-[#a1a1aa] hover:text-rose-200',
+      ? 'border-rose-400/30 bg-rose-400/[0.08] text-rose-200'
+      : 'border-white/[0.08] bg-transparent text-zinc-400 hover:bg-white/[0.04] hover:text-rose-200',
     blue: active
-      ? 'border-sky-400/60 bg-sky-400/10 text-sky-200'
-      : 'border-[#27272a] bg-transparent text-[#a1a1aa] hover:text-sky-200',
+      ? 'border-sky-400/30 bg-sky-400/[0.08] text-sky-200'
+      : 'border-white/[0.08] bg-transparent text-zinc-400 hover:bg-white/[0.04] hover:text-sky-200',
   };
-  return `inline-flex items-center text-[10px] font-mono uppercase tracking-wider px-2.5 py-1 rounded-full border transition-colors ${palette[tone]}`;
+  return `inline-flex items-center text-xs font-medium px-2.5 py-1 rounded-full border transition-colors ${palette[tone]}`;
 }
 
 export default function IncidentsClient({
@@ -205,13 +205,7 @@ export default function IncidentsClient({
 
   return (
     <div className="space-y-5">
-      {isSnapshot ? (
-        <AdminCard title="Log incident — read-only in snapshot mode">
-          <p className="text-xs text-[#a1a1aa]">
-            Creating incidents activates once <code className="text-emerald-300">DATABASE_URL</code> is set. Below are real operational incidents from the discovery (dead IP, stranded zones, disk-fill, redirect gap).
-          </p>
-        </AdminCard>
-      ) : (
+      {isSnapshot ? null : (
       <AdminCard title="Log incident">
         <form onSubmit={handleCreate} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-3">
           <input
@@ -219,13 +213,13 @@ export default function IncidentsClient({
             value={summary}
             onChange={(e) => setSummary(e.target.value)}
             placeholder="One-line summary"
-            className="rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5] placeholder:text-[#3f3f46] focus:border-[#0f7b3a]/50 focus:outline-none lg:col-span-3"
+            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-500 focus:border-white/[0.12] focus:outline-none lg:col-span-3"
             disabled={busy}
           />
           <select
             value={severity}
             onChange={(e) => setSeverity(e.target.value as Severity)}
-            className="rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5]"
+            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-100"
             disabled={busy}
           >
             {SEVERITIES.map((s) => (
@@ -235,7 +229,7 @@ export default function IncidentsClient({
           <select
             value={source}
             onChange={(e) => setSource(e.target.value as (typeof SOURCES)[number])}
-            className="rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5]"
+            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-100"
             disabled={busy}
           >
             {SOURCES.map((s) => (
@@ -246,13 +240,13 @@ export default function IncidentsClient({
             type="datetime-local"
             value={startedAtLocal}
             onChange={(e) => setStartedAtLocal(e.target.value)}
-            className="rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5]"
+            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-100"
             disabled={busy}
           />
           <select
             value={assetId}
             onChange={(e) => setAssetId(e.target.value)}
-            className="rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5] lg:col-span-3"
+            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-100 lg:col-span-3"
             disabled={busy}
           >
             <option value="">no asset</option>
@@ -263,7 +257,7 @@ export default function IncidentsClient({
           <select
             value={clientId}
             onChange={(e) => setClientId(e.target.value)}
-            className="rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5] lg:col-span-3"
+            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-100 lg:col-span-3"
             disabled={busy}
           >
             <option value="">no client</option>
@@ -283,16 +277,16 @@ export default function IncidentsClient({
       </AdminCard>
       )}
 
-      <div className="flex flex-col gap-3 rounded-2xl border border-[#27272a] bg-[#111113] p-4 md:flex-row md:items-center md:justify-between">
+      <div className="flex flex-col gap-3 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-4 md:flex-row md:items-center md:justify-between">
         <div className="flex flex-col gap-2">
-          <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a]">Severity</p>
+          <p className="text-[11px] font-medium text-zinc-500">Severity</p>
           <div className="flex flex-wrap gap-2">
             <button
               type="button"
               onClick={() => setSeverityFilter('all')}
               className={chipClass(severityFilter === 'all', 'neutral')}
             >
-              all
+              All
             </button>
             {SEVERITIES.map((s) => (
               <button
@@ -301,31 +295,34 @@ export default function IncidentsClient({
                 onClick={() => setSeverityFilter(s)}
                 className={chipClass(severityFilter === s, SEVERITY_TONES[s] ?? 'neutral')}
               >
-                {s}
+                {s[0].toUpperCase() + s.slice(1)}
               </button>
             ))}
           </div>
         </div>
         <div className="flex flex-col gap-2">
-          <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a]">Status</p>
+          <p className="text-[11px] font-medium text-zinc-500">Status</p>
           <div className="flex flex-wrap gap-2">
             <button
               type="button"
               onClick={() => setStatusFilter('all')}
               className={chipClass(statusFilter === 'all', 'neutral')}
             >
-              all
+              All
             </button>
-            {STATUSES.map((s) => (
-              <button
-                key={s}
-                type="button"
-                onClick={() => setStatusFilter(s)}
-                className={chipClass(statusFilter === s, STATUS_TONES[s] ?? 'neutral')}
-              >
-                {s.replace('_', ' ')}
-              </button>
-            ))}
+            {STATUSES.map((s) => {
+              const label = s.replace('_', ' ');
+              return (
+                <button
+                  key={s}
+                  type="button"
+                  onClick={() => setStatusFilter(s)}
+                  className={chipClass(statusFilter === s, STATUS_TONES[s] ?? 'neutral')}
+                >
+                  {label[0].toUpperCase() + label.slice(1)}
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>
@@ -338,9 +335,9 @@ export default function IncidentsClient({
             header: 'Summary',
             render: (i) => (
               <div className="max-w-md">
-                <p className="font-medium text-[#f5f5f5]">{i.summary}</p>
+                <p className="font-medium text-zinc-100">{i.summary}</p>
                 {i.client && (
-                  <p className="mt-0.5 text-[10px] font-mono uppercase tracking-[0.12em] text-[#52525b]">
+                  <p className="mt-0.5 text-xs text-zinc-500">
                     {i.client.name}
                   </p>
                 )}
@@ -353,7 +350,7 @@ export default function IncidentsClient({
                           value={rootCauseDraft}
                           onChange={(e) => setRootCauseDraft(e.target.value)}
                           placeholder="Root cause…"
-                          className="w-full rounded-md border border-[#27272a] bg-[#0a0a0b] px-2 py-1 text-[11px] text-[#f5f5f5] placeholder:text-[#3f3f46] focus:border-[#0f7b3a]/50 focus:outline-none"
+                          className="w-full rounded-md border border-white/[0.06] bg-white/[0.02] px-2 py-1 text-[11px] text-zinc-100 placeholder:text-zinc-500 focus:border-white/[0.12] focus:outline-none"
                           disabled={rowBusy === i.id}
                           autoFocus
                         />
@@ -362,35 +359,35 @@ export default function IncidentsClient({
                             type="button"
                             onClick={() => saveRootCause(i.id)}
                             disabled={rowBusy === i.id}
-                            className="rounded-md bg-[#0f7b3a] px-2.5 py-0.5 text-[10px] font-mono uppercase tracking-wider text-white hover:bg-[#B8C4C8] hover:text-black disabled:opacity-40 transition-colors"
+                            className="rounded-md bg-emerald-400/[0.08] border border-emerald-400/20 px-2.5 py-0.5 text-xs font-medium text-emerald-300 hover:bg-emerald-400/[0.12] hover:border-emerald-400/40 disabled:opacity-40 transition-colors"
                           >
-                            save
+                            Save
                           </button>
                           <button
                             type="button"
                             onClick={cancelEditRootCause}
                             disabled={rowBusy === i.id}
-                            className="rounded-md border border-[#27272a] px-2.5 py-0.5 text-[10px] font-mono uppercase tracking-wider text-[#a1a1aa] hover:text-[#e4e4e7] disabled:opacity-40"
+                            className="rounded-md border border-white/[0.08] px-2.5 py-0.5 text-xs font-medium text-zinc-400 hover:bg-white/[0.04] hover:text-zinc-100 disabled:opacity-40"
                           >
-                            cancel
+                            Cancel
                           </button>
                         </div>
                       </div>
                     ) : (
                       <div className="flex flex-wrap items-center gap-2">
                         {i.rootCause ? (
-                          <span className="text-[11px] text-[#a1a1aa] italic">{i.rootCause}</span>
+                          <span className="text-[11px] text-zinc-400 italic">{i.rootCause}</span>
                         ) : (
-                          <span className="text-[10px] font-mono uppercase tracking-wider text-[#52525b]">
-                            no root cause
+                          <span className="text-xs text-zinc-500">
+                            No root cause
                           </span>
                         )}
                         <button
                           type="button"
                           onClick={() => beginEditRootCause(i)}
-                          className="text-[10px] font-mono uppercase tracking-wider text-[#71717a] hover:text-[#e4e4e7] underline-offset-2 hover:underline"
+                          className="text-xs text-zinc-500 hover:text-zinc-100 underline-offset-2 hover:underline"
                         >
-                          {i.rootCause ? 'edit' : 'add'} root cause
+                          {i.rootCause ? 'Edit' : 'Add'} root cause
                         </button>
                       </div>
                     )}
@@ -402,26 +399,29 @@ export default function IncidentsClient({
           {
             key: 'severity',
             header: 'Severity',
-            render: (i) => <Badge text={i.severity} tone={SEVERITY_TONES[i.severity] ?? 'neutral'} />,
+            render: (i) => <Badge text={i.severity[0].toUpperCase() + i.severity.slice(1)} tone={SEVERITY_TONES[i.severity] ?? 'neutral'} />,
           },
           {
             key: 'status',
             header: 'Status',
-            render: (i) => (
-              <div className="flex flex-col gap-1.5">
-                <Badge text={i.status} tone={STATUS_TONES[i.status] ?? 'neutral'} />
-                <select
-                  value={i.status}
-                  onChange={(e) => setStatus(i.id, e.target.value as Status)}
-                  disabled={rowBusy === i.id}
-                  className="rounded-md border border-[#27272a] bg-[#0a0a0b] px-2 py-1 text-[10px] font-mono text-[#a1a1aa] focus:border-[#0f7b3a]/50 focus:outline-none disabled:opacity-50"
-                >
-                  {STATUSES.map((s) => (
-                    <option key={s} value={s}>{s}</option>
-                  ))}
-                </select>
-              </div>
-            ),
+            render: (i) => {
+              const statusLabel = i.status.replace('_', ' ');
+              return (
+                <div className="flex flex-col gap-1.5">
+                  <Badge text={statusLabel[0].toUpperCase() + statusLabel.slice(1)} tone={STATUS_TONES[i.status] ?? 'neutral'} />
+                  <select
+                    value={i.status}
+                    onChange={(e) => setStatus(i.id, e.target.value as Status)}
+                    disabled={rowBusy === i.id}
+                    className="rounded-md border border-white/[0.06] bg-white/[0.02] px-2 py-1 text-[10px] text-zinc-400 focus:border-white/[0.12] focus:outline-none disabled:opacity-50"
+                  >
+                    {STATUSES.map((s) => (
+                      <option key={s} value={s}>{s}</option>
+                    ))}
+                  </select>
+                </div>
+              );
+            },
           },
           {
             key: 'followup',
@@ -434,20 +434,20 @@ export default function IncidentsClient({
                 className={chipClass(i.followupRequired, i.followupRequired ? 'amber' : 'neutral')}
                 title="Toggle follow-up required"
               >
-                {i.followupRequired ? 'required' : 'none'}
+                {i.followupRequired ? 'Required' : 'None'}
               </button>
             ),
           },
           {
             key: 'asset',
             header: 'Asset',
-            render: (i) => i.asset?.name ?? <span className="text-[#52525b]">—</span>,
+            render: (i) => i.asset?.name ?? <span className="text-zinc-500">—</span>,
           },
           {
             key: 'started',
             header: 'Started',
             render: (i) => (
-              <span className="text-[11px] font-mono text-[#a1a1aa] whitespace-nowrap">
+              <span className="text-[11px] font-mono text-zinc-400 whitespace-nowrap">
                 {formatStarted(i.startedAt)}
               </span>
             ),
@@ -456,20 +456,20 @@ export default function IncidentsClient({
             key: 'duration',
             header: 'Duration',
             render: (i) => (
-              <span className="text-[11px] font-mono text-[#a1a1aa]">
+              <span className="text-[11px] font-mono text-zinc-400">
                 {formatDuration(i.startedAt, i.endedAt ?? i.resolvedAt)}
               </span>
             ),
           },
         ]}
         empty={
-          <div className="rounded-2xl border border-dashed border-[#27272a] bg-[#0a0a0b] p-10 text-center">
-            <p className="text-sm text-[#a1a1aa]">
+          <div className="rounded-2xl border border-dashed border-white/[0.06] bg-white/[0.02] p-10 text-center">
+            <p className="text-sm text-zinc-300">
               {initialIncidents.length === 0
                 ? 'No incidents logged.'
                 : 'No incidents match the current filters.'}
             </p>
-            <p className="mt-2 text-xs text-[#52525b] max-w-md mx-auto">
+            <p className="mt-2 text-xs text-zinc-500 max-w-md mx-auto">
               {initialIncidents.length === 0
                 ? 'Log incidents manually for now. BetterStack auto-ingestion lands in Phase 2B.'
                 : 'Clear or adjust the severity/status chips to widen the view.'}

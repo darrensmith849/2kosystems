@@ -3,6 +3,7 @@ import OpsLoginGate from './OpsLoginGate';
 import OperatorPicker from './OperatorPicker';
 import OpsSidebar from './components/OpsSidebar';
 import OpsMobileBar from './components/OpsMobileBar';
+import OpsTopBar from './components/OpsTopBar';
 import { FloatingChat } from '@/components/admin-ui/floating-chat';
 
 export const metadata = {
@@ -18,7 +19,10 @@ export default async function OpsLayout({ children }: { children: React.ReactNod
     <div className="min-h-screen flex flex-col lg:flex-row">
       <OpsMobileBar operatorSlug={gate.operatorSlug} />
       <OpsSidebar operatorSlug={gate.operatorSlug} />
-      <main className="flex-1 min-w-0 px-6 py-6 max-w-[1400px] w-full mx-auto lg:mx-0">{children}</main>
+      <div className="flex-1 min-w-0 flex flex-col">
+        <OpsTopBar operatorSlug={gate.operatorSlug} />
+        <main className="flex-1 min-w-0 px-6 py-6 max-w-[1400px] w-full mx-auto lg:mx-0">{children}</main>
+      </div>
       <FloatingChat />
     </div>
   );

@@ -1,9 +1,9 @@
 // Small inline chip rendered next to entity names when the row is saved
-// discovery data rather than a live database row.
+// discovery data rather than a live database row. Sentence case "preview".
 
 export default function SnapshotBadge() {
   return (
-    <span className="ml-2 inline-block text-[10px] text-emerald-300/80 border border-emerald-400/30 rounded-full px-1.5 py-0.5 align-middle">
+    <span className="ml-2 inline-block align-middle rounded-full border border-emerald-400/20 bg-emerald-400/[0.08] px-1.5 py-0.5 text-[10px] text-emerald-300">
       preview
     </span>
   );

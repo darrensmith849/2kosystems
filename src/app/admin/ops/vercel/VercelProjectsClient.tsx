@@ -65,7 +65,7 @@ export default function VercelProjectsClient({
               type="button"
               onClick={runSync}
               disabled={busy || integrationStatus.status !== 'connected'}
-              className="rounded-full border border-[#27272a] hover:border-[#3f3f46] px-3 py-1 text-[11px] font-mono text-[#f5f5f5] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              className="rounded-md border border-white/[0.08] hover:bg-white/[0.04] px-2.5 py-1 text-xs font-medium text-zinc-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               {busy ? 'Syncing…' : 'Run sync now'}
             </button>
@@ -73,7 +73,7 @@ export default function VercelProjectsClient({
         }
       >
         {integrationStatus.status === 'connected' ? (
-          <p className="text-xs text-[#71717a]">Both Vercel teams are connected and syncing.</p>
+          <p className="text-xs text-zinc-400">Both Vercel teams are connected and syncing.</p>
         ) : (
           <p className="text-xs text-amber-200">Not connected. {integrationStatus.detail}</p>
         )}
@@ -84,7 +84,7 @@ export default function VercelProjectsClient({
         <select
           value={stateFilter}
           onChange={(e) => setStateFilter(e.target.value)}
-          className="rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2 text-xs text-[#f5f5f5]"
+          className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2 text-xs text-zinc-100"
         >
           <option value="all">All statuses</option>
           <option value="live">Live</option>
@@ -95,13 +95,13 @@ export default function VercelProjectsClient({
         <select
           value={teamFilter}
           onChange={(e) => setTeamFilter(e.target.value)}
-          className="rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2 text-xs text-[#f5f5f5]"
+          className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2 text-xs text-zinc-100"
         >
           <option value="all">All teams</option>
           <option value="pumpbots-projects">pumpbots-projects</option>
           <option value="impart-global">impart-global</option>
         </select>
-        <p className="text-xs text-[#71717a] self-center">
+        <p className="text-xs text-zinc-400 self-center">
           {filtered.length} of {projects.length}
         </p>
       </div>
@@ -115,16 +115,16 @@ export default function VercelProjectsClient({
         <DataTable
           rows={filtered}
           columns={[
-            { key: 'name', header: 'Name', render: (p) => <span className="font-medium text-[#f5f5f5]">{p.name}</span> },
+            { key: 'name', header: 'Name', render: (p) => <span className="font-medium text-zinc-100">{p.name}</span> },
             { key: 'team', header: 'Team', render: (p) => <Badge text={p.teamSlug} /> },
             { key: 'state', header: 'Status', render: (p) => <Badge text={labelFor(VERCEL_STATE_LABEL, p.state)} tone={STATE_TONES[p.state] ?? 'neutral'} /> },
             { key: 'url', header: 'Production URL', render: (p) =>
               p.productionUrl
                 ? <a href={p.productionUrl.startsWith('http') ? p.productionUrl : `https://${p.productionUrl}`} target="_blank" rel="noreferrer" className="text-emerald-300 hover:underline">{p.productionUrl}</a>
-                : <span className="text-[#52525b]">—</span>
+                : <span className="text-zinc-500">—</span>
             },
-            { key: 'repo', header: 'Linked repo', render: (p) => p.linkedRepo ?? <span className="text-[#52525b]">—</span> },
-            { key: 'node', header: 'Node', render: (p) => p.nodeVersion ?? <span className="text-[#52525b]">—</span> },
+            { key: 'repo', header: 'Linked repo', render: (p) => p.linkedRepo ?? <span className="text-zinc-500">—</span> },
+            { key: 'node', header: 'Node', render: (p) => p.nodeVersion ?? <span className="text-zinc-500">—</span> },
           ]}
         />
       )}

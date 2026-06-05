@@ -70,13 +70,13 @@ export default function OpsMobileBar({ operatorSlug }: { operatorSlug: string })
   const isOnSubpage = pathname !== '/admin/ops';
 
   return (
-    <div className="lg:hidden sticky top-0 z-30 border-b border-[#1c1c1e] bg-[#0a0a0b]/95 backdrop-blur-sm">
+    <div className="lg:hidden sticky top-0 z-30 border-b border-white/[0.06] bg-[#0a0a0b]/95 backdrop-blur-sm">
       <div className="px-4 py-2 flex items-center justify-between gap-3">
         <div className="flex items-center gap-2 min-w-0">
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
-            className="relative text-[#a1a1aa] hover:text-[#f5f5f5] border border-[#27272a] rounded px-2 py-1 text-xs"
+            className="relative text-zinc-400 hover:text-zinc-100 border border-white/[0.06] hover:border-white/[0.08] rounded px-2 py-1 text-xs"
             aria-expanded={open}
             aria-label="Toggle navigation"
           >
@@ -88,7 +88,7 @@ export default function OpsMobileBar({ operatorSlug }: { operatorSlug: string })
               />
             )}
           </button>
-          <span className="text-xs text-[#a1a1aa] truncate">
+          <span className="text-xs text-zinc-400 truncate">
             <span className="hidden sm:inline">2KO Systems · </span>
             Ops Dashboard
           </span>
@@ -96,7 +96,7 @@ export default function OpsMobileBar({ operatorSlug }: { operatorSlug: string })
         <button
           type="button"
           onClick={handleSwitchOperator}
-          className="text-xs text-emerald-300 hover:text-emerald-200 border border-emerald-400/30 rounded-md px-2.5 py-1 shrink-0"
+          className="text-xs text-zinc-100 hover:text-white border border-white/[0.08] hover:border-white/[0.12] bg-white/[0.02] rounded-md px-2.5 py-1 shrink-0"
           title="Switch user"
           aria-label="Switch user"
         >
@@ -105,11 +105,11 @@ export default function OpsMobileBar({ operatorSlug }: { operatorSlug: string })
       </div>
 
       {open && (
-        <div className="border-t border-[#1c1c1e] max-h-[78vh] flex flex-col">
+        <div className="border-t border-white/[0.06] max-h-[78vh] flex flex-col">
           <div className="flex-1 min-h-0 overflow-y-auto px-3 py-3 space-y-4">
             {/* Admin consoles — always visible at top so cross-console jump is one tap. */}
-            <div className="pb-3 border-b border-[#1c1c1e]">
-              <p className="px-1 mb-1 text-[10px] uppercase tracking-wider text-zinc-500">
+            <div className="pb-3 border-b border-white/[0.06]">
+              <p className="px-1 mb-1 text-[11px] font-medium text-zinc-500">
                 {OPS_NAV_GROUPS[0].title}
               </p>
               <ul className="space-y-0.5">
@@ -123,17 +123,17 @@ export default function OpsMobileBar({ operatorSlug }: { operatorSlug: string })
                         href={item.href}
                         onClick={() => setOpen(false)}
                         aria-current={active ? 'page' : undefined}
-                        className={`flex items-center justify-between gap-2 px-2 py-1.5 text-sm rounded border-l-2 transition-colors ${
+                        className={`flex items-center justify-between gap-2 px-2 py-1.5 text-sm rounded-md transition-colors ${
                           active
-                            ? 'bg-neutral-800/80 ring-1 ring-emerald-500/20 text-emerald-300 border-emerald-400 font-medium'
-                            : 'text-[#a1a1aa] hover:text-[#f5f5f5] hover:bg-neutral-800/40 border-transparent'
+                            ? 'bg-white/[0.06] text-white font-medium'
+                            : 'text-zinc-400 hover:text-zinc-100 hover:bg-white/[0.04]'
                         }`}
                       >
                         <span className="flex items-center gap-2 min-w-0">
                           {IconCmp && (
                             <IconCmp
                               className={`h-4 w-4 shrink-0 ${
-                                active ? 'text-emerald-300' : 'text-zinc-500'
+                                active ? 'text-emerald-400' : 'text-zinc-500'
                               }`}
                             />
                           )}
@@ -142,7 +142,7 @@ export default function OpsMobileBar({ operatorSlug }: { operatorSlug: string })
                         {isExternalConsole && (
                           <span
                             aria-hidden="true"
-                            className="text-[10px] text-[#52525b]"
+                            className="text-[10px] text-zinc-500"
                           >
                             →
                           </span>
@@ -156,7 +156,7 @@ export default function OpsMobileBar({ operatorSlug }: { operatorSlug: string })
 
             {/* Pinned grid — top destinations as a 2-column tap grid. */}
             <div>
-              <p className="px-1 mb-1.5 text-[10px] uppercase tracking-wider text-zinc-500">
+              <p className="px-1 mb-1.5 text-[11px] font-medium text-zinc-500">
                 Pinned
               </p>
               <div className="grid grid-cols-2 gap-1.5">
@@ -169,16 +169,16 @@ export default function OpsMobileBar({ operatorSlug }: { operatorSlug: string })
                       href={item.href}
                       onClick={() => setOpen(false)}
                       aria-current={active ? 'page' : undefined}
-                      className={`px-2 py-2 text-sm rounded border transition-colors flex items-center justify-center gap-2 ${
+                      className={`px-2 py-2 text-sm rounded-md border transition-colors flex items-center justify-center gap-2 ${
                         active
-                          ? 'bg-neutral-800/80 text-emerald-300 border-emerald-400/60 font-medium'
-                          : 'text-[#e4e4e7] border-[#27272a] hover:bg-neutral-800/40 hover:text-[#f5f5f5]'
+                          ? 'bg-white/[0.06] text-white border-white/[0.08] font-medium'
+                          : 'text-zinc-300 border-white/[0.06] hover:bg-white/[0.04] hover:text-zinc-100'
                       }`}
                     >
                       {IconCmp && (
                         <IconCmp
                           className={`h-4 w-4 shrink-0 ${
-                            active ? 'text-emerald-300' : 'text-zinc-500'
+                            active ? 'text-emerald-400' : 'text-zinc-500'
                           }`}
                         />
                       )}
@@ -197,7 +197,7 @@ export default function OpsMobileBar({ operatorSlug }: { operatorSlug: string })
                 type="button"
                 aria-expanded={moreOpen}
                 onClick={() => setMoreOpen((v) => !v)}
-                className="w-full flex items-center justify-between px-1 mb-1.5 text-[10px] uppercase tracking-wider text-zinc-500 hover:text-zinc-300 transition-colors"
+                className="w-full flex items-center justify-between px-1 mb-1.5 text-[11px] font-medium text-zinc-500 hover:text-zinc-300 transition-colors"
               >
                 <span>All sections</span>
                 <span
@@ -218,7 +218,7 @@ export default function OpsMobileBar({ operatorSlug }: { operatorSlug: string })
                     if (itemsToShow.length === 0) return null;
                     return (
                       <div key={group.title}>
-                        <p className="px-1 mb-1 text-[10px] uppercase tracking-wider text-zinc-500">
+                        <p className="px-1 mb-1 text-[11px] font-medium text-zinc-500">
                           {group.title}
                         </p>
                         <ul className="space-y-0.5">
@@ -231,17 +231,17 @@ export default function OpsMobileBar({ operatorSlug }: { operatorSlug: string })
                                   href={item.href}
                                   onClick={() => setOpen(false)}
                                   aria-current={active ? 'page' : undefined}
-                                  className={`flex items-center justify-between gap-2 px-2 py-1.5 text-sm rounded border-l-2 transition-colors ${
+                                  className={`flex items-center justify-between gap-2 px-2 py-1.5 text-sm rounded-md transition-colors ${
                                     active
-                                      ? 'bg-neutral-800/80 ring-1 ring-emerald-500/20 text-emerald-300 border-emerald-400 font-medium'
-                                      : 'text-[#a1a1aa] hover:text-[#f5f5f5] hover:bg-neutral-800/40 border-transparent'
+                                      ? 'bg-white/[0.06] text-white font-medium'
+                                      : 'text-zinc-400 hover:text-zinc-100 hover:bg-white/[0.04]'
                                   }`}
                                 >
                                   <span className="flex items-center gap-2 min-w-0">
                                     {IconCmp && (
                                       <IconCmp
                                         className={`h-4 w-4 shrink-0 ${
-                                          active ? 'text-emerald-300' : 'text-zinc-500'
+                                          active ? 'text-emerald-400' : 'text-zinc-500'
                                         }`}
                                       />
                                     )}
@@ -262,24 +262,24 @@ export default function OpsMobileBar({ operatorSlug }: { operatorSlug: string })
 
           {/* Sticky footer inside the scroll region — sign-out + switch-user
               stay reachable without scrolling 17 nav rows. */}
-          <div className="shrink-0 border-t border-[#1c1c1e] bg-[#0a0a0b]/95 px-3 py-3 space-y-2">
+          <div className="shrink-0 border-t border-white/[0.06] bg-[#0a0a0b]/95 px-3 py-3 space-y-2">
             <button
               type="button"
               onClick={handleSwitchOperator}
-              className="w-full text-xs text-emerald-300 hover:text-emerald-200 border border-emerald-400/30 rounded-md px-2.5 py-1.5 text-left"
+              className="w-full text-xs text-zinc-100 hover:text-white border border-white/[0.08] hover:border-white/[0.12] bg-white/[0.02] rounded-md px-2.5 py-1.5 text-left"
               aria-label="Switch user"
             >
-              <span className="block text-[11px] text-emerald-200/90">
+              <span className="block text-[11px] text-zinc-400">
                 Switch user
               </span>
-              <span className="block truncate font-mono text-[10px] text-[#a1a1aa]">
+              <span className="block truncate text-[11px] text-zinc-400">
                 {operatorSlug}
               </span>
             </button>
             <button
               type="button"
               onClick={handleLogout}
-              className="w-full text-xs text-[#a1a1aa] hover:text-[#f5f5f5] border border-[#27272a] rounded-md px-2.5 py-1.5"
+              className="w-full text-xs text-zinc-400 hover:text-zinc-100 border border-white/[0.06] hover:border-white/[0.08] rounded-md px-2.5 py-1.5"
             >
               Sign out
             </button>

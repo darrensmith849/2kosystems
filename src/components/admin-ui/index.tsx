@@ -14,9 +14,9 @@ export function AdminCard({
   action?: React.ReactNode;
 }) {
   return (
-    <div className="rounded-2xl border border-[#27272a] bg-[#111113] p-5">
+    <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5">
       <div className="flex items-center justify-between mb-4">
-        <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a]">{title}</p>
+        <p className="text-sm font-medium text-zinc-100">{title}</p>
         {action}
       </div>
       {children}
@@ -27,23 +27,23 @@ export function AdminCard({
 export function Row({ label, value }: { label: string; value: React.ReactNode }) {
   if (value === null || value === undefined || value === '') return null;
   return (
-    <div className="flex gap-3 py-1.5 border-b border-[#1c1c1e] last:border-0">
-      <span className="w-40 shrink-0 text-xs text-[#71717a]">{label}</span>
-      <span className="text-xs text-[#f5f5f5] flex-1 break-words">{value}</span>
+    <div className="flex gap-3 py-1.5 border-b border-white/[0.04] last:border-0">
+      <span className="w-40 shrink-0 text-xs text-zinc-500">{label}</span>
+      <span className="text-xs text-zinc-100 flex-1 break-words">{value}</span>
     </div>
   );
 }
 
 export function Badge({ text, tone = 'neutral' }: { text: string; tone?: 'neutral' | 'green' | 'amber' | 'rose' | 'blue' }) {
   const palette: Record<typeof tone, string> = {
-    neutral: 'text-[#a1a1aa] border-[#27272a]',
-    green: 'text-emerald-300 border-emerald-400/30 bg-emerald-400/5',
-    amber: 'text-amber-300 border-amber-400/30 bg-amber-400/5',
-    rose: 'text-rose-300 border-rose-400/30 bg-rose-400/5',
-    blue: 'text-sky-300 border-sky-400/30 bg-sky-400/5',
+    neutral: 'text-zinc-300 border-white/[0.08] bg-white/[0.03]',
+    green: 'text-emerald-300 border-emerald-400/20 bg-emerald-400/[0.06]',
+    amber: 'text-amber-300 border-amber-400/20 bg-amber-400/[0.06]',
+    rose: 'text-rose-300 border-rose-400/20 bg-rose-400/[0.06]',
+    blue: 'text-sky-300 border-sky-400/20 bg-sky-400/[0.06]',
   };
   return (
-    <span className={`inline-block text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-full border ${palette[tone]}`}>
+    <span className={`inline-block text-xs font-medium px-2 py-0.5 rounded-full border ${palette[tone]}`}>
       {text}
     </span>
   );
@@ -73,9 +73,9 @@ export function StatusPill({
 
 export function EmptyState({ title, hint, action }: { title: string; hint?: string; action?: React.ReactNode }) {
   return (
-    <div className="rounded-2xl border border-dashed border-[#27272a] bg-[#0a0a0b] p-10 text-center">
-      <p className="text-sm text-[#a1a1aa]">{title}</p>
-      {hint && <p className="mt-2 text-xs text-[#52525b] max-w-md mx-auto">{hint}</p>}
+    <div className="rounded-2xl border border-dashed border-white/[0.06] bg-white/[0.02] p-10 text-center">
+      <p className="text-sm text-zinc-300">{title}</p>
+      {hint && <p className="mt-2 text-xs text-zinc-500 max-w-md mx-auto">{hint}</p>}
       {action && <div className="mt-4 inline-flex">{action}</div>}
     </div>
   );
@@ -85,8 +85,8 @@ export function SectionHeader({ title, subtitle, action }: { title: string; subt
   return (
     <div className="flex items-start justify-between gap-4 mb-5">
       <div>
-        <h2 className="text-base font-semibold text-[#f5f5f5]">{title}</h2>
-        {subtitle && <p className="mt-1 text-xs text-[#71717a]">{subtitle}</p>}
+        <h2 className="text-2xl font-semibold text-white">{title}</h2>
+        {subtitle && <p className="mt-1 text-sm text-zinc-400">{subtitle}</p>}
       </div>
       {action}
     </div>
@@ -106,14 +106,14 @@ export function DataTable<T extends { id: string | number }>({
     return <>{empty ?? <EmptyState title="No rows yet" />}</>;
   }
   return (
-    <div className="overflow-x-auto rounded-2xl border border-[#27272a] bg-[#111113]">
+    <div className="overflow-x-auto rounded-2xl border border-white/[0.06] bg-white/[0.02]">
       <table className="min-w-full text-left text-xs">
-        <thead className="border-b border-[#1c1c1e]">
+        <thead className="border-b border-white/[0.06]">
           <tr>
             {columns.map((c) => (
               <th
                 key={c.key}
-                className={`px-4 py-3 font-mono uppercase tracking-[0.15em] text-[10px] text-[#71717a] ${c.className ?? ''}`}
+                className={`px-4 py-3 text-xs font-medium text-zinc-500 ${c.className ?? ''}`}
               >
                 {c.header}
               </th>
@@ -122,9 +122,9 @@ export function DataTable<T extends { id: string | number }>({
         </thead>
         <tbody>
           {rows.map((row) => (
-            <tr key={row.id} className="border-b border-[#1c1c1e] last:border-0 hover:bg-[#0a0a0b]/60 transition-colors">
+            <tr key={row.id} className="border-b border-white/[0.04] last:border-0 hover:bg-white/[0.03] transition-colors">
               {columns.map((c) => (
-                <td key={c.key} className={`px-4 py-3 align-top text-[#e4e4e7] ${c.className ?? ''}`}>
+                <td key={c.key} className={`px-4 py-3 align-top text-zinc-100 ${c.className ?? ''}`}>
                   {c.render(row)}
                 </td>
               ))}

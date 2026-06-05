@@ -53,8 +53,8 @@ function Chip({
       onClick={onClick}
       className={
         active
-          ? 'rounded-full border border-emerald-400/40 bg-emerald-400/10 px-3 py-1 text-[11px] font-mono uppercase tracking-wider text-emerald-300 transition-colors'
-          : 'rounded-full border border-[#27272a] bg-transparent px-3 py-1 text-[11px] font-mono uppercase tracking-wider text-[#a1a1aa] hover:border-[#3f3f46] hover:text-[#f5f5f5] transition-colors'
+          ? 'rounded-full border border-emerald-400/20 bg-emerald-400/[0.08] px-3 py-1 text-xs font-medium text-emerald-300 transition-colors'
+          : 'rounded-full border border-white/[0.08] bg-transparent px-3 py-1 text-xs font-medium text-zinc-400 hover:bg-white/[0.04] hover:border-white/[0.12] hover:text-zinc-100 transition-colors'
       }
     >
       {children}
@@ -147,19 +147,13 @@ export default function TicketsClient({
 
   return (
     <div className="space-y-5">
-      {isSnapshot ? (
-        <AdminCard title="Add ticket — read-only in preview mode">
-          <p className="text-xs text-[#a1a1aa]">
-            Adding tickets turns on once the production database is connected. The rows below are real operational tasks from the saved sample data.
-          </p>
-        </AdminCard>
-      ) : (
+      {isSnapshot ? null : (
       <AdminCard title="Add ticket">
         <form onSubmit={handleCreate} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-3">
           <select
             value={kind}
             onChange={(e) => setKind(e.target.value as (typeof TICKET_KINDS)[number])}
-            className="rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5]"
+            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-100"
             disabled={busy}
           >
             {TICKET_KINDS.map((k) => (
@@ -171,13 +165,13 @@ export default function TicketsClient({
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Ticket title"
-            className="rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5] placeholder:text-[#3f3f46] focus:border-[#0f7b3a]/50 focus:outline-none lg:col-span-3"
+            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-500 focus:border-white/[0.12] focus:outline-none lg:col-span-3"
             disabled={busy}
           />
           <select
             value={priority}
             onChange={(e) => setPriority(e.target.value as (typeof PRIORITIES)[number])}
-            className="rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5]"
+            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-100"
             disabled={busy}
           >
             {PRIORITIES.map((p) => (
@@ -189,13 +183,13 @@ export default function TicketsClient({
             value={dueAt}
             onChange={(e) => setDueAt(e.target.value)}
             disabled={busy}
-            className="rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5]"
+            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-100"
             aria-label="Due date"
           />
           <select
             value={clientId}
             onChange={(e) => setClientId(e.target.value)}
-            className="rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5] lg:col-span-2"
+            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-100 lg:col-span-2"
             disabled={busy}
           >
             <option value="">No client</option>
@@ -206,7 +200,7 @@ export default function TicketsClient({
           <select
             value={assetId}
             onChange={(e) => setAssetId(e.target.value)}
-            className="rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5] lg:col-span-2"
+            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-100 lg:col-span-2"
             disabled={busy}
           >
             <option value="">No asset</option>
@@ -217,7 +211,7 @@ export default function TicketsClient({
           <select
             value={assigneeOperatorId}
             onChange={(e) => setAssigneeOperatorId(e.target.value)}
-            className="rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5] lg:col-span-2"
+            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-100 lg:col-span-2"
             disabled={busy}
           >
             <option value="">Unassigned</option>
@@ -230,7 +224,7 @@ export default function TicketsClient({
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Description (optional)"
             rows={2}
-            className="rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5] placeholder:text-[#3f3f46] focus:border-[#0f7b3a]/50 focus:outline-none lg:col-span-4"
+            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-500 focus:border-white/[0.12] focus:outline-none lg:col-span-4"
             disabled={busy}
           />
           <button
@@ -248,11 +242,11 @@ export default function TicketsClient({
       <AdminCard title="Filters">
         <div className="space-y-3">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a] mr-1">Client</span>
+            <span className="text-[11px] font-medium text-zinc-500 mr-1">Client</span>
             <select
               value={clientFilter}
               onChange={(e) => setClientFilter(e.target.value)}
-              className="rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3 py-1.5 text-xs text-[#f5f5f5]"
+              className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3 py-1.5 text-xs text-zinc-100"
             >
               <option value="all">All clients</option>
               {clients.map((c) => (
@@ -261,7 +255,7 @@ export default function TicketsClient({
             </select>
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a] mr-1">Status</span>
+            <span className="text-[11px] font-medium text-zinc-500 mr-1">Status</span>
             <Chip active={statusFilter === 'all'} onClick={() => setStatusFilter('all')}>All</Chip>
             {STATUS_OPTIONS.map((s) => (
               <Chip key={s} active={statusFilter === s} onClick={() => setStatusFilter(s)}>
@@ -270,7 +264,7 @@ export default function TicketsClient({
             ))}
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a] mr-1">Priority</span>
+            <span className="text-[11px] font-medium text-zinc-500 mr-1">Priority</span>
             <Chip active={priorityFilter === 'all'} onClick={() => setPriorityFilter('all')}>All</Chip>
             {PRIORITY_FILTERS.map((p) => (
               <Chip key={p} active={priorityFilter === p} onClick={() => setPriorityFilter(p)}>
@@ -298,7 +292,7 @@ export default function TicketsClient({
               key: 'title',
               header: 'Title',
               render: (t) => (
-                <Link href={`/admin/ops/tickets/${t.id}`} className="font-medium text-[#f5f5f5] hover:text-emerald-300 transition-colors">
+                <Link href={`/admin/ops/tickets/${t.id}`} className="font-medium text-zinc-100 hover:text-zinc-50 transition-colors">
                   {t.title}
                 </Link>
               ),
@@ -317,21 +311,21 @@ export default function TicketsClient({
             {
               key: 'client',
               header: 'Client',
-              render: (t) => t.client?.name ?? <span className="text-[#52525b]">—</span>,
+              render: (t) => t.client?.name ?? <span className="text-zinc-500">—</span>,
             },
             {
               key: 'due',
               header: 'Due',
               render: (t) => {
-                if (!t.dueAt) return <span className="text-[#52525b]">—</span>;
+                if (!t.dueAt) return <span className="text-zinc-500">—</span>;
                 const dueMs = t.dueAt.getTime();
                 const overdue = dueMs < nowMs && !CLOSED_STATUSES.has(t.status);
                 return (
                   <div className="flex items-center gap-2">
-                    <span className="font-mono text-[10px] text-[#a1a1aa]">
+                    <span className="font-mono text-[10px] text-zinc-400">
                       {t.dueAt.toISOString().slice(0, 10)}
                     </span>
-                    {overdue && <Badge text="overdue" tone="rose" />}
+                    {overdue && <Badge text="Overdue" tone="rose" />}
                   </div>
                 );
               },
@@ -340,7 +334,7 @@ export default function TicketsClient({
               key: 'updated',
               header: 'Updated',
               render: (t) => (
-                <span className="font-mono text-[10px] text-[#71717a]">
+                <span className="font-mono text-[10px] text-zinc-500">
                   {t.updatedAt?.toISOString().slice(0, 16) ?? '—'}
                 </span>
               ),

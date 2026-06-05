@@ -35,9 +35,9 @@ export function SourceCards({ sources }: { sources: AssistantSource[] }) {
   const hidden = sources.length - DEFAULT_VISIBLE;
   const showToggle = sources.length > DEFAULT_VISIBLE;
   return (
-    <div className="mt-3 rounded-xl border border-[#1c1c1e] bg-[#0a0a0b] px-3 py-2.5">
-      <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a] mb-2">
-        Sources ({sources.length})
+    <div className="mt-3 rounded-xl border border-white/[0.06] bg-white/[0.02] px-3 py-2.5">
+      <p className="text-xs font-medium text-zinc-500 mb-2">
+        Related records ({sources.length})
       </p>
       <ul className="space-y-1">
         {visible.map((s) => {
@@ -50,12 +50,12 @@ export function SourceCards({ sources }: { sources: AssistantSource[] }) {
               {valid ? (
                 <a
                   href={s.url}
-                  className="text-emerald-300 hover:text-emerald-200 underline underline-offset-2 truncate text-[12px]"
+                  className="text-emerald-300 hover:text-emerald-200 underline underline-offset-2 truncate text-xs"
                 >
                   {s.title}
                 </a>
               ) : (
-                <span className="text-[#e4e4e7] truncate text-[12px]">{s.title}</span>
+                <span className="text-zinc-300 truncate text-xs">{s.title}</span>
               )}
             </li>
           );
@@ -65,7 +65,7 @@ export function SourceCards({ sources }: { sources: AssistantSource[] }) {
         <button
           type="button"
           onClick={() => setExpanded((v) => !v)}
-          className="mt-2 text-[11px] uppercase tracking-[0.18em] text-emerald-300 hover:text-emerald-200"
+          className="mt-2 text-xs text-emerald-300 hover:text-emerald-200"
         >
           {expanded ? 'Show fewer' : `Show ${hidden} more sources`}
         </button>

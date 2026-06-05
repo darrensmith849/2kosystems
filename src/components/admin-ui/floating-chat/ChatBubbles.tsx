@@ -164,8 +164,8 @@ export function ChatBubbles({
         if (m.role === 'user') {
           return (
             <div key={`u-${idx}-${m.ts}`} className="flex justify-end">
-              <div className="max-w-[85%] rounded-2xl bg-emerald-400/[0.08] border border-emerald-400/20 px-4 py-2.5">
-                <p className="text-sm text-[#f5f5f5] leading-relaxed whitespace-pre-wrap">
+              <div className="max-w-[85%] rounded-2xl bg-emerald-400/[0.10] border border-emerald-400/[0.20] px-4 py-3">
+                <p className="text-sm text-zinc-100 leading-relaxed whitespace-pre-wrap">
                   {m.content}
                 </p>
               </div>
@@ -175,10 +175,10 @@ export function ChatBubbles({
         const isLast = idx === messages.length - 1;
         return (
           <div key={`a-${idx}-${m.ts}`} className="flex flex-col items-start">
-            <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a] mb-1 ml-1">
+            <p className="text-xs text-zinc-500 mb-1 ml-1">
               2KO Ops Assistant
             </p>
-            <div className="max-w-[92%] w-full rounded-2xl border border-[#27272a] bg-[#111113] px-4 py-3">
+            <div className="max-w-[92%] w-full rounded-2xl border border-white/[0.06] bg-white/[0.03] px-4 py-3">
               {(m.mode || (m.warnings && m.warnings.length > 0)) && (
                 <div className="flex flex-wrap items-center gap-1.5 mb-2">
                   {m.mode && (
@@ -203,8 +203,8 @@ export function ChatBubbles({
               </div>
               {m.sources && <SourceCards sources={m.sources} />}
               {isLast && m.followUps && m.followUps.length > 0 && onFollowUpClick && (
-                <div className="mt-3 pt-3 border-t border-[#1c1c1e]">
-                  <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a] mb-2">
+                <div className="mt-3 pt-3 border-t border-white/[0.06]">
+                  <p className="text-xs text-zinc-500 mb-2">
                     Try next
                   </p>
                   <div className="flex flex-wrap gap-2">
@@ -214,7 +214,7 @@ export function ChatBubbles({
                         type="button"
                         onClick={() => onFollowUpClick(f)}
                         disabled={busy}
-                        className="rounded-full border border-[#27272a] hover:border-emerald-400/40 hover:text-emerald-200 px-3 py-1 text-xs text-[#e4e4e7] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                        className="rounded-full border border-white/[0.08] hover:border-white/[0.12] hover:bg-white/[0.04] px-3 py-1 text-xs text-zinc-300 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                       >
                         {f}
                       </button>
@@ -229,11 +229,11 @@ export function ChatBubbles({
 
       {busy && (
         <div className="flex flex-col items-start">
-          <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a] mb-1 ml-1">
+          <p className="text-xs text-zinc-500 mb-1 ml-1">
             2KO Ops Assistant
           </p>
-          <div className="rounded-2xl border border-[#27272a] bg-[#111113] px-4 py-2.5">
-            <p className="text-xs text-[#a1a1aa] flex items-center gap-2">
+          <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] px-4 py-2.5">
+            <p className="text-xs text-zinc-400 flex items-center gap-2">
               <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
               {busyLabel}
             </p>

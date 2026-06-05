@@ -136,7 +136,7 @@ export default async function OpsOverviewPage() {
 
 function SectionLabel({ title }: { title: string }) {
   return (
-    <p className="mt-2 mb-3 text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a]">
+    <p className="mt-2 mb-3 text-sm font-medium text-zinc-100">
       {title}
     </p>
   );
@@ -412,7 +412,7 @@ function NextAction({ summary, index }: { summary: ReportsSummary; index: IndexI
     <div className="mb-6">
       <AdminCard title="What needs attention">
         {top.length === 0 ? (
-          <p className="text-xs text-[#71717a]">
+          <p className="text-xs text-zinc-500">
             Nothing flagged. Snapshot data may not be loaded — connect DATABASE_URL or check the
             snapshot fixtures.
           </p>
@@ -421,15 +421,15 @@ function NextAction({ summary, index }: { summary: ReportsSummary; index: IndexI
             {headline && (
               <Link
                 href={headline.href}
-                className="block rounded-xl border border-emerald-400/30 bg-emerald-400/[0.04] p-4 hover:border-emerald-400/60 transition-colors"
+                className="block rounded-xl border border-emerald-400/20 bg-emerald-400/[0.04] p-4 hover:border-emerald-400/40 transition-colors"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1 min-w-0">
-                    <p className="text-[10px] font-mono uppercase tracking-wider text-emerald-300/80">
+                    <p className="text-xs font-medium text-emerald-300">
                       Do this next
                     </p>
-                    <p className="mt-1.5 text-sm font-medium text-[#f5f5f5]">{headline.title}</p>
-                    <p className="mt-1 text-[11px] font-mono text-[#a1a1aa] whitespace-pre-line leading-snug">
+                    <p className="mt-1.5 text-sm font-medium text-zinc-100">{headline.title}</p>
+                    <p className="mt-1 text-xs text-zinc-400 whitespace-pre-line leading-snug">
                       {headline.context}
                     </p>
                   </div>
@@ -445,19 +445,19 @@ function NextAction({ summary, index }: { summary: ReportsSummary; index: IndexI
                 {rest.map((r) => (
                   <li
                     key={r.id}
-                    className="flex items-start gap-3 border-b border-[#1c1c1e] pb-3 last:border-0 last:pb-0"
+                    className="flex items-start gap-3 border-b border-white/[0.04] pb-3 last:border-0 last:pb-0"
                   >
-                    <span className="font-mono text-[11px] text-emerald-300/70 w-6 shrink-0">
+                    <span className="text-xs text-emerald-300/80 w-6 shrink-0">
                       {r.icon}
                     </span>
                     <div className="flex-1 min-w-0">
                       <Link
                         href={r.href}
-                        className="text-xs text-[#f5f5f5] hover:text-emerald-300 font-medium"
+                        className="text-xs text-zinc-100 hover:text-white font-medium"
                       >
                         {r.title}
                       </Link>
-                      <p className="mt-1 text-[10px] font-mono text-[#71717a] whitespace-pre-line leading-snug">
+                      <p className="mt-1 text-xs text-zinc-500 whitespace-pre-line leading-snug">
                         {r.context}
                       </p>
                     </div>
@@ -526,7 +526,7 @@ function KeyBlockers() {
       <AdminCard
         title="Credentials and decisions"
         action={
-          <p className="text-[10px] font-mono text-[#71717a]">
+          <p className="text-xs text-zinc-500">
             {blockedCount} blocked · {resolvedCount} resolved · {optionalCount} optional
           </p>
         }
@@ -535,9 +535,9 @@ function KeyBlockers() {
           {blockers.map((b) => (
             <div
               key={b.label}
-              className="rounded-xl border border-[#27272a] bg-[#0a0a0b] px-3 py-3 flex flex-col gap-2"
+              className="rounded-xl border border-white/[0.06] bg-white/[0.02] px-3 py-3 flex flex-col gap-2"
             >
-              <p className="text-xs text-[#e4e4e7] font-medium leading-tight">{b.label}</p>
+              <p className="text-xs text-zinc-100 font-medium leading-tight">{b.label}</p>
               <Badge
                 text={b.status}
                 tone={b.status === 'blocked' ? 'rose' : b.status === 'optional' ? 'amber' : 'green'}
@@ -563,17 +563,17 @@ function AreaCard({ href, Icon, title, summary }: AreaCardProps) {
   return (
     <Link
       href={href}
-      className="group block rounded-2xl border border-[#27272a] bg-[#111113] p-4 hover:border-emerald-400/40 transition-colors"
+      className="group block rounded-2xl border border-white/[0.06] bg-white/[0.02] p-4 hover:bg-white/[0.04] hover:border-white/[0.08] transition-colors"
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-2 min-w-0">
-          <Icon className="h-4 w-4 text-emerald-300/80 shrink-0" />
-          <p className="text-sm font-medium text-[#f5f5f5] truncate">{title}</p>
+          <Icon className="h-4 w-4 text-emerald-400 shrink-0" />
+          <p className="text-sm font-medium text-zinc-100 truncate">{title}</p>
         </div>
-        <ArrowRightIcon className="h-4 w-4 text-[#52525b] group-hover:text-emerald-300 shrink-0" />
+        <ArrowRightIcon className="h-4 w-4 text-zinc-500 group-hover:text-zinc-300 shrink-0" />
       </div>
-      <p className="mt-2 text-[11px] font-mono text-[#a1a1aa] leading-snug">{summary}</p>
-      <p className="mt-2 text-[10px] text-emerald-300/80 group-hover:text-emerald-200 font-mono uppercase tracking-wider">
+      <p className="mt-2 text-xs text-zinc-400 leading-snug">{summary}</p>
+      <p className="mt-2 text-xs text-emerald-300/80 group-hover:text-emerald-200">
         View
       </p>
     </Link>
@@ -642,28 +642,28 @@ type QuickActionProps = {
 };
 
 const ACCENT_BORDER: Record<QuickActionProps['accent'], string> = {
-  emerald: 'border-emerald-400/30 hover:border-emerald-400/60 hover:bg-emerald-400/[0.04]',
-  sky: 'border-sky-400/30 hover:border-sky-400/60 hover:bg-sky-400/[0.04]',
-  amber: 'border-amber-400/30 hover:border-amber-400/60 hover:bg-amber-400/[0.04]',
-  neutral: 'border-[#27272a] hover:border-[#3f3f46] hover:bg-neutral-800/40',
+  emerald: 'border-emerald-400/20 bg-emerald-400/[0.04] hover:border-emerald-400/40 hover:bg-emerald-400/[0.08]',
+  sky: 'border-sky-400/20 bg-sky-400/[0.04] hover:border-sky-400/40 hover:bg-sky-400/[0.08]',
+  amber: 'border-amber-400/20 bg-amber-400/[0.04] hover:border-amber-400/40 hover:bg-amber-400/[0.08]',
+  neutral: 'border-white/[0.06] bg-white/[0.02] hover:border-white/[0.08] hover:bg-white/[0.04]',
 };
 
 const ACCENT_ICON: Record<QuickActionProps['accent'], string> = {
   emerald: 'text-emerald-300',
   sky: 'text-sky-300',
   amber: 'text-amber-300',
-  neutral: 'text-[#a1a1aa]',
+  neutral: 'text-zinc-400',
 };
 
 function QuickActionButton({ href, Icon, label, accent }: QuickActionProps) {
   return (
     <Link
       href={href}
-      className={`flex items-center justify-between gap-3 rounded-xl border bg-[#0a0a0b] px-4 py-3 transition-colors ${ACCENT_BORDER[accent]}`}
+      className={`flex items-center justify-between gap-3 rounded-xl border px-4 py-3 transition-colors ${ACCENT_BORDER[accent]}`}
     >
       <span className="flex items-center gap-2.5 min-w-0">
         <Icon className={`h-4 w-4 shrink-0 ${ACCENT_ICON[accent]}`} />
-        <span className="text-sm font-medium text-[#f5f5f5] truncate">{label}</span>
+        <span className="text-sm font-medium text-zinc-100 truncate">{label}</span>
       </span>
       <ArrowRightIcon className={`h-4 w-4 shrink-0 ${ACCENT_ICON[accent]}`} />
     </Link>
@@ -744,22 +744,22 @@ function Tile({
 }) {
   const ring =
     tone === 'green'
-      ? 'border-emerald-400/30 bg-emerald-400/5'
+      ? 'border-emerald-400/20 bg-emerald-400/[0.04]'
       : tone === 'amber'
-        ? 'border-amber-400/30 bg-amber-400/5'
+        ? 'border-amber-400/20 bg-amber-400/[0.04]'
         : tone === 'rose'
-          ? 'border-rose-400/30 bg-rose-400/5'
+          ? 'border-rose-400/20 bg-rose-400/[0.04]'
           : tone === 'blue'
-            ? 'border-sky-400/30 bg-sky-400/5'
-            : 'border-[#27272a] bg-[#0a0a0b]';
+            ? 'border-sky-400/20 bg-sky-400/[0.04]'
+            : 'border-white/[0.06] bg-white/[0.02]';
   return (
     <div className={`rounded-2xl border p-4 ${ring}`}>
-      <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a] mb-2">
+      <p className="text-xs text-zinc-500 mb-2">
         {label}
       </p>
-      <p className="text-xl font-semibold text-[#f5f5f5]">{value}</p>
+      <p className="text-xl font-semibold text-zinc-100">{value}</p>
       {subline && (
-        <p className="mt-1 text-[10px] font-mono text-[#71717a] leading-snug">{subline}</p>
+        <p className="mt-1 text-xs text-zinc-500 leading-snug">{subline}</p>
       )}
     </div>
   );

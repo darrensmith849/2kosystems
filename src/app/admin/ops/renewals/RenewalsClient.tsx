@@ -236,13 +236,7 @@ export default function RenewalsClient({
 
   return (
     <div className="space-y-5">
-      {isSnapshot ? (
-        <AdminCard title="Add renewal — read-only in snapshot mode">
-          <p className="text-xs text-[#a1a1aa]">
-            Creating renewals activates once <code className="text-emerald-300">DATABASE_URL</code> is set. Below are real upcoming renewals (domains, hosting, SaaS) identified from the discovery work.
-          </p>
-        </AdminCard>
-      ) : (
+      {isSnapshot ? null : (
       <AdminCard title="Add renewal">
         <form onSubmit={handleCreate} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-3">
           <input
@@ -250,13 +244,13 @@ export default function RenewalsClient({
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Renewal name"
-            className="rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5] placeholder:text-[#3f3f46] focus:border-[#0f7b3a]/50 focus:outline-none lg:col-span-2"
+            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-500 focus:border-white/[0.12] focus:outline-none lg:col-span-2"
             disabled={busy}
           />
           <select
             value={kind}
             onChange={(e) => setKind(e.target.value as (typeof KINDS)[number])}
-            className="rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5]"
+            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-100"
             disabled={busy}
           >
             {KINDS.map((k) => (
@@ -267,7 +261,7 @@ export default function RenewalsClient({
             type="date"
             value={nextDueAt}
             onChange={(e) => setNextDueAt(e.target.value)}
-            className="rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5] placeholder:text-[#3f3f46] focus:border-[#0f7b3a]/50 focus:outline-none"
+            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-500 focus:border-white/[0.12] focus:outline-none"
             disabled={busy}
           />
           <input
@@ -277,7 +271,7 @@ export default function RenewalsClient({
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             placeholder="Amount"
-            className="rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5] placeholder:text-[#3f3f46] focus:border-[#0f7b3a]/50 focus:outline-none"
+            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-500 focus:border-white/[0.12] focus:outline-none"
             disabled={busy}
           />
           <input
@@ -286,13 +280,13 @@ export default function RenewalsClient({
             onChange={(e) => setCurrency(e.target.value)}
             placeholder="ZAR"
             maxLength={8}
-            className="rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5] placeholder:text-[#3f3f46] focus:border-[#0f7b3a]/50 focus:outline-none"
+            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-500 focus:border-white/[0.12] focus:outline-none"
             disabled={busy}
           />
           <select
             value={period}
             onChange={(e) => setPeriod(e.target.value as (typeof PERIODS)[number])}
-            className="rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5]"
+            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-100"
             disabled={busy}
           >
             {PERIODS.map((p) => (
@@ -302,7 +296,7 @@ export default function RenewalsClient({
           <select
             value={clientId}
             onChange={(e) => setClientId(e.target.value)}
-            className="rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5] lg:col-span-2"
+            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-100 lg:col-span-2"
             disabled={busy}
           >
             <option value="">no client</option>
@@ -312,11 +306,11 @@ export default function RenewalsClient({
           </select>
 
           {/* Subject picker */}
-          <div className="lg:col-span-6 rounded-lg border border-[#1c1c1e] bg-[#0a0a0b] p-3 space-y-2">
+          <div className="lg:col-span-6 rounded-lg border border-white/[0.06] bg-white/[0.02] p-3 space-y-2">
             <div className="flex flex-wrap items-center gap-3">
-              <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a]">Subject</p>
+              <p className="text-[11px] font-medium text-zinc-500">Subject</p>
               {(['none', 'asset', 'domain', 'service'] as SubjectKind[]).map((opt) => (
-                <label key={opt} className="flex items-center gap-1.5 text-xs text-[#a1a1aa]">
+                <label key={opt} className="flex items-center gap-1.5 text-xs text-zinc-300">
                   <input
                     type="radio"
                     name="subjectKind"
@@ -334,7 +328,7 @@ export default function RenewalsClient({
               <select
                 value={subjectId}
                 onChange={(e) => setSubjectId(e.target.value)}
-                className="w-full rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5]"
+                className="w-full rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-100"
                 disabled={busy}
               >
                 <option value="">— pick {subjectKind} —</option>
@@ -344,7 +338,7 @@ export default function RenewalsClient({
               </select>
             )}
             {subjectPickerHint && (
-              <p className="text-[11px] text-[#71717a]">{subjectPickerHint}</p>
+              <p className="text-xs text-zinc-500">{subjectPickerHint}</p>
             )}
           </div>
 
@@ -364,7 +358,7 @@ export default function RenewalsClient({
       <AdminCard title="Filters">
         <div className="space-y-3">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a] mr-1">
+            <span className="text-[11px] font-medium text-zinc-500 mr-1">
               Kind
             </span>
             {(['all', ...KINDS] as KindFilter[]).map((k) => {
@@ -374,10 +368,10 @@ export default function RenewalsClient({
                   key={k}
                   type="button"
                   onClick={() => setKindFilter(k)}
-                  className={`text-[10px] font-mono uppercase tracking-wider px-2.5 py-1 rounded-full border transition-colors ${
+                  className={`text-xs font-medium px-2.5 py-1 rounded-full border transition-colors ${
                     active
-                      ? 'border-emerald-400/40 text-emerald-300 bg-emerald-400/10'
-                      : 'border-[#27272a] text-[#a1a1aa] hover:text-[#f5f5f5]'
+                      ? 'border-emerald-400/20 text-emerald-300 bg-emerald-400/[0.08]'
+                      : 'border-white/[0.08] text-zinc-400 hover:bg-white/[0.04] hover:text-zinc-100'
                   }`}
                 >
                   {k.replace('_', ' ')}
@@ -387,15 +381,15 @@ export default function RenewalsClient({
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a] mr-1">
+            <span className="text-[11px] font-medium text-zinc-500 mr-1">
               Window
             </span>
             {(
               [
-                ['all', 'all'],
-                ['attention', 'overdue + due'],
-                ['next_7', 'next 7 days'],
-                ['next_30', 'next 30 days'],
+                ['all', 'All'],
+                ['attention', 'Overdue + due'],
+                ['next_7', 'Next 7 days'],
+                ['next_30', 'Next 30 days'],
               ] as Array<[WindowFilter, string]>
             ).map(([key, label]) => {
               const active = windowFilter === key;
@@ -404,10 +398,10 @@ export default function RenewalsClient({
                   key={key}
                   type="button"
                   onClick={() => setWindowFilter(key)}
-                  className={`text-[10px] font-mono uppercase tracking-wider px-2.5 py-1 rounded-full border transition-colors ${
+                  className={`text-xs font-medium px-2.5 py-1 rounded-full border transition-colors ${
                     active
-                      ? 'border-amber-400/40 text-amber-300 bg-amber-400/10'
-                      : 'border-[#27272a] text-[#a1a1aa] hover:text-[#f5f5f5]'
+                      ? 'border-amber-400/20 text-amber-300 bg-amber-400/[0.08]'
+                      : 'border-white/[0.08] text-zinc-400 hover:bg-white/[0.04] hover:text-zinc-100'
                   }`}
                 >
                   {label}
@@ -417,16 +411,16 @@ export default function RenewalsClient({
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a] mr-1">
+            <span className="text-[11px] font-medium text-zinc-500 mr-1">
               Client
             </span>
             <select
               value={clientFilter}
               onChange={(e) => setClientFilter(e.target.value)}
-              className="rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3 py-1.5 text-xs text-[#f5f5f5]"
+              className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3 py-1.5 text-xs text-zinc-100"
             >
-              <option value="all">all clients</option>
-              <option value="__none__">no client</option>
+              <option value="all">All clients</option>
+              <option value="__none__">No client</option>
               {clients.map((c) => (
                 <option key={c.id} value={c.id}>{c.name}</option>
               ))}
@@ -436,7 +430,8 @@ export default function RenewalsClient({
       </AdminCard>
 
       {dueSoonCount > 0 && (
-        <div className="rounded-2xl border border-amber-400/30 bg-amber-400/5 px-4 py-3 text-sm text-amber-200">
+        <div className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3 py-2 text-sm text-zinc-300 flex items-center gap-2">
+          <span aria-hidden className="inline-block h-1.5 w-1.5 rounded-full bg-amber-400" />
           {dueSoonCount} renewal{dueSoonCount === 1 ? '' : 's'} need attention this week
         </div>
       )}
@@ -460,8 +455,8 @@ export default function RenewalsClient({
               header: 'Name',
               render: (r) => (
                 <div className="flex flex-col">
-                  <span className="font-medium text-[#f5f5f5]">{r.name}</span>
-                  <span className="text-[10px] font-mono uppercase tracking-wider text-[#71717a]">{r.kind}</span>
+                  <span className="font-medium text-zinc-100">{r.name}</span>
+                  <span className="text-xs text-zinc-500">{r.kind.replace('_', ' ')}</span>
                 </div>
               ),
             },
@@ -486,14 +481,14 @@ export default function RenewalsClient({
             {
               key: 'client',
               header: 'Client',
-              render: (r) => r.client?.name ?? <span className="text-[#52525b]">—</span>,
+              render: (r) => r.client?.name ?? <span className="text-zinc-500">—</span>,
             },
             {
               key: 'autoRenew',
               header: 'Auto-renew',
               render: (r) =>
                 r.autoRenew === null || r.autoRenew === undefined
-                  ? <span className="text-[#52525b]">—</span>
+                  ? <span className="text-zinc-500">—</span>
                   : <Badge text={r.autoRenew ? 'Y' : 'N'} tone={r.autoRenew ? 'green' : 'neutral'} />,
             },
             {
@@ -507,7 +502,7 @@ export default function RenewalsClient({
                       type="button"
                       onClick={() => patchRenewal(r.id, { reminderState: nextReminderState(r.reminderState) })}
                       disabled={disabled}
-                      className="text-[10px] font-mono uppercase tracking-wider px-2 py-1 rounded-full border border-emerald-400/30 text-emerald-300 hover:bg-emerald-400/5 disabled:opacity-40"
+                      className="text-xs font-medium px-2.5 py-1 rounded-full border border-emerald-400/20 text-emerald-300 hover:bg-emerald-400/[0.08] disabled:opacity-40"
                       title={`Current: ${r.reminderState}`}
                     >
                       Mark reminded
@@ -516,7 +511,7 @@ export default function RenewalsClient({
                       type="button"
                       onClick={() => patchRenewal(r.id, { reminderState: 'none' })}
                       disabled={disabled}
-                      className="text-[10px] font-mono uppercase tracking-wider px-2 py-1 rounded-full border border-[#27272a] text-[#a1a1aa] hover:text-[#f5f5f5] disabled:opacity-40"
+                      className="text-xs font-medium px-2.5 py-1 rounded-full border border-white/[0.08] text-zinc-400 hover:bg-white/[0.04] hover:text-zinc-100 disabled:opacity-40"
                     >
                       Snooze
                     </button>

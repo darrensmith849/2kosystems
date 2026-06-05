@@ -127,7 +127,7 @@ function renderMarkdownLite(text: string): React.ReactNode {
     const bulletMatch = /^\s*[-*]\s+(.*)$/.exec(line);
     if (bulletMatch) {
       listBuffer.push(
-        <li key={`li-${idx}`} className="text-sm text-[#e4e4e7] leading-relaxed">
+        <li key={`li-${idx}`} className="text-sm text-zinc-200 leading-relaxed">
           {renderInline(bulletMatch[1], idx)}
         </li>,
       );
@@ -141,14 +141,14 @@ function renderMarkdownLite(text: string): React.ReactNode {
     const heading = /^\*\*(.+)\*\*$/.exec(line);
     if (heading) {
       out.push(
-        <p key={`h-${idx}`} className="mt-3 text-xs font-medium text-[#a1a1aa]">
+        <p key={`h-${idx}`} className="mt-3 text-xs font-medium text-zinc-400">
           {heading[1]}
         </p>,
       );
       return;
     }
     out.push(
-      <p key={`p-${idx}`} className="text-sm text-[#e4e4e7] leading-relaxed">
+      <p key={`p-${idx}`} className="text-sm text-zinc-200 leading-relaxed">
         {renderInline(line, idx)}
       </p>,
     );
@@ -249,9 +249,9 @@ function SourceCards({ sources }: { sources: AssistantSource[] }) {
   const hidden = sources.length - SOURCE_CARDS_DEFAULT_VISIBLE;
   const showToggle = sources.length > SOURCE_CARDS_DEFAULT_VISIBLE;
   return (
-    <div className="mt-3 rounded-xl border border-[#1c1c1e] bg-[#0a0a0b] px-3 py-2.5">
-      <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#71717a] mb-2">
-        Sources ({sources.length})
+    <div className="mt-3 rounded-xl border border-white/[0.06] bg-white/[0.02] px-3 py-2.5">
+      <p className="text-xs font-medium text-zinc-500 mb-2">
+        Related records ({sources.length})
       </p>
       <ul className="space-y-1">
         {visible.map((s) => {
@@ -266,12 +266,12 @@ function SourceCards({ sources }: { sources: AssistantSource[] }) {
               {valid ? (
                 <a
                   href={s.url}
-                  className="text-emerald-300 hover:text-emerald-200 underline underline-offset-2 truncate text-[12px]"
+                  className="text-emerald-300 hover:text-emerald-200 underline underline-offset-2 truncate text-xs"
                 >
                   {s.title}
                 </a>
               ) : (
-                <span className="text-[#e4e4e7] truncate text-[12px]">{s.title}</span>
+                <span className="text-zinc-300 truncate text-xs">{s.title}</span>
               )}
             </li>
           );
@@ -281,7 +281,7 @@ function SourceCards({ sources }: { sources: AssistantSource[] }) {
         <button
           type="button"
           onClick={() => setExpanded((v) => !v)}
-          className="mt-2 text-[11px] uppercase tracking-[0.18em] text-emerald-300 hover:text-emerald-200"
+          className="mt-2 text-xs text-emerald-300 hover:text-emerald-200"
         >
           {expanded ? 'Show fewer' : `Show ${hidden} more sources`}
         </button>
@@ -479,7 +479,7 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
       <div className="flex flex-wrap items-center justify-between gap-3 text-xs">
         <div className="flex items-center gap-2">
           <Badge text={hasAiKey ? 'AI mode' : 'Search mode'} tone={hasAiKey ? 'green' : 'blue'} />
-          <span className="text-[#a1a1aa]">
+          <span className="text-zinc-400">
             {hasAiKey
               ? 'Grounded in your dashboard data.'
               : 'Answering from dashboard data already available.'}
@@ -490,7 +490,7 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
             type="button"
             onClick={handleNewChat}
             disabled={!hasMessages || busy}
-            className="rounded-md border border-[#27272a] hover:border-emerald-400/40 hover:text-emerald-200 px-2.5 py-1 text-xs text-[#a1a1aa] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            className="rounded-md border border-white/[0.06] hover:border-white/[0.12] hover:text-white px-2.5 py-1 text-xs text-zinc-400 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
             New chat
           </button>
@@ -498,14 +498,14 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
             type="button"
             onClick={handleClearChat}
             disabled={!hasMessages || busy}
-            className="rounded-md border border-[#27272a] hover:border-rose-400/40 hover:text-rose-200 px-2.5 py-1 text-xs text-[#a1a1aa] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            className="rounded-md border border-white/[0.06] hover:border-rose-400/40 hover:text-rose-200 px-2.5 py-1 text-xs text-zinc-400 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
             Clear chat
           </button>
           <button
             type="button"
             onClick={() => setShowSavedPanel((v) => !v)}
-            className="rounded-md border border-[#27272a] hover:border-emerald-400/40 hover:text-emerald-200 px-2.5 py-1 text-xs text-[#a1a1aa] transition-colors"
+            className="rounded-md border border-white/[0.06] hover:border-white/[0.12] hover:text-white px-2.5 py-1 text-xs text-zinc-400 transition-colors"
           >
             Saved ({saved.length})
           </button>
@@ -514,13 +514,19 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
 
       {/* Search-mode helper banner (dismissible) */}
       {showSearchModeHelper && (
-        <div className="flex items-start justify-between gap-3 rounded-xl border border-amber-400/20 bg-amber-400/[0.04] px-4 py-2.5">
-          <p className="text-xs text-amber-200/90 leading-relaxed">{SEARCH_MODE_HELPER}</p>
+        <div className="flex items-center justify-between gap-3 rounded-lg border border-white/[0.06] bg-white/[0.02] px-3 py-2">
+          <p className="text-sm text-zinc-300 leading-snug flex items-center gap-2">
+            <span
+              aria-hidden
+              className="inline-block h-1.5 w-1.5 rounded-full bg-amber-400 shrink-0"
+            />
+            <span>{SEARCH_MODE_HELPER}</span>
+          </p>
           <button
             type="button"
             onClick={() => setHelperDismissed(true)}
             aria-label="Dismiss"
-            className="text-[#71717a] hover:text-[#e4e4e7] text-sm leading-none px-1"
+            className="text-zinc-500 hover:text-zinc-100 text-sm leading-none px-1 shrink-0"
           >
             ×
           </button>
@@ -529,9 +535,9 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
 
       {/* Saved questions panel (preserved feature) */}
       {showSavedPanel && (
-        <div className="rounded-2xl border border-[#27272a] bg-[#0a0a0b] p-4 space-y-3">
+        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-4 space-y-3">
           <div className="flex items-center justify-between">
-            <p className="text-sm text-[#e4e4e7] font-medium">Saved questions</p>
+            <p className="text-sm text-zinc-100 font-medium">Saved questions</p>
             <div className="flex gap-1.5">
               <button
                 type="button"
@@ -540,7 +546,7 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
                   setShowSaveDialog((v) => !v);
                 }}
                 disabled={!canSave}
-                className="rounded-md border border-emerald-400/30 hover:border-emerald-400/60 px-2.5 py-1 text-xs text-emerald-300 hover:text-emerald-200 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                className="rounded-md border border-emerald-400/20 hover:border-emerald-400/40 bg-emerald-400/[0.04] px-2.5 py-1 text-xs text-emerald-300 hover:text-emerald-200 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 Save current
               </button>
@@ -548,7 +554,7 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
                 type="button"
                 onClick={clearSaved}
                 disabled={saved.length === 0}
-                className="rounded-md border border-[#27272a] hover:border-rose-400/40 px-2.5 py-1 text-xs text-[#a1a1aa] hover:text-rose-200 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                className="rounded-md border border-white/[0.06] hover:border-rose-400/40 px-2.5 py-1 text-xs text-zinc-400 hover:text-rose-200 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 Clear all
               </button>
@@ -556,7 +562,7 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
           </div>
 
           {showSaveDialog && canSave && (
-            <div className="rounded-xl border border-[#27272a] bg-[#111113] p-3 space-y-2">
+            <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-3 space-y-2">
               <input
                 type="text"
                 value={saveName}
@@ -571,7 +577,7 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
                     setSaveName('');
                   }
                 }}
-                className="w-full rounded-md border border-[#27272a] bg-[#0a0a0b] px-3 py-1.5 text-xs text-[#f5f5f5] placeholder:text-[#52525b] focus:outline-none focus:border-emerald-400/40"
+                className="w-full rounded-md border border-white/[0.06] bg-white/[0.02] px-3 py-1.5 text-xs text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:border-emerald-400/30"
               />
               <div className="flex items-center justify-end gap-2">
                 <button
@@ -580,7 +586,7 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
                     setShowSaveDialog(false);
                     setSaveName('');
                   }}
-                  className="text-xs text-[#71717a] hover:text-[#e4e4e7] px-2 py-1"
+                  className="text-xs text-zinc-500 hover:text-zinc-100 px-2 py-1"
                 >
                   Cancel
                 </button>
@@ -588,7 +594,7 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
                   type="button"
                   onClick={commitSavedQuestion}
                   disabled={saveName.trim().length === 0}
-                  className="rounded-md border border-emerald-400/40 hover:border-emerald-400/70 px-3 py-1 text-xs text-emerald-300 hover:text-emerald-200 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                  className="rounded-md border border-emerald-400/20 hover:border-emerald-400/40 bg-emerald-400/[0.04] px-3 py-1 text-xs text-emerald-300 hover:text-emerald-200 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                 >
                   Save
                 </button>
@@ -597,7 +603,7 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
           )}
 
           {saved.length === 0 ? (
-            <p className="text-xs text-[#52525b]">
+            <p className="text-xs text-zinc-500">
               No saved questions yet. Type a question, then press &ldquo;Save current&rdquo;.
             </p>
           ) : (
@@ -605,7 +611,7 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
               {saved.map((s) => (
                 <li
                   key={s.id}
-                  className="rounded-xl border border-[#27272a] bg-[#111113] p-2.5 flex items-start justify-between gap-2"
+                  className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-2.5 flex items-start justify-between gap-2"
                 >
                   <button
                     type="button"
@@ -616,10 +622,10 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
                     disabled={busy}
                     className="text-left flex-1 min-w-0 disabled:opacity-40 disabled:cursor-not-allowed"
                   >
-                    <span className="block text-xs text-[#f5f5f5] font-medium truncate">
+                    <span className="block text-xs text-zinc-100 font-medium truncate">
                       {s.name}
                     </span>
-                    <span className="block text-xs italic text-[#71717a] break-words mt-0.5">
+                    <span className="block text-xs italic text-zinc-500 break-words mt-0.5">
                       {s.question}
                     </span>
                   </button>
@@ -627,7 +633,7 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
                     type="button"
                     onClick={() => deleteSaved(s.id)}
                     aria-label={`Delete ${s.name}`}
-                    className="text-[#52525b] hover:text-rose-300 text-sm leading-none px-1"
+                    className="text-zinc-500 hover:text-rose-300 text-sm leading-none px-1"
                   >
                     ×
                   </button>
@@ -641,25 +647,23 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
       {/* Chat thread (dominant area) */}
       <div
         ref={scrollRef}
-        className="rounded-2xl border border-[#27272a] bg-[#0a0a0b] p-4 min-h-[520px] max-h-[70vh] overflow-y-auto"
+        className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-4 min-h-[520px] max-h-[70vh] overflow-y-auto"
       >
         {!hasMessages ? (
           <div className="h-full flex flex-col items-center justify-center text-center py-10 gap-8">
             {/* Welcome bubble */}
             <div className="max-w-xl w-full">
-              <div className="flex justify-start">
-                <div className="max-w-full rounded-2xl border border-[#27272a] bg-[#111113] px-5 py-4">
-                  <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-emerald-300 mb-2">
-                    2KO Ops Assistant
-                  </p>
-                  <p className="text-sm text-[#e4e4e7] leading-relaxed">{WELCOME_COPY}</p>
+              <div className="flex justify-start flex-col items-start">
+                <p className="text-xs text-zinc-500 mb-1 ml-1">2KO Ops Assistant</p>
+                <div className="max-w-full rounded-2xl border border-white/[0.06] bg-white/[0.03] px-5 py-4 text-left">
+                  <p className="text-sm text-zinc-300 leading-relaxed">{WELCOME_COPY}</p>
                 </div>
               </div>
             </div>
 
             {/* Suggested prompt chips */}
             <div className="space-y-3 max-w-2xl">
-              <p className="text-xs text-[#71717a]">Try one of these to get started:</p>
+              <p className="text-xs text-zinc-500">Try one of these to get started:</p>
               <div className="flex flex-wrap justify-center gap-2">
                 {SUGGESTIONS.map((s) => (
                   <button
@@ -667,7 +671,7 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
                     type="button"
                     onClick={() => void submitQuestion(s)}
                     disabled={busy}
-                    className="rounded-full border border-[#27272a] hover:border-emerald-400/40 hover:text-emerald-200 px-3 py-1.5 text-xs text-[#a1a1aa] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                    className="rounded-full border border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.06] hover:border-white/[0.12] px-3 py-1.5 text-xs text-zinc-300 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                   >
                     {s}
                   </button>
@@ -681,8 +685,8 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
               if (m.role === 'user') {
                 return (
                   <div key={`u-${idx}-${m.ts}`} className="flex justify-end">
-                    <div className="max-w-[80%] rounded-2xl bg-emerald-400/[0.08] border border-emerald-400/20 px-4 py-2.5">
-                      <p className="text-sm text-[#f5f5f5] leading-relaxed whitespace-pre-wrap">
+                    <div className="max-w-[80%] rounded-2xl bg-emerald-400/[0.10] border border-emerald-400/[0.20] px-4 py-3">
+                      <p className="text-sm text-zinc-100 leading-relaxed whitespace-pre-wrap">
                         {m.content}
                       </p>
                     </div>
@@ -691,22 +695,22 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
               }
               const isLast = idx === messages.length - 1;
               return (
-                <div key={`a-${idx}-${m.ts}`} className="flex justify-start">
-                  <div className="max-w-[92%] w-full rounded-2xl border border-[#27272a] bg-[#111113] px-4 py-3">
-                    <div className="flex flex-wrap items-center gap-1.5 mb-2">
-                      <span className="text-[10px] font-mono uppercase tracking-[0.18em] text-emerald-300">
-                        2KO Ops Assistant
-                      </span>
-                      {m.mode && (
-                        <Badge
-                          text={m.mode === 'ai' ? 'AI' : 'Search'}
-                          tone={m.mode === 'ai' ? 'green' : 'blue'}
-                        />
-                      )}
-                      {(m.warnings ?? []).map((w) => (
-                        <Badge key={w} text={WARNING_LABEL[w]} tone={WARNING_TONE[w]} />
-                      ))}
-                    </div>
+                <div key={`a-${idx}-${m.ts}`} className="flex flex-col items-start">
+                  <p className="text-xs text-zinc-500 mb-1 ml-1">2KO Ops Assistant</p>
+                  <div className="max-w-[92%] w-full rounded-2xl border border-white/[0.06] bg-white/[0.03] px-4 py-3">
+                    {(m.mode || (m.warnings && m.warnings.length > 0)) && (
+                      <div className="flex flex-wrap items-center gap-1.5 mb-2">
+                        {m.mode && (
+                          <Badge
+                            text={m.mode === 'ai' ? 'AI' : 'Search'}
+                            tone={m.mode === 'ai' ? 'green' : 'blue'}
+                          />
+                        )}
+                        {(m.warnings ?? []).map((w) => (
+                          <Badge key={w} text={WARNING_LABEL[w]} tone={WARNING_TONE[w]} />
+                        ))}
+                      </div>
+                    )}
                     <div className="space-y-1">
                       {renderMarkdownLite(
                         (m.content ?? '').trim().length > 0
@@ -718,8 +722,8 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
                     </div>
                     {m.sources && <SourceCards sources={m.sources} />}
                     {isLast && m.followUps && m.followUps.length > 0 && (
-                      <div className="mt-3 pt-3 border-t border-[#1c1c1e]">
-                        <p className="text-xs text-[#71717a] mb-2">Try next</p>
+                      <div className="mt-3 pt-3 border-t border-white/[0.06]">
+                        <p className="text-xs text-zinc-500 mb-2">Try next</p>
                         <div className="flex flex-wrap gap-2">
                           {m.followUps.map((f) => (
                             <button
@@ -727,7 +731,7 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
                               type="button"
                               onClick={() => void submitQuestion(f)}
                               disabled={busy}
-                              className="rounded-full border border-[#27272a] hover:border-emerald-400/40 hover:text-emerald-200 px-3 py-1 text-xs text-[#e4e4e7] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                              className="rounded-full border border-white/[0.08] hover:border-white/[0.12] hover:bg-white/[0.04] px-3 py-1 text-xs text-zinc-300 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                             >
                               {f}
                             </button>
@@ -741,9 +745,11 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
             })}
 
             {busy && (
-              <div className="flex justify-start">
-                <div className="rounded-2xl border border-[#27272a] bg-[#111113] px-4 py-2.5">
-                  <p className="text-xs text-[#a1a1aa]">
+              <div className="flex flex-col items-start">
+                <p className="text-xs text-zinc-500 mb-1 ml-1">2KO Ops Assistant</p>
+                <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] px-4 py-2.5">
+                  <p className="text-xs text-zinc-400 flex items-center gap-2">
+                    <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
                     {stage === 'generating' ? 'Thinking…' : 'Checking the dashboard…'}
                   </p>
                 </div>
@@ -756,7 +762,7 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
       {/* Composer */}
       <form
         onSubmit={handleSubmit}
-        className="rounded-2xl border border-[#27272a] bg-[#111113] p-3 space-y-2"
+        className="rounded-2xl border border-white/[0.06] bg-white/[0.02] focus-within:border-white/[0.14] focus-within:bg-white/[0.04] p-3 space-y-2 transition-colors"
       >
         <textarea
           ref={textareaRef}
@@ -771,16 +777,16 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
               void submitQuestion(input);
             }
           }}
-          className="w-full resize-none bg-transparent text-sm text-[#f5f5f5] placeholder:text-[#52525b] focus:outline-none disabled:opacity-50"
+          className="w-full resize-none bg-transparent text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none disabled:opacity-50"
         />
         <div className="flex items-center justify-between gap-3">
-          <span className="text-xs text-[#52525b]">
+          <span className="text-xs text-zinc-500">
             Enter to send · Shift + Enter for new line · Read-only · No secrets shared
           </span>
           <button
             type="submit"
             disabled={busy || input.trim().length === 0}
-            className="rounded-md bg-emerald-400/10 border border-emerald-400/40 hover:bg-emerald-400/20 hover:border-emerald-400/70 px-4 py-1 text-xs font-medium text-emerald-300 hover:text-emerald-200 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            className="rounded-md bg-white/[0.06] border border-white/[0.08] hover:bg-white/[0.10] hover:border-white/[0.14] px-4 py-1.5 text-xs font-medium text-zinc-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
             {busy ? 'Working…' : 'Send'}
           </button>
@@ -788,7 +794,7 @@ export default function AskClient({ hasAiKey }: { hasAiKey: boolean }) {
       </form>
 
       {error && (
-        <div className="rounded-xl border border-rose-400/30 bg-rose-400/[0.04] px-4 py-2.5 text-xs text-rose-200">
+        <div className="rounded-lg border border-rose-400/20 bg-rose-400/[0.04] px-3 py-2 text-xs text-rose-200">
           {error}
         </div>
       )}

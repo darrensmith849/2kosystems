@@ -52,11 +52,6 @@ export default function ClientsClient({
   if (isSnapshot) {
     return (
       <div className="space-y-5">
-        <AdminCard title="Add client — read-only in preview mode">
-          <p className="text-xs text-[#a1a1aa]">
-            Adding clients turns on once the production database is connected. The rows below are the saved sample data.
-          </p>
-        </AdminCard>
         <SnapshotTable rows={initialClients} />
       </div>
     );
@@ -71,13 +66,13 @@ export default function ClientsClient({
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Client name"
-            className="flex-1 min-w-[200px] rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5] placeholder:text-[#3f3f46] focus:border-[#0f7b3a]/50 focus:outline-none transition-colors"
+            className="flex-1 min-w-[200px] rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-500 focus:border-white/[0.12] focus:outline-none transition-colors"
             disabled={busy}
           />
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value)}
-            className="rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3.5 py-2.5 text-sm text-[#f5f5f5] focus:border-[#0f7b3a]/50 focus:outline-none"
+            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-100 focus:border-white/[0.12] focus:outline-none"
             disabled={busy}
           >
             <option value="active">Active</option>
@@ -104,11 +99,11 @@ export default function ClientsClient({
           rows={initialClients}
           columns={[
             { key: 'name', header: 'Name', render: (c) => (
-              <Link href={`/admin/ops/clients/${c.id}`} className="font-medium text-[#f5f5f5] hover:text-emerald-300 transition-colors">
+              <Link href={`/admin/ops/clients/${c.id}`} className="font-medium text-zinc-100 hover:text-zinc-50 transition-colors">
                 {c.name}
               </Link>
             ) },
-            { key: 'division', header: 'Division', render: (c) => c.division?.name ?? <span className="text-[#52525b]">—</span> },
+            { key: 'division', header: 'Division', render: (c) => c.division?.name ?? <span className="text-zinc-500">—</span> },
             { key: 'status', header: 'Status', render: (c) => <Badge text={labelFor(CLIENT_STATUS_LABEL, c.status)} tone={STATUS_TONES[c.status] ?? 'neutral'} /> },
             { key: 'updated', header: 'Updated', render: (c) => fmtDate(c.updatedAt) },
           ]}
@@ -132,17 +127,14 @@ function SnapshotTable({ rows }: { rows: ClientWithDivision[] }) {
       rows={rows}
       columns={[
         { key: 'name', header: 'Name', render: (c) => (
-          <Link href={`/admin/ops/clients/${c.id}`} className="font-medium text-[#f5f5f5] hover:text-emerald-300 transition-colors">
+          <Link href={`/admin/ops/clients/${c.id}`} className="font-medium text-zinc-100 hover:text-zinc-50 transition-colors">
             {c.name}
-            <span className="ml-2 inline-block text-[9px] uppercase tracking-wider text-emerald-300/80 border border-emerald-400/30 rounded-full px-1.5 py-0.5 align-middle">
-              preview
-            </span>
           </Link>
         ) },
-        { key: 'division', header: 'Division', render: (c) => c.division?.name ?? <span className="text-[#52525b]">—</span> },
+        { key: 'division', header: 'Division', render: (c) => c.division?.name ?? <span className="text-zinc-500">—</span> },
         { key: 'status', header: 'Status', render: (c) => <Badge text={labelFor(CLIENT_STATUS_LABEL, c.status)} tone={STATUS_TONES[c.status] ?? 'neutral'} /> },
-        { key: 'tags', header: 'Tags', render: (c) => c.tags.length > 0 ? <span className="font-mono text-[10px] text-[#a1a1aa]">{c.tags.join(', ')}</span> : <span className="text-[#52525b]">—</span> },
-        { key: 'notes', header: 'Notes', render: (c) => c.notes ? <span className="text-[11px] text-[#a1a1aa]">{c.notes}</span> : <span className="text-[#52525b]">—</span> },
+        { key: 'tags', header: 'Tags', render: (c) => c.tags.length > 0 ? <span className="font-mono text-[10px] text-zinc-400">{c.tags.join(', ')}</span> : <span className="text-zinc-500">—</span> },
+        { key: 'notes', header: 'Notes', render: (c) => c.notes ? <span className="text-xs text-zinc-400">{c.notes}</span> : <span className="text-zinc-500">—</span> },
       ]}
     />
   );

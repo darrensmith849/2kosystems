@@ -67,7 +67,7 @@ export default function GithubReposClient({
               type="button"
               onClick={runSync}
               disabled={busy || integrationStatus.status !== 'connected'}
-              className="rounded-full border border-[#27272a] hover:border-[#3f3f46] px-3 py-1 text-[11px] font-mono text-[#f5f5f5] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              className="rounded-md border border-white/[0.08] hover:bg-white/[0.04] px-2.5 py-1 text-xs font-medium text-zinc-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               {busy ? 'Syncing…' : 'Run sync now'}
             </button>
@@ -75,7 +75,7 @@ export default function GithubReposClient({
         }
       >
         {integrationStatus.status === 'connected' ? (
-          <p className="text-xs text-[#71717a]">Connected. Categories are a best-guess from repo names and topics; manual category edits are planned for a later step.</p>
+          <p className="text-xs text-zinc-400">Connected. Categories are a best-guess from repo names and topics; manual category edits are planned for a later step.</p>
         ) : (
           <p className="text-xs text-amber-200">
             Not connected. {integrationStatus.detail ?? 'Add a GitHub access token in Settings to enable sync.'}
@@ -85,10 +85,10 @@ export default function GithubReposClient({
       </AdminCard>
 
       <div className="flex items-center justify-between gap-3">
-        <p className="text-xs text-[#71717a]">
-          Showing <strong className="text-[#f5f5f5]">{visible.length}</strong> of {repos.length} repos
+        <p className="text-xs text-zinc-400">
+          Showing <strong className="text-zinc-100">{visible.length}</strong> of {repos.length} repos
         </p>
-        <label className="flex items-center gap-2 text-xs text-[#a1a1aa] cursor-pointer">
+        <label className="flex items-center gap-2 text-xs text-zinc-300 cursor-pointer">
           <input
             type="checkbox"
             checked={showExcluded}
@@ -110,14 +110,14 @@ export default function GithubReposClient({
           columns={[
             { key: 'name', header: 'Name', render: (r) => (
               <span>
-                <span className="text-[#71717a]">{r.owner}/</span>
-                <span className="font-medium text-[#f5f5f5]">{r.name}</span>
+                <span className="text-zinc-500">{r.owner}/</span>
+                <span className="font-medium text-zinc-100">{r.name}</span>
                 {r.isArchived && <span className="ml-2 text-[10px] text-amber-300">archived</span>}
               </span>
             )},
             { key: 'visibility', header: 'Visibility', render: (r) => <Badge text={r.visibility[0].toUpperCase() + r.visibility.slice(1)} tone={r.visibility === 'private' ? 'neutral' : 'blue'} /> },
             { key: 'category', header: 'Category', render: (r) => <Badge text={labelFor(REPO_CATEGORY_LABEL, r.category)} tone={CATEGORY_TONES[r.category] ?? 'neutral'} /> },
-            { key: 'language', header: 'Language', render: (r) => r.language ?? <span className="text-[#52525b]">—</span> },
+            { key: 'language', header: 'Language', render: (r) => r.language ?? <span className="text-zinc-500">—</span> },
             { key: 'pushed', header: 'Last push', render: (r) => fmtDate(r.pushedAt) },
           ]}
         />

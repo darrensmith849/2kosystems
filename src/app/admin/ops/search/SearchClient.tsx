@@ -141,7 +141,7 @@ function highlight(text: string, tokens: string[]): React.ReactNode {
   return parts.map((part, i) => {
     if (i % 2 === 1) {
       return (
-        <span key={i} className="text-emerald-300 bg-emerald-400/10 rounded px-0.5">
+        <span key={i} className="text-emerald-300 bg-emerald-400/[0.08] rounded px-0.5">
           {part}
         </span>
       );
@@ -175,19 +175,19 @@ function MultiSelect<T extends string>({
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex items-center gap-2 rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3 py-2 text-xs text-[#e4e4e7] hover:border-[#3f3f46] transition-colors min-w-[160px]"
+        className="flex items-center gap-2 rounded-lg border border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04] px-3 py-2 text-xs text-zinc-100 transition-colors min-w-[160px]"
       >
-        <span className="text-[10px] font-mono uppercase tracking-wider text-[#71717a]">{label}:</span>
-        <span className="font-mono text-[11px] text-[#f5f5f5] truncate">{summary}</span>
+        <span className="text-xs text-zinc-500">{label}:</span>
+        <span className="text-sm text-zinc-100 truncate">{summary}</span>
       </button>
       {open && (
         <>
           <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
-          <div className="absolute z-20 mt-1 max-h-72 w-full min-w-[220px] overflow-auto rounded-lg border border-[#27272a] bg-[#111113] p-1 shadow-xl">
+          <div className="absolute z-20 mt-1 max-h-72 w-full min-w-[220px] overflow-auto rounded-lg border border-white/[0.06] bg-[#111113] p-1 shadow-xl">
             <button
               type="button"
               onClick={() => onChange([])}
-              className="block w-full text-left px-2 py-1 text-[11px] text-[#71717a] hover:text-[#f5f5f5] hover:bg-[#1c1c1e] rounded"
+              className="block w-full text-left px-2 py-1 text-xs text-zinc-500 hover:text-zinc-100 hover:bg-white/[0.04] rounded"
             >
               Clear ({selected.length})
             </button>
@@ -196,7 +196,7 @@ function MultiSelect<T extends string>({
               return (
                 <label
                   key={opt}
-                  className="flex items-center gap-2 px-2 py-1 text-[11px] text-[#e4e4e7] hover:bg-[#1c1c1e] rounded cursor-pointer"
+                  className="flex items-center gap-2 px-2 py-1 text-xs text-zinc-200 hover:bg-white/[0.04] rounded cursor-pointer"
                 >
                   <input
                     type="checkbox"
@@ -207,7 +207,7 @@ function MultiSelect<T extends string>({
                     }}
                     className="accent-emerald-400"
                   />
-                  <span className="font-mono">{opt}</span>
+                  <span>{opt}</span>
                 </label>
               );
             })}
@@ -382,11 +382,11 @@ export default function SearchClient({ initialItems }: { initialItems: IndexItem
               value={filters.q}
               onChange={(e) => setFilters((p) => ({ ...p, q: e.target.value }))}
               placeholder="Search clients, assets, repos, renewals, incidents, decisions, services…"
-              className="w-full rounded-lg border border-emerald-400/30 bg-[#0a0a0b] px-4 py-3 text-sm text-[#f5f5f5] placeholder:text-[#3f3f46] focus:border-emerald-400/60 focus:outline-none transition-colors"
+              className="w-full rounded-lg border border-white/[0.06] bg-white/[0.02] px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 focus:border-emerald-400/40 focus:bg-white/[0.04] focus:outline-none transition-colors"
             />
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[10px] font-mono uppercase tracking-wider text-[#52525b]">
+            <span className="text-xs text-zinc-500">
               Try:
             </span>
             {EXAMPLES.map((ex) => (
@@ -394,7 +394,7 @@ export default function SearchClient({ initialItems }: { initialItems: IndexItem
                 key={ex}
                 type="button"
                 onClick={() => applyExample(ex)}
-                className="rounded-full border border-[#27272a] hover:border-emerald-400/40 px-2.5 py-0.5 text-[11px] font-mono text-[#a1a1aa] hover:text-emerald-300 transition-colors"
+                className="rounded-full border border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.06] hover:border-white/[0.12] px-2.5 py-1 text-xs text-zinc-400 hover:text-zinc-100 transition-colors"
               >
                 {ex}
               </button>
@@ -403,7 +403,7 @@ export default function SearchClient({ initialItems }: { initialItems: IndexItem
               type="button"
               onClick={() => setShowAdvancedFilters((v) => !v)}
               aria-expanded={advancedOpen}
-              className="ml-auto rounded-full border border-[#27272a] hover:border-[#3f3f46] px-3 py-1 text-[11px] font-mono text-[#a1a1aa] hover:text-[#f5f5f5] transition-colors"
+              className="ml-auto rounded-md border border-white/[0.06] hover:bg-white/[0.04] hover:border-white/[0.12] px-3 py-1 text-xs text-zinc-400 hover:text-zinc-100 transition-colors"
             >
               {advancedOpen ? 'Hide filters' : 'More filters'}
               {advancedActive && (
@@ -414,7 +414,7 @@ export default function SearchClient({ initialItems }: { initialItems: IndexItem
             </button>
           </div>
           {advancedOpen && (
-            <div className="rounded-lg border border-[#27272a] bg-[#0a0a0b] p-3">
+            <div className="rounded-lg border border-white/[0.06] bg-white/[0.02] p-3">
               <div className="flex flex-wrap items-center gap-2">
                 <MultiSelect
                   label="type"
@@ -443,7 +443,7 @@ export default function SearchClient({ initialItems }: { initialItems: IndexItem
                     onClick={() =>
                       setFilters({ q: '', types: [], sources: [], blockedBy: [] })
                     }
-                    className="rounded-full border border-[#27272a] hover:border-[#3f3f46] px-3 py-1 text-[11px] font-mono text-[#71717a] hover:text-[#f5f5f5] transition-colors"
+                    className="rounded-md border border-white/[0.06] hover:bg-white/[0.04] hover:border-white/[0.12] px-3 py-1 text-xs text-zinc-500 hover:text-zinc-100 transition-colors"
                   >
                     Reset
                   </button>
@@ -452,14 +452,14 @@ export default function SearchClient({ initialItems }: { initialItems: IndexItem
                   type="button"
                   disabled={!hasActiveFilters}
                   onClick={() => setShowSaveDialog(true)}
-                  className="rounded-full border border-[#27272a] hover:border-emerald-400/40 disabled:opacity-40 disabled:hover:border-[#27272a] disabled:cursor-not-allowed px-3 py-1 text-[11px] font-mono text-[#a1a1aa] hover:text-emerald-300 transition-colors"
+                  className="rounded-md border border-white/[0.06] hover:bg-white/[0.04] hover:border-white/[0.12] disabled:opacity-40 disabled:hover:border-white/[0.06] disabled:cursor-not-allowed px-3 py-1 text-xs text-zinc-400 hover:text-zinc-100 transition-colors"
                 >
                   Save current search
                 </button>
               </div>
               {showSaveDialog && (
-                <div className="mt-3 rounded-lg border border-[#27272a] bg-[#111113] p-3">
-                  <p className="text-[10px] font-mono uppercase tracking-wider text-[#71717a] mb-2">
+                <div className="mt-3 rounded-lg border border-white/[0.06] bg-white/[0.02] p-3">
+                  <p className="text-xs font-medium text-zinc-500 mb-2">
                     Save search
                   </p>
                   <div className="flex flex-wrap items-center gap-2">
@@ -476,13 +476,13 @@ export default function SearchClient({ initialItems }: { initialItems: IndexItem
                       }}
                       autoFocus
                       placeholder="Name this search…"
-                      className="flex-1 min-w-[200px] rounded-lg border border-[#27272a] bg-[#0a0a0b] px-3 py-1.5 text-xs text-[#f5f5f5] placeholder:text-[#3f3f46] focus:border-[#0f7b3a]/50 focus:outline-none transition-colors"
+                      className="flex-1 min-w-[200px] rounded-lg border border-white/[0.06] bg-white/[0.02] px-3 py-1.5 text-xs text-zinc-100 placeholder:text-zinc-500 focus:border-emerald-400/30 focus:outline-none transition-colors"
                     />
                     <button
                       type="button"
                       onClick={handleSaveCurrent}
                       disabled={saveName.trim().length === 0}
-                      className="rounded-full border border-emerald-400/30 bg-emerald-400/5 px-3 py-1 text-[11px] font-mono text-emerald-300 hover:border-emerald-400/60 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                      className="rounded-md border border-emerald-400/20 bg-emerald-400/[0.04] hover:border-emerald-400/40 px-3 py-1 text-xs font-medium text-emerald-300 hover:text-emerald-200 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                     >
                       Save
                     </button>
@@ -492,7 +492,7 @@ export default function SearchClient({ initialItems }: { initialItems: IndexItem
                         setShowSaveDialog(false);
                         setSaveName('');
                       }}
-                      className="rounded-full border border-[#27272a] hover:border-[#3f3f46] px-3 py-1 text-[11px] font-mono text-[#71717a] hover:text-[#f5f5f5] transition-colors"
+                      className="rounded-md border border-white/[0.06] hover:bg-white/[0.04] hover:border-white/[0.12] px-3 py-1 text-xs text-zinc-500 hover:text-zinc-100 transition-colors"
                     >
                       Cancel
                     </button>
@@ -511,31 +511,31 @@ export default function SearchClient({ initialItems }: { initialItems: IndexItem
             <button
               type="button"
               onClick={handleClearAllSaved}
-              className="rounded-full border border-[#27272a] hover:border-rose-400/40 px-2.5 py-0.5 text-[10px] font-mono text-[#71717a] hover:text-rose-300 transition-colors"
+              className="rounded-md border border-white/[0.06] hover:border-rose-400/40 px-2.5 py-1 text-xs text-zinc-500 hover:text-rose-300 transition-colors"
             >
               Clear all saved
             </button>
           }
         >
           <div className="space-y-2">
-            <p className="text-[10px] font-mono uppercase tracking-wider text-[#52525b]">
+            <p className="text-xs text-zinc-500">
               Saved locally in this browser
             </p>
             <ul className="space-y-1.5">
               {saved.map((s) => (
                 <li
                   key={s.id}
-                  className="flex items-center gap-2 rounded-lg border border-[#27272a] bg-[#0a0a0b] px-2.5 py-1.5"
+                  className="flex items-center gap-2 rounded-lg border border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04] px-2.5 py-1.5"
                 >
                   <button
                     type="button"
                     onClick={() => handleRestoreSaved(s)}
                     className="flex-1 min-w-0 text-left group"
                   >
-                    <p className="text-xs text-[#f5f5f5] group-hover:text-emerald-300 transition-colors truncate">
+                    <p className="text-xs text-zinc-100 group-hover:text-emerald-300 transition-colors truncate">
                       {s.name}
                     </p>
-                    <p className="text-[10px] font-mono text-[#52525b] truncate">
+                    <p className="text-xs text-zinc-500 truncate">
                       {summarizeSaved(s)}
                     </p>
                   </button>
@@ -543,7 +543,7 @@ export default function SearchClient({ initialItems }: { initialItems: IndexItem
                     type="button"
                     onClick={() => handleDeleteSaved(s.id)}
                     aria-label={`Delete ${s.name}`}
-                    className="shrink-0 rounded-full border border-[#27272a] hover:border-rose-400/40 px-2 py-0.5 text-[11px] font-mono text-[#71717a] hover:text-rose-300 transition-colors"
+                    className="shrink-0 rounded-md border border-white/[0.06] hover:border-rose-400/40 px-2 py-0.5 text-xs text-zinc-500 hover:text-rose-300 transition-colors"
                   >
                     ×
                   </button>
@@ -568,7 +568,7 @@ export default function SearchClient({ initialItems }: { initialItems: IndexItem
         )
       ) : (
         <div className="space-y-3">
-          <p className="text-[10px] font-mono uppercase tracking-wider text-[#71717a]">
+          <p className="text-sm text-zinc-400">
             {hasQuery ? `Showing ${results.length} of ${totalAfterFilters} results` : `Showing ${results.length} of ${totalAfterFilters} indexed items`}
           </p>
           {results.map(({ item, reasons }) => {
@@ -614,23 +614,23 @@ function ResultCard({
       : item.source === 'readiness' ? 'amber'
       : 'neutral';
   return (
-    <div className="rounded-2xl border border-[#27272a] bg-[#111113] p-3">
+    <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04] p-3 transition-colors">
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
           {item.url ? (
             <Link
               href={item.url}
-              className="text-sm font-medium text-[#f5f5f5] hover:text-emerald-300 transition-colors break-words"
+              className="text-sm font-medium text-zinc-100 hover:text-zinc-50 transition-colors break-words"
             >
               {highlight(item.title, tokens)}
             </Link>
           ) : (
-            <p className="text-sm font-medium text-[#f5f5f5] break-words">
+            <p className="text-sm font-medium text-zinc-100 break-words">
               {highlight(item.title, tokens)}
             </p>
           )}
           {item.subtitle && (
-            <p className="mt-0.5 text-[11px] text-[#71717a]">{item.subtitle}</p>
+            <p className="mt-0.5 text-xs text-zinc-500">{item.subtitle}</p>
           )}
         </div>
         <div className="shrink-0 flex flex-wrap items-center justify-end gap-1.5">
@@ -639,7 +639,7 @@ function ResultCard({
           {item.status ? <Badge text={item.status} tone="neutral" /> : null}
         </div>
       </div>
-      <p className="mt-2 text-xs text-[#a1a1aa] leading-relaxed break-words line-clamp-2">
+      <p className="mt-2 text-xs text-zinc-400 leading-relaxed break-words line-clamp-2">
         {highlight(excerpt, tokens)}
       </p>
       {reasons.length > 0 && (
@@ -648,7 +648,7 @@ function ResultCard({
             type="button"
             onClick={onToggleWhy}
             aria-expanded={whyOpen}
-            className="text-[10px] font-mono uppercase tracking-wider text-[#71717a] hover:text-emerald-300 transition-colors"
+            className="text-xs text-zinc-500 hover:text-emerald-300 transition-colors"
           >
             {whyOpen ? 'Hide why' : `Why? · ${reasons.length}`}
           </button>
@@ -657,7 +657,7 @@ function ResultCard({
               {reasons.slice(0, 8).map((r, i) => (
                 <span
                   key={i}
-                  className="inline-block text-[10px] font-mono text-[#71717a] border border-[#27272a] rounded-full px-1.5 py-0.5"
+                  className="inline-block text-xs text-zinc-400 border border-white/[0.08] rounded-full px-1.5 py-0.5"
                 >
                   {r}
                 </span>
