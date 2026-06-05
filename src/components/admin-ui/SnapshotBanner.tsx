@@ -9,8 +9,8 @@ export default function SnapshotBanner({
 }: { area?: string }) {
   if (isDbConfigured()) return null;
   return (
-    <div className="mb-4 flex items-center gap-2 rounded-lg border border-white/[0.06] bg-white/[0.02] px-3 py-2 text-sm text-zinc-300">
-      <span aria-hidden className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400" />
+    <div className="mb-4 flex items-center gap-2 rounded-lg border border-zinc-200 dark:border-white/[0.06] bg-white dark:bg-white/[0.02] px-3 py-2 text-sm text-zinc-700 dark:text-zinc-300 transition-colors">
+      <span aria-hidden className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400" />
       <span>
         Preview mode · {area} is showing saved sample data. Editing turns on once the production database is connected.
       </span>

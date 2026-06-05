@@ -14,10 +14,10 @@ export function StatusDot({
   size?: Size;
 }) {
   const bg: Record<Tone, string> = {
-    ok: 'bg-emerald-400',
-    warn: 'bg-amber-400',
-    risk: 'bg-rose-400',
-    neutral: 'bg-zinc-500',
+    ok: 'bg-emerald-500 dark:bg-emerald-400',
+    warn: 'bg-amber-500 dark:bg-amber-400',
+    risk: 'bg-rose-500 dark:bg-rose-400',
+    neutral: 'bg-zinc-400 dark:bg-zinc-500',
   };
   const dim: Record<Size, string> = {
     sm: 'h-1.5 w-1.5',

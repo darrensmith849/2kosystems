@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+/* Tailwind v4 class-based dark mode. `dark:` prefix matches when an
+   ancestor element (typically <html>) carries `class="dark"` or
+   `data-theme="dark"`. The admin/ops dashboard toggles this via the
+   theme toggle in the top bar; user preference is stored in
+   localStorage. */
+@custom-variant dark (&:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *));
+
 :root {
   /* ============================================================
      2KO Systems · Light theme (autotax-style)

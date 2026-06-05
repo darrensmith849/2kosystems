@@ -88,13 +88,13 @@ export default function OpsSidebar({ operatorSlug }: { operatorSlug: string }) {
   const isOnOpsSubroute = pathname !== '/admin/ops' && pathname.startsWith('/admin/ops');
 
   return (
-    <aside className="hidden lg:flex lg:flex-col w-56 shrink-0 border-r border-white/[0.06] bg-[#0a0a0b]/95 backdrop-blur-sm sticky top-0 h-screen">
+    <aside className="hidden lg:flex lg:flex-col w-56 shrink-0 border-r border-zinc-200 dark:border-white/[0.06] bg-white dark:bg-[#0a0a0b]/95 backdrop-blur-sm sticky top-0 h-screen transition-colors">
       <div className="flex flex-col h-full min-h-0">
-        <div className="px-4 pt-5 pb-4 border-b border-white/[0.06]">
+        <div className="px-4 pt-5 pb-4 border-b border-zinc-200 dark:border-white/[0.06]">
           <p className="text-[11px] font-medium text-zinc-500">
             2KO Systems
           </p>
-          <p className="mt-1 text-base font-medium text-zinc-100">Ops Dashboard</p>
+          <p className="mt-1 text-base font-medium text-zinc-900 dark:text-zinc-100">Ops Dashboard</p>
         </div>
 
         <nav className="flex-1 min-h-0 px-2 py-4 pb-3 space-y-5 overflow-y-auto">
@@ -117,7 +117,7 @@ export default function OpsSidebar({ operatorSlug }: { operatorSlug: string }) {
                 key={group.title}
                 className={
                   isConsoleSwitcher
-                    ? 'pb-4 border-b border-white/[0.06]'
+                    ? 'pb-4 border-b border-zinc-200 dark:border-white/[0.06]'
                     : undefined
                 }
               >
@@ -128,7 +128,7 @@ export default function OpsSidebar({ operatorSlug }: { operatorSlug: string }) {
                     aria-expanded={isOpen}
                     aria-controls={panelId}
                     onClick={() => toggleGroup(group.title)}
-                    className="w-full flex items-center justify-between px-3 mb-1.5 text-[11px] font-medium text-zinc-500 hover:text-zinc-300 transition-colors"
+                    className="w-full flex items-center justify-between px-3 mb-1.5 text-[11px] font-medium text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
                   >
                     <span>{group.title}</span>
                     <span
@@ -178,15 +178,15 @@ export default function OpsSidebar({ operatorSlug }: { operatorSlug: string }) {
                             aria-current={active ? 'page' : undefined}
                             className={`flex items-center justify-between gap-2 px-2 py-1.5 text-[13px] rounded-md transition-colors ${
                               active
-                                ? 'bg-white/[0.06] text-white font-medium'
-                                : 'text-zinc-400 hover:text-zinc-100 hover:bg-white/[0.04]'
+                                ? 'bg-zinc-200/60 dark:bg-white/[0.06] text-zinc-900 dark:text-white font-medium'
+                                : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-white/[0.04]'
                             }`}
                           >
                             <span className="flex items-center gap-2 min-w-0">
                               {IconCmp && (
                                 <IconCmp
                                   className={`h-4 w-4 shrink-0 ${
-                                    active ? 'text-emerald-400' : 'text-zinc-500'
+                                    active ? 'text-emerald-600 dark:text-emerald-400' : 'text-zinc-500 dark:text-zinc-400'
                                   }`}
                                 />
                               )}
@@ -211,7 +211,7 @@ export default function OpsSidebar({ operatorSlug }: { operatorSlug: string }) {
           })}
         </nav>
 
-        <div className="shrink-0 px-4 py-4 border-t border-white/[0.06] space-y-2 bg-[#0a0a0b]/95">
+        <div className="shrink-0 px-4 py-4 border-t border-zinc-200 dark:border-white/[0.06] space-y-2 bg-white dark:bg-[#0a0a0b]/95 transition-colors">
           <div className="flex flex-col gap-1">
             <span className="text-[11px] text-zinc-500">
               Signed in as
@@ -219,12 +219,12 @@ export default function OpsSidebar({ operatorSlug }: { operatorSlug: string }) {
             <button
               type="button"
               onClick={handleSwitchOperator}
-              className="text-xs text-zinc-100 hover:text-white border border-white/[0.08] hover:border-white/[0.12] rounded-md px-2.5 py-1 text-left bg-white/[0.02]"
+              className="text-xs text-zinc-900 dark:text-zinc-100 hover:text-zinc-900 dark:hover:text-white border border-zinc-300 dark:border-white/[0.08] hover:border-zinc-400 dark:hover:border-white/[0.12] rounded-md px-2.5 py-1 text-left bg-zinc-50 dark:bg-white/[0.02]"
               title={operatorSlug}
               aria-label="Switch user"
             >
-              <span className="block text-[11px] text-zinc-400">Switch user</span>
-              <span className="block truncate text-[11px] text-zinc-400">
+              <span className="block text-[11px] text-zinc-600 dark:text-zinc-400">Switch user</span>
+              <span className="block truncate text-[11px] text-zinc-600 dark:text-zinc-400">
                 {operatorSlug}
               </span>
             </button>
@@ -232,7 +232,7 @@ export default function OpsSidebar({ operatorSlug }: { operatorSlug: string }) {
           <button
             type="button"
             onClick={handleLogout}
-            className="w-full text-xs text-zinc-400 hover:text-zinc-100 border border-white/[0.06] hover:border-white/[0.08] rounded-md px-2.5 py-1"
+            className="w-full text-xs text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 border border-zinc-200 dark:border-white/[0.06] hover:border-zinc-300 dark:hover:border-white/[0.08] rounded-md px-2.5 py-1"
           >
             Sign out
           </button>

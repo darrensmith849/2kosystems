@@ -32,9 +32,9 @@ export default function WaitingForDb({
   if (!hasBullets && description) {
     // Legacy fallback for callers that pass a description but no bullets.
     return (
-      <div className="mb-4 flex items-start gap-2 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-4">
-        <span aria-hidden className="mt-1.5 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-amber-400" />
-        <p className="text-sm text-zinc-300 leading-relaxed">
+      <div className="mb-4 flex items-start gap-2 rounded-2xl border border-zinc-200 dark:border-white/[0.06] bg-white dark:bg-white/[0.02] p-4 transition-colors">
+        <span aria-hidden className="mt-1.5 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500 dark:bg-amber-400" />
+        <p className="text-sm text-zinc-700 dark:text-zinc-300 leading-relaxed">
           {description}
         </p>
       </div>
@@ -42,15 +42,15 @@ export default function WaitingForDb({
   }
 
   return (
-    <div className="mb-4 rounded-2xl border border-white/[0.06] bg-white/[0.02] px-4 py-3">
-      <p className="text-sm font-medium text-zinc-100 mb-2">
+    <div className="mb-4 rounded-2xl border border-zinc-200 dark:border-white/[0.06] bg-white dark:bg-white/[0.02] px-4 py-3 transition-colors">
+      <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100 mb-2">
         What will be available
       </p>
       <ul className="space-y-1">
         {whatYouWillSee!.map((item) => (
           <li
             key={item}
-            className="flex items-start gap-2 text-xs text-zinc-300 leading-relaxed"
+            className="flex items-start gap-2 text-xs text-zinc-700 dark:text-zinc-300 leading-relaxed"
           >
             <span aria-hidden="true" className="text-zinc-500 mt-[1px]">
               ·

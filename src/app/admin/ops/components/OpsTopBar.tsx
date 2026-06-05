@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Search as SearchIcon } from '@/components/admin-ui/icons';
+import { ThemeToggle } from '@/components/admin-ui/theme';
 
 // Tiny route → sentence-case label map for the page-context hint shown
 // between the wordmark and the search input. Order doesn't matter; the
@@ -59,20 +60,20 @@ export default function OpsTopBar({ operatorSlug }: { operatorSlug: string }) {
   const pathname = usePathname();
   const pageLabel = resolvePageLabel(pathname);
   return (
-    <header className="hidden lg:flex sticky top-0 z-40 h-14 items-center gap-4 border-b border-white/[0.06] bg-[#0a0a0b]/85 backdrop-blur-md px-6">
+    <header className="hidden lg:flex sticky top-0 z-40 h-14 items-center gap-4 border-b border-zinc-200 bg-white/85 dark:border-white/[0.06] dark:bg-[#0a0a0b]/85 backdrop-blur-md px-6 transition-colors">
       <Link
         href="/"
-        className="flex items-center gap-2 text-sm font-semibold text-zinc-100 hover:text-white"
+        className="flex items-center gap-2 text-sm font-semibold text-zinc-900 hover:text-black dark:text-zinc-100 dark:hover:text-white transition-colors"
       >
         <span
           aria-hidden="true"
-          className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400"
+          className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-500"
         />
         2KO Systems
       </Link>
 
       {pageLabel && (
-        <span className="hidden md:inline text-xs text-zinc-500" aria-label="Current page">
+        <span className="hidden md:inline text-xs text-zinc-500 dark:text-zinc-500" aria-label="Current page">
           {pageLabel}
         </span>
       )}
@@ -80,30 +81,31 @@ export default function OpsTopBar({ operatorSlug }: { operatorSlug: string }) {
       <div className="flex-1 flex justify-center">
         <Link
           href="/admin/ops/search"
-          className="flex items-center gap-2 w-72 rounded-lg border border-white/[0.06] bg-white/[0.04] hover:bg-white/[0.06] px-3 py-1.5 text-xs text-zinc-400 transition-colors"
+          className="flex items-center gap-2 w-72 rounded-lg border border-zinc-200 bg-zinc-100 hover:bg-zinc-200 dark:border-white/[0.06] dark:bg-white/[0.04] dark:hover:bg-white/[0.06] px-3 py-1.5 text-xs text-zinc-600 dark:text-zinc-400 transition-colors"
           aria-label="Open search"
         >
           <SearchIcon className="h-3.5 w-3.5 text-zinc-500" />
           <span className="flex-1 truncate">Quick search</span>
-          <kbd className="text-[11px] text-zinc-500 border border-white/[0.06] rounded px-1.5 py-0.5 leading-none">
+          <kbd className="text-[11px] text-zinc-500 border border-zinc-300 dark:border-white/[0.06] rounded px-1.5 py-0.5 leading-none">
             ⌘K
           </kbd>
         </Link>
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2">
         <Link
           href="/admin/ops/ask"
-          className="inline-flex items-center gap-2 text-xs text-zinc-300 hover:text-white rounded-md px-2.5 py-1.5 hover:bg-white/[0.04] transition-colors"
+          className="inline-flex items-center gap-2 text-xs text-zinc-700 hover:text-black hover:bg-zinc-100 dark:text-zinc-300 dark:hover:text-white dark:hover:bg-white/[0.04] rounded-md px-2.5 py-1.5 transition-colors"
         >
           <span
             aria-hidden="true"
-            className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400"
+            className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-500"
           />
           Ask 2KO
         </Link>
+        <ThemeToggle />
         <span
-          className="grid place-items-center size-7 rounded-full bg-white/[0.06] border border-white/[0.06] text-xs text-zinc-300"
+          className="grid place-items-center size-7 rounded-full bg-zinc-100 border border-zinc-200 text-xs text-zinc-700 dark:bg-white/[0.06] dark:border-white/[0.06] dark:text-zinc-300"
           title={operatorSlug}
           aria-label={`Operator ${operatorSlug}`}
         >

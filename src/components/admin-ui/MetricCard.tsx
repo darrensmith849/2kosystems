@@ -30,22 +30,22 @@ export function MetricCard({
 }) {
   const accent: Record<Tone, string> = {
     neutral: '',
-    good: 'border-l-2 border-l-emerald-400',
-    warn: 'border-l-2 border-l-amber-400',
-    risk: 'border-l-2 border-l-rose-400',
+    good: 'border-l-2 border-l-emerald-500 dark:border-l-emerald-400',
+    warn: 'border-l-2 border-l-amber-500 dark:border-l-amber-400',
+    risk: 'border-l-2 border-l-rose-500 dark:border-l-rose-400',
   };
   const effectiveSparkTone: SparklineTone =
     sparklineTone ??
     (tone === 'good' ? 'good' : tone === 'warn' ? 'warn' : tone === 'risk' ? 'risk' : 'neutral');
   return (
     <div
-      className={`rounded-2xl border border-white/[0.06] bg-white/[0.02] p-4 ${accent[tone]}`}
+      className={`rounded-2xl border border-zinc-200 dark:border-white/[0.06] bg-white dark:bg-white/[0.02] p-4 transition-colors ${accent[tone]}`}
     >
       <div className="flex items-center gap-2 mb-3">
         {icon && <span className="text-zinc-500">{icon}</span>}
         <span className="text-xs font-medium text-zinc-500">{title}</span>
       </div>
-      <p className="text-2xl font-semibold text-white tabular-nums">{value}</p>
+      <p className="text-2xl font-semibold text-zinc-900 dark:text-white tabular-nums">{value}</p>
       {hint && <p className="mt-1 text-xs text-zinc-500">{hint}</p>}
       {sparklineSeed && (
         <div className="mt-2 -mx-1">

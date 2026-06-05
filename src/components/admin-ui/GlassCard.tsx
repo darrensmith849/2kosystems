@@ -17,14 +17,14 @@ export function GlassCard({
   footer?: ReactNode;
 }) {
   return (
-    <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5">
+    <div className="rounded-2xl border border-zinc-200 dark:border-white/[0.06] bg-white dark:bg-white/[0.02] p-5 transition-colors">
       <div className="flex items-center justify-between mb-4">
-        <p className="text-sm font-medium text-zinc-100">{title}</p>
+        <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{title}</p>
         {action}
       </div>
       {children}
       {footer && (
-        <div className="mt-4 border-t border-white/[0.04] pt-3">{footer}</div>
+        <div className="mt-4 border-t border-zinc-100 dark:border-white/[0.04] pt-3">{footer}</div>
       )}
     </div>
   );
