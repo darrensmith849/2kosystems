@@ -127,13 +127,13 @@ export default function AssetsClient({
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Asset name"
-            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-500 focus:border-white/[0.12] focus:outline-none lg:col-span-1"
+            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-500 focus:border-white/[0.12] focus:outline-none lg:col-span-1"
             disabled={busy}
           />
           <select
             value={type}
             onChange={(e) => setType(e.target.value)}
-            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-100"
+            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-900 dark:text-zinc-100"
             disabled={busy}
           >
             {ASSET_TYPES.map((t) => (
@@ -145,13 +145,13 @@ export default function AssetsClient({
             value={liveUrl}
             onChange={(e) => setLiveUrl(e.target.value)}
             placeholder="https://example.com"
-            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-500 focus:border-white/[0.12] focus:outline-none lg:col-span-2"
+            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-500 focus:border-white/[0.12] focus:outline-none lg:col-span-2"
             disabled={busy}
           />
           <select
             value={clientId}
             onChange={(e) => setClientId(e.target.value)}
-            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-100"
+            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-900 dark:text-zinc-100"
             disabled={busy}
           >
             <option value="">No client</option>
@@ -162,7 +162,7 @@ export default function AssetsClient({
           <button
             type="submit"
             disabled={busy || !name.trim()}
-            className="rounded-full bg-emerald-500/20 border border-emerald-400/30 px-5 py-2.5 text-sm font-medium text-emerald-200 hover:bg-emerald-500/30 disabled:opacity-40 disabled:cursor-not-allowed transition-colors lg:col-span-5"
+            className="rounded-full bg-emerald-500/20 border border-emerald-400/30 px-5 py-2.5 text-sm font-medium text-emerald-700 dark:text-emerald-200 hover:bg-emerald-500/30 disabled:opacity-40 disabled:cursor-not-allowed transition-colors lg:col-span-5"
           >
             {busy ? 'Saving…' : 'Add asset'}
           </button>

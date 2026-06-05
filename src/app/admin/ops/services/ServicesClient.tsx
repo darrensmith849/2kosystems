@@ -268,7 +268,7 @@ function SummaryTile({ label, value, tone }: { label: string; value: number; ton
       <p className="mb-2 text-[11px] font-medium text-zinc-500">
         {label}
       </p>
-      <p className="text-2xl font-semibold text-white">{value}</p>
+      <p className="text-2xl font-semibold text-zinc-900 dark:text-white">{value}</p>
     </div>
   );
 }
@@ -301,8 +301,8 @@ function ChipRow<T extends string>({
             onClick={() => onChange(opt.value)}
             className={`rounded-full border px-2.5 py-1 text-[11px] transition-colors ${
               active
-                ? 'border-emerald-400/40 bg-emerald-400/[0.08] text-emerald-200'
-                : 'border-white/[0.06] bg-white/[0.02] text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]'
+                ? 'border-emerald-400/40 bg-emerald-400/[0.08] text-emerald-700 dark:text-emerald-200'
+                : 'border-white/[0.06] bg-white/[0.02] text-zinc-600 dark:text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]'
             }`}
           >
             {opt.label}

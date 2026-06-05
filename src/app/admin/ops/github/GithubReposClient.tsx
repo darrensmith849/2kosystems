@@ -53,7 +53,7 @@ export default function GithubReposClient({
               type="button"
               onClick={runSync}
               disabled={busy || integrationStatus.status !== 'connected'}
-              className="rounded-md border border-white/[0.08] hover:bg-white/[0.04] px-2.5 py-1 text-xs font-medium text-zinc-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              className="rounded-md border border-white/[0.08] hover:bg-white/[0.04] px-2.5 py-1 text-xs font-medium text-zinc-900 dark:text-zinc-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               {busy ? 'Syncing…' : 'Run sync now'}
             </button>
@@ -61,9 +61,9 @@ export default function GithubReposClient({
         }
       >
         {integrationStatus.status === 'connected' ? (
-          <p className="text-xs text-zinc-400">Connected. Categories are a best-guess from repo names and topics; manual category edits are planned for a later step.</p>
+          <p className="text-xs text-zinc-600 dark:text-zinc-400">Connected. Categories are a best-guess from repo names and topics; manual category edits are planned for a later step.</p>
         ) : (
-          <p className="text-xs text-amber-200">
+          <p className="text-xs text-amber-700 dark:text-amber-200">
             Not connected. {integrationStatus.detail ?? 'Add a GitHub access token in Settings to enable sync.'}
           </p>
         )}
@@ -71,10 +71,10 @@ export default function GithubReposClient({
       </AdminCard>
 
       <div className="flex items-center justify-between gap-3">
-        <p className="text-xs text-zinc-400">
-          Showing <strong className="text-zinc-100">{visible.length}</strong> of {repos.length} repos
+        <p className="text-xs text-zinc-600 dark:text-zinc-400">
+          Showing <strong className="text-zinc-900 dark:text-zinc-100">{visible.length}</strong> of {repos.length} repos
         </p>
-        <label className="flex items-center gap-2 text-xs text-zinc-300 cursor-pointer">
+        <label className="flex items-center gap-2 text-xs text-zinc-700 dark:text-zinc-300 cursor-pointer">
           <input
             type="checkbox"
             checked={showExcluded}

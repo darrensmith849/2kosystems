@@ -141,7 +141,7 @@ export default function TicketDetailClient({
         title={ticket.title}
         subtitle={
           <span>
-            <Link href="/admin/ops/tickets" className="text-emerald-300 hover:underline">← Tickets</Link>
+            <Link href="/admin/ops/tickets" className="text-emerald-700 dark:text-emerald-300 hover:underline">← Tickets</Link>
             <span className="ml-2 text-zinc-500 dark:text-[#52525b]">·</span>
             <span className="ml-2 text-zinc-500 dark:text-[#71717a]">{ticket.kind}</span>
           </span>
@@ -343,7 +343,7 @@ export default function TicketDetailClient({
             <button
               type="submit"
               disabled={busy !== null || !commentBody.trim()}
-              className="rounded-full bg-[#0f7b3a] px-5 py-2 text-sm font-semibold text-white hover:bg-[#B8C4C8] hover:text-black disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              className="rounded-full bg-[#0f7b3a] px-5 py-2 text-sm font-semibold text-zinc-900 dark:text-white hover:bg-[#B8C4C8] hover:text-black disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               {busy === 'comment' ? 'Posting…' : 'Post comment'}
             </button>

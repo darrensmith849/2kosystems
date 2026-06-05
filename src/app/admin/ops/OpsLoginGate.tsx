@@ -65,7 +65,7 @@ export default function OpsLoginGate() {
           <button
             type="submit"
             disabled={loading || !password.trim()}
-            className="w-full rounded-full bg-[#0f7b3a] px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#B8C4C8] hover:text-black disabled:opacity-40 disabled:cursor-not-allowed"
+            className="w-full rounded-full bg-[#0f7b3a] px-6 py-2.5 text-sm font-semibold text-zinc-900 dark:text-white transition-colors hover:bg-[#B8C4C8] hover:text-black disabled:opacity-40 disabled:cursor-not-allowed"
           >
             {loading ? 'Checking…' : 'Sign in'}
           </button>

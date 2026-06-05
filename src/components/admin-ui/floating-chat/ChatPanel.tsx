@@ -176,12 +176,12 @@ export function ChatPanel({
       <header className="flex items-start justify-between gap-3 border-b border-white/[0.06] bg-white/[0.02] px-4 py-3">
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
-            <h2 className="text-sm font-medium text-zinc-100 truncate">
+            <h2 className="text-sm font-medium text-zinc-900 dark:text-zinc-100 truncate">
               {title}
             </h2>
             <Badge text={modeBadgeText} tone={modeBadgeTone} />
           </div>
-          <p className="mt-0.5 text-xs text-zinc-400 truncate">{subtitle}</p>
+          <p className="mt-0.5 text-xs text-zinc-600 dark:text-zinc-400 truncate">{subtitle}</p>
           {pageContext && (
             <p className="mt-1 text-xs text-zinc-500 truncate">
               Context · {pageContext.sectionTitle}
@@ -193,7 +193,7 @@ export function ChatPanel({
             type="button"
             onClick={handleClear}
             disabled={!hasMessages || busy}
-            className="rounded-md border border-white/[0.06] hover:border-white/[0.12] hover:text-white px-2 py-1 text-xs text-zinc-400 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            className="rounded-md border border-white/[0.06] hover:border-white/[0.12] hover:text-white px-2 py-1 text-xs text-zinc-600 dark:text-zinc-400 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
             New chat
           </button>
@@ -202,7 +202,7 @@ export function ChatPanel({
               type="button"
               onClick={onClose}
               aria-label="Close chat"
-              className="rounded-md border border-white/[0.06] hover:border-white/[0.12] hover:text-white px-2 py-1 text-zinc-400 transition-colors"
+              className="rounded-md border border-white/[0.06] hover:border-white/[0.12] hover:text-white px-2 py-1 text-zinc-600 dark:text-zinc-400 transition-colors"
             >
               <span aria-hidden className="block leading-none text-sm">×</span>
             </button>
@@ -214,13 +214,13 @@ export function ChatPanel({
       {showSearchBanner && (
         <div className="border-b border-white/[0.06] bg-white/[0.02] px-4 py-2">
           <div className="flex items-center justify-between gap-2">
-            <p className="text-sm text-zinc-300 leading-snug flex items-center gap-2">
+            <p className="text-sm text-zinc-700 dark:text-zinc-300 leading-snug flex items-center gap-2">
               <span
                 aria-hidden
                 className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400 shrink-0"
               />
               <span>
-                <span className="text-emerald-300 font-medium">Search mode</span>
+                <span className="text-emerald-700 dark:text-emerald-300 font-medium">Search mode</span>
                 {' '}— I can answer using dashboard data already available. Full AI
                 answers can be enabled later.
               </span>
@@ -254,7 +254,7 @@ export function ChatPanel({
         )}
 
         {error && !busy && (
-          <div className="rounded-lg border border-rose-400/20 bg-rose-400/[0.04] px-3 py-2 text-xs text-rose-200">
+          <div className="rounded-lg border border-rose-400/20 bg-rose-400/[0.04] px-3 py-2 text-xs text-rose-700 dark:text-rose-200">
             {error}
           </div>
         )}

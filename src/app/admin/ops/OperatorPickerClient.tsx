@@ -69,7 +69,7 @@ export default function OperatorPickerClient({
         </div>
 
         {!dbConfigured && (
-          <div className="mb-6 rounded-xl border border-amber-400/30 bg-amber-400/5 p-4 text-xs text-amber-200">
+          <div className="mb-6 rounded-xl border border-amber-400/30 bg-amber-400/5 p-4 text-xs text-amber-700 dark:text-amber-200">
             Database is not connected. Operator selection is still tracked in a cookie, but no operator records exist yet.
             Add at least your name below; it will become a real DB row once the database is configured.
           </div>
@@ -95,7 +95,7 @@ export default function OperatorPickerClient({
             <button
               type="submit"
               disabled={busy || !chosen}
-              className="w-full rounded-full bg-[#0f7b3a] px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#B8C4C8] hover:text-black disabled:opacity-40 disabled:cursor-not-allowed"
+              className="w-full rounded-full bg-[#0f7b3a] px-6 py-2.5 text-sm font-semibold text-zinc-900 dark:text-white transition-colors hover:bg-[#B8C4C8] hover:text-black disabled:opacity-40 disabled:cursor-not-allowed"
             >
               Continue as selected
             </button>

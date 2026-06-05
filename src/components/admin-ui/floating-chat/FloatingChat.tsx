@@ -87,7 +87,7 @@ export function FloatingChat() {
           type="button"
           onClick={() => setOpen(true)}
           aria-label="Open 2KO Ops Assistant"
-          className="fixed bottom-6 right-6 z-50 inline-flex items-center gap-2 rounded-full bg-white/[0.06] backdrop-blur-md border border-white/[0.08] hover:bg-white/[0.10] hover:border-white/[0.14] px-4 py-2 text-sm text-zinc-100 shadow-lg shadow-black/30 transition-colors"
+          className="fixed bottom-6 right-6 z-50 inline-flex items-center gap-2 rounded-full bg-white/[0.06] backdrop-blur-md border border-white/[0.08] hover:bg-white/[0.10] hover:border-white/[0.14] px-4 py-2 text-sm text-zinc-900 dark:text-zinc-100 shadow-lg shadow-black/30 transition-colors"
           style={{
             fontFamily:
               'var(--font-roboto), Roboto, system-ui, -apple-system, "Segoe UI", sans-serif',

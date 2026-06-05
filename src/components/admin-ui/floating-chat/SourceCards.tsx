@@ -50,12 +50,12 @@ export function SourceCards({ sources }: { sources: AssistantSource[] }) {
               {valid ? (
                 <a
                   href={s.url}
-                  className="text-emerald-300 hover:text-emerald-200 underline underline-offset-2 truncate text-xs"
+                  className="text-emerald-700 dark:text-emerald-300 hover:text-emerald-200 underline underline-offset-2 truncate text-xs"
                 >
                   {s.title}
                 </a>
               ) : (
-                <span className="text-zinc-300 truncate text-xs">{s.title}</span>
+                <span className="text-zinc-700 dark:text-zinc-300 truncate text-xs">{s.title}</span>
               )}
             </li>
           );
@@ -65,7 +65,7 @@ export function SourceCards({ sources }: { sources: AssistantSource[] }) {
         <button
           type="button"
           onClick={() => setExpanded((v) => !v)}
-          className="mt-2 text-xs text-emerald-300 hover:text-emerald-200"
+          className="mt-2 text-xs text-emerald-700 dark:text-emerald-300 hover:text-emerald-200"
         >
           {expanded ? 'Show fewer' : `Show ${hidden} more sources`}
         </button>

@@ -65,7 +65,7 @@ export default function EmailsPage() {
           {EMAIL_CATEGORY_ORDER.map((cat) => (
             <li
               key={cat}
-              className="flex items-center gap-2 rounded-xl border border-white/[0.06] bg-white/[0.02] px-3 py-2 text-sm text-zinc-200"
+              className="flex items-center gap-2 rounded-xl border border-white/[0.06] bg-white/[0.02] px-3 py-2 text-sm text-zinc-800 dark:text-zinc-200"
             >
               <span aria-hidden className="text-zinc-600">·</span>
               {EMAIL_CATEGORY_LABEL[cat]}

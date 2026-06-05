@@ -90,13 +90,13 @@ export default function ClientsClient({
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Client name"
-            className="flex-1 min-w-[200px] rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-500 focus:border-white/[0.12] focus:outline-none transition-colors"
+            className="flex-1 min-w-[200px] rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-500 focus:border-white/[0.12] focus:outline-none transition-colors"
             disabled={busy}
           />
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value)}
-            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-100 focus:border-white/[0.12] focus:outline-none"
+            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-900 dark:text-zinc-100 focus:border-white/[0.12] focus:outline-none"
             disabled={busy}
           >
             <option value="active">Active</option>
@@ -108,7 +108,7 @@ export default function ClientsClient({
           <button
             type="submit"
             disabled={busy || !name.trim()}
-            className="rounded-full bg-[#0f7b3a] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#B8C4C8] hover:text-black disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            className="rounded-full bg-[#0f7b3a] px-5 py-2.5 text-sm font-semibold text-zinc-900 dark:text-white hover:bg-[#B8C4C8] hover:text-black disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
             {busy ? 'Saving…' : 'Add'}
           </button>

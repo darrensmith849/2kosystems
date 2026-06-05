@@ -62,14 +62,14 @@ export function ChatComposer({
         disabled={busy}
         autoFocus={autoFocus}
         onKeyDown={handleKeyDown}
-        className="w-full resize-none bg-transparent text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none disabled:opacity-50"
+        className="w-full resize-none bg-transparent text-sm text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-500 focus:outline-none disabled:opacity-50"
       />
       <div className="flex items-center justify-between gap-3">
         <span className="text-xs text-zinc-500 leading-tight">{hint}</span>
         <button
           type="submit"
           disabled={busy || value.trim().length === 0}
-          className="rounded-md bg-white/[0.06] border border-white/[0.08] hover:bg-white/[0.10] hover:border-white/[0.14] px-4 py-1.5 text-xs font-medium text-zinc-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          className="rounded-md bg-white/[0.06] border border-white/[0.08] hover:bg-white/[0.10] hover:border-white/[0.14] px-4 py-1.5 text-xs font-medium text-zinc-900 dark:text-zinc-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
         >
           {busy ? 'Working…' : 'Send'}
         </button>

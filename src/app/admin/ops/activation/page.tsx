@@ -465,7 +465,7 @@ export default function ActivationPage() {
       {snapshot && <SnapshotBanner area="Activation" />}
 
       <div className="mb-4">
-        <p className="mb-3 text-sm font-medium text-zinc-100">
+        <p className="mb-3 text-sm font-medium text-zinc-900 dark:text-zinc-100">
           Pre-flight summary
         </p>
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
@@ -572,27 +572,27 @@ export default function ActivationPage() {
           alongside activation. */}
       <div className="mb-6">
         <AdminCard title="Commercial preflight">
-          <p className="mb-3 text-xs text-zinc-400 leading-relaxed">
+          <p className="mb-3 text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
             Five short checks for the commercial side of activation. None of
             these block the 27-step sequence — they make sure the local-only
             workspace stays useful while the database is being prepared.
           </p>
-          <ul className="space-y-2 text-xs text-zinc-200">
+          <ul className="space-y-2 text-xs text-zinc-800 dark:text-zinc-200">
             <li className="flex gap-2">
               <span className="mt-1.5 inline-block size-1 shrink-0 rounded-full bg-emerald-400/70" />
-              <span>Test local email references on <code className="text-xs bg-white/[0.04] border border-white/[0.06] px-1.5 py-0.5 rounded text-zinc-200 font-mono">/admin/ops/emails</code> — capture one per category as a smoke test.</span>
+              <span>Test local email references on <code className="text-xs bg-white/[0.04] border border-white/[0.06] px-1.5 py-0.5 rounded text-zinc-800 dark:text-zinc-200 font-mono">/admin/ops/emails</code> — capture one per category as a smoke test.</span>
             </li>
             <li className="flex gap-2">
               <span className="mt-1.5 inline-block size-1 shrink-0 rounded-full bg-emerald-400/70" />
-              <span>Confirm service billing owners on <code className="text-xs bg-white/[0.04] border border-white/[0.06] px-1.5 py-0.5 rounded text-zinc-200 font-mono">/admin/ops/services</code> — every row either has an owner or is tagged &ldquo;Needs review&rdquo;.</span>
+              <span>Confirm service billing owners on <code className="text-xs bg-white/[0.04] border border-white/[0.06] px-1.5 py-0.5 rounded text-zinc-800 dark:text-zinc-200 font-mono">/admin/ops/services</code> — every row either has an owner or is tagged &ldquo;Needs review&rdquo;.</span>
             </li>
             <li className="flex gap-2">
               <span className="mt-1.5 inline-block size-1 shrink-0 rounded-full bg-emerald-400/70" />
-              <span>Confirm contact role placeholders on <code className="text-xs bg-white/[0.04] border border-white/[0.06] px-1.5 py-0.5 rounded text-zinc-200 font-mono">/admin/ops/contacts</code> reflect the real team that will be entered as live rows.</span>
+              <span>Confirm contact role placeholders on <code className="text-xs bg-white/[0.04] border border-white/[0.06] px-1.5 py-0.5 rounded text-zinc-800 dark:text-zinc-200 font-mono">/admin/ops/contacts</code> reflect the real team that will be entered as live rows.</span>
             </li>
             <li className="flex gap-2">
               <span className="mt-1.5 inline-block size-1 shrink-0 rounded-full bg-emerald-400/70" />
-              <span>Plan the migration of local drafts after Hetzner connects — see <code className="text-xs bg-white/[0.04] border border-white/[0.06] px-1.5 py-0.5 rounded text-zinc-200 font-mono">docs/runbooks/ops-local-email-references.md</code>.</span>
+              <span>Plan the migration of local drafts after Hetzner connects — see <code className="text-xs bg-white/[0.04] border border-white/[0.06] px-1.5 py-0.5 rounded text-zinc-800 dark:text-zinc-200 font-mono">docs/runbooks/ops-local-email-references.md</code>.</span>
             </li>
             <li className="flex gap-2">
               <span className="mt-1.5 inline-block size-1 shrink-0 rounded-full bg-emerald-400/70" />
@@ -615,7 +615,7 @@ export default function ActivationPage() {
                 </span>
                 <div className="flex-1 min-w-0">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="text-sm font-semibold text-zinc-100">{step.title}</span>
+                    <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">{step.title}</span>
                     <Badge text={step.status} tone={statusTone(step.status)} />
                     {step.blockedBy.length > 0 && step.status !== 'Done' && (
                       <span className="flex flex-wrap gap-1">
@@ -625,22 +625,22 @@ export default function ActivationPage() {
                       </span>
                     )}
                   </div>
-                  <p className="mt-1.5 text-xs text-zinc-400 leading-relaxed">
+                  <p className="mt-1.5 text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
                     {step.description}
                   </p>
-                  <p className="mt-2 text-xs text-zinc-400">
+                  <p className="mt-2 text-xs text-zinc-600 dark:text-zinc-400">
                     <span className="text-xs font-medium text-zinc-500">
                       Where ·{' '}
                     </span>
                     {step.where}
                   </p>
-                  <p className="mt-1 text-xs text-zinc-400">
+                  <p className="mt-1 text-xs text-zinc-600 dark:text-zinc-400">
                     <span className="text-xs font-medium text-zinc-500">
                       Runbook ·{' '}
                     </span>
-                    <code className="text-xs bg-white/[0.04] border border-white/[0.06] px-1.5 py-0.5 rounded text-zinc-200 font-mono">{step.runbook}</code>
+                    <code className="text-xs bg-white/[0.04] border border-white/[0.06] px-1.5 py-0.5 rounded text-zinc-800 dark:text-zinc-200 font-mono">{step.runbook}</code>
                   </p>
-                  <p className="mt-1 text-xs leading-relaxed text-emerald-300/80">
+                  <p className="mt-1 text-xs leading-relaxed text-emerald-700 dark:text-emerald-300/80">
                     <span className="text-xs font-medium text-emerald-400/80">
                       Safe next action ·{' '}
                     </span>
@@ -655,7 +655,7 @@ export default function ActivationPage() {
 
       <div className="mb-6">
         <AdminCard title="Snapshot validation — informational">
-          <p className="mb-3 text-xs text-zinc-400 leading-relaxed">
+          <p className="mb-3 text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
             Findings from a pure-function pass over the snapshot data. They never block activation
             — fix them before the import or accept the default behaviour.
           </p>
@@ -664,12 +664,12 @@ export default function ActivationPage() {
             <Badge text={`${validation.bySeverity.warn} warnings`} tone="amber" />
             <Badge text={`${validation.bySeverity.info} info`} tone="blue" />
           </div>
-          <ul className="space-y-1.5 text-xs text-zinc-400">
+          <ul className="space-y-1.5 text-xs text-zinc-600 dark:text-zinc-400">
             {(Object.keys(validation.byCategory) as (keyof typeof validation.byCategory)[])
               .filter((k) => validation.byCategory[k].length > 0)
               .map((k) => (
                 <li key={k} className="flex justify-between gap-3">
-                  <span className="text-zinc-200">{VALIDATION_CATEGORY_LABEL[k]}</span>
+                  <span className="text-zinc-800 dark:text-zinc-200">{VALIDATION_CATEGORY_LABEL[k]}</span>
                   <span className="text-xs text-zinc-500">
                     {validation.byCategory[k].length} item{validation.byCategory[k].length === 1 ? '' : 's'}
                   </span>
@@ -684,12 +684,12 @@ export default function ActivationPage() {
 
       <div className="mb-6">
         <AdminCard title="Email linking — next steps">
-          <p className="mb-3 text-xs text-zinc-400 leading-relaxed">
+          <p className="mb-3 text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
             Email linking is in preview today. The following steps make it active once the
             database is connected. No inbox is connected, and no email is sent or read by the
             dashboard automatically.
           </p>
-          <ol className="space-y-2 text-xs text-zinc-200">
+          <ol className="space-y-2 text-xs text-zinc-800 dark:text-zinc-200">
             <li>
               <span className="text-zinc-500">1.</span> Pick the email linking approach — manual
               references first; Gmail or Outlook integration only as a later, separately approved
@@ -707,7 +707,7 @@ export default function ActivationPage() {
             </li>
             <li>
               <span className="text-zinc-500">4.</span> Set{' '}
-              <code className="text-xs bg-white/[0.04] border border-white/[0.06] px-1.5 py-0.5 rounded text-zinc-200 font-mono">BREVO_OPS_DIGEST_TO</code> so the daily renewal
+              <code className="text-xs bg-white/[0.04] border border-white/[0.06] px-1.5 py-0.5 rounded text-zinc-800 dark:text-zinc-200 font-mono">BREVO_OPS_DIGEST_TO</code> so the daily renewal
               digest has a recipient.
             </li>
             <li>
@@ -722,9 +722,9 @@ export default function ActivationPage() {
         <div className="rounded-xl border border-amber-400/20 bg-amber-400/[0.04] px-4 py-3 flex items-start gap-3">
           <span aria-hidden className="mt-1.5 inline-block h-2 w-2 shrink-0 rounded-full bg-amber-400" />
           <div className="min-w-0 flex-1">
-            <p className="text-xs font-medium text-amber-200">Safety</p>
+            <p className="text-xs font-medium text-amber-700 dark:text-amber-200">Safety</p>
             <p className="mt-1 text-xs leading-relaxed text-amber-100/80">
-              Database changes are disabled until <code className="text-xs bg-white/[0.04] border border-white/[0.06] px-1.5 py-0.5 rounded text-zinc-200 font-mono">DATABASE_URL</code> is set. Provider sync actions are
+              Database changes are disabled until <code className="text-xs bg-white/[0.04] border border-white/[0.06] px-1.5 py-0.5 rounded text-zinc-800 dark:text-zinc-200 font-mono">DATABASE_URL</code> is set. Provider sync actions are
               disabled until the matching token is set. Snapshot data stays read-only. No
               destructive action exists on this page.
             </p>
@@ -760,7 +760,7 @@ function StatusCard({
         {label}
       </p>
       <div className="mb-2 flex items-baseline gap-3">
-        <p className="text-xl font-semibold text-zinc-100">{value}</p>
+        <p className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">{value}</p>
       </div>
       {hint && <p className="text-xs text-zinc-500">{hint}</p>}
     </div>
@@ -792,7 +792,7 @@ function PreflightCard({
     <div className={`rounded-2xl border p-4 ${ring}`}>
       <p className="mb-3 text-[11px] font-medium text-zinc-500">{title}</p>
       {bullets && (
-        <ul className="space-y-1.5 text-[12px] leading-relaxed text-zinc-200">
+        <ul className="space-y-1.5 text-[12px] leading-relaxed text-zinc-800 dark:text-zinc-200">
           {bullets.map((b, i) => (
             <li key={i} className="flex gap-2">
               <span className="mt-1.5 inline-block size-1 shrink-0 rounded-full bg-zinc-500" />
@@ -802,7 +802,7 @@ function PreflightCard({
         </ul>
       )}
       {checklist && (
-        <ul className="space-y-1.5 text-[12px] leading-relaxed text-zinc-200">
+        <ul className="space-y-1.5 text-[12px] leading-relaxed text-zinc-800 dark:text-zinc-200">
           {checklist.map((b, i) => (
             <li key={i} className="flex gap-2">
               <span className="mt-0.5 inline-block size-3.5 shrink-0 rounded-sm border border-emerald-400/40 bg-emerald-400/[0.04]" />
@@ -812,15 +812,15 @@ function PreflightCard({
         </ul>
       )}
       {credentials && (
-        <ul className="space-y-2 text-[12px] leading-relaxed text-zinc-200">
+        <ul className="space-y-2 text-[12px] leading-relaxed text-zinc-800 dark:text-zinc-200">
           {credentials.map((c) => (
             <li
               key={c.label}
               className="flex items-start justify-between gap-3 rounded-lg border border-white/[0.06] bg-white/[0.02] px-3 py-2"
             >
               <div className="min-w-0 flex-1">
-                <p className="text-[12px] font-medium text-zinc-100">{c.label}</p>
-                <p className="mt-0.5 text-[11px] text-zinc-400">{c.hint}</p>
+                <p className="text-[12px] font-medium text-zinc-900 dark:text-zinc-100">{c.label}</p>
+                <p className="mt-0.5 text-[11px] text-zinc-600 dark:text-zinc-400">{c.hint}</p>
               </div>
               <Badge text={c.present ? 'present' : 'missing'} tone={c.present ? 'green' : 'amber'} />
             </li>
@@ -844,12 +844,12 @@ function ProgressTile({
 }) {
   const ring =
     tone === 'green'
-      ? 'border-emerald-400/20 bg-emerald-400/[0.04] text-emerald-200'
+      ? 'border-emerald-400/20 bg-emerald-400/[0.04] text-emerald-700 dark:text-emerald-200'
       : tone === 'amber'
-        ? 'border-amber-400/20 bg-amber-400/[0.04] text-amber-200'
+        ? 'border-amber-400/20 bg-amber-400/[0.04] text-amber-700 dark:text-amber-200'
         : tone === 'rose'
-          ? 'border-rose-400/20 bg-rose-400/[0.04] text-rose-200'
-          : 'border-sky-400/20 bg-sky-400/[0.04] text-sky-200';
+          ? 'border-rose-400/20 bg-rose-400/[0.04] text-rose-700 dark:text-rose-200'
+          : 'border-sky-400/20 bg-sky-400/[0.04] text-sky-700 dark:text-sky-200';
   return (
     <div className={`rounded-2xl border p-3 ${ring}`}>
       <p className="mb-1 text-[11px] font-medium text-zinc-500">

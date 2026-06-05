@@ -52,20 +52,20 @@ function tileStatusForIncident(severity: string, status: string): TileStatus {
 function chipClass(active: boolean, tone: Tone): string {
   const palette: Record<Tone, string> = {
     neutral: active
-      ? 'border-white/[0.12] bg-white/[0.06] text-zinc-100'
-      : 'border-white/[0.08] bg-transparent text-zinc-400 hover:bg-white/[0.04] hover:text-zinc-100',
+      ? 'border-white/[0.12] bg-white/[0.06] text-zinc-900 dark:text-zinc-100'
+      : 'border-white/[0.08] bg-transparent text-zinc-600 dark:text-zinc-400 hover:bg-white/[0.04] hover:text-zinc-100',
     green: active
-      ? 'border-emerald-400/30 bg-emerald-400/[0.08] text-emerald-200'
-      : 'border-white/[0.08] bg-transparent text-zinc-400 hover:bg-white/[0.04] hover:text-emerald-200',
+      ? 'border-emerald-400/30 bg-emerald-400/[0.08] text-emerald-700 dark:text-emerald-200'
+      : 'border-white/[0.08] bg-transparent text-zinc-600 dark:text-zinc-400 hover:bg-white/[0.04] hover:text-emerald-200',
     amber: active
-      ? 'border-amber-400/30 bg-amber-400/[0.08] text-amber-200'
-      : 'border-white/[0.08] bg-transparent text-zinc-400 hover:bg-white/[0.04] hover:text-amber-200',
+      ? 'border-amber-400/30 bg-amber-400/[0.08] text-amber-700 dark:text-amber-200'
+      : 'border-white/[0.08] bg-transparent text-zinc-600 dark:text-zinc-400 hover:bg-white/[0.04] hover:text-amber-200',
     rose: active
-      ? 'border-rose-400/30 bg-rose-400/[0.08] text-rose-200'
-      : 'border-white/[0.08] bg-transparent text-zinc-400 hover:bg-white/[0.04] hover:text-rose-200',
+      ? 'border-rose-400/30 bg-rose-400/[0.08] text-rose-700 dark:text-rose-200'
+      : 'border-white/[0.08] bg-transparent text-zinc-600 dark:text-zinc-400 hover:bg-white/[0.04] hover:text-rose-200',
     blue: active
-      ? 'border-sky-400/30 bg-sky-400/[0.08] text-sky-200'
-      : 'border-white/[0.08] bg-transparent text-zinc-400 hover:bg-white/[0.04] hover:text-sky-200',
+      ? 'border-sky-400/30 bg-sky-400/[0.08] text-sky-700 dark:text-sky-200'
+      : 'border-white/[0.08] bg-transparent text-zinc-600 dark:text-zinc-400 hover:bg-white/[0.04] hover:text-sky-200',
   };
   return `inline-flex items-center text-xs font-medium px-2.5 py-1 rounded-full border transition-colors ${palette[tone]}`;
 }
@@ -151,13 +151,13 @@ export default function IncidentsClient({
             value={summary}
             onChange={(e) => setSummary(e.target.value)}
             placeholder="One-line summary"
-            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-500 focus:border-white/[0.12] focus:outline-none lg:col-span-3"
+            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-500 focus:border-white/[0.12] focus:outline-none lg:col-span-3"
             disabled={busy}
           />
           <select
             value={severity}
             onChange={(e) => setSeverity(e.target.value as Severity)}
-            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-100"
+            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-900 dark:text-zinc-100"
             disabled={busy}
           >
             {SEVERITIES.map((s) => (
@@ -167,7 +167,7 @@ export default function IncidentsClient({
           <select
             value={source}
             onChange={(e) => setSource(e.target.value as (typeof SOURCES)[number])}
-            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-100"
+            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-900 dark:text-zinc-100"
             disabled={busy}
           >
             {SOURCES.map((s) => (
@@ -178,13 +178,13 @@ export default function IncidentsClient({
             type="datetime-local"
             value={startedAtLocal}
             onChange={(e) => setStartedAtLocal(e.target.value)}
-            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-100"
+            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-900 dark:text-zinc-100"
             disabled={busy}
           />
           <select
             value={assetId}
             onChange={(e) => setAssetId(e.target.value)}
-            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-100 lg:col-span-3"
+            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-900 dark:text-zinc-100 lg:col-span-3"
             disabled={busy}
           >
             <option value="">no asset</option>
@@ -195,7 +195,7 @@ export default function IncidentsClient({
           <select
             value={clientId}
             onChange={(e) => setClientId(e.target.value)}
-            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-100 lg:col-span-3"
+            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-900 dark:text-zinc-100 lg:col-span-3"
             disabled={busy}
           >
             <option value="">no client</option>
@@ -206,7 +206,7 @@ export default function IncidentsClient({
           <button
             type="submit"
             disabled={busy || !summary.trim()}
-            className="rounded-full bg-[#0f7b3a] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#B8C4C8] hover:text-black disabled:opacity-40 disabled:cursor-not-allowed transition-colors lg:col-span-6"
+            className="rounded-full bg-[#0f7b3a] px-5 py-2.5 text-sm font-semibold text-zinc-900 dark:text-white hover:bg-[#B8C4C8] hover:text-black disabled:opacity-40 disabled:cursor-not-allowed transition-colors lg:col-span-6"
           >
             {busy ? 'Logging…' : 'Log incident'}
           </button>
@@ -267,7 +267,7 @@ export default function IncidentsClient({
 
       {rows.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-white/[0.06] bg-white/[0.02] p-10 text-center">
-          <p className="text-sm text-zinc-300">
+          <p className="text-sm text-zinc-700 dark:text-zinc-300">
             {initialIncidents.length === 0
               ? 'No incidents logged.'
               : 'No incidents match the current filters.'}

@@ -62,7 +62,7 @@ export default function InfrastructureClient({
                 type="button"
                 onClick={() => runSync('cloudflare')}
                 disabled={busy !== null || cloudflareStatus.status !== 'connected'}
-                className="rounded-md border border-white/[0.08] hover:bg-white/[0.04] px-2.5 py-1 text-xs font-medium text-zinc-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                className="rounded-md border border-white/[0.08] hover:bg-white/[0.04] px-2.5 py-1 text-xs font-medium text-zinc-900 dark:text-zinc-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 {busy === 'cloudflare' ? 'Syncing…' : 'Run sync now'}
               </button>
@@ -70,11 +70,11 @@ export default function InfrastructureClient({
           }
         >
           {cloudflareStatus.status === 'connected' ? (
-            <p className="text-xs text-zinc-400">
+            <p className="text-xs text-zinc-600 dark:text-zinc-400">
               Sync reads DNS zones, DNS records, and Pages projects. Read-only — nothing is deleted. Rows that disappear upstream are marked Missing.
             </p>
           ) : (
-            <p className="text-xs text-amber-200">{cloudflareStatus.detail}</p>
+            <p className="text-xs text-amber-700 dark:text-amber-200">{cloudflareStatus.detail}</p>
           )}
         </AdminCard>
 
@@ -87,7 +87,7 @@ export default function InfrastructureClient({
                 type="button"
                 onClick={() => runSync('hetzner')}
                 disabled={busy !== null || hetznerStatus.status !== 'connected'}
-                className="rounded-md border border-white/[0.08] hover:bg-white/[0.04] px-2.5 py-1 text-xs font-medium text-zinc-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                className="rounded-md border border-white/[0.08] hover:bg-white/[0.04] px-2.5 py-1 text-xs font-medium text-zinc-900 dark:text-zinc-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 {busy === 'hetzner' ? 'Syncing…' : 'Run sync now'}
               </button>
@@ -95,11 +95,11 @@ export default function InfrastructureClient({
           }
         >
           {hetznerStatus.status === 'connected' ? (
-            <p className="text-xs text-zinc-400">
+            <p className="text-xs text-zinc-600 dark:text-zinc-400">
               Sync reads servers, labels, and IP addresses. Read-only. Metrics and backup status come in a later step.
             </p>
           ) : (
-            <p className="text-xs text-amber-200">{hetznerStatus.detail}</p>
+            <p className="text-xs text-amber-700 dark:text-amber-200">{hetznerStatus.detail}</p>
           )}
         </AdminCard>
       </div>
@@ -108,7 +108,7 @@ export default function InfrastructureClient({
 
       <div>
         <div className="flex items-baseline justify-between mb-3">
-          <h3 className="text-sm font-medium text-zinc-100">Hetzner servers</h3>
+          <h3 className="text-sm font-medium text-zinc-900 dark:text-zinc-100">Hetzner servers</h3>
           {hetznerServers.length > 0 && (
             <span className="text-[11px] font-medium text-zinc-500">
               {hetznerServers.length} server{hetznerServers.length === 1 ? '' : 's'}
@@ -141,7 +141,7 @@ export default function InfrastructureClient({
 
       <div>
         <div className="flex items-baseline justify-between mb-3">
-          <h3 className="text-sm font-medium text-zinc-100">Cloudflare zones</h3>
+          <h3 className="text-sm font-medium text-zinc-900 dark:text-zinc-100">Cloudflare zones</h3>
           {zones.length > 0 && (
             <span className="text-[11px] font-medium text-zinc-500">
               {zones.length} zone{zones.length === 1 ? '' : 's'}
@@ -174,7 +174,7 @@ export default function InfrastructureClient({
 
       <div>
         <div className="flex items-baseline justify-between mb-3">
-          <h3 className="text-sm font-medium text-zinc-100">Cloudflare Pages projects</h3>
+          <h3 className="text-sm font-medium text-zinc-900 dark:text-zinc-100">Cloudflare Pages projects</h3>
           {pagesProjects.length > 0 && (
             <span className="text-[11px] font-medium text-zinc-500">
               {pagesProjects.length} project{pagesProjects.length === 1 ? '' : 's'}

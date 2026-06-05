@@ -56,7 +56,7 @@ export default function VercelProjectsClient({
               type="button"
               onClick={runSync}
               disabled={busy || integrationStatus.status !== 'connected'}
-              className="rounded-md border border-white/[0.08] hover:bg-white/[0.04] px-2.5 py-1 text-xs font-medium text-zinc-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              className="rounded-md border border-white/[0.08] hover:bg-white/[0.04] px-2.5 py-1 text-xs font-medium text-zinc-900 dark:text-zinc-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               {busy ? 'Syncing…' : 'Run sync now'}
             </button>
@@ -64,9 +64,9 @@ export default function VercelProjectsClient({
         }
       >
         {integrationStatus.status === 'connected' ? (
-          <p className="text-xs text-zinc-400">Both Vercel teams are connected and syncing.</p>
+          <p className="text-xs text-zinc-600 dark:text-zinc-400">Both Vercel teams are connected and syncing.</p>
         ) : (
-          <p className="text-xs text-amber-200">Not connected. {integrationStatus.detail}</p>
+          <p className="text-xs text-amber-700 dark:text-amber-200">Not connected. {integrationStatus.detail}</p>
         )}
         {syncError && <p className="mt-2 text-xs text-rose-400">{syncError}</p>}
       </AdminCard>
@@ -75,7 +75,7 @@ export default function VercelProjectsClient({
         <select
           value={stateFilter}
           onChange={(e) => setStateFilter(e.target.value)}
-          className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2 text-xs text-zinc-100"
+          className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2 text-xs text-zinc-900 dark:text-zinc-100"
         >
           <option value="all">All statuses</option>
           <option value="live">Live</option>
@@ -86,13 +86,13 @@ export default function VercelProjectsClient({
         <select
           value={teamFilter}
           onChange={(e) => setTeamFilter(e.target.value)}
-          className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2 text-xs text-zinc-100"
+          className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2 text-xs text-zinc-900 dark:text-zinc-100"
         >
           <option value="all">All teams</option>
           <option value="pumpbots-projects">pumpbots-projects</option>
           <option value="impart-global">impart-global</option>
         </select>
-        <p className="text-xs text-zinc-400 self-center">
+        <p className="text-xs text-zinc-600 dark:text-zinc-400 self-center">
           {filtered.length} of {projects.length}
         </p>
       </div>

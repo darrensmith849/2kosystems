@@ -131,7 +131,7 @@ export default function AssetLinksClient({
           <button
             type="submit"
             disabled={busy !== null || !chosenRef}
-            className="rounded-full bg-[#0f7b3a] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#B8C4C8] hover:text-black disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            className="rounded-full bg-[#0f7b3a] px-5 py-2.5 text-sm font-semibold text-zinc-900 dark:text-white hover:bg-[#B8C4C8] hover:text-black disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
             {busy === 'add' ? 'Linking…' : 'Add link'}
           </button>
@@ -162,7 +162,7 @@ export default function AssetLinksClient({
                     type="button"
                     onClick={() => handleDelete(l.id)}
                     disabled={busy === l.id}
-                    className="shrink-0 text-[11px] text-rose-300 hover:text-rose-200 border border-rose-400/30 hover:border-rose-400/50 rounded-full px-3 py-1 disabled:opacity-40 disabled:cursor-not-allowed"
+                    className="shrink-0 text-[11px] text-rose-700 dark:text-rose-300 hover:text-rose-200 border border-rose-400/30 hover:border-rose-400/50 rounded-full px-3 py-1 disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     {busy === l.id ? 'Removing…' : 'Unlink'}
                   </button>

@@ -54,7 +54,7 @@ function renderInline(text: string, keyHint: number): ReactNode {
         <a
           key={`a-${keyHint}-${key++}`}
           href={url}
-          className="text-emerald-300 hover:text-emerald-200 underline underline-offset-2"
+          className="text-emerald-700 dark:text-emerald-300 hover:text-emerald-200 underline underline-offset-2"
         >
           {label}
         </a>,
@@ -81,7 +81,7 @@ function renderInline(text: string, keyHint: number): ReactNode {
       nodes.push(
         <code
           key={`c-${keyHint}-${key++}`}
-          className="px-1 py-0.5 rounded bg-[#1c1c1e] text-[12px] font-mono text-emerald-300"
+          className="px-1 py-0.5 rounded bg-[#1c1c1e] text-[12px] font-mono text-emerald-700 dark:text-emerald-300"
         >
           {first.match[1]}
         </code>,
@@ -165,7 +165,7 @@ export function ChatBubbles({
           return (
             <div key={`u-${idx}-${m.ts}`} className="flex justify-end">
               <div className="max-w-[85%] rounded-2xl bg-emerald-400/[0.10] border border-emerald-400/[0.20] px-4 py-3">
-                <p className="text-sm text-zinc-100 leading-relaxed whitespace-pre-wrap">
+                <p className="text-sm text-zinc-900 dark:text-zinc-100 leading-relaxed whitespace-pre-wrap">
                   {m.content}
                 </p>
               </div>
@@ -214,7 +214,7 @@ export function ChatBubbles({
                         type="button"
                         onClick={() => onFollowUpClick(f)}
                         disabled={busy}
-                        className="rounded-full border border-white/[0.08] hover:border-white/[0.12] hover:bg-white/[0.04] px-3 py-1 text-xs text-zinc-300 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                        className="rounded-full border border-white/[0.08] hover:border-white/[0.12] hover:bg-white/[0.04] px-3 py-1 text-xs text-zinc-700 dark:text-zinc-300 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                       >
                         {f}
                       </button>
@@ -233,7 +233,7 @@ export function ChatBubbles({
             2KO Ops Assistant
           </p>
           <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] px-4 py-2.5">
-            <p className="text-xs text-zinc-400 flex items-center gap-2">
+            <p className="text-xs text-zinc-600 dark:text-zinc-400 flex items-center gap-2">
               <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
               {busyLabel}
             </p>

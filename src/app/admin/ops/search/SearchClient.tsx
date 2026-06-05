@@ -141,7 +141,7 @@ function highlight(text: string, tokens: string[]): React.ReactNode {
   return parts.map((part, i) => {
     if (i % 2 === 1) {
       return (
-        <span key={i} className="text-emerald-300 bg-emerald-400/[0.08] rounded px-0.5">
+        <span key={i} className="text-emerald-700 dark:text-emerald-300 bg-emerald-400/[0.08] rounded px-0.5">
           {part}
         </span>
       );
@@ -175,10 +175,10 @@ function MultiSelect<T extends string>({
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex items-center gap-2 rounded-lg border border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04] px-3 py-2 text-xs text-zinc-100 transition-colors min-w-[160px]"
+        className="flex items-center gap-2 rounded-lg border border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04] px-3 py-2 text-xs text-zinc-900 dark:text-zinc-100 transition-colors min-w-[160px]"
       >
         <span className="text-xs text-zinc-500">{label}:</span>
-        <span className="text-sm text-zinc-100 truncate">{summary}</span>
+        <span className="text-sm text-zinc-900 dark:text-zinc-100 truncate">{summary}</span>
       </button>
       {open && (
         <>
@@ -196,7 +196,7 @@ function MultiSelect<T extends string>({
               return (
                 <label
                   key={opt}
-                  className="flex items-center gap-2 px-2 py-1 text-xs text-zinc-200 hover:bg-white/[0.04] rounded cursor-pointer"
+                  className="flex items-center gap-2 px-2 py-1 text-xs text-zinc-800 dark:text-zinc-200 hover:bg-white/[0.04] rounded cursor-pointer"
                 >
                   <input
                     type="checkbox"
@@ -382,7 +382,7 @@ export default function SearchClient({ initialItems }: { initialItems: IndexItem
               value={filters.q}
               onChange={(e) => setFilters((p) => ({ ...p, q: e.target.value }))}
               placeholder="Search clients, assets, repos, renewals, incidents, decisions, services…"
-              className="w-full rounded-lg border border-white/[0.06] bg-white/[0.02] px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 focus:border-emerald-400/40 focus:bg-white/[0.04] focus:outline-none transition-colors"
+              className="w-full rounded-lg border border-white/[0.06] bg-white/[0.02] px-4 py-3 text-sm text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-500 focus:border-emerald-400/40 focus:bg-white/[0.04] focus:outline-none transition-colors"
             />
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -394,7 +394,7 @@ export default function SearchClient({ initialItems }: { initialItems: IndexItem
                 key={ex}
                 type="button"
                 onClick={() => applyExample(ex)}
-                className="rounded-full border border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.06] hover:border-white/[0.12] px-2.5 py-1 text-xs text-zinc-400 hover:text-zinc-100 transition-colors"
+                className="rounded-full border border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.06] hover:border-white/[0.12] px-2.5 py-1 text-xs text-zinc-600 dark:text-zinc-400 hover:text-zinc-100 transition-colors"
               >
                 {ex}
               </button>
@@ -403,11 +403,11 @@ export default function SearchClient({ initialItems }: { initialItems: IndexItem
               type="button"
               onClick={() => setShowAdvancedFilters((v) => !v)}
               aria-expanded={advancedOpen}
-              className="ml-auto rounded-md border border-white/[0.06] hover:bg-white/[0.04] hover:border-white/[0.12] px-3 py-1 text-xs text-zinc-400 hover:text-zinc-100 transition-colors"
+              className="ml-auto rounded-md border border-white/[0.06] hover:bg-white/[0.04] hover:border-white/[0.12] px-3 py-1 text-xs text-zinc-600 dark:text-zinc-400 hover:text-zinc-100 transition-colors"
             >
               {advancedOpen ? 'Hide filters' : 'More filters'}
               {advancedActive && (
-                <span className="ml-1.5 text-emerald-300">
+                <span className="ml-1.5 text-emerald-700 dark:text-emerald-300">
                   · {filters.types.length + filters.sources.length + filters.blockedBy.length}
                 </span>
               )}
@@ -452,7 +452,7 @@ export default function SearchClient({ initialItems }: { initialItems: IndexItem
                   type="button"
                   disabled={!hasActiveFilters}
                   onClick={() => setShowSaveDialog(true)}
-                  className="rounded-md border border-white/[0.06] hover:bg-white/[0.04] hover:border-white/[0.12] disabled:opacity-40 disabled:hover:border-white/[0.06] disabled:cursor-not-allowed px-3 py-1 text-xs text-zinc-400 hover:text-zinc-100 transition-colors"
+                  className="rounded-md border border-white/[0.06] hover:bg-white/[0.04] hover:border-white/[0.12] disabled:opacity-40 disabled:hover:border-white/[0.06] disabled:cursor-not-allowed px-3 py-1 text-xs text-zinc-600 dark:text-zinc-400 hover:text-zinc-100 transition-colors"
                 >
                   Save current search
                 </button>
@@ -476,13 +476,13 @@ export default function SearchClient({ initialItems }: { initialItems: IndexItem
                       }}
                       autoFocus
                       placeholder="Name this search…"
-                      className="flex-1 min-w-[200px] rounded-lg border border-white/[0.06] bg-white/[0.02] px-3 py-1.5 text-xs text-zinc-100 placeholder:text-zinc-500 focus:border-emerald-400/30 focus:outline-none transition-colors"
+                      className="flex-1 min-w-[200px] rounded-lg border border-white/[0.06] bg-white/[0.02] px-3 py-1.5 text-xs text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-500 focus:border-emerald-400/30 focus:outline-none transition-colors"
                     />
                     <button
                       type="button"
                       onClick={handleSaveCurrent}
                       disabled={saveName.trim().length === 0}
-                      className="rounded-md border border-emerald-400/20 bg-emerald-400/[0.04] hover:border-emerald-400/40 px-3 py-1 text-xs font-medium text-emerald-300 hover:text-emerald-200 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                      className="rounded-md border border-emerald-400/20 bg-emerald-400/[0.04] hover:border-emerald-400/40 px-3 py-1 text-xs font-medium text-emerald-700 dark:text-emerald-300 hover:text-emerald-200 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                     >
                       Save
                     </button>
@@ -532,7 +532,7 @@ export default function SearchClient({ initialItems }: { initialItems: IndexItem
                     onClick={() => handleRestoreSaved(s)}
                     className="flex-1 min-w-0 text-left group"
                   >
-                    <p className="text-xs text-zinc-100 group-hover:text-emerald-300 transition-colors truncate">
+                    <p className="text-xs text-zinc-900 dark:text-zinc-100 group-hover:text-emerald-300 transition-colors truncate">
                       {s.name}
                     </p>
                     <p className="text-xs text-zinc-500 truncate">
@@ -568,7 +568,7 @@ export default function SearchClient({ initialItems }: { initialItems: IndexItem
         )
       ) : (
         <div className="space-y-3">
-          <p className="text-sm text-zinc-400">
+          <p className="text-sm text-zinc-600 dark:text-zinc-400">
             {hasQuery ? `Showing ${results.length} of ${totalAfterFilters} results` : `Showing ${results.length} of ${totalAfterFilters} indexed items`}
           </p>
           {results.map(({ item, reasons }) => {
@@ -620,12 +620,12 @@ function ResultCard({
           {item.url ? (
             <Link
               href={item.url}
-              className="text-sm font-medium text-zinc-100 hover:text-zinc-50 transition-colors break-words"
+              className="text-sm font-medium text-zinc-900 dark:text-zinc-100 hover:text-zinc-50 transition-colors break-words"
             >
               {highlight(item.title, tokens)}
             </Link>
           ) : (
-            <p className="text-sm font-medium text-zinc-100 break-words">
+            <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100 break-words">
               {highlight(item.title, tokens)}
             </p>
           )}
@@ -639,7 +639,7 @@ function ResultCard({
           {item.status ? <Badge text={item.status} tone="neutral" /> : null}
         </div>
       </div>
-      <p className="mt-2 text-xs text-zinc-400 leading-relaxed break-words line-clamp-2">
+      <p className="mt-2 text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed break-words line-clamp-2">
         {highlight(excerpt, tokens)}
       </p>
       {reasons.length > 0 && (
@@ -657,7 +657,7 @@ function ResultCard({
               {reasons.slice(0, 8).map((r, i) => (
                 <span
                   key={i}
-                  className="inline-block text-xs text-zinc-400 border border-white/[0.08] rounded-full px-1.5 py-0.5"
+                  className="inline-block text-xs text-zinc-600 dark:text-zinc-400 border border-white/[0.08] rounded-full px-1.5 py-0.5"
                 >
                   {r}
                 </span>

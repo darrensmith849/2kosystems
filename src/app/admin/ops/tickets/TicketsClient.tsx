@@ -33,8 +33,8 @@ function Chip({
       onClick={onClick}
       className={
         active
-          ? 'rounded-full border border-emerald-400/20 bg-emerald-400/[0.08] px-3 py-1 text-xs font-medium text-emerald-300 transition-colors'
-          : 'rounded-full border border-white/[0.08] bg-transparent px-3 py-1 text-xs font-medium text-zinc-400 hover:bg-white/[0.04] hover:border-white/[0.12] hover:text-zinc-100 transition-colors'
+          ? 'rounded-full border border-emerald-400/20 bg-emerald-400/[0.08] px-3 py-1 text-xs font-medium text-emerald-700 dark:text-emerald-300 transition-colors'
+          : 'rounded-full border border-white/[0.08] bg-transparent px-3 py-1 text-xs font-medium text-zinc-600 dark:text-zinc-400 hover:bg-white/[0.04] hover:border-white/[0.12] hover:text-zinc-100 transition-colors'
       }
     >
       {children}
@@ -131,7 +131,7 @@ export default function TicketsClient({
           <select
             value={kind}
             onChange={(e) => setKind(e.target.value as (typeof TICKET_KINDS)[number])}
-            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-100"
+            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-900 dark:text-zinc-100"
             disabled={busy}
           >
             {TICKET_KINDS.map((k) => (
@@ -143,13 +143,13 @@ export default function TicketsClient({
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Ticket title"
-            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-500 focus:border-white/[0.12] focus:outline-none lg:col-span-3"
+            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-500 focus:border-white/[0.12] focus:outline-none lg:col-span-3"
             disabled={busy}
           />
           <select
             value={priority}
             onChange={(e) => setPriority(e.target.value as (typeof PRIORITIES)[number])}
-            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-100"
+            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-900 dark:text-zinc-100"
             disabled={busy}
           >
             {PRIORITIES.map((p) => (
@@ -161,13 +161,13 @@ export default function TicketsClient({
             value={dueAt}
             onChange={(e) => setDueAt(e.target.value)}
             disabled={busy}
-            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-100"
+            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-900 dark:text-zinc-100"
             aria-label="Due date"
           />
           <select
             value={clientId}
             onChange={(e) => setClientId(e.target.value)}
-            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-100 lg:col-span-2"
+            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-900 dark:text-zinc-100 lg:col-span-2"
             disabled={busy}
           >
             <option value="">No client</option>
@@ -178,7 +178,7 @@ export default function TicketsClient({
           <select
             value={assetId}
             onChange={(e) => setAssetId(e.target.value)}
-            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-100 lg:col-span-2"
+            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-900 dark:text-zinc-100 lg:col-span-2"
             disabled={busy}
           >
             <option value="">No asset</option>
@@ -189,7 +189,7 @@ export default function TicketsClient({
           <select
             value={assigneeOperatorId}
             onChange={(e) => setAssigneeOperatorId(e.target.value)}
-            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-100 lg:col-span-2"
+            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-900 dark:text-zinc-100 lg:col-span-2"
             disabled={busy}
           >
             <option value="">Unassigned</option>
@@ -202,13 +202,13 @@ export default function TicketsClient({
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Description (optional)"
             rows={2}
-            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-500 focus:border-white/[0.12] focus:outline-none lg:col-span-4"
+            className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5 text-sm text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-500 focus:border-white/[0.12] focus:outline-none lg:col-span-4"
             disabled={busy}
           />
           <button
             type="submit"
             disabled={busy || !title.trim()}
-            className="rounded-full bg-[#0f7b3a] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#B8C4C8] hover:text-black disabled:opacity-40 disabled:cursor-not-allowed transition-colors lg:col-span-6"
+            className="rounded-full bg-[#0f7b3a] px-5 py-2.5 text-sm font-semibold text-zinc-900 dark:text-white hover:bg-[#B8C4C8] hover:text-black disabled:opacity-40 disabled:cursor-not-allowed transition-colors lg:col-span-6"
           >
             {busy ? 'Saving…' : 'Add ticket'}
           </button>
@@ -224,7 +224,7 @@ export default function TicketsClient({
             <select
               value={clientFilter}
               onChange={(e) => setClientFilter(e.target.value)}
-              className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3 py-1.5 text-xs text-zinc-100"
+              className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3 py-1.5 text-xs text-zinc-900 dark:text-zinc-100"
             >
               <option value="all">All clients</option>
               {clients.map((c) => (

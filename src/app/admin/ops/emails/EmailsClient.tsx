@@ -434,7 +434,7 @@ export default function EmailsClient({ snapshotRefs }: { snapshotRefs: SnapshotE
             type="button"
             onClick={handleClearAll}
             disabled={totalLocal === 0}
-            className="inline-flex items-center gap-2 rounded-md border border-rose-400/30 bg-rose-400/5 px-3 py-2 text-xs text-rose-200 hover:bg-rose-400/10 disabled:opacity-40 disabled:cursor-not-allowed"
+            className="inline-flex items-center gap-2 rounded-md border border-rose-400/30 bg-rose-400/5 px-3 py-2 text-xs text-rose-700 dark:text-rose-200 hover:bg-rose-400/10 disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <TrashIcon />
             Clear local refs
@@ -596,7 +596,7 @@ export default function EmailsClient({ snapshotRefs }: { snapshotRefs: SnapshotE
                 type="button"
                 onClick={saveForm}
                 disabled={!draft.subject.trim()}
-                className="inline-flex items-center gap-2 rounded-md border border-emerald-400/30 bg-emerald-400/10 px-3 py-2 text-xs text-emerald-200 hover:bg-emerald-400/20 disabled:opacity-40 disabled:cursor-not-allowed"
+                className="inline-flex items-center gap-2 rounded-md border border-emerald-400/30 bg-emerald-400/10 px-3 py-2 text-xs text-emerald-700 dark:text-emerald-200 hover:bg-emerald-400/20 disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 <SaveIcon />
                 Save reference
@@ -643,12 +643,12 @@ export default function EmailsClient({ snapshotRefs }: { snapshotRefs: SnapshotE
                     onClick={() => toggleCategory(cat)}
                     className="flex w-full items-center justify-between gap-2 px-3 py-2 text-left"
                   >
-                    <span className="flex items-center gap-2 text-sm font-medium text-zinc-100">
-                      <MailIcon className="h-4 w-4 shrink-0 text-zinc-400" />
+                    <span className="flex items-center gap-2 text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                      <MailIcon className="h-4 w-4 shrink-0 text-zinc-600 dark:text-zinc-400" />
                       {EMAIL_CATEGORY_LABEL[cat]}
                       <span className="text-xs text-zinc-500">({inCat.length})</span>
                     </span>
-                    <ChevronIcon open={!collapsed} className="h-4 w-4 text-zinc-400" />
+                    <ChevronIcon open={!collapsed} className="h-4 w-4 text-zinc-600 dark:text-zinc-400" />
                   </button>
                   {!collapsed && (
                     <ul className="space-y-2 px-3 pb-3">
@@ -698,7 +698,7 @@ export default function EmailsClient({ snapshotRefs }: { snapshotRefs: SnapshotE
                             <button
                               type="button"
                               onClick={() => handleDelete(r.id)}
-                              className="inline-flex items-center gap-1.5 rounded-md border border-rose-400/30 bg-rose-400/5 px-2 py-1 text-[11px] text-rose-200 hover:bg-rose-400/10"
+                              className="inline-flex items-center gap-1.5 rounded-md border border-rose-400/30 bg-rose-400/5 px-2 py-1 text-[11px] text-rose-700 dark:text-rose-200 hover:bg-rose-400/10"
                             >
                               <TrashIcon className="h-3.5 w-3.5 shrink-0" />
                               Delete
@@ -732,8 +732,8 @@ export default function EmailsClient({ snapshotRefs }: { snapshotRefs: SnapshotE
                 </div>
                 <ul className="space-y-1">
                   {inCat.map((e) => (
-                    <li key={e.id} className="text-xs text-zinc-400">
-                      <span className="text-zinc-100">{e.subject}</span>
+                    <li key={e.id} className="text-xs text-zinc-600 dark:text-zinc-400">
+                      <span className="text-zinc-900 dark:text-zinc-100">{e.subject}</span>
                       {e.fromName && <> — from {e.fromName}</>}
                     </li>
                   ))}
@@ -762,7 +762,7 @@ export default function EmailsClient({ snapshotRefs }: { snapshotRefs: SnapshotE
 function FormField({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="block">
-      <span className="mb-1 block text-xs font-medium text-zinc-400">
+      <span className="mb-1 block text-xs font-medium text-zinc-600 dark:text-zinc-400">
         {label}
       </span>
       {children}

@@ -355,7 +355,7 @@ export default async function OpsOverviewPage() {
               {topClients.map((c) => (
                 <li key={c.id} className="flex items-center gap-2">
                   <StatusDot tone="neutral" size="sm" />
-                  <span className="text-sm text-zinc-100">{c.name}</span>
+                  <span className="text-sm text-zinc-900 dark:text-zinc-100">{c.name}</span>
                 </li>
               ))}
             </ul>
@@ -395,7 +395,7 @@ export default async function OpsOverviewPage() {
           title="Email references"
           action={<CardLink href="/admin/ops/emails" label="Open" />}
         >
-          <p className="text-sm text-zinc-200">
+          <p className="text-sm text-zinc-800 dark:text-zinc-200">
             Service emails and client linkage planned.
           </p>
           <p className="mt-1 text-xs text-zinc-500">
@@ -413,7 +413,7 @@ export default async function OpsOverviewPage() {
             </p>
           }
         >
-          <p className="text-sm text-zinc-200">
+          <p className="text-sm text-zinc-800 dark:text-zinc-200">
             {servicesActive} active · {servicesNeedsReview} needs review
           </p>
         </GlassCard>
@@ -423,10 +423,10 @@ export default async function OpsOverviewPage() {
           title="Tickets and renewals"
           action={<CardLink href="/admin/ops/tickets" label="Open" />}
         >
-          <p className="text-sm text-zinc-200">
+          <p className="text-sm text-zinc-800 dark:text-zinc-200">
             {summary.totals.openTickets} open tickets
           </p>
-          <p className="mt-1 text-sm text-zinc-200">
+          <p className="mt-1 text-sm text-zinc-800 dark:text-zinc-200">
             {urgentRenewals} urgent renewals
           </p>
         </GlassCard>
@@ -456,7 +456,7 @@ export default async function OpsOverviewPage() {
           title="Audit summary"
           action={<CardLink href="/admin/ops/audits" label="Open" />}
         >
-          <p className="text-sm text-zinc-200">
+          <p className="text-sm text-zinc-800 dark:text-zinc-200">
             {auditUrgentCount} high or critical findings
           </p>
           {auditUrgentTop.length > 0 && (
@@ -464,7 +464,7 @@ export default async function OpsOverviewPage() {
               {auditUrgentTop.map((f) => (
                 <li key={f.id} className="flex items-start gap-2">
                   <StatusDot tone="risk" size="sm" />
-                  <span className="text-xs text-zinc-300 leading-snug">{f.title}</span>
+                  <span className="text-xs text-zinc-700 dark:text-zinc-300 leading-snug">{f.title}</span>
                 </li>
               ))}
             </ul>
@@ -486,7 +486,7 @@ export default async function OpsOverviewPage() {
               {pendingSteps.map((s) => (
                 <li key={s.id} className="flex items-start gap-2">
                   <StatusDot tone="warn" size="sm" />
-                  <span className="text-sm text-zinc-200 leading-snug">{s.label}</span>
+                  <span className="text-sm text-zinc-800 dark:text-zinc-200 leading-snug">{s.label}</span>
                 </li>
               ))}
             </ul>
@@ -502,7 +502,7 @@ export default async function OpsOverviewPage() {
             {healthRows.map((r) => (
               <li key={r.label} className="flex items-center gap-2">
                 <StatusDot tone={r.tone} size="sm" />
-                <span className="text-sm text-zinc-200">{r.label}</span>
+                <span className="text-sm text-zinc-800 dark:text-zinc-200">{r.label}</span>
               </li>
             ))}
           </ul>
@@ -530,7 +530,7 @@ export default async function OpsOverviewPage() {
 
 function PreviewPill() {
   return (
-    <span className="inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/[0.06] px-3 py-1 text-xs font-medium text-emerald-200">
+    <span className="inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/[0.06] px-3 py-1 text-xs font-medium text-emerald-700 dark:text-emerald-200">
       <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" aria-hidden="true" />
       Preview mode
     </span>
@@ -584,12 +584,12 @@ function MetricCard({
 }) {
   const valueColor =
     tone === 'good'
-      ? 'text-emerald-200'
+      ? 'text-emerald-700 dark:text-emerald-200'
       : tone === 'warn'
-        ? 'text-amber-200'
+        ? 'text-amber-700 dark:text-amber-200'
         : tone === 'risk'
-          ? 'text-rose-200'
-          : 'text-white';
+          ? 'text-rose-700 dark:text-rose-200'
+          : 'text-zinc-900 dark:text-white';
   const sparklineTone =
     tone === 'good' ? 'good' : tone === 'warn' ? 'warn' : tone === 'risk' ? 'risk' : 'good';
   return (
@@ -651,7 +651,7 @@ function GlassCard({
       <div className="flex items-center justify-between gap-3 px-5 pt-5 pb-3">
         <div className="flex items-center gap-2 min-w-0">
           {Icon && <Icon className="h-4 w-4 text-zinc-500 dark:text-zinc-400 shrink-0" />}
-          <p className="text-sm font-medium text-zinc-100 truncate">{title}</p>
+          <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100 truncate">{title}</p>
         </div>
         {action && <div className="shrink-0">{action}</div>}
       </div>
