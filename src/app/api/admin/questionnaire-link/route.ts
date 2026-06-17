@@ -36,7 +36,6 @@ export async function POST(request: NextRequest) {
       clientName: parsed.data.clientName.trim(),
       priceAmount: parsed.data.priceAmount.toFixed(2),
       currency: parsed.data.currency.trim().toUpperCase(),
-      paymentTerms: '50% upfront, 50% on completion',
       expiresInDays: parsed.data.expiresInDays,
     });
   } catch {

@@ -64,6 +64,7 @@ export default function QuestionnaireForm({
   const [notes, setNotes] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<'cash' | 'eft'>('cash');
   const [signedName, setSignedName] = useState('');
+  const [idNumber, setIdNumber] = useState('');
   const [terms, setTerms] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
 
@@ -140,6 +141,7 @@ export default function QuestionnaireForm({
       paymentMethod,
       termsAccepted: terms,
       signedName: signedName.trim(),
+      idNumber: idNumber.trim(),
       logoBase64: logo?.base64 ?? '',
       logoContentType: logo?.contentType ?? '',
     };
@@ -379,14 +381,24 @@ export default function QuestionnaireForm({
             ))}
           </div>
         )}
-        <Field label="Type your full name to sign" required>
-          <input
-            className={inputClass}
-            value={signedName}
-            onChange={(e) => setSignedName(e.target.value)}
-            placeholder="Full legal name"
-          />
-        </Field>
+        <Grid>
+          <Field label="Type your full name to sign" required>
+            <input
+              className={inputClass}
+              value={signedName}
+              onChange={(e) => setSignedName(e.target.value)}
+              placeholder="Full legal name"
+            />
+          </Field>
+          <Field label="ID / passport number">
+            <input
+              className={inputClass}
+              value={idNumber}
+              onChange={(e) => setIdNumber(e.target.value)}
+              placeholder="ID or passport number"
+            />
+          </Field>
+        </Grid>
         <label className="flex items-start gap-3 text-sm text-[var(--color-fg-muted)]">
           <input
             type="checkbox"

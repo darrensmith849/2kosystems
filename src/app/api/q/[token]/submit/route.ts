@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { isQuestionnaireUnlocked } from '@/lib/questionnaire-auth';
 import { verifyQuestionnaireLink } from '@/lib/questionnaire-link';
 import { generateSlaPdf } from '@/lib/sla/generate';
+import { DEFAULT_PAYMENT_TERMS } from '@/lib/sla/template';
 import { sendSlaEmail } from '@/lib/brevo';
 
 export const runtime = 'nodejs';
@@ -26,6 +27,7 @@ const SubmitSchema = z.object({
   paymentMethod: z.enum(['cash', 'eft']),
   termsAccepted: z.literal(true),
   signedName: z.string().min(1).max(200),
+  idNumber: z.string().max(60).optional().default(''),
   logoBase64: z.string().max(4_000_000).optional().default(''),
   logoContentType: z.string().max(100).optional().default(''),
 });
@@ -103,10 +105,11 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       offering: offeringSummary || null,
       siteGoals: d.siteGoals.trim() || null,
       priceFormatted,
-      paymentTerms: link.paymentTerms,
+      paymentTerms: DEFAULT_PAYMENT_TERMS,
       paymentMethodLabel,
       agreementDate: signedAt.toLocaleDateString('en-ZA', { day: '2-digit', month: 'long', year: 'numeric' }),
       signedName: d.signedName.trim(),
+      signedIdNumber: d.idNumber.trim() || null,
       signedAtText: `Signed electronically on ${signedAt.toLocaleString('en-ZA')}`,
       signedIp,
       logo:
@@ -134,7 +137,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       slaPdfBase64: pdfBase64,
       slaFileName: fileName,
       priceFormatted,
-      paymentTerms: link.paymentTerms,
+      paymentTerms: DEFAULT_PAYMENT_TERMS,
       paymentMethodLabel,
     });
     if (!result.sent && result.reason && result.reason !== 'dryrun') {

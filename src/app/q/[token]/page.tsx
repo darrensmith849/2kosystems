@@ -1,5 +1,6 @@
 import { isQuestionnaireUnlocked } from '@/lib/questionnaire-auth';
 import { verifyQuestionnaireLink } from '@/lib/questionnaire-link';
+import { DEFAULT_PAYMENT_TERMS } from '@/lib/sla/template';
 import QuestionnaireGate from './QuestionnaireGate';
 import QuestionnaireForm from './QuestionnaireForm';
 
@@ -49,7 +50,7 @@ export default async function QuestionnaireTokenPage({
       clientName={link.clientName}
       priceAmount={link.priceAmount}
       currency={link.currency}
-      paymentTerms={link.paymentTerms}
+      paymentTerms={DEFAULT_PAYMENT_TERMS}
     />
   );
 }

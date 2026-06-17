@@ -12,6 +12,7 @@ export type SlaInput = {
   paymentMethodLabel: string;
   agreementDate: string;
   signedName: string;
+  signedIdNumber?: string | null;
   signedAtText: string;
   signedIp?: string | null;
   logo?: { bytes: Uint8Array; contentType: string } | null;
@@ -184,6 +185,9 @@ export async function generateSlaPdf(input: SlaInput): Promise<Uint8Array> {
   divider();
   heading('Signed');
   paragraph(`Signed electronically by ${input.signedName}, on behalf of ${input.companyName}.`, { size: 10 });
+  if (input.signedIdNumber) {
+    paragraph(`ID / passport number: ${input.signedIdNumber}`, { size: 9.5, color: MUTED });
+  }
   paragraph(`${input.signedAtText}${input.signedIp ? ` · IP ${input.signedIp}` : ''}`, { size: 8.5, color: MUTED });
   gap(8);
   paragraph(`Accepted by ${COMPANY_LEGAL_NAME}.`, { size: 10 });
