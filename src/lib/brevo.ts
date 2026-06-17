@@ -204,25 +204,37 @@ export type SlaEmailInput = {
   slaFileName: string;
   briefPdfBase64?: string;
   briefFileName?: string;
+  logoBase64?: string;
+  logoFileName?: string;
   priceFormatted: string;
   paymentTerms: string;
   paymentMethodLabel: string;
 };
 
-// Emails the generated SLA to the client (primary recipient) with the internal
-// team cc'd. The PDF rides along as a base64 attachment. Returns a small status
-// object instead of throwing so the submit route can still report success when
-// the submission + PDF are saved but email delivery hiccups.
+const SIGNATURE_HTML = `
+  <div style="margin-top:28px;padding-top:8px;">
+    <a href="https://www.2kosystems.com" target="_blank" style="text-decoration:none;border:0;">
+      <img src="https://www.2kosystems.com/email/sig-daniel.jpg" alt="Daniel Jenkins — 2KO Systems" width="600" style="width:100%;max-width:600px;height:auto;display:block;border:0;border-radius:10px;margin-bottom:10px;" />
+    </a>
+    <a href="https://www.2kosystems.com" target="_blank" style="text-decoration:none;border:0;">
+      <img src="https://www.2kosystems.com/email/sig-darren.jpg" alt="Darren Smith — 2KO Systems" width="600" style="width:100%;max-width:600px;height:auto;display:block;border:0;border-radius:10px;" />
+    </a>
+  </div>`;
+
+// Sends TWO emails so each is clean:
+//   1. To the client (cc 2KO): a tidy message + ONLY the SLA PDF attached.
+//   2. To 2KO (the cc list): the Project Brief PDF + the client's logo file, so
+//      the team has the requirements + brand asset without cluttering the
+//      client's email. Returns a status object instead of throwing.
 export async function sendSlaEmail(input: SlaEmailInput): Promise<{ sent: boolean; reason?: string }> {
+  const cc = getSlaCcList();
+
   if (process.env.SLA_EMAIL_DRYRUN === "1" || process.env.SLA_EMAIL_DRYRUN === "true") {
-    const cc = getSlaCcList();
     console.info(
       "[sla-email] DRYRUN — skipping send.",
       JSON.stringify({
-        to: input.toEmail,
-        cc: cc.map((c) => c.email),
-        subject: `Your 2KO Systems Service Level Agreement — ${input.clientName}`,
-        attachments: [input.slaFileName, input.briefFileName].filter(Boolean),
+        clientEmail: { to: input.toEmail, cc: cc.map((c) => c.email), attachment: input.slaFileName },
+        internalEmail: { to: cc.map((c) => c.email), attachments: [input.briefFileName, input.logoFileName].filter(Boolean) },
       }),
     );
     return { sent: false, reason: "dryrun" };
@@ -232,20 +244,16 @@ export async function sendSlaEmail(input: SlaEmailInput): Promise<{ sent: boolea
     return { sent: false, reason: "Email is not configured on the server yet." };
   }
 
-  const cc = getSlaCcList();
-  const htmlContent = `
+  const sender = { email: BREVO_SENDER_EMAIL, name: BREVO_SENDER_NAME };
+
+  // 1) Client email — clean, SLA only.
+  const clientHtml = `
     <html>
       <body style="font-family:Arial,sans-serif;background:#f4f8f4;color:#111;margin:0;padding:24px;">
         <div style="max-width:680px;margin:0 auto;background:#ffffff;border-radius:16px;padding:32px;">
-          <p style="margin:0 0 8px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#16a34a;font-weight:bold;">
-            2KO Systems
-          </p>
-          <h1 style="margin:0 0 16px;font-size:22px;line-height:1.3;color:#0a3517;">
-            Your Service Level Agreement
-          </h1>
-          <p style="margin:0 0 16px;color:#111;line-height:1.7;">
-            Hi ${escapeHtml(input.toName || "there")},
-          </p>
+          <p style="margin:0 0 8px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#16a34a;font-weight:bold;">2KO Systems</p>
+          <h1 style="margin:0 0 16px;font-size:22px;line-height:1.3;color:#0a3517;">Your Service Level Agreement</h1>
+          <p style="margin:0 0 16px;color:#111;line-height:1.7;">Hi ${escapeHtml(input.toName || "there")},</p>
           <p style="margin:0 0 16px;color:#111;line-height:1.7;">
             Thank you for completing your onboarding questionnaire for <strong>${escapeHtml(input.clientName)}</strong>.
             Your Service Level Agreement is attached as a PDF for your records.
@@ -255,41 +263,58 @@ export async function sendSlaEmail(input: SlaEmailInput): Promise<{ sent: boolea
             <div style="margin:0 0 6px;"><strong>Payment terms:</strong> ${escapeHtml(input.paymentTerms)}</div>
             <div><strong>Payment method:</strong> ${escapeHtml(input.paymentMethodLabel)}</div>
           </div>
-          <p style="margin:0 0 16px;color:#111;line-height:1.7;">
-            A summary of the details you submitted is also attached as a project brief.
-          </p>
           <p style="margin:0;color:#111;line-height:1.7;">
             We'll be in touch shortly with the next steps. If anything looks off, just reply to this email.
           </p>
-          <div style="margin-top:28px;padding-top:8px;">
-            <a href="https://www.2kosystems.com" target="_blank" style="text-decoration:none;border:0;">
-              <img src="https://www.2kosystems.com/email/sig-daniel.jpg" alt="Daniel Jenkins — 2KO Systems" width="600" style="width:100%;max-width:600px;height:auto;display:block;border:0;border-radius:10px;margin-bottom:10px;" />
-            </a>
-            <a href="https://www.2kosystems.com" target="_blank" style="text-decoration:none;border:0;">
-              <img src="https://www.2kosystems.com/email/sig-darren.jpg" alt="Darren Smith — 2KO Systems" width="600" style="width:100%;max-width:600px;height:auto;display:block;border:0;border-radius:10px;" />
-            </a>
-          </div>
+          ${SIGNATURE_HTML}
         </div>
       </body>
     </html>
   `;
-
-  const attachment: { name: string; content: string }[] = [
-    { name: input.slaFileName, content: input.slaPdfBase64 },
-  ];
-  if (input.briefPdfBase64 && input.briefFileName) {
-    attachment.push({ name: input.briefFileName, content: input.briefPdfBase64 });
-  }
-
-  const body: Record<string, unknown> = {
-    sender: { email: BREVO_SENDER_EMAIL, name: BREVO_SENDER_NAME },
+  const clientBody: Record<string, unknown> = {
+    sender,
     to: [{ email: input.toEmail, name: input.toName || input.clientName }],
     subject: `Your 2KO Systems Service Level Agreement — ${input.clientName}`,
-    htmlContent,
-    attachment,
+    htmlContent: clientHtml,
+    attachment: [{ name: input.slaFileName, content: input.slaPdfBase64 }],
   };
-  if (cc.length > 0) body.cc = cc;
+  if (cc.length > 0) clientBody.cc = cc;
+  await brevoRequest("/smtp/email", clientBody);
 
-  await brevoRequest("/smtp/email", body);
+  // 2) Internal email to 2KO — Project Brief + the client's logo file.
+  if (cc.length > 0) {
+    const internalAttachments: { name: string; content: string }[] = [];
+    if (input.briefPdfBase64 && input.briefFileName) {
+      internalAttachments.push({ name: input.briefFileName, content: input.briefPdfBase64 });
+    }
+    if (input.logoBase64 && input.logoFileName) {
+      internalAttachments.push({ name: input.logoFileName, content: input.logoBase64 });
+    }
+    if (internalAttachments.length > 0) {
+      const internalHtml = `
+        <html>
+          <body style="font-family:Arial,sans-serif;color:#111;margin:0;padding:24px;">
+            <div style="max-width:680px;margin:0 auto;">
+              <h2 style="margin:0 0 12px;font-size:18px;color:#0a3517;">New onboarding submission — ${escapeHtml(input.clientName)}</h2>
+              <p style="margin:0 0 12px;line-height:1.7;">
+                The client just submitted their questionnaire. Attached: their <strong>Project Brief</strong>
+                (what they want built)${input.logoFileName ? " and their <strong>logo</strong> file" : ""}.
+                Their signed SLA is on the client email you're cc'd on.
+              </p>
+              <p style="margin:0;color:#555;">Fee: ${escapeHtml(input.priceFormatted)} · ${escapeHtml(input.paymentTerms)} · ${escapeHtml(input.paymentMethodLabel)}</p>
+            </div>
+          </body>
+        </html>
+      `;
+      await brevoRequest("/smtp/email", {
+        sender,
+        to: cc,
+        subject: `New onboarding — ${input.clientName} (brief + logo)`,
+        htmlContent: internalHtml,
+        attachment: internalAttachments,
+      });
+    }
+  }
+
   return { sent: true };
 }

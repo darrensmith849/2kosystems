@@ -187,6 +187,8 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       slaFileName: fileName,
       briefPdfBase64: briefBase64 ?? undefined,
       briefFileName: briefBase64 ? `2KO-Brief-${safeName}.pdf` : undefined,
+      logoBase64: logoBase64 ?? undefined,
+      logoFileName: logoBase64 ? `${safeName}-logo.${logoContentType === 'image/png' ? 'png' : 'jpg'}` : undefined,
       priceFormatted,
       paymentTerms: DEFAULT_PAYMENT_TERMS,
       paymentMethodLabel,
