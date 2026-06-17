@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { isQuestionnaireUnlocked } from '@/lib/questionnaire-auth';
 import { verifyQuestionnaireLink } from '@/lib/questionnaire-link';
 import { generateSlaPdf } from '@/lib/sla/generate';
+import { generateBriefPdf } from '@/lib/sla/brief';
 import { DEFAULT_PAYMENT_TERMS } from '@/lib/sla/template';
 import { sendSlaEmail } from '@/lib/brevo';
 
@@ -139,8 +140,43 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     );
   }
 
-  // Email the SLA to the client + internal cc. Non-fatal on failure — the
-  // client still gets the on-page download from the response below.
+  // Project brief PDF (the client's requirements + logo) — attached so 2KO can
+  // see what they want built. Non-fatal: a failure here doesn't block the SLA.
+  let briefBase64: string | null = null;
+  const logo =
+    logoBase64 && logoContentType ? { bytes: Buffer.from(logoBase64, 'base64'), contentType: logoContentType } : null;
+  try {
+    const briefBytes = await generateBriefPdf({
+      companyName: d.businessName.trim(),
+      contactName: d.contactName.trim(),
+      contactEmail: d.contactEmail.trim().toLowerCase(),
+      contactPhone: d.contactPhone.trim() || null,
+      physicalAddress: d.physicalAddress.trim() || null,
+      businessType: d.businessType.trim() || null,
+      offering: d.offering.trim() || null,
+      catalogueSize: d.catalogueSize.trim() || null,
+      businessAim: d.businessAim.trim() || null,
+      hasExistingWebsite: d.hasExistingWebsite,
+      existingWebsiteUrl: d.hasExistingWebsite ? d.existingWebsiteUrl.trim() || null : null,
+      siteGoals: d.siteGoals.trim() || null,
+      notes: d.notes.trim() || null,
+      priceFormatted,
+      paymentTerms: DEFAULT_PAYMENT_TERMS,
+      paymentMethodLabel,
+      startDate: formatDate(d.startDate),
+      finishDate: formatDate(d.finishDate),
+      signedName: d.signedName.trim(),
+      signedIdNumber: d.idNumber.trim() || null,
+      signedAtText: `Signed electronically on ${signedAt.toLocaleString('en-ZA')}`,
+      logo,
+    });
+    briefBase64 = Buffer.from(briefBytes).toString('base64');
+  } catch (err) {
+    console.error('[q/submit] brief generation failed', err);
+  }
+
+  // Email the SLA (+ brief) to the client + internal cc. Non-fatal on failure —
+  // the client still gets the on-page download from the response below.
   let warning: string | null = null;
   try {
     const result = await sendSlaEmail({
@@ -149,6 +185,8 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       clientName: d.businessName.trim(),
       slaPdfBase64: pdfBase64,
       slaFileName: fileName,
+      briefPdfBase64: briefBase64 ?? undefined,
+      briefFileName: briefBase64 ? `2KO-Brief-${safeName}.pdf` : undefined,
       priceFormatted,
       paymentTerms: DEFAULT_PAYMENT_TERMS,
       paymentMethodLabel,

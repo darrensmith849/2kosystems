@@ -221,7 +221,7 @@ export default function QuestionnaireForm({
       {/* Company */}
       <Section title="Your business">
         <Grid>
-          <Field label="Business / company name" required>
+          <Field label="Registered company name (exact legal name for the agreement)" required>
             <input className={inputClass} value={businessName} onChange={(e) => setBusinessName(e.target.value)} required />
           </Field>
           <Field label="Contact name" required>

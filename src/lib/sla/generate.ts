@@ -1,5 +1,5 @@
 import 'server-only';
-import { PDFDocument, StandardFonts, rgb, type PDFFont } from 'pdf-lib';
+import { PDFDocument, StandardFonts, rgb, PDFName, PDFString, type PDFFont } from 'pdf-lib';
 import { COMPANY_LEGAL_NAME, SLA_TITLE, SLA_CLAUSES, fillClause } from './template';
 
 export type SlaInput = {
@@ -141,6 +141,14 @@ export async function generateSlaPdf(input: SlaInput): Promise<Uint8Array> {
   y = headerBottom - 52;
   divider();
 
+  // ---- Summary of services ----
+  heading('Summary of services');
+  paragraph(
+    `Under this Agreement, ${COMPANY_LEGAL_NAME} ("the Developer") will design and build a website for ${input.companyName} ("the Client") as described in the Client's onboarding questionnaire. The total fee is ${input.priceFormatted}, payable ${input.paymentTerms.toLowerCase()}, via ${input.paymentMethodLabel}. This Agreement is for the website build only — what is and is not included is set out in the terms below.`,
+    { color: MUTED },
+  );
+  gap(6);
+
   // ---- Parties & date ----
   heading('Agreement');
   detailRow('Service provider', COMPANY_LEGAL_NAME);
@@ -198,5 +206,37 @@ export async function generateSlaPdf(input: SlaInput): Promise<Uint8Array> {
   gap(8);
   paragraph(`Accepted by ${COMPANY_LEGAL_NAME}.`, { size: 10 });
 
+  drawBrandFooter(pdf, font, bold);
   return pdf.save();
+}
+
+// 2KO Systems wordmark footer on every page.
+export function drawBrandFooter(
+  pdf: PDFDocument,
+  font: PDFFont,
+  bold: PDFFont,
+) {
+  const SITE_URL = 'https://www.2kosystems.com';
+  for (const p of pdf.getPages()) {
+    const { width } = p.getSize();
+    p.drawLine({ start: { x: MARGIN, y: 40 }, end: { x: width - MARGIN, y: 40 }, thickness: 0.5, color: LINE });
+    p.drawText('2KO', { x: MARGIN, y: 24, size: 11, font: bold, color: DEEP });
+    const w = bold.widthOfTextAtSize('2KO', 11);
+    p.drawText(' SYSTEMS', { x: MARGIN + w, y: 24, size: 11, font: bold, color: MUTED });
+    // Clickable link to the website, right-aligned.
+    const url = 'www.2kosystems.com';
+    const uw = font.widthOfTextAtSize(url, 8.5);
+    const ux = width - MARGIN - uw;
+    p.drawText(url, { x: ux, y: 25, size: 8.5, font, color: GREEN });
+    const linkRef = pdf.context.register(
+      pdf.context.obj({
+        Type: 'Annot',
+        Subtype: 'Link',
+        Rect: [ux, 21, ux + uw, 34],
+        Border: [0, 0, 0],
+        A: pdf.context.obj({ Type: 'Action', S: 'URI', URI: PDFString.of(SITE_URL) }),
+      }),
+    );
+    p.node.set(PDFName.of('Annots'), pdf.context.obj([linkRef]));
+  }
 }
