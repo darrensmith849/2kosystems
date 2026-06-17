@@ -46,6 +46,9 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const origin = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '') || new URL(request.url).origin;
+  // Trim whitespace/newlines — the configured NEXT_PUBLIC_SITE_URL has a
+  // trailing newline that would otherwise break the link.
+  const envOrigin = process.env.NEXT_PUBLIC_SITE_URL?.trim().replace(/\/+$/, '');
+  const origin = envOrigin || new URL(request.url).origin;
   return NextResponse.json({ link: `${origin}/q/${signed}`, token: signed });
 }
