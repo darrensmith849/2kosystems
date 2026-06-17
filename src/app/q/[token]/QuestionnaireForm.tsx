@@ -220,14 +220,21 @@ export default function QuestionnaireForm({
 
       {/* Company */}
       <Section title="Your business">
-        <Grid>
-          <Field label="Registered company name (exact legal name for the agreement)" required>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:items-end">
+          <label className="block">
+            <span className="mb-1.5 block text-[13px] font-medium text-[var(--color-fg)] sm:flex sm:min-h-[2.6rem] sm:items-start">
+              Registered company name (exact legal name for the agreement)
+              <span className="text-[var(--accent)]">&nbsp;*</span>
+            </span>
             <input className={inputClass} value={businessName} onChange={(e) => setBusinessName(e.target.value)} required />
-          </Field>
-          <Field label="Contact name" required>
+          </label>
+          <label className="block">
+            <span className="mb-1.5 block text-[13px] font-medium text-[var(--color-fg)] sm:flex sm:min-h-[2.6rem] sm:items-start">
+              Contact name<span className="text-[var(--accent)]">&nbsp;*</span>
+            </span>
             <input className={inputClass} value={contactName} onChange={(e) => setContactName(e.target.value)} required />
-          </Field>
-        </Grid>
+          </label>
+        </div>
         <Grid>
           <Field label="Email" required>
             <input
