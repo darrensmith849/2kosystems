@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { SLA_CLAUSES, fillClause } from '@/lib/sla/template';
+import { useEffect, useState } from 'react';
+import { SLA_CLAUSES, SLA_TITLE, fillClause } from '@/lib/sla/template';
 
 type Status = 'idle' | 'submitting' | 'success' | 'error';
 
@@ -54,6 +54,7 @@ export default function QuestionnaireForm({
   const [contactName, setContactName] = useState('');
   const [contactEmail, setContactEmail] = useState('');
   const [contactPhone, setContactPhone] = useState('');
+  const [physicalAddress, setPhysicalAddress] = useState('');
   const [hasWebsite, setHasWebsite] = useState<'yes' | 'no' | ''>('');
   const [websiteUrl, setWebsiteUrl] = useState('');
   const [businessAim, setBusinessAim] = useState('');
@@ -130,6 +131,7 @@ export default function QuestionnaireForm({
       contactName: contactName.trim(),
       contactEmail: contactEmail.trim().toLowerCase(),
       contactPhone: contactPhone.trim(),
+      physicalAddress: physicalAddress.trim(),
       hasExistingWebsite: hasWebsite === 'yes',
       existingWebsiteUrl: hasWebsite === 'yes' ? websiteUrl.trim() : '',
       businessAim: businessAim.trim(),
@@ -236,6 +238,15 @@ export default function QuestionnaireForm({
             <input type="tel" className={inputClass} value={contactPhone} onChange={(e) => setContactPhone(e.target.value)} />
           </Field>
         </Grid>
+        <Field label="Business / physical address">
+          <textarea
+            className={inputClass}
+            rows={2}
+            value={physicalAddress}
+            onChange={(e) => setPhysicalAddress(e.target.value)}
+            placeholder="Street, suburb, city, country"
+          />
+        </Field>
         <Field label="What does your business do? What's its main aim?">
           <textarea
             className={inputClass}
@@ -372,20 +383,13 @@ export default function QuestionnaireForm({
       <Section title="Agreement & signature">
         <button
           type="button"
-          onClick={() => setShowTerms((s) => !s)}
+          onClick={() => setShowTerms(true)}
           className="text-sm font-medium text-[var(--accent)] underline-offset-2 hover:underline"
         >
-          {showTerms ? 'Hide' : 'Read'} the Service Level Agreement terms
+          Read the full Service Level Agreement
         </button>
         {showTerms && (
-          <div className="max-h-64 overflow-y-auto rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] p-4 text-xs leading-relaxed text-[var(--color-fg-muted)]">
-            {SLA_CLAUSES.map((c) => (
-              <div key={c.title} className="mb-3 last:mb-0">
-                <p className="font-semibold text-[var(--color-fg)]">{c.title}</p>
-                <p className="mt-0.5">{fillClause(c.body, businessName || 'the client')}</p>
-              </div>
-            ))}
-          </div>
+          <SlaModal companyName={businessName || 'the client'} onClose={() => setShowTerms(false)} />
         )}
         <Grid>
           <Field label="Type your full name to sign" required>
@@ -485,5 +489,66 @@ function Radio({
       <input type="radio" name={name} checked={checked} onChange={onChange} className="h-4 w-4 accent-[var(--accent)]" />
       {label}
     </label>
+  );
+}
+
+function SlaModal({ companyName, onClose }: { companyName: string; onClose: () => void }) {
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    document.addEventListener('keydown', onKey);
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.body.style.overflow = '';
+    };
+  }, [onClose]);
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Service Level Agreement"
+      onClick={onClose}
+    >
+      <div
+        className="flex max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl bg-[var(--color-surface)] shadow-[var(--shadow-popover)]"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between border-b border-[var(--color-border)] px-6 py-4">
+          <h3 className="text-base font-semibold text-[var(--color-fg)]">{SLA_TITLE}</h3>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close"
+            className="rounded-full px-2 py-1 text-lg leading-none text-[var(--color-fg-muted)] transition-colors hover:bg-[var(--color-hover)]"
+          >
+            ✕
+          </button>
+        </div>
+        <div className="overflow-y-auto px-6 py-5 text-sm leading-relaxed text-[var(--color-fg-muted)]">
+          <p className="mb-4 text-[var(--color-fg-muted)]">
+            Please read this agreement. By signing below you confirm you agree to it.
+          </p>
+          {SLA_CLAUSES.map((c) => (
+            <div key={c.title} className="mb-4 last:mb-0">
+              <p className="font-semibold text-[var(--color-fg)]">{c.title}</p>
+              <p className="mt-1 whitespace-pre-line">{fillClause(c.body, companyName)}</p>
+            </div>
+          ))}
+        </div>
+        <div className="border-t border-[var(--color-border)] px-6 py-3 text-right">
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-full bg-[var(--accent)] px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-[var(--accent2)]"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }

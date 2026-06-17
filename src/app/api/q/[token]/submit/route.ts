@@ -16,6 +16,7 @@ const SubmitSchema = z.object({
   contactName: z.string().min(1).max(200),
   contactEmail: z.string().email().max(200),
   contactPhone: z.string().max(60).optional().default(''),
+  physicalAddress: z.string().max(500).optional().default(''),
   hasExistingWebsite: z.boolean().optional().default(false),
   existingWebsiteUrl: z.string().max(500).optional().default(''),
   businessAim: z.string().max(4000).optional().default(''),
@@ -101,6 +102,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   try {
     const pdfBytes = await generateSlaPdf({
       companyName: d.businessName.trim(),
+      clientAddress: d.physicalAddress.trim() || null,
       businessAim: d.businessAim.trim() || null,
       offering: offeringSummary || null,
       siteGoals: d.siteGoals.trim() || null,
