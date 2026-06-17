@@ -57,6 +57,9 @@ export default function QuestionnaireForm({
   const [hasWebsite, setHasWebsite] = useState<'yes' | 'no' | ''>('');
   const [websiteUrl, setWebsiteUrl] = useState('');
   const [businessAim, setBusinessAim] = useState('');
+  const [businessType, setBusinessType] = useState('');
+  const [offering, setOffering] = useState('');
+  const [catalogueSize, setCatalogueSize] = useState('');
   const [siteGoals, setSiteGoals] = useState('');
   const [notes, setNotes] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<'cash' | 'eft'>('cash');
@@ -129,6 +132,9 @@ export default function QuestionnaireForm({
       hasExistingWebsite: hasWebsite === 'yes',
       existingWebsiteUrl: hasWebsite === 'yes' ? websiteUrl.trim() : '',
       businessAim: businessAim.trim(),
+      businessType,
+      offering: offering.trim(),
+      catalogueSize,
       siteGoals: siteGoals.trim(),
       notes: notes.trim(),
       paymentMethod,
@@ -235,6 +241,39 @@ export default function QuestionnaireForm({
             value={businessAim}
             onChange={(e) => setBusinessAim(e.target.value)}
             placeholder="e.g. We're an estate agency helping buyers and sellers across Harare with residential and commercial property."
+          />
+        </Field>
+      </Section>
+
+      {/* What you offer */}
+      <Section title="What you sell or offer">
+        <Grid>
+          <Field label="What does your business mainly offer?">
+            <select className={inputClass} value={businessType} onChange={(e) => setBusinessType(e.target.value)}>
+              <option value="">Select…</option>
+              <option value="Products (physical goods)">Products (physical goods)</option>
+              <option value="Services">Services</option>
+              <option value="Both products and services">Both products and services</option>
+              <option value="Creative or artwork (art, design, media)">Creative / artwork (art, design, media)</option>
+              <option value="Other">Other</option>
+            </select>
+          </Field>
+          <Field label="Roughly how many products/services will the site show?">
+            <select className={inputClass} value={catalogueSize} onChange={(e) => setCatalogueSize(e.target.value)}>
+              <option value="">Select…</option>
+              <option value="Just a few (1–10)">Just a few (1–10)</option>
+              <option value="A medium range (10–50)">A medium range (10–50)</option>
+              <option value="A large catalogue (50+)">A large catalogue (50+)</option>
+              <option value="Not applicable / services only">Not applicable / services only</option>
+            </select>
+          </Field>
+        </Grid>
+        <Field label="In one line, what do you sell or provide?">
+          <input
+            className={inputClass}
+            value={offering}
+            onChange={(e) => setOffering(e.target.value)}
+            placeholder="e.g. Residential & commercial property sales and rentals."
           />
         </Field>
       </Section>

@@ -5,6 +5,7 @@ import { COMPANY_LEGAL_NAME, SLA_TITLE, SLA_CLAUSES, fillClause } from './templa
 export type SlaInput = {
   companyName: string;
   businessAim?: string | null;
+  offering?: string | null;
   siteGoals?: string | null;
   priceFormatted: string;
   paymentTerms: string;
@@ -144,11 +145,16 @@ export async function generateSlaPdf(input: SlaInput): Promise<Uint8Array> {
   gap(4);
 
   // ---- Project ----
-  if (input.businessAim || input.siteGoals) {
+  if (input.businessAim || input.offering || input.siteGoals) {
     heading('Project');
     if (input.businessAim) {
       paragraph('About the business', { f: bold, size: 9.5 });
       paragraph(input.businessAim, { color: MUTED });
+      gap(4);
+    }
+    if (input.offering) {
+      paragraph('What they sell / offer', { f: bold, size: 9.5 });
+      paragraph(input.offering, { color: MUTED });
       gap(4);
     }
     if (input.siteGoals) {

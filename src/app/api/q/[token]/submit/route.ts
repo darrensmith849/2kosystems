@@ -18,6 +18,9 @@ const SubmitSchema = z.object({
   hasExistingWebsite: z.boolean().optional().default(false),
   existingWebsiteUrl: z.string().max(500).optional().default(''),
   businessAim: z.string().max(4000).optional().default(''),
+  businessType: z.string().max(120).optional().default(''),
+  offering: z.string().max(600).optional().default(''),
+  catalogueSize: z.string().max(120).optional().default(''),
   siteGoals: z.string().max(4000).optional().default(''),
   notes: z.string().max(4000).optional().default(''),
   paymentMethod: z.enum(['cash', 'eft']),
@@ -84,11 +87,20 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   const safeName = d.businessName.trim().replace(/[^a-z0-9]+/gi, '-').replace(/^-+|-+$/g, '') || 'client';
   const fileName = `2KO-SLA-${safeName}.pdf`;
 
+  const offeringSummary = [
+    d.businessType.trim(),
+    d.offering.trim(),
+    d.catalogueSize.trim() ? `Catalogue size: ${d.catalogueSize.trim()}` : '',
+  ]
+    .filter((s) => s)
+    .join(' — ');
+
   let pdfBase64: string;
   try {
     const pdfBytes = await generateSlaPdf({
       companyName: d.businessName.trim(),
       businessAim: d.businessAim.trim() || null,
+      offering: offeringSummary || null,
       siteGoals: d.siteGoals.trim() || null,
       priceFormatted,
       paymentTerms: link.paymentTerms,
