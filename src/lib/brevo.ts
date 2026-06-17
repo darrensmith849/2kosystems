@@ -261,30 +261,11 @@ export async function sendSlaEmail(input: SlaEmailInput): Promise<{ sent: boolea
           <p style="margin:0;color:#111;line-height:1.7;">
             We'll be in touch shortly with the next steps. If anything looks off, just reply to this email.
           </p>
-          <div style="margin-top:28px;padding-top:20px;border-top:1px solid #e5e7eb;">
-            <p style="margin:0 0 4px;font-size:14px;letter-spacing:.1em;font-weight:bold;color:#0a3517;">
-              2KO<span style="color:#7d8489;"> SYSTEMS</span>
-            </p>
-            <p style="margin:0 0 16px;font-size:11px;color:#7d8489;">Custom Systems for Operational Businesses</p>
-            <table cellpadding="0" cellspacing="0" style="font-size:13px;color:#111;line-height:1.55;">
-              <tr>
-                <td style="padding:0 32px 12px 0;vertical-align:top;">
-                  <div style="font-weight:bold;color:#0a3517;">Daniel Jenkins</div>
-                  <div style="font-size:11px;color:#7d8489;margin-bottom:4px;">AI Engineer &nbsp;|&nbsp; Tech Platform Specialist</div>
-                  <div>+27 (84) 665 1423</div>
-                  <div><a href="mailto:daniel@2kosystems.com" style="color:#16a34a;text-decoration:none;">daniel@2kosystems.com</a></div>
-                </td>
-                <td style="padding:0 0 12px 0;vertical-align:top;">
-                  <div style="font-weight:bold;color:#0a3517;">Darren Smith</div>
-                  <div style="font-size:11px;color:#7d8489;margin-bottom:4px;">AI Engineer &nbsp;|&nbsp; Tech Platform Specialist</div>
-                  <div>+27 (76) 625 4910</div>
-                  <div><a href="mailto:darren@2kosystems.com" style="color:#16a34a;text-decoration:none;">darren@2kosystems.com</a></div>
-                </td>
-              </tr>
-            </table>
-            <p style="margin:14px 0 0;font-size:12px;">
-              <a href="https://www.2kosystems.com" style="color:#16a34a;text-decoration:none;">www.2kosystems.com</a>
-            </p>
+          <div style="margin-top:28px;padding-top:8px;">
+            <a href="https://www.2kosystems.com" target="_blank" style="text-decoration:none;border:0;">
+              <img src="https://www.2kosystems.com/email/sig-darren.jpg" alt="Darren Smith — 2KO Systems" width="600" style="width:100%;max-width:600px;height:auto;display:block;border:0;border-radius:10px;" />
+            </a>
+            <!-- Daniel's banner is added here once public/email/sig-daniel.jpg exists. -->
           </div>
         </div>
       </body>
