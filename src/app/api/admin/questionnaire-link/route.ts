@@ -1,12 +1,12 @@
 import 'server-only';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { cookies } from 'next/headers';
-import { verifyAdminSessionToken, ADMIN_COOKIE_NAME } from '@/lib/admin-auth';
+import { isQuestionnaireUnlocked } from '@/lib/questionnaire-auth';
 import { signQuestionnaireLink } from '@/lib/questionnaire-link';
 
-// Admin-only: signs a questionnaire link with the price baked in. Gated by the
-// shared admin session cookie (same one used by /admin/ops, /admin/agent).
+// Signs a questionnaire link with the price baked in. Gated by the same shared
+// questionnaire password (systems123!) as the client form, so there is one
+// password to remember.
 const Schema = z.object({
   clientName: z.string().min(1).max(300),
   priceAmount: z.coerce.number().nonnegative().max(1_000_000_000),
@@ -15,9 +15,7 @@ const Schema = z.object({
 });
 
 export async function POST(request: NextRequest) {
-  const cookieStore = await cookies();
-  const token = cookieStore.get(ADMIN_COOKIE_NAME)?.value;
-  if (!token || !verifyAdminSessionToken(token)) {
+  if (!(await isQuestionnaireUnlocked())) {
     return NextResponse.json({ error: 'Unauthorised' }, { status: 401 });
   }
 
