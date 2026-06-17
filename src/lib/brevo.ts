@@ -263,9 +263,11 @@ export async function sendSlaEmail(input: SlaEmailInput): Promise<{ sent: boolea
           </p>
           <div style="margin-top:28px;padding-top:8px;">
             <a href="https://www.2kosystems.com" target="_blank" style="text-decoration:none;border:0;">
+              <img src="https://www.2kosystems.com/email/sig-daniel.jpg" alt="Daniel Jenkins — 2KO Systems" width="600" style="width:100%;max-width:600px;height:auto;display:block;border:0;border-radius:10px;margin-bottom:10px;" />
+            </a>
+            <a href="https://www.2kosystems.com" target="_blank" style="text-decoration:none;border:0;">
               <img src="https://www.2kosystems.com/email/sig-darren.jpg" alt="Darren Smith — 2KO Systems" width="600" style="width:100%;max-width:600px;height:auto;display:block;border:0;border-radius:10px;" />
             </a>
-            <!-- Daniel's banner is added here once public/email/sig-daniel.jpg exists. -->
           </div>
         </div>
       </body>
