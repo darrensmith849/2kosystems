@@ -14,6 +14,23 @@ function formatMoney(amount: string, currency: string): string {
   return `${currency} ${n.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
 
+// Turns the base64 PDF returned by the submit route into a client-side download
+// (no server storage to fetch from).
+function downloadBase64Pdf(base64: string, fileName: string) {
+  const bin = atob(base64);
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  const blob = new Blob([bytes], { type: 'application/pdf' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = fileName;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
 export default function QuestionnaireForm({
   token,
   clientName,
@@ -30,6 +47,7 @@ export default function QuestionnaireForm({
   const [status, setStatus] = useState<Status>('idle');
   const [error, setError] = useState<string | null>(null);
   const [warning, setWarning] = useState<string | null>(null);
+  const [sla, setSla] = useState<{ base64: string; fileName: string } | null>(null);
 
   // Controlled fields
   const [businessName, setBusinessName] = useState(clientName);
@@ -127,12 +145,19 @@ export default function QuestionnaireForm({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-      const data = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string; warning?: string };
+      const data = (await res.json().catch(() => ({}))) as {
+        ok?: boolean;
+        error?: string;
+        warning?: string;
+        pdfBase64?: string;
+        fileName?: string;
+      };
       if (!res.ok || !data.ok) {
         setError(data.error || "Couldn't send that through — please try again.");
         setStatus('error');
         return;
       }
+      setSla(data.pdfBase64 ? { base64: data.pdfBase64, fileName: data.fileName ?? '2KO-SLA.pdf' } : null);
       setWarning(data.warning ?? null);
       setStatus('success');
     } catch {
@@ -155,12 +180,15 @@ export default function QuestionnaireForm({
               {warning}
             </p>
           )}
-          <a
-            href={`/api/q/${token}/sla`}
-            className="mt-6 inline-flex items-center justify-center rounded-full bg-[var(--accent)] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[var(--accent2)]"
-          >
-            Download your SLA (PDF)
-          </a>
+          {sla && (
+            <button
+              type="button"
+              onClick={() => downloadBase64Pdf(sla.base64, sla.fileName)}
+              className="mt-6 inline-flex items-center justify-center rounded-full bg-[var(--accent)] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[var(--accent2)]"
+            >
+              Download your SLA (PDF)
+            </button>
+          )}
         </div>
       </div>
     );

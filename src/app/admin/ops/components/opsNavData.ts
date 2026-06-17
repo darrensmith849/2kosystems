@@ -55,7 +55,6 @@ export const OPS_NAV_GROUPS: OpsNavGroup[] = [
       { href: '/admin/ops/emails', label: 'Emails', icon: 'Mail' },
       { href: '/admin/ops/clients', label: 'Clients', icon: 'Building' },
       { href: '/admin/ops/contacts', label: 'Contacts', icon: 'User' },
-      { href: '/admin/ops/questionnaires', label: 'Questionnaires', icon: 'Edit' },
       { href: '/admin/ops/assets', label: 'Assets', icon: 'Boxes' },
       { href: '/admin/ops/map', label: 'Map', icon: 'NetworkMap' },
     ],
