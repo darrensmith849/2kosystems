@@ -63,6 +63,8 @@ export default function QuestionnaireForm({
   const [catalogueSize, setCatalogueSize] = useState('');
   const [siteGoals, setSiteGoals] = useState('');
   const [notes, setNotes] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [finishDate, setFinishDate] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<'cash' | 'eft'>('cash');
   const [signedName, setSignedName] = useState('');
   const [idNumber, setIdNumber] = useState('');
@@ -140,6 +142,8 @@ export default function QuestionnaireForm({
       catalogueSize,
       siteGoals: siteGoals.trim(),
       notes: notes.trim(),
+      startDate,
+      finishDate,
       paymentMethod,
       termsAccepted: terms,
       signedName: signedName.trim(),
@@ -361,6 +365,28 @@ export default function QuestionnaireForm({
           </div>
           <p className="mt-1 text-xs text-[var(--color-fg-meta)]">Payment terms: {paymentTerms}.</p>
         </div>
+        <Grid>
+          <Field label="Preferred start date">
+            <input
+              type="date"
+              className={inputClass}
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+            />
+          </Field>
+          <Field label="Expected completion date">
+            <input
+              type="date"
+              className={inputClass}
+              value={finishDate}
+              onChange={(e) => setFinishDate(e.target.value)}
+            />
+          </Field>
+        </Grid>
+        <p className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] px-3 py-2 text-xs text-[var(--color-fg-muted)]">
+          Please note: your website is only published live once <strong>full payment</strong> is received. If the
+          balance isn&apos;t paid by the completion date, the site stays unpublished until it is.
+        </p>
         <Field label="How would you like to pay?">
           <div className="flex flex-col gap-2 pt-1 sm:flex-row sm:gap-4">
             <Radio name="payment" label="Cash" checked={paymentMethod === 'cash'} onChange={() => setPaymentMethod('cash')} />

@@ -3,14 +3,17 @@ import crypto from 'crypto';
 
 // Stateless, tamper-proof questionnaire links — no database.
 //
-// Format:  <name-slug>~<payloadB64>.<sig>
-//   e.g.   virgin-estate-agents~MTIwMHxVU0R8MTc4Njg3NA.Ab3Kf...
+// Format:  <name-slug>~<cents>.<currency>.<expDays>.<sig>
+//   e.g.   virgin-estate-agents~120000.USD.20620.Ab3xK9dQ1m
 //
 // The readable slug makes the link recognisable (and pre-fills the company
-// name on the form). The compact payload carries only price|currency|expiry,
-// HMAC-signed with QUESTIONNAIRE_LINK_SECRET (truncated to 128 bits) so the
-// client can't change the price. Payment terms are fixed server-side, so they
-// don't need to live in the link. Much shorter than encoding the whole record.
+// name). The price (in cents — it's already shown on the form, so not secret),
+// currency and day-granular expiry are plain and compact. A truncated HMAC
+// (QUESTIONNAIRE_LINK_SECRET) signs the lot so the client can't change the
+// price. Payment terms are fixed server-side. Kept deliberately short.
+
+const SIG_BYTES = 10; // 80-bit truncated HMAC — infeasible to forge, compact
+const DAY_MS = 24 * 60 * 60 * 1000;
 
 export type QuestionnaireLink = {
   clientName: string; // de-slugified from the path, used to pre-fill the form
@@ -41,13 +44,8 @@ function deslugify(slug: string): string {
     .join(' ');
 }
 
-function sign(slug: string, payloadB64: string, secret: string): string {
-  return crypto
-    .createHmac('sha256', secret)
-    .update(`${slug}.${payloadB64}`)
-    .digest()
-    .subarray(0, 16)
-    .toString('base64url');
+function sign(message: string, secret: string): string {
+  return crypto.createHmac('sha256', secret).update(message).digest().subarray(0, SIG_BYTES).toString('base64url');
 }
 
 export function signQuestionnaireLink(input: {
@@ -59,10 +57,11 @@ export function signQuestionnaireLink(input: {
   const secret = getSecret();
   if (!secret) throw new Error('QUESTIONNAIRE_LINK_SECRET is not configured');
   const slug = slugifyClientName(input.clientName);
-  const expSec = Math.floor((Date.now() + (input.expiresInDays ?? 60) * 24 * 60 * 60 * 1000) / 1000);
-  const payloadB64 = Buffer.from(`${input.priceAmount}|${input.currency}|${expSec}`).toString('base64url');
-  const sig = sign(slug, payloadB64, secret);
-  return `${slug}~${payloadB64}.${sig}`;
+  const cents = Math.round(parseFloat(input.priceAmount) * 100);
+  const currency = input.currency.toUpperCase();
+  const expDays = Math.floor((Date.now() + (input.expiresInDays ?? 60) * DAY_MS) / DAY_MS);
+  const message = `${slug}.${cents}.${currency}.${expDays}`;
+  return `${slug}~${cents}.${currency}.${expDays}.${sign(message, secret)}`;
 }
 
 export function verifyQuestionnaireLink(token: string): QuestionnaireLink | null {
@@ -72,18 +71,17 @@ export function verifyQuestionnaireLink(token: string): QuestionnaireLink | null
     const tilde = token.indexOf('~');
     if (tilde < 1) return null;
     const slug = token.slice(0, tilde);
-    const rest = token.slice(tilde + 1);
-    const dot = rest.lastIndexOf('.');
-    if (dot < 1) return null;
-    const payloadB64 = rest.slice(0, dot);
-    const sig = rest.slice(dot + 1);
-    const expected = sign(slug, payloadB64, secret);
+    const parts = token.slice(tilde + 1).split('.');
+    if (parts.length !== 4) return null;
+    const [centsStr, currency, expDaysStr, sig] = parts;
+    const expected = sign(`${slug}.${centsStr}.${currency}.${expDaysStr}`, secret);
     if (sig.length !== expected.length) return null;
     if (!crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(expected))) return null;
-    const [priceAmount, currency, expSecStr] = Buffer.from(payloadB64, 'base64url').toString('utf8').split('|');
-    const expSec = Number(expSecStr);
-    if (!priceAmount || !currency || !expSec || Date.now() > expSec * 1000) return null;
-    return { clientName: deslugify(slug), priceAmount, currency, exp: expSec * 1000 };
+    const cents = Number(centsStr);
+    const expDays = Number(expDaysStr);
+    if (!Number.isFinite(cents) || cents < 0 || !currency || !Number.isFinite(expDays)) return null;
+    if (Date.now() > expDays * DAY_MS) return null;
+    return { clientName: deslugify(slug), priceAmount: (cents / 100).toFixed(2), currency, exp: expDays * DAY_MS };
   } catch {
     return null;
   }

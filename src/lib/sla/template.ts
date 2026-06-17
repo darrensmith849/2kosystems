@@ -33,11 +33,13 @@ export const SLA_CLAUSES: SlaClause[] = [
   },
   {
     title: '4. Fees & payment',
-    body: 'The total fee for the project is as stated in this Agreement and is for the website build as scoped above. Payment is 50% upfront before work begins and 50% on completion, before final handover or go-live. Payment is made using the method selected by the Client. Fees are exclusive of any third-party costs listed in clause 3.',
+    body:
+      'The total fee for the project is as stated in this Agreement and is for the website build as scoped above. Payment is 50% upfront before work begins and 50% on completion. Payment is made using the method selected by the Client. Fees are exclusive of any third-party costs listed in clause 3.\n' +
+      'The website will NOT be published or made live until the full fee (both payments) has been received. If full payment is not completed by the expected completion date, the website will remain unpublished and will not go live until payment is made in full.',
   },
   {
     title: '5. Timeline',
-    body: 'Work begins once the upfront payment and the materials the Developer needs (logo, content and any access) have been received. Estimated timelines are confirmed in writing and depend on the Client supplying content, feedback and approvals promptly.',
+    body: 'The Client’s preferred start date and expected completion date are as captured in this questionnaire. These dates are indicative and depend on the upfront payment, the materials the Developer needs (logo, content and any access) being received, and the Client supplying feedback and approvals promptly. Estimated timelines are confirmed in writing.',
   },
   {
     title: '6. Client responsibilities',

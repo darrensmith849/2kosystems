@@ -5,6 +5,8 @@ import { COMPANY_LEGAL_NAME, SLA_TITLE, SLA_CLAUSES, fillClause } from './templa
 export type SlaInput = {
   companyName: string;
   clientAddress?: string | null;
+  startDate?: string | null;
+  finishDate?: string | null;
   businessAim?: string | null;
   offering?: string | null;
   siteGoals?: string | null;
@@ -145,6 +147,8 @@ export async function generateSlaPdf(input: SlaInput): Promise<Uint8Array> {
   detailRow('Client', input.companyName);
   if (input.clientAddress) detailRow('Client address', input.clientAddress.replace(/\n+/g, ', '));
   detailRow('Date', input.agreementDate);
+  if (input.startDate) detailRow('Preferred start', input.startDate);
+  if (input.finishDate) detailRow('Expected completion', input.finishDate);
   gap(4);
 
   // ---- Project ----

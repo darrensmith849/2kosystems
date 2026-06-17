@@ -25,6 +25,8 @@ const SubmitSchema = z.object({
   catalogueSize: z.string().max(120).optional().default(''),
   siteGoals: z.string().max(4000).optional().default(''),
   notes: z.string().max(4000).optional().default(''),
+  startDate: z.string().max(40).optional().default(''),
+  finishDate: z.string().max(40).optional().default(''),
   paymentMethod: z.enum(['cash', 'eft']),
   termsAccepted: z.literal(true),
   signedName: z.string().min(1).max(200),
@@ -37,6 +39,13 @@ function formatMoney(amount: string, currency: string): string {
   const n = Number(amount);
   if (Number.isNaN(n)) return `${currency} ${amount}`;
   return `${currency} ${n.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+}
+
+function formatDate(d: string): string | null {
+  if (!d) return null;
+  const dt = new Date(`${d}T00:00:00`);
+  if (Number.isNaN(dt.getTime())) return d;
+  return dt.toLocaleDateString('en-ZA', { day: '2-digit', month: 'long', year: 'numeric' });
 }
 
 function clientIp(request: NextRequest): string | null {
@@ -103,6 +112,8 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     const pdfBytes = await generateSlaPdf({
       companyName: d.businessName.trim(),
       clientAddress: d.physicalAddress.trim() || null,
+      startDate: formatDate(d.startDate),
+      finishDate: formatDate(d.finishDate),
       businessAim: d.businessAim.trim() || null,
       offering: offeringSummary || null,
       siteGoals: d.siteGoals.trim() || null,
