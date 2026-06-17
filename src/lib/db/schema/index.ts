@@ -7,3 +7,4 @@ export * from './sync';
 export * from './tickets';
 export * from './renewals';
 export * from './incidents';
+export * from './questionnaires';

@@ -184,3 +184,92 @@ export async function submitAuditEnquiry(payload: AuditPayload) {
   await sendInternalNotification(payload);
   await sendUserConfirmation(payload);
 }
+
+// Comma-separated internal recipients to cc on every SLA email. Left empty by
+// default so no real 2KO addresses are hardcoded — set SLA_CC_EMAILS in the
+// environment (e.g. "darren@2ko.co.za,peter777daniel@gmail.com").
+function getSlaCcList(): { email: string }[] {
+  return (process.env.SLA_CC_EMAILS ?? "")
+    .split(",")
+    .map((e) => e.trim())
+    .filter((e) => isValidEmail(e))
+    .map((email) => ({ email }));
+}
+
+export type SlaEmailInput = {
+  toEmail: string;
+  toName: string;
+  clientName: string;
+  slaPdfBase64: string;
+  slaFileName: string;
+  priceFormatted: string;
+  paymentTerms: string;
+  paymentMethodLabel: string;
+};
+
+// Emails the generated SLA to the client (primary recipient) with the internal
+// team cc'd. The PDF rides along as a base64 attachment. Returns a small status
+// object instead of throwing so the submit route can still report success when
+// the submission + PDF are saved but email delivery hiccups.
+export async function sendSlaEmail(input: SlaEmailInput): Promise<{ sent: boolean; reason?: string }> {
+  if (process.env.SLA_EMAIL_DRYRUN === "1" || process.env.SLA_EMAIL_DRYRUN === "true") {
+    const cc = getSlaCcList();
+    console.info(
+      "[sla-email] DRYRUN — skipping send.",
+      JSON.stringify({
+        to: input.toEmail,
+        cc: cc.map((c) => c.email),
+        subject: `Your 2KO Systems Service Level Agreement — ${input.clientName}`,
+        attachment: { name: input.slaFileName, base64Length: input.slaPdfBase64.length },
+      }),
+    );
+    return { sent: false, reason: "dryrun" };
+  }
+
+  if (!BREVO_API_KEY || !BREVO_SENDER_EMAIL) {
+    return { sent: false, reason: "Email is not configured on the server yet." };
+  }
+
+  const cc = getSlaCcList();
+  const htmlContent = `
+    <html>
+      <body style="font-family:Arial,sans-serif;background:#f4f8f4;color:#111;margin:0;padding:24px;">
+        <div style="max-width:680px;margin:0 auto;background:#ffffff;border-radius:16px;padding:32px;">
+          <p style="margin:0 0 8px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#16a34a;font-weight:bold;">
+            2KO Systems
+          </p>
+          <h1 style="margin:0 0 16px;font-size:22px;line-height:1.3;color:#0a3517;">
+            Your Service Level Agreement
+          </h1>
+          <p style="margin:0 0 16px;color:#111;line-height:1.7;">
+            Hi ${escapeHtml(input.toName || "there")},
+          </p>
+          <p style="margin:0 0 16px;color:#111;line-height:1.7;">
+            Thank you for completing your onboarding questionnaire for <strong>${escapeHtml(input.clientName)}</strong>.
+            Your Service Level Agreement is attached as a PDF for your records.
+          </p>
+          <div style="margin:0 0 16px;padding:16px 20px;border:1px solid #e5e7eb;border-radius:12px;background:#f9fcf9;">
+            <div style="margin:0 0 6px;"><strong>Project fee:</strong> ${escapeHtml(input.priceFormatted)}</div>
+            <div style="margin:0 0 6px;"><strong>Payment terms:</strong> ${escapeHtml(input.paymentTerms)}</div>
+            <div><strong>Payment method:</strong> ${escapeHtml(input.paymentMethodLabel)}</div>
+          </div>
+          <p style="margin:0;color:#111;line-height:1.7;">
+            We'll be in touch shortly with the next steps. If anything looks off, just reply to this email.
+          </p>
+        </div>
+      </body>
+    </html>
+  `;
+
+  const body: Record<string, unknown> = {
+    sender: { email: BREVO_SENDER_EMAIL, name: BREVO_SENDER_NAME },
+    to: [{ email: input.toEmail, name: input.toName || input.clientName }],
+    subject: `Your 2KO Systems Service Level Agreement — ${input.clientName}`,
+    htmlContent,
+    attachment: [{ name: input.slaFileName, content: input.slaPdfBase64 }],
+  };
+  if (cc.length > 0) body.cc = cc;
+
+  await brevoRequest("/smtp/email", body);
+  return { sent: true };
+}
