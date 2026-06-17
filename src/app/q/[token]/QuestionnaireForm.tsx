@@ -249,8 +249,11 @@ export default function QuestionnaireForm({
 
       {/* What you offer */}
       <Section title="What you sell or offer">
-        <Grid>
-          <Field label="What does your business mainly offer?">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:items-end">
+          <label className="block">
+            <span className="mb-1.5 block text-[13px] font-medium text-[var(--color-fg)] sm:flex sm:min-h-[2.6rem] sm:items-start">
+              What does your business mainly offer?
+            </span>
             <select className={inputClass} value={businessType} onChange={(e) => setBusinessType(e.target.value)}>
               <option value="">Select…</option>
               <option value="Products (physical goods)">Products (physical goods)</option>
@@ -259,8 +262,11 @@ export default function QuestionnaireForm({
               <option value="Creative or artwork (art, design, media)">Creative / artwork (art, design, media)</option>
               <option value="Other">Other</option>
             </select>
-          </Field>
-          <Field label="Roughly how many products/services will the site show?">
+          </label>
+          <label className="block">
+            <span className="mb-1.5 block text-[13px] font-medium text-[var(--color-fg)] sm:flex sm:min-h-[2.6rem] sm:items-start">
+              Roughly how many products/services will the site show?
+            </span>
             <select className={inputClass} value={catalogueSize} onChange={(e) => setCatalogueSize(e.target.value)}>
               <option value="">Select…</option>
               <option value="Just a few (1–10)">Just a few (1–10)</option>
@@ -268,8 +274,8 @@ export default function QuestionnaireForm({
               <option value="A large catalogue (50+)">A large catalogue (50+)</option>
               <option value="Not applicable / services only">Not applicable / services only</option>
             </select>
-          </Field>
-        </Grid>
+          </label>
+        </div>
         <Field label="In one line, what do you sell or provide?">
           <input
             className={inputClass}
