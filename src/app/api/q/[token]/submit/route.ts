@@ -7,6 +7,7 @@ import { generateSlaPdf } from '@/lib/sla/generate';
 import { generateBriefPdf } from '@/lib/sla/brief';
 import { DEFAULT_PAYMENT_TERMS } from '@/lib/sla/template';
 import { sendSlaEmail } from '@/lib/brevo';
+import { insertSubmission } from '@/lib/ops/submissions-service';
 
 export const runtime = 'nodejs';
 
@@ -178,6 +179,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   // Email the SLA (+ brief) to the client + internal cc. Non-fatal on failure —
   // the client still gets the on-page download from the response below.
   let warning: string | null = null;
+  let emailSent = false;
   try {
     const result = await sendSlaEmail({
       toEmail: d.contactEmail.trim().toLowerCase(),
@@ -193,12 +195,52 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       paymentTerms: DEFAULT_PAYMENT_TERMS,
       paymentMethodLabel,
     });
+    emailSent = result.sent;
     if (!result.sent && result.reason && result.reason !== 'dryrun') {
       warning = `${result.reason} You can still download your SLA below.`;
     }
   } catch (err) {
     console.error('[q/submit] SLA email failed', err);
     warning = "Your SLA is ready to download below, but the confirmation email didn't go through.";
+  }
+
+  // Store the submission for the private team dashboard — only when a database
+  // is connected (insertSubmission returns null otherwise). Never blocks the
+  // client: a storage failure is logged and ignored.
+  try {
+    await insertSubmission({
+      clientName: link.clientName,
+      priceAmount: link.priceAmount,
+      currency: link.currency,
+      paymentTerms: DEFAULT_PAYMENT_TERMS,
+      paymentMethod: d.paymentMethod,
+      businessName: d.businessName.trim(),
+      contactName: d.contactName.trim(),
+      contactEmail: d.contactEmail.trim().toLowerCase(),
+      contactPhone: d.contactPhone.trim() || null,
+      physicalAddress: d.physicalAddress.trim() || null,
+      businessType: d.businessType.trim() || null,
+      offering: d.offering.trim() || null,
+      catalogueSize: d.catalogueSize.trim() || null,
+      businessAim: d.businessAim.trim() || null,
+      hasExistingWebsite: d.hasExistingWebsite,
+      existingWebsiteUrl: d.hasExistingWebsite ? d.existingWebsiteUrl.trim() || null : null,
+      siteGoals: d.siteGoals.trim() || null,
+      notes: d.notes.trim() || null,
+      startDate: d.startDate.trim() || null,
+      finishDate: d.finishDate.trim() || null,
+      logoBase64,
+      logoContentType,
+      slaPdf: pdfBase64,
+      briefPdf: briefBase64,
+      signedName: d.signedName.trim(),
+      signedIdNumber: d.idNumber.trim() || null,
+      signedAt,
+      signedIp,
+      emailSent,
+    });
+  } catch (err) {
+    console.error('[q/submit] submission store failed', err);
   }
 
   return NextResponse.json({ ok: true, pdfBase64, fileName, warning: warning ?? undefined });

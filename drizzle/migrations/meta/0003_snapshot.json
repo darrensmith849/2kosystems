@@ -1,5 +1,5 @@
 {
-  "id": "11dc02fe-3cb3-40c4-85be-74a3df5fd8b5",
+  "id": "569d8e33-c49e-4860-ba44-af564ec13d9d",
   "prevId": "3c95940a-46a8-4a27-8b5a-b00107fd6204",
   "version": "7",
   "dialect": "postgresql",
@@ -2567,11 +2567,35 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "questionnaire_id": {
-          "name": "questionnaire_id",
-          "type": "uuid",
+        "client_name": {
+          "name": "client_name",
+          "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
+        },
+        "price_amount": {
+          "name": "price_amount",
+          "type": "numeric(12, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "currency": {
+          "name": "currency",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "payment_terms": {
+          "name": "payment_terms",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "payment_method": {
+          "name": "payment_method",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         },
         "business_name": {
           "name": "business_name",
@@ -2597,6 +2621,36 @@
           "primaryKey": false,
           "notNull": false
         },
+        "physical_address": {
+          "name": "physical_address",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "business_type": {
+          "name": "business_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "offering": {
+          "name": "offering",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "catalogue_size": {
+          "name": "catalogue_size",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "business_aim": {
+          "name": "business_aim",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "has_existing_website": {
           "name": "has_existing_website",
           "type": "boolean",
@@ -2605,12 +2659,6 @@
         },
         "existing_website_url": {
           "name": "existing_website_url",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "business_aim": {
-          "name": "business_aim",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -2627,6 +2675,18 @@
           "primaryKey": false,
           "notNull": false
         },
+        "start_date": {
+          "name": "start_date",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "finish_date": {
+          "name": "finish_date",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "logo_base64": {
           "name": "logo_base64",
           "type": "text",
@@ -2639,31 +2699,35 @@
           "primaryKey": false,
           "notNull": false
         },
-        "payment_method": {
-          "name": "payment_method",
+        "sla_pdf": {
+          "name": "sla_pdf",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
-        "terms_accepted": {
-          "name": "terms_accepted",
-          "type": "boolean",
+        "brief_pdf": {
+          "name": "brief_pdf",
+          "type": "text",
           "primaryKey": false,
-          "notNull": true,
-          "default": false
+          "notNull": false
         },
         "signed_name": {
           "name": "signed_name",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
+        },
+        "signed_id_number": {
+          "name": "signed_id_number",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         },
         "signed_at": {
           "name": "signed_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
+          "notNull": false
         },
         "signed_ip": {
           "name": "signed_ip",
@@ -2671,109 +2735,19 @@
           "primaryKey": false,
           "notNull": false
         },
-        "sla_pdf": {
-          "name": "sla_pdf",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "email_sent_at": {
-          "name": "email_sent_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp with time zone",
+        "email_sent": {
+          "name": "email_sent",
+          "type": "boolean",
           "primaryKey": false,
           "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "questionnaire_submissions_questionnaire_id_questionnaires_id_fk": {
-          "name": "questionnaire_submissions_questionnaire_id_questionnaires_id_fk",
-          "tableFrom": "questionnaire_submissions",
-          "tableTo": "questionnaires",
-          "columnsFrom": [
-            "questionnaire_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.questionnaires": {
-      "name": "questionnaires",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "token": {
-          "name": "token",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "client_name": {
-          "name": "client_name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "price_amount": {
-          "name": "price_amount",
-          "type": "numeric(12, 2)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "currency": {
-          "name": "currency",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'ZAR'"
-        },
-        "payment_terms": {
-          "name": "payment_terms",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'50% upfront, 50% on completion'"
+          "default": false
         },
         "status": {
           "name": "status",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
-          "default": "'sent'"
-        },
-        "created_by_operator_slug": {
-          "name": "created_by_operator_slug",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "expires_at": {
-          "name": "expires_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false
+          "default": "'submitted'"
         },
         "created_at": {
           "name": "created_at",
@@ -2781,33 +2755,12 @@
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "archived_at": {
-          "name": "archived_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false
         }
       },
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "questionnaires_token_unique": {
-          "name": "questionnaires_token_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "token"
-          ]
-        }
-      },
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
