@@ -54,12 +54,6 @@ export default function Header() {
 
         <div className="hidden items-center gap-3 md:flex">
           <Link
-            href="/get-started"
-            className="text-[14px] tracking-[-0.005em] text-[var(--color-fg)]/80 transition-colors hover:text-[var(--color-fg)]"
-          >
-            Sign in
-          </Link>
-          <Link
             href="/contact"
             className="inline-flex items-center justify-center rounded-full bg-[var(--accent)] px-5 py-2.5 text-[13px] font-semibold tracking-[-0.005em] text-white shadow-[0_8px_20px_-10px_rgba(22,163,74,0.6)] transition-all duration-200 hover:bg-[var(--accent2)] active:scale-[0.98]"
           >
