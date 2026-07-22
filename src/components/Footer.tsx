@@ -83,10 +83,15 @@ export default function Footer() {
               Custom operational systems and intelligent automation for
               established businesses across South Africa.
             </p>
-            <span className="mt-6 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/[0.06] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[var(--tracking-eyebrow)] text-white/85">
+            <a
+              href="https://www.2ko.co.za"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-6 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/[0.06] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[var(--tracking-eyebrow)] text-white/85 transition-colors hover:border-white/40 hover:bg-white/[0.12] hover:text-white"
+            >
               <span className="h-1.5 w-1.5 rounded-full bg-[var(--accent)]" />
               Part of the 2KO Group
-            </span>
+            </a>
           </div>
 
           {/* ---------- Site column ---------- */}
