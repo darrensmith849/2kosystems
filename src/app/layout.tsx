@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "2KO Systems" }],
   creator: "2KO Systems",
-  metadataBase: new URL("https://2kosystems.vercel.app"),
+  metadataBase: new URL("https://www.2kosystems.com"),
   openGraph: {
     type: "website",
     locale: "en_ZA",
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     title: "2KO Systems — Custom Operational Systems & Intelligent Automation",
     description:
       "Custom operational systems for established businesses. Workflow automation, approvals, dashboards, portals, and embedded AI.",
-    url: "https://2kosystems.vercel.app",
+    url: "https://www.2kosystems.com",
   },
   twitter: {
     card: "summary_large_image",
@@ -63,7 +63,7 @@ const jsonLd = {
   name: "2KO Systems",
   description:
     "Custom operational systems and intelligent automation for established businesses across Africa.",
-  url: "https://2kosystems.vercel.app",
+  url: "https://www.2kosystems.com",
   parentOrganization: {
     "@type": "Organization",
     name: "2KO Group",
