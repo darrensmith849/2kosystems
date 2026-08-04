@@ -8,6 +8,7 @@ export type ChatEvent =
   | "chat_opened"
   | "chat_closed"
   | "quick_reply_clicked"
+  | "start_menu_reopened"
   | "lead_details_submitted"
   | "audit_intent_detected"
   | "human_handoff_requested"

@@ -239,8 +239,37 @@ export default function ChatPanel() {
             {state.isSending && <TypingBubble />}
           </div>
 
-          {showStartMenu && (
+          {showStartMenu ? (
             <QuickReplies onSelect={handleQuickReply} disabled={state.isSending} />
+          ) : (
+            !capReached && (
+              <div className="px-4 pt-3 pb-1">
+                <button
+                  type="button"
+                  onClick={() => {
+                    trackChatEvent("start_menu_reopened");
+                    setShowStartMenu(true);
+                  }}
+                  disabled={state.isSending}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:border-accent/40 hover:bg-white/[0.08] hover:text-text disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <svg
+                    width="12"
+                    height="12"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={2.5}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden
+                  >
+                    <path d="M15 18l-6-6 6-6" />
+                  </svg>
+                  Back to questions
+                </button>
+              </div>
+            )
           )}
 
           {capReached && (
