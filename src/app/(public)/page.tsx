@@ -1,5 +1,6 @@
 import Link from "next/link";
 import ClientLogoCarousel from "@/components/ClientLogoCarousel";
+import VisitSiteLabel from "@/components/VisitSiteLabel";
 import SectionHeader from "@/components/SectionHeader";
 import Card from "@/components/Card";
 import StepProcess from "@/components/StepProcess";
@@ -397,7 +398,7 @@ export default function Home() {
                 href="https://www.2ko.co.za"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block h-full rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-7 transition-colors hover:border-[var(--accent-border)]"
+                className="group flex h-full flex-col rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-7 transition-colors hover:border-[var(--accent-border)]"
                 style={{ boxShadow: "var(--shadow-card)" }}
               >
                 <h3 className="mb-1 text-[17px] font-semibold tracking-[var(--tracking-tight)] text-[var(--color-fg)]">
@@ -406,6 +407,7 @@ export default function Home() {
                 <p className="text-[14px] leading-relaxed text-[var(--color-fg-muted)]">
                   Training and improvement delivery across Southern Africa.
                 </p>
+                <VisitSiteLabel label="Visit site" />
               </a>
             </RevealOnScroll>
             <RevealOnScroll delay={120} className="h-full">
@@ -413,7 +415,7 @@ export default function Home() {
                 href="https://sixsigmasouthafrica.co.za"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block h-full rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-7 transition-colors hover:border-[var(--accent-border)]"
+                className="group flex h-full flex-col rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-7 transition-colors hover:border-[var(--accent-border)]"
                 style={{ boxShadow: "var(--shadow-card)" }}
               >
                 <h3 className="mb-1 text-[17px] font-semibold tracking-[var(--tracking-tight)] text-[var(--color-fg)]">
@@ -422,12 +424,13 @@ export default function Home() {
                 <p className="text-[14px] leading-relaxed text-[var(--color-fg-muted)]">
                   Accreditation and consulting credibility for operational excellence.
                 </p>
+                <VisitSiteLabel label="Visit site" />
               </a>
             </RevealOnScroll>
             <RevealOnScroll delay={240} className="h-full">
               <Link
                 href="/about"
-                className="block h-full rounded-2xl border border-[var(--accent-border)] bg-[var(--color-surface)] p-7"
+                className="group flex h-full flex-col rounded-2xl border border-[var(--accent-border)] bg-[var(--color-surface)] p-7"
                 style={{ boxShadow: "var(--shadow-glow-accent)" }}
               >
                 <h3 className="mb-1 text-[17px] font-semibold tracking-[var(--tracking-tight)] text-[var(--accent)]">
@@ -436,6 +439,7 @@ export default function Home() {
                 <p className="text-[14px] leading-relaxed text-[var(--color-fg-muted)]">
                   Custom systems and intelligent automation for established businesses.
                 </p>
+                <VisitSiteLabel label="Explore 2KO Systems" internal />
               </Link>
             </RevealOnScroll>
           </div>

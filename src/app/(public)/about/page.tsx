@@ -5,6 +5,7 @@ import SectionHeader from "@/components/SectionHeader";
 import Card from "@/components/Card";
 import CTASection from "@/components/CTASection";
 import AboutHeroMotion from "@/components/about/AboutHeroMotion";
+import VisitSiteLabel from "@/components/VisitSiteLabel";
 
 export const metadata: Metadata = {
   title: "About",
@@ -126,7 +127,7 @@ export default function AboutPage() {
               href="https://www.2ko.co.za"
               target="_blank"
               rel="noopener noreferrer"
-              className="block rounded-2xl border border-border bg-surface p-7 transition-colors hover:border-accent/40"
+              className="group flex h-full flex-col rounded-2xl border border-border bg-surface p-7 transition-colors hover:border-accent/40"
             >
               <h3 className="mb-1 text-base font-semibold text-text">
                 2KO Africa
@@ -137,12 +138,13 @@ export default function AboutPage() {
               <p className="text-sm leading-relaxed text-muted">
                 Lean, Six Sigma, project management, and leadership training for corporates and government. The operational improvement foundation that informs our systems work.
               </p>
+              <VisitSiteLabel label="Visit site" />
             </a>
             <a
               href="https://sixsigmasouthafrica.co.za"
               target="_blank"
               rel="noopener noreferrer"
-              className="block rounded-2xl border border-border bg-surface p-7 transition-colors hover:border-accent/40"
+              className="group flex h-full flex-col rounded-2xl border border-border bg-surface p-7 transition-colors hover:border-accent/40"
             >
               <h3 className="mb-1 text-base font-semibold text-text">
                 Six Sigma South Africa
@@ -153,10 +155,11 @@ export default function AboutPage() {
               <p className="text-sm leading-relaxed text-muted">
                 International accreditation body and consulting practice. Provides the process methodology and quality framework that underpins our approach to systems design.
               </p>
+              <VisitSiteLabel label="Visit site" />
             </a>
             <Link
               href="/"
-              className="block rounded-2xl border border-accent/30 bg-surface p-7 transition-colors hover:border-accent/60"
+              className="group flex h-full flex-col rounded-2xl border border-accent/30 bg-surface p-7 transition-colors hover:border-accent/60"
             >
               <h3 className="mb-1 text-base font-semibold text-accent">
                 2KO Systems
@@ -167,6 +170,7 @@ export default function AboutPage() {
               <p className="text-sm leading-relaxed text-muted">
                 The technology arm that turns operational improvement insights into production-ready digital systems. We build the platforms that make improvements permanent and scalable.
               </p>
+              <VisitSiteLabel label="Explore 2KO Systems" internal />
             </Link>
           </div>
         </div>
