@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import PageHero from "@/components/PageHero";
 import SectionHeader from "@/components/SectionHeader";
 import Card from "@/components/Card";
@@ -121,7 +122,12 @@ export default function AboutPage() {
           />
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-            <div className="rounded-2xl border border-border bg-surface p-7">
+            <a
+              href="https://www.2ko.co.za"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block rounded-2xl border border-border bg-surface p-7 transition-colors hover:border-accent/40"
+            >
               <h3 className="mb-1 text-base font-semibold text-text">
                 2KO Africa
               </h3>
@@ -131,8 +137,13 @@ export default function AboutPage() {
               <p className="text-sm leading-relaxed text-muted">
                 Lean, Six Sigma, project management, and leadership training for corporates and government. The operational improvement foundation that informs our systems work.
               </p>
-            </div>
-            <div className="rounded-2xl border border-border bg-surface p-7">
+            </a>
+            <a
+              href="https://sixsigmasouthafrica.co.za"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block rounded-2xl border border-border bg-surface p-7 transition-colors hover:border-accent/40"
+            >
               <h3 className="mb-1 text-base font-semibold text-text">
                 Six Sigma South Africa
               </h3>
@@ -142,8 +153,11 @@ export default function AboutPage() {
               <p className="text-sm leading-relaxed text-muted">
                 International accreditation body and consulting practice. Provides the process methodology and quality framework that underpins our approach to systems design.
               </p>
-            </div>
-            <div className="rounded-2xl border border-accent/30 bg-surface p-7">
+            </a>
+            <Link
+              href="/"
+              className="block rounded-2xl border border-accent/30 bg-surface p-7 transition-colors hover:border-accent/60"
+            >
               <h3 className="mb-1 text-base font-semibold text-accent">
                 2KO Systems
               </h3>
@@ -153,7 +167,7 @@ export default function AboutPage() {
               <p className="text-sm leading-relaxed text-muted">
                 The technology arm that turns operational improvement insights into production-ready digital systems. We build the platforms that make improvements permanent and scalable.
               </p>
-            </div>
+            </Link>
           </div>
         </div>
       </section>

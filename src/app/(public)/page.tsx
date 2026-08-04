@@ -1,3 +1,4 @@
+import Link from "next/link";
 import ClientLogoCarousel from "@/components/ClientLogoCarousel";
 import SectionHeader from "@/components/SectionHeader";
 import Card from "@/components/Card";
@@ -392,8 +393,11 @@ export default function Home() {
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
             <RevealOnScroll delay={0} className="h-full">
-              <div
-                className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-7"
+              <a
+                href="https://www.2ko.co.za"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block h-full rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-7 transition-colors hover:border-[var(--accent-border)]"
                 style={{ boxShadow: "var(--shadow-card)" }}
               >
                 <h3 className="mb-1 text-[17px] font-semibold tracking-[var(--tracking-tight)] text-[var(--color-fg)]">
@@ -402,11 +406,14 @@ export default function Home() {
                 <p className="text-[14px] leading-relaxed text-[var(--color-fg-muted)]">
                   Training and improvement delivery across Southern Africa.
                 </p>
-              </div>
+              </a>
             </RevealOnScroll>
             <RevealOnScroll delay={120} className="h-full">
-              <div
-                className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-7"
+              <a
+                href="https://sixsigmasouthafrica.co.za"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block h-full rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-7 transition-colors hover:border-[var(--accent-border)]"
                 style={{ boxShadow: "var(--shadow-card)" }}
               >
                 <h3 className="mb-1 text-[17px] font-semibold tracking-[var(--tracking-tight)] text-[var(--color-fg)]">
@@ -415,11 +422,12 @@ export default function Home() {
                 <p className="text-[14px] leading-relaxed text-[var(--color-fg-muted)]">
                   Accreditation and consulting credibility for operational excellence.
                 </p>
-              </div>
+              </a>
             </RevealOnScroll>
             <RevealOnScroll delay={240} className="h-full">
-              <div
-                className="rounded-2xl border border-[var(--accent-border)] bg-[var(--color-surface)] p-7"
+              <Link
+                href="/about"
+                className="block h-full rounded-2xl border border-[var(--accent-border)] bg-[var(--color-surface)] p-7"
                 style={{ boxShadow: "var(--shadow-glow-accent)" }}
               >
                 <h3 className="mb-1 text-[17px] font-semibold tracking-[var(--tracking-tight)] text-[var(--accent)]">
@@ -428,7 +436,7 @@ export default function Home() {
                 <p className="text-[14px] leading-relaxed text-[var(--color-fg-muted)]">
                   Custom systems and intelligent automation for established businesses.
                 </p>
-              </div>
+              </Link>
             </RevealOnScroll>
           </div>
         </div>
