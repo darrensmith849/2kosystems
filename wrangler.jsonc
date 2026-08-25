@@ -21,6 +21,12 @@
   "send_email": [
     { "name": "EMAIL" }
   ],
+  // Custom domains. Cloudflare manages the DNS records and the certificate for
+  // these, which replaces the Vercel A/CNAME records on the apex and www.
+  "routes": [
+    { "pattern": "2kosystems.com", "custom_domain": true },
+    { "pattern": "www.2kosystems.com", "custom_domain": true }
+  ],
   "observability": {
     "enabled": true
   }
