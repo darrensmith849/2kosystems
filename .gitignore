@@ -45,3 +45,8 @@ next-env.d.ts
 
 # local dev DB volume
 /.local-data/
+
+# Cloudflare
+.open-next/
+.wrangler/
+cloudflare-env.d.ts
