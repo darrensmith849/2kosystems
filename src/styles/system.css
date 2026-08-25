@@ -1,0 +1,592 @@
+/* ============================================================
+   2KO Systems · Cinema
+   ============================================================
+   Dark, photographic, atmospheric. Imagery carries the feeling and
+   the copy whispers over it. Everything here exists to keep large
+   photographs looking like one body of work rather than a gallery.
+   ============================================================ */
+
+[data-k] {
+  /* ---------- Colour ----------
+     Calibrated against a product-grade dark UI: a true near-black page, one
+     step up for panels, hairlines rather than visible borders, and colour
+     reserved for state. */
+  --black: #08090a;
+  --black-2: #0d0e10;
+  --black-3: #131417;
+
+  --panel: #0f1012;
+  --panel-2: #16171a;
+  --panel-3: #1c1e22;
+
+  --warm: #f7f8f8;
+  --warm-70: #b4b8bf;
+  --warm-45: #8a8f98;
+  --warm-25: #62666d;
+  --hair: rgba(255, 255, 255, 0.07);
+  --hair-2: rgba(255, 255, 255, 0.11);
+
+  --ember: #e8a33d;
+  --signal: #3fb950;
+  --alert: #e5534b;
+  --info: #6a8cff;
+
+  /* ---------- Type ---------- */
+  /* Inter first, matching Linear's own stack. Measured on this machine:
+     `-apple-system` resolves to SF Pro, and SF Pro Display / Text are not
+     installed as named families — so SF was what was rendering before, and
+     Inter is what Linear actually shows. To go back to SF Pro, move
+     `-apple-system, BlinkMacSystemFont` to the front of this line. */
+  --font: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --mono: ui-monospace, SFMono-Regular, var(--font-mono-fallback), Menlo, monospace;
+
+  --t-hero:   clamp(40px, 4.6vw, 68px);
+  --t-state:  clamp(32px, 3.4vw, 48px);
+  --t-title:  clamp(26px, 2.6vw, 38px);
+  --t-sub:    clamp(17px, 1.4vw, 21px);
+  --t-lead:   clamp(15px, 1.1vw, 17px);
+  --t-body:   15px;
+  --t-sm:     13.5px;
+  --t-mono:   11px;
+
+  --gutter: 24px;
+  --measure: 1280px;
+  --band: clamp(64px, 6.5vw, 104px);
+
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur: 480ms;
+}
+
+[data-k] {
+  background: var(--black);
+  color: var(--warm);
+  font-family: var(--font);
+  font-size: var(--t-body);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+[data-k] ::selection { background: var(--ember); color: var(--black); }
+
+/* ---------- Layout ---------- */
+
+.k-shell {
+  width: 100%;
+  max-width: var(--measure);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+@media (min-width: 1024px) { .k-shell { padding-inline: 56px; } }
+
+.k-band { padding-block: var(--band); }
+.k-band--2 { background: var(--black-2); }
+
+/* ---------- Type ---------- */
+
+.k-hero {
+  font-size: var(--t-hero);
+  line-height: 1.0;
+  letter-spacing: -0.022em;
+  font-weight: 510;
+  text-wrap: balance;
+}
+.k-state {
+  font-size: var(--t-state);
+  line-height: 1.06;
+  letter-spacing: -0.021em;
+  font-weight: 510;
+  text-wrap: balance;
+}
+.k-title {
+  font-size: var(--t-title);
+  line-height: 1.12;
+  letter-spacing: -0.019em;
+  font-weight: 510;
+  text-wrap: balance;
+}
+.k-sub {
+  font-size: var(--t-sub);
+  line-height: 1.28;
+  letter-spacing: -0.022em;
+  font-weight: 500;
+}
+.k-lead { font-size: var(--t-lead); line-height: 1.6; color: var(--warm-70); text-wrap: pretty; }
+.k-sm { font-size: var(--t-sm); line-height: 1.55; color: var(--warm-70); }
+
+.k-mono {
+  font-family: var(--mono);
+  font-size: var(--t-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--warm-45);
+}
+.k-mono--ember { color: var(--ember); }
+
+.k-num { font-variant-numeric: tabular-nums; letter-spacing: -0.04em; font-weight: 600; }
+
+.k-measure { max-width: 54ch; }
+
+/* ---------- Photography ----------
+   One treatment, applied to every image on the site. This is what makes a
+   set of unrelated photographs read as a single body of work. */
+
+/* Fills whatever box it is given — a positioned parent for full-bleed
+   plates, or an aspect-ratio box for inline figures. */
+.k-photo {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--black);
+}
+
+/* The grade is done on the image itself rather than by stacking dark
+   layers over it. Deepen, add a little contrast, pull saturation back —
+   the film look — then one warm pass for the light already in the frame.
+   Stacked scrims were what turned these plates black. */
+.k-photo img {
+  object-fit: cover;
+  filter: brightness(0.70) contrast(1.12) saturate(0.82);
+}
+
+.k-photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(130% 100% at 50% 35%, rgba(224, 163, 74, 0.16), transparent 72%);
+  mix-blend-mode: soft-light;
+}
+
+/* Legibility scrims. Use one directional scrim per plate — `left` or
+   `bottom`, never both, or the plate goes black. `edges` is the one
+   sanctioned pairing: it works on the vertical axis only, seating the
+   floating nav and the join to the band below without touching the
+   middle of the frame. */
+.k-scrim-bottom {
+  position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(to top,
+    rgba(10,11,10,0.92) 0%, rgba(10,11,10,0.58) 30%,
+    rgba(10,11,10,0.14) 62%, rgba(10,11,10,0) 100%);
+}
+.k-scrim-left {
+  position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(100deg,
+    rgba(10,11,10,0.90) 0%, rgba(10,11,10,0.60) 34%,
+    rgba(10,11,10,0.16) 66%, rgba(10,11,10,0) 100%);
+}
+/* Seats the floating nav at the top and the page against the band below. */
+.k-scrim-edges {
+  position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(to bottom,
+    rgba(10,11,10,0.55) 0%, transparent 15%,
+    transparent 82%, rgba(10,11,10,0.70) 100%);
+}
+
+/* ---------- Controls ---------- */
+
+.k-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding-inline: 18px;
+  border-radius: 8px;
+  font-size: var(--t-sm);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  transition: background-color var(--dur) var(--ease),
+              color var(--dur) var(--ease),
+              border-color var(--dur) var(--ease);
+}
+.k-btn--solid { background: var(--warm); color: var(--black); }
+.k-btn--solid:hover { background: var(--ember); }
+.k-btn--ghost { border: 1px solid var(--warm-25); color: var(--warm); }
+.k-btn--ghost:hover { border-color: var(--warm); }
+
+.k-link {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: var(--t-sm); font-weight: 600; color: var(--warm);
+  border-bottom: 1px solid var(--warm-25);
+  padding-bottom: 3px;
+  transition: border-color var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+.k-link:hover { color: var(--ember); border-bottom-color: var(--ember); }
+
+.k-row {
+  display: grid;
+  gap: 20px;
+  padding-block: 20px;
+  border-top: 1px solid var(--hair);
+  transition: background-color var(--dur) var(--ease);
+}
+.k-row:hover { background: rgba(244, 241, 234, 0.025); }
+
+/* ---------- The one animation ---------- */
+
+.k-rise {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease);
+}
+.k-rise[data-shown="true"] { opacity: 1; transform: none; }
+.k-rise-1 { transition-delay: 110ms; }
+.k-rise-2 { transition-delay: 220ms; }
+.k-rise-3 { transition-delay: 330ms; }
+
+/* Photographs settle rather than appear: a slow scale-down on entry. */
+.k-settle { transform: scale(1.06); transition: transform 2400ms var(--ease); }
+.k-settle[data-shown="true"] { transform: scale(1); }
+
+@media (prefers-reduced-motion: reduce) {
+  .k-rise, .k-settle { opacity: 1; transform: none; transition: none; }
+}
+
+/* ============================================================
+   Map — the hero's moving parts
+   ============================================================
+   All CSS so the map can stay a server component and keep its path data
+   out of the JavaScript bundle. */
+
+@keyframes kmDraw { to { stroke-dashoffset: 0; } }
+@keyframes kmTravel { to { stroke-dashoffset: 0; } }
+@keyframes kmCity { to { opacity: 1; transform: none; } }
+@keyframes kmPing {
+  0%   { r: 5;  opacity: 0.9; }
+  100% { r: 26; opacity: 0; }
+}
+@keyframes kmDrift {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50%      { transform: translate3d(0, -10px, 0); }
+}
+
+.km-arc {
+  stroke-dasharray: 1400;
+  stroke-dashoffset: 1400;
+  animation: kmDraw 2400ms var(--ease) forwards;
+}
+
+.km-city {
+  opacity: 0;
+  transform: translateY(5px);
+  animation: kmCity 900ms var(--ease) forwards;
+}
+
+.km-ping { animation: kmPing 3200ms var(--ease) infinite; }
+
+.km-land { animation: kmDrift 14s ease-in-out infinite; }
+
+/* ---------- Floating instrument cards ---------- */
+
+.k-card {
+  background: var(--panel);
+  border: 1px solid var(--hair);
+  border-radius: 10px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  padding: 14px 16px;
+}
+
+.k-card--float { animation: kmDrift 9s ease-in-out infinite; }
+.k-card--float-slow { animation: kmDrift 12s ease-in-out infinite reverse; }
+
+.k-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--signal);
+  box-shadow: 0 0 10px var(--signal);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .km-arc { stroke-dashoffset: 0; animation: none; }
+  .km-city { opacity: 1; transform: none; animation: none; }
+  .km-ping, .km-land, .k-card--float, .k-card--float-slow { animation: none; }
+}
+
+/* ============================================================
+   Instruments
+   ============================================================ */
+
+@keyframes kFeedIn { from { opacity: 0; transform: translateX(-6px); } to { opacity: 1; transform: none; } }
+@keyframes kToken  { 0% { left: -6px; opacity: 0; } 12% { opacity: 1; } 88% { opacity: 1; } 100% { left: 100%; opacity: 0; } }
+
+.k-feed-line { opacity: 0; animation: kFeedIn 600ms var(--ease) forwards; }
+
+.k-node {
+  border: 1px solid var(--hair);
+  border-radius: 8px;
+  background: var(--panel);
+  padding: 12px 14px;
+}
+
+.k-connector {
+  position: relative;
+  height: 1px;
+  min-width: 28px;
+  flex: 0 0 28px;
+  background: var(--hair);
+  align-self: center;
+}
+@media (max-width: 1023px) {
+  .k-connector { width: 1px; height: 28px; min-width: 0; flex: 0 0 28px; margin-left: 26px; }
+}
+
+.k-token {
+  position: absolute;
+  top: -2px;
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--ember);
+  box-shadow: 0 0 10px var(--ember);
+  animation: kToken 3600ms linear infinite;
+}
+@media (max-width: 1023px) { .k-token { display: none; } }
+
+/* Section rhythm shared by the inner pages */
+.k-hairline { border-top: 1px solid var(--hair); }
+
+.k-field {
+  width: 100%;
+  height: 38px;
+  padding-inline: 12px;
+  border-radius: 6px;
+  background: rgba(244, 241, 234, 0.04);
+  border: 1px solid var(--hair);
+  color: var(--warm);
+  font-size: 13.5px;
+  transition: border-color var(--dur) var(--ease), background-color var(--dur) var(--ease);
+}
+.k-field:focus {
+  outline: none;
+  border-color: var(--signal);
+  background: rgba(244, 241, 234, 0.06);
+}
+.k-field::placeholder { color: var(--warm-45); }
+textarea.k-field { height: auto; padding-block: 10px; line-height: 1.5; resize: vertical; }
+
+@media (prefers-reduced-motion: reduce) {
+  .k-feed-line { opacity: 1; animation: none; }
+  .k-token { animation: none; }
+}
+
+/* ============================================================
+   App chrome — the embedded operations console
+   ============================================================
+   Product-grade UI rendered as real DOM, not a screenshot. Everything
+   here is the same vocabulary we use inside the systems we build. */
+
+.k-app {
+  border: 1px solid var(--hair);
+  border-radius: 12px;
+  background: var(--panel);
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.02),
+    0 40px 90px -40px rgba(0, 0, 0, 0.9);
+}
+
+.k-app-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  height: 36px;
+  padding-inline: 12px;
+  border-bottom: 1px solid var(--hair);
+  background: var(--panel-2);
+}
+
+.k-app-dot { width: 9px; height: 9px; border-radius: 999px; opacity: 0.55; }
+
+.k-kbd {
+  display: inline-block;
+  min-width: 17px;
+  padding: 1px 4px;
+  margin-inline: 2px;
+  border: 1px solid var(--hair-2);
+  border-radius: 4px;
+  background: var(--panel-3);
+  color: var(--warm-70);
+  font-size: 10px;
+  text-align: center;
+}
+
+.k-app-body {
+  display: grid;
+  grid-template-columns: 196px minmax(0, 1fr) 300px;
+  min-height: 460px;
+}
+@media (max-width: 1023px) {
+  .k-app-body { grid-template-columns: minmax(0, 1fr); }
+  .k-app-side { display: none; }
+  .k-app-detail { border-left: none; border-top: 1px solid var(--hair); }
+}
+
+.k-app-side {
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  border-right: 1px solid var(--hair);
+  background: var(--black-2);
+}
+
+.k-app-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px; height: 22px;
+  border-radius: 6px;
+  background: var(--signal);
+  color: #04140a;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.k-app-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  height: 28px;
+  padding: 0 6px;
+  border-radius: 6px;
+  font-size: 13px;
+  color: var(--warm-70);
+  text-align: left;
+  transition: background-color 160ms var(--ease), color 160ms var(--ease);
+}
+.k-app-nav:hover:not([data-static]) { background: var(--panel-2); color: var(--warm); }
+.k-app-nav[data-active="true"] { background: var(--panel-3); color: var(--warm); }
+.k-app-nav[data-static] { cursor: default; }
+
+.k-app-list { border-right: 1px solid var(--hair); min-width: 0; }
+
+.k-app-listhead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 32px;
+  padding-inline: 12px;
+  border-bottom: 1px solid var(--hair);
+}
+
+.k-app-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  height: 34px;
+  padding: 0 12px;
+  border-bottom: 1px solid var(--hair);
+  text-align: left;
+  transition: background-color 140ms var(--ease);
+}
+.k-app-row:hover { background: var(--panel-2); }
+.k-app-row[data-selected="true"] { background: var(--panel-3); }
+
+.k-app-rowtitle {
+  flex: 1;
+  min-width: 0;
+  font-size: 13px;
+  line-height: 1;
+  color: var(--warm);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.k-app-detail {
+  display: flex;
+  flex-direction: column;
+  padding: 14px 16px;
+  background: var(--black-2);
+}
+
+.k-app-btn {
+  flex: 1;
+  height: 32px;
+  border-radius: 6px;
+  border: 1px solid var(--hair-2);
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--warm-70);
+  transition: background-color 160ms var(--ease), color 160ms var(--ease), border-color 160ms var(--ease);
+}
+.k-app-btn:hover { color: var(--warm); border-color: var(--warm-25); }
+.k-app-btn--go { background: var(--signal); border-color: var(--signal); color: #04140a; }
+.k-app-btn--go:hover { background: #35a344; border-color: #35a344; color: #04140a; }
+
+/* Aurora wash behind the hero, the way product sites seat a dark app frame */
+.k-aurora {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(60% 45% at 50% 0%, rgba(63, 185, 80, 0.13), transparent 70%),
+    radial-gradient(40% 35% at 82% 12%, rgba(232, 163, 61, 0.08), transparent 72%);
+}
+
+/* ============================================================
+   Hero lighting
+   ============================================================
+   A soft field seated behind the app frame rather than a wash across the
+   whole section — the light should look like it is coming off the product. */
+
+.k-glow {
+  position: absolute;
+  left: 50%;
+  top: -140px;
+  transform: translateX(-50%);
+  width: min(1500px, 130vw);
+  height: 1000px;
+  pointer-events: none;
+  background:
+    radial-gradient(48% 44% at 50% 38%, rgba(63, 185, 80, 0.30), transparent 66%),
+    radial-gradient(34% 34% at 76% 28%, rgba(232, 163, 61, 0.18), transparent 68%),
+    radial-gradient(38% 38% at 24% 32%, rgba(106, 140, 255, 0.14), transparent 70%);
+  filter: blur(20px);
+}
+
+/* A faint horizon line under the glow, the way a lit stage floor reads. */
+.k-horizon {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  pointer-events: none;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(255, 255, 255, 0.10) 25%,
+    rgba(255, 255, 255, 0.16) 50%,
+    rgba(255, 255, 255, 0.10) 75%,
+    transparent 100%
+  );
+}
+
+/* The frame catches the light along its top edge. */
+.k-app {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 0 0 1px rgba(255, 255, 255, 0.02),
+    0 60px 120px -50px rgba(0, 0, 0, 0.95),
+    0 20px 60px -30px rgba(0, 0, 0, 0.8);
+}
+
+/* Full-width header bar, aligned to the same container as the content. */
+.k-topbar {
+  position: fixed;
+  inset-inline: 0;
+  top: 0;
+  z-index: 50;
+  border-bottom: 1px solid transparent;
+  transition: background-color 400ms var(--ease), border-color 400ms var(--ease);
+}
+.k-topbar[data-lifted="true"] {
+  background: rgba(8, 9, 10, 0.72);
+  border-bottom-color: var(--hair);
+  backdrop-filter: blur(12px);
+}

@@ -103,7 +103,7 @@ export default function Home() {
       <section className="border-t border-[var(--color-border-subtle)] bg-[var(--color-bg-2)]">
         <div className="mx-auto max-w-6xl px-6 py-20 lg:px-10">
           <SectionHeader
-            title="What we build"
+            title="Six things we build. One system they live in."
             description="Custom systems that replace fragmented workflows with one clear operational layer."
           />
 

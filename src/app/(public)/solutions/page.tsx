@@ -118,7 +118,7 @@ export default function SolutionsPage() {
     <>
       <PageHero
         eyebrow="Solutions"
-        title="Systems that replace fragmented workflows with operational clarity."
+        title="Six tools and a WhatsApp group. Or one system."
         description="We build custom web-based systems for the workflows, approvals, reporting and coordination your business depends on. Six core service areas — every engagement is custom-shaped to the operation."
         primaryCTA="Request a Systems Audit"
         primaryHref="/get-started"
@@ -248,7 +248,7 @@ export default function SolutionsPage() {
       </section>
 
       <CTASection
-        title="Ready to modernise one critical workflow?"
+        title="One workflow first. The rest once it has proved itself."
         description="Start with a Systems Audit and identify the highest-value place to digitise first."
         primaryCTA="Request a Systems Audit"
         primaryHref="/get-started"

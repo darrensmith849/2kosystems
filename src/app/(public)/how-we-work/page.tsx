@@ -22,7 +22,7 @@ export default function HowWeWorkPage() {
     <>
       <PageHero
         eyebrow="How We Work"
-        title="A structured path from operational pain to production system."
+        title="Working software in week two. Not a slide deck in month six."
         description="We do not force clients into giant software projects on day one. We start narrow, prove value quickly, and scale from there."
         primaryCTA="Request a Systems Audit"
         primaryHref="/get-started"

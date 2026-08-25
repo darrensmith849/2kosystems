@@ -18,3 +18,4 @@ Abstract brand visuals in `generated/` were created with Google's `gemini-2.5-fl
 - `imagery/case-studies/training.jpg` — photo by [Luis Sevilla](https://www.pexels.com/@luis-sevilla-252657) ([source](https://www.pexels.com/photo/business-meeting-presentation-in-modern-office-34221175/))
 - `imagery/case-studies/industrial.jpg` — photo by [ThisIsEngineering](https://www.pexels.com/@thisisengineering) ([source](https://www.pexels.com/photo/man-with-white-helmet-in-factory-19895885/))
 - `imagery/about/hero.jpg` — photo by [Fernando Narvaez](https://www.pexels.com/@fernando-narvaez-2150621466) ([source](https://www.pexels.com/photo/advanced-control-room-in-el-agustino-lima-32529341/))
+- `imagery/home/hero.jpg` — same Volker Braun open-pit aerial as `case-studies/mining.jpg`, copied so the home hero can be re-graded or replaced independently.

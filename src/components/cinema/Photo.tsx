@@ -1,0 +1,38 @@
+import Image from "next/image";
+
+type Scrim = "bottom" | "left" | "edges" | "none";
+
+/**
+ * Every photograph on the site goes through here, which is the point: one
+ * grade, one set of scrims, one behaviour. Nothing is styled per-image.
+ */
+export default function Photo({
+  src,
+  priority = false,
+  sizes = "100vw",
+  scrim = "none",
+  position = "center",
+  className = "",
+}: {
+  src: string;
+  priority?: boolean;
+  sizes?: string;
+  scrim?: Scrim;
+  /** CSS object-position, for framing the crop. */
+  position?: string;
+  className?: string;
+}) {
+  return (
+    <div className={`k-photo ${className}`.trim()}>
+      <Image
+        src={src}
+        alt=""
+        fill
+        priority={priority}
+        sizes={sizes}
+        style={{ objectPosition: position }}
+      />
+      {scrim !== "none" && <div className={`k-scrim-${scrim}`} aria-hidden="true" />}
+    </div>
+  );
+}

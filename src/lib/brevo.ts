@@ -1,8 +1,9 @@
+import { postSigmafyLead, SigmafyLeadError } from "@/lib/sigmafy/lead-client";
+
 const BREVO_API_KEY = process.env.BREVO_API_KEY;
 const BREVO_SENDER_EMAIL = process.env.BREVO_SENDER_EMAIL;
 const BREVO_SENDER_NAME = process.env.BREVO_SENDER_NAME || "2KO Systems";
 const BOOK_AUDIT_TO_EMAIL = process.env.BOOK_AUDIT_TO_EMAIL;
-const BREVO_LIST_ID = process.env.BREVO_LIST_ID;
 
 export type AuditPayload = {
   firstName: string;
@@ -60,14 +61,35 @@ async function brevoRequest(path: string, body: unknown) {
   return json;
 }
 
-async function upsertBrevoContact(payload: AuditPayload) {
-  const listId = BREVO_LIST_ID ? Number(BREVO_LIST_ID) : undefined;
+async function recordSigmafyLead(payload: AuditPayload) {
+  const fullName = `${payload.firstName} ${payload.lastName}`.trim();
+  const messageParts = [
+    payload.message?.trim() || "Audit request via 2kosystems form",
+  ];
+  if (payload.website) {
+    messageParts.push(`Website: ${payload.website}`);
+  }
 
-  await brevoRequest("/contacts", {
-    email: payload.email,
-    listIds: listId ? [listId] : undefined,
-    updateEnabled: true,
-  });
+  try {
+    await postSigmafyLead({
+      source: "2kosystems-audit",
+      sourcePage: "/contact",
+      name: fullName || payload.email,
+      email: payload.email,
+      phone: payload.phone || null,
+      company: payload.company || null,
+      subject: "audit-request",
+      message: messageParts.join("\n\n"),
+      receivedAt: new Date().toISOString(),
+    });
+  } catch (err) {
+    if (err instanceof SigmafyLeadError) {
+      console.error("[2kosystems] Sigmafy lead error:", err.status, err.body);
+    } else {
+      console.error("[2kosystems] Sigmafy lead request failed", err);
+    }
+    throw err;
+  }
 }
 
 async function sendInternalNotification(payload: AuditPayload) {
@@ -180,7 +202,7 @@ async function sendUserConfirmation(payload: AuditPayload) {
 }
 
 export async function submitAuditEnquiry(payload: AuditPayload) {
-  await upsertBrevoContact(payload);
+  await recordSigmafyLead(payload);
   await sendInternalNotification(payload);
   await sendUserConfirmation(payload);
 }

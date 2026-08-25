@@ -205,7 +205,7 @@ export default function CaseStudiesPage() {
     <>
       <PageHero
         eyebrow="Case Studies"
-        title="Real operational patterns. Practical system solutions."
+        title="Patterns we keep finding. And what we built instead."
         description="Representative engagements drawn from real operational pain across mining, agriculture, logistics, training and industrial services. Client names and identifying details are anonymised; the operational challenges, the systems built, and the outcome targets are real."
         primaryCTA="Request a Systems Audit"
         primaryHref="/get-started"

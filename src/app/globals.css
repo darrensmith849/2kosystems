@@ -11,8 +11,8 @@
   /* ============================================================
      2KO Systems · Light theme (autotax-style)
      ============================================================
-     Pure white surfaces, near-black text, brand-green accent used
-     sparingly. Every visual choice in the codebase reads from a
+     Warm bone page background with pure-white cards layered on top,
+     near-black text, brand-green accent used sparingly. Every visual choice in the codebase reads from a
      token in this block; nothing should hardcode a hex elsewhere.
   */
 
@@ -20,8 +20,8 @@
      existing components reference (bg-background, text-text,
      text-muted, border-border, bg-surface, text-accent, etc.).
      Flipping these flips the whole site. ----- */
-  --background: #ffffff;
-  --background-secondary: #f4f8f4;       /* pale green-tinted off-white (Six Sigma stats strip) */
+  --background: #f7f5f0;
+  --background-secondary: #efece3;       /* pale green-tinted off-white (Six Sigma stats strip) */
   --surface: #ffffff;
   --text: #0a0a0a;
   --muted: #4d5358;          /* mid gray — body subtext */
@@ -45,13 +45,13 @@
   /* ----- Apple-style token contract -----
      A small, named contract every component reads directly via
      bg-[var(--color-bg)] / text-[var(--color-fg)] etc. */
-  --color-bg: #ffffff;
-  --color-bg-2: #f4f8f4;         /* alt sections — Six Sigma stats strip */
-  --color-bg-3: #ebf2ec;         /* deeper green-tinted wash */
-  --color-bg-tinted: #eff5ef;    /* header glass / quiet section backdrop */
+  --color-bg: #f7f5f0;
+  --color-bg-2: #efece3;         /* alt sections — deeper bone */
+  --color-bg-3: #e7e3d8;         /* deepest bone wash */
+  --color-bg-tinted: #f1eee6;    /* header glass / quiet section backdrop */
   --color-surface: #ffffff;       /* card surface (kept pure white for contrast) */
-  --color-surface-2: #f9fcf9;     /* subtle green-tinted card */
-  --color-surface-3: #f1f6f1;     /* third tier */
+  --color-surface-2: #fbfaf7;     /* subtle warm card */
+  --color-surface-3: #f3f0e9;     /* third tier */
 
   /* Bold green canvas — for the hero block (Six Sigma-style) */
   --color-hero-block: var(--accent-hero-bg);
@@ -62,8 +62,8 @@
   --tint-accent-medium: color-mix(in srgb, var(--accent) 10%, transparent);
   --tint-accent-strong: color-mix(in srgb, var(--accent) 16%, transparent);
 
-  /* Glass chrome — pale green-tinted translucent (Six Sigma header) */
-  --color-topbar-bg: rgba(239, 245, 239, 0.78);
+  /* Glass chrome — warm translucent bone */
+  --color-topbar-bg: rgba(247, 245, 240, 0.82);
   --color-sidebar-bg: rgba(239, 245, 239, 0.78);
 
   /* Special "dark canvas" surfaces, used for phone mockups and

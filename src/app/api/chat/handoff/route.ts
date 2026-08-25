@@ -4,6 +4,7 @@ import type {
   HandoffResponseBody,
   ChatMessage,
 } from "@/lib/chat/types";
+import { postSigmafyLead, SigmafyLeadError } from "@/lib/sigmafy/lead-client";
 
 export const runtime = "nodejs";
 
@@ -11,7 +12,6 @@ const BREVO_API_KEY = process.env.BREVO_API_KEY;
 const BREVO_SENDER_EMAIL = process.env.BREVO_SENDER_EMAIL;
 const BREVO_SENDER_NAME = process.env.BREVO_SENDER_NAME || "2KO Systems";
 const BOOK_AUDIT_TO_EMAIL = process.env.BOOK_AUDIT_TO_EMAIL;
-const BREVO_LIST_ID = process.env.BREVO_LIST_ID;
 
 function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -52,19 +52,43 @@ async function brevoRequest(path: string, body: unknown) {
   return json;
 }
 
-async function upsertContact(email: string, name: string, phone?: string) {
-  const listId = BREVO_LIST_ID ? Number(BREVO_LIST_ID) : undefined;
-  const [firstName, ...rest] = name.split(/\s+/);
-  await brevoRequest("/contacts", {
-    email,
-    attributes: {
-      FIRSTNAME: firstName || name,
-      LASTNAME: rest.join(" "),
-      SMS: phone || undefined,
-    },
-    listIds: listId ? [listId] : undefined,
-    updateEnabled: true,
-  });
+async function recordSigmafyLead(payload: HandoffRequestBody) {
+  const transcriptText = payload.transcript
+    .slice(-20)
+    .map((m) => `${m.role}: ${m.content}`)
+    .join("\n");
+
+  const messageParts = [
+    payload.requestedHuman
+      ? "Visitor requested a human handoff via the chat bot."
+      : "New lead captured by the chat bot.",
+    payload.detectedIntent ? `Detected intent: ${payload.detectedIntent}` : null,
+    transcriptText ? `Recent transcript:\n${transcriptText}` : null,
+  ].filter(Boolean);
+
+  try {
+    await postSigmafyLead({
+      source: "2kosystems-chat-handoff",
+      sourcePage: payload.pagePath || "/chat",
+      name: payload.lead.name,
+      email: payload.lead.email,
+      phone: payload.lead.phone || null,
+      subject: payload.requestedHuman ? "consultancy" : "general",
+      message: messageParts.join("\n\n"),
+      receivedAt: payload.timestamp || new Date().toISOString(),
+    });
+  } catch (err) {
+    if (err instanceof SigmafyLeadError) {
+      console.error(
+        "[2kosystems chat] Sigmafy lead error:",
+        err.status,
+        err.body,
+      );
+    } else {
+      console.error("[2kosystems chat] Sigmafy lead request failed", err);
+    }
+    throw err;
+  }
 }
 
 function renderTranscriptHtml(transcript: ChatMessage[]) {
@@ -201,7 +225,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<HandoffRespon
   const transcript = Array.isArray(body.transcript) ? body.transcript.slice(-50) : [];
 
   try {
-    await upsertContact(lead.email, lead.name, lead.phone);
+    await recordSigmafyLead({ ...body, transcript });
     await sendInternalNotification({ ...body, transcript });
     await sendUserConfirmation(body);
     return NextResponse.json({ ok: true });

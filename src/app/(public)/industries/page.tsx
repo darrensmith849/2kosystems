@@ -199,7 +199,7 @@ export default function IndustriesPage() {
     <>
       <PageHero
         eyebrow="Industries"
-        title="Built for sectors where process matters and admin is heavy."
+        title="Different industries. The same broken handover."
         description="We work especially well with analogue-heavy, operations-led businesses that need practical systems — not more generic software. Below: the specific operational pain we see most often, and the systems we build for each sector."
         primaryCTA="Request a Systems Audit"
         primaryHref="/get-started"
