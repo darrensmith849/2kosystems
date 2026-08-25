@@ -802,3 +802,46 @@ textarea.k-field { height: auto; padding-block: 10px; line-height: 1.5; resize: 
   .k-chat { animation: none; }
   .k-chat-typing span { animation: none; opacity: 0.6; }
 }
+
+/* ============================================================
+   Scope builder
+   ============================================================ */
+
+.k-choice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-height: 40px;
+  padding: 8px 12px;
+  border: 1px solid var(--hair);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--warm-70);
+  font-size: 13.5px;
+  text-align: left;
+  transition: border-color 200ms var(--ease), background-color 200ms var(--ease),
+              color 200ms var(--ease);
+}
+.k-choice:hover { border-color: var(--hair-2); color: var(--warm); }
+.k-choice[data-active="true"] {
+  border-color: var(--signal);
+  background: rgba(63, 185, 80, 0.07);
+  color: var(--warm);
+}
+
+.k-choice-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  border: 1px solid var(--warm-25);
+  flex: 0 0 auto;
+  transition: background-color 200ms var(--ease), border-color 200ms var(--ease);
+}
+.k-choice-dot[data-active="true"] {
+  background: var(--signal);
+  border-color: var(--signal);
+}
+
+fieldset[disabled] .k-choice { cursor: not-allowed; }

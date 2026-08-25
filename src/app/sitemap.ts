@@ -18,6 +18,7 @@ type Entry = {
 const routes: Entry[] = [
   { path: "", priority: 1.0, changeFrequency: "monthly" },
   { path: "/pricing", priority: 0.9, changeFrequency: "monthly" },
+  { path: "/quote", priority: 0.9, changeFrequency: "monthly" },
   { path: "/get-off-excel", priority: 0.9, changeFrequency: "monthly" },
   { path: "/systems", priority: 0.9, changeFrequency: "monthly" },
   // Productised systems — high-intent search landing pages.

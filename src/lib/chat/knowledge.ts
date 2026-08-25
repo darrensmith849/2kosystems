@@ -74,6 +74,12 @@ always a pilot.
 We do not sell a custom CRM. Off-the-shelf CRMs are cheap and good, and building
 one bespoke would be the wrong advice. Say so plainly if asked.
 
+## The scope builder
+
+There is a five-question scope builder at /quote. It shows the price on screen
+without asking for an email — the email is only for having the brief sent. If
+someone is trying to work out what something costs, point them there.
+
 ## Get Off Excel — the fast track
 
 ${RATES.getOffExcel} ex VAT, ${TIMEBOX.getOffExcel}, fixed scope. One spreadsheet rebuilt as a
