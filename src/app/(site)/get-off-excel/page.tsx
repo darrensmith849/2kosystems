@@ -9,7 +9,7 @@ const TIMEBOXED = TIMEBOX.getOffExcel;
 
 export const metadata: Metadata = {
   title: "Get Off Excel — Replace Your Spreadsheet With a Real System",
-  description: `Replace the spreadsheet your operation runs on with a proper multi-user system in ${TIMEBOXED}. Fixed price ${PRICE} ex VAT, fixed scope, fixed date. Built in South Africa.`,
+  description: `Replace the spreadsheet your operation runs on with a real multi-user system in ${TIMEBOXED}. Fixed price ${PRICE} ex VAT, fixed scope.`,
   alternates: { canonical: "/get-off-excel" },
 };
 

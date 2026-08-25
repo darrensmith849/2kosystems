@@ -5,9 +5,10 @@ import { Panel, Readout, QueueRows, Pill, EventFeed, Sparkline } from "@/compone
 import { RATES, TERMS, TIMEBOX } from "@/lib/pricing";
 
 export const metadata: Metadata = {
-  title: "Method",
+  title: "How We Work — DMAIC, Fixed Price at Every Phase",
   description:
-    "Define, Measure, Analyse, Improve, Control — the five phases 2KO Systems engages in, each a fixed price against a written scope. Stop after any of them.",
+    "Define, Measure, Analyse, Improve, Control. Five phases, each a fixed price against a written scope. Stop after any of them.",
+  alternates: { canonical: "/method" },
 };
 
 const phases = [

@@ -5,9 +5,10 @@ import { Panel, Readout, QueueRows, EventFeed, Pill, StatusGrid } from "@/compon
 import { RATES } from "@/lib/pricing";
 
 export const metadata: Metadata = {
-  title: "Studio",
+  title: "About 2KO Systems — Process People Who Build Software",
   description:
-    "2KO Systems is the systems and automation arm of the 2KO group — process improvement people who build software, working with established South African operations.",
+    "The systems and automation arm of the 2KO group. Process improvement people who build software for established South African operations.",
+  alternates: { canonical: "/studio" },
 };
 
 const principles = [

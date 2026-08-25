@@ -6,9 +6,10 @@ import { Panel, QueueRows, Sparkline, Pill } from "@/components/cinema/instrumen
 import { RATES } from "@/lib/pricing";
 
 export const metadata: Metadata = {
-  title: "Sectors",
+  title: "Mining, Agriculture, Logistics & Manufacturing Systems",
   description:
-    "Mining, agriculture, logistics and manufacturing — the heavy South African operations where a small process slip carries a large cost, and what 2KO Systems builds for each.",
+    "Operational systems for South African mining, agriculture, logistics and manufacturing — where a small process slip carries a large cost.",
+  alternates: { canonical: "/sectors" },
 };
 
 const sectors = [

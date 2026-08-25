@@ -5,9 +5,10 @@ import { Panel, QueueRows, EventFeed, Pill } from "@/components/cinema/instrumen
 import { RATES, TIMEBOX } from "@/lib/pricing";
 
 export const metadata: Metadata = {
-  title: "Contact",
+  title: "Contact — Book a R7,500 Half-Day Process Review",
   description:
-    "Book a half-day process review with 2KO Systems. Fixed price, credited against whatever you commission next. One business day to a reply.",
+    "Book a half-day process review with 2KO Systems. Fixed price, credited against whatever you commission next.",
+  alternates: { canonical: "/contact" },
 };
 
 export default function ContactPage() {

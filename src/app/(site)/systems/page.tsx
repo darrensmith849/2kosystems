@@ -18,9 +18,10 @@ import { RATES } from "@/lib/pricing";
 import { CATALOGUE } from "@/lib/products";
 
 export const metadata: Metadata = {
-  title: "Systems We Build",
+  title: "Operational Systems We Build — Fixed-Price and Custom",
   description:
-    "Approvals, capture, escalation, reporting, portals and embedded intelligence — the six layers 2KO Systems builds into South African operations.",
+    "Approvals, capture, escalation, reporting and portals for South African operations — plus fixed-price systems from R79,500.",
+  alternates: { canonical: "/systems" },
 };
 
 export default function SystemsPage() {

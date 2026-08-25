@@ -6,7 +6,7 @@ import { RATES, TERMS, TIMEBOX } from "@/lib/pricing";
 
 export const metadata: Metadata = {
   title: "Pricing — What Custom Software Costs in South Africa",
-  description: `Published prices for custom operational systems in South Africa. Process reviews from ${RATES.review}, spreadsheet replacement at ${RATES.getOffExcel}, pilots from ${RATES.pilotFrom}, builds ${RATES.buildFrom}–${RATES.buildTo}, retainers from ${RATES.retainerCare} a month. All ex VAT, all fixed scope.`,
+  description: `What custom software costs in South Africa. Published prices: reviews ${RATES.review}, systems from ${RATES.getOffExcel}, builds to ${RATES.buildTo}. All ex VAT.`,
   alternates: { canonical: "/pricing" },
 };
 

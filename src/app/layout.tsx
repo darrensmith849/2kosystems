@@ -76,7 +76,7 @@ export const metadata: Metadata = {
 
 const jsonLd = {
   "@context": "https://schema.org",
-  "@type": "Organization",
+  "@type": ["Organization", "ProfessionalService"],
   name: "2KO Systems",
   description:
     "Custom operational systems and intelligent automation for established businesses across Africa.",
@@ -85,10 +85,10 @@ const jsonLd = {
     "@type": "Organization",
     name: "2KO Group",
   },
-  areaServed: {
-    "@type": "Place",
-    name: "Southern Africa",
-  },
+  areaServed: { "@type": "Country", name: "South Africa" },
+  /** Published bands, so the rich result can show a price range. */
+  priceRange: "R7,500–R1,200,000",
+  currenciesAccepted: "ZAR",
   knowsAbout: [
     "Custom operational systems",
     "Workflow automation",
@@ -99,33 +99,22 @@ const jsonLd = {
   ],
   hasOfferCatalog: {
     "@type": "OfferCatalog",
-    name: "2KO Systems Services",
+    name: "Fixed-price systems",
     itemListElement: [
-      {
+      { slug: "get-off-excel", name: "Get Off Excel", description: "One spreadsheet rebuilt as a secure multi-user system." },
+      { slug: "systems/job-card-system", name: "Job Card System", description: "Raise, assign, schedule and close out work with proof captured on site." },
+      { slug: "systems/sheq-incident-reporting", name: "SHEQ Incident Reporting", description: "Incident capture, investigation, corrective actions and regulator-ready reporting." },
+      { slug: "systems/contractor-compliance", name: "Contractor Compliance Register", description: "Onboarding, medicals, inductions, expiry alerts and site access approval." },
+      { slug: "systems/stock-and-asset-register", name: "Stock & Asset Register", description: "One register for what you own, where it is and what moved." },
+    ].map((item) => ({
+      "@type": "Offer",
+      itemOffered: {
         "@type": "Service",
-        name: "Systems Opportunity Audit",
-        description:
-          "Diagnostic to identify the best workflow to digitise first and define the ROI case.",
+        name: item.name,
+        description: item.description,
+        url: `https://www.2kosystems.com/${item.slug}`,
       },
-      {
-        "@type": "Service",
-        name: "Workflow Automation",
-        description:
-          "Custom workflow automation systems for operational processes.",
-      },
-      {
-        "@type": "Service",
-        name: "Client & Staff Portals",
-        description:
-          "Secure role-based portals for onboarding, requests, and document access.",
-      },
-      {
-        "@type": "Service",
-        name: "Dashboards & Reporting",
-        description:
-          "Live operational dashboards and automated reporting systems.",
-      },
-    ],
+    })),
   },
 };
 
@@ -135,7 +124,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en-ZA">
       <head>
         <script
           type="application/ld+json"

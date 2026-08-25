@@ -65,15 +65,35 @@ export default async function ProductPage({
     })),
   };
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://www.2kosystems.com" },
+      { "@type": "ListItem", position: 2, name: "Systems", item: "https://www.2kosystems.com/systems" },
+      { "@type": "ListItem", position: 3, name: product.name },
+    ],
+  };
+
   const others = PRODUCTS.filter((p) => p.slug !== product.slug);
 
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+
+      {/* Visible breadcrumb — Google prefers markup it can see corroborated */}
+      <nav aria-label="Breadcrumb" className="k-shell pt-28 lg:pt-32">
+        <ol className="k-mono flex flex-wrap items-center gap-2">
+          <li><Link href="/systems" className="hover:text-[var(--warm)]">Systems</Link></li>
+          <li aria-hidden="true">/</li>
+          <li style={{ color: "var(--warm-70)" }}>{product.name}</li>
+        </ol>
+      </nav>
 
       {/* ═══ OPENING ═══ */}
-      <section className="relative isolate overflow-hidden pt-32 pb-16 lg:pt-40">
+      <section className="relative isolate overflow-hidden pt-8 pb-16">
         <div className="k-glow -z-10" style={{ top: "40px" }} aria-hidden="true" />
         <div className="k-shell">
           <Rise>

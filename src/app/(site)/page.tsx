@@ -8,9 +8,10 @@ import { UptimeCard } from "@/components/cinema/HeroCards";
 import { RATES } from "@/lib/pricing";
 
 export const metadata: Metadata = {
-  title: "Operational Systems for Heavy Industry",
+  title: "Custom Operational Systems for South African Industry",
   description:
-    "2KO Systems builds the approvals, capture, escalation and reporting systems that heavy South African operations run on. Fixed scope, published prices, code you own.",
+    "Approvals, capture, escalation and reporting systems for South African operations. Fixed scope, published prices, code you own.",
+  alternates: { canonical: "/" },
 };
 
 const systems = [

@@ -10,11 +10,19 @@ export default function Photo({
   src,
   priority = false,
   sizes = "100vw",
+  alt = "",
   scrim = "none",
   position = "center",
   className = "",
 }: {
   src: string;
+  /**
+   * Leave empty for decorative plates — every one of ours sits behind a
+   * heading that already carries the meaning, and alt text there is noise a
+   * screen reader has to sit through. Pass real text only when the photograph
+   * itself conveys something the surrounding copy does not.
+   */
+  alt?: string;
   priority?: boolean;
   sizes?: string;
   scrim?: Scrim;
@@ -26,7 +34,7 @@ export default function Photo({
     <div className={`k-photo ${className}`.trim()}>
       <Image
         src={src}
-        alt=""
+        alt={alt}
         fill
         priority={priority}
         sizes={sizes}

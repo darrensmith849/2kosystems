@@ -4,7 +4,7 @@ import Rise from "@/components/cinema/Rise";
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description:
-    "How 2KO Systems handles personal information, in line with POPIA.",
+    "How 2KO Systems collects, uses and retains personal information from this website and its assistant, in line with POPIA. Your rights and how to exercise them.",
   alternates: { canonical: "/privacy" },
 };
 

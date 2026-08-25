@@ -126,7 +126,7 @@ export const PRODUCTS: Product[] = [
     summary: "Incident capture, investigation, corrective actions and regulator-ready reporting.",
     price: RATES.sheq,
     timebox: TIMEBOX.sheq,
-    metaDescription: `A fixed-price SHEQ incident reporting and investigation system for South African mining and industrial operations. Capture, root cause, corrective actions and reporting in ${TIMEBOX.sheq} for ${RATES.sheq} ex VAT.`,
+    metaDescription: `Fixed-price SHEQ incident reporting for South African mining and industry. Capture, root cause and corrective actions in ${TIMEBOX.sheq}, ${RATES.sheq} ex VAT.`,
     symptoms: [
       { t: "The register is a spreadsheet one person maintains", d: "It is current until they are on leave, and nobody else knows the conventions they use." },
       { t: "Corrective actions have no owner or due date", d: "They are agreed in the investigation meeting and then live in the minutes, which nobody reopens." },
@@ -187,7 +187,7 @@ export const PRODUCTS: Product[] = [
     summary: "Onboarding, medicals, inductions, expiry alerts and site access approval.",
     price: RATES.contractor,
     timebox: TIMEBOX.contractor,
-    metaDescription: `A fixed-price contractor compliance and site access system for South African operations. Onboarding, medicals, inductions, certificate expiry alerts and access approval in ${TIMEBOX.contractor} for ${RATES.contractor} ex VAT.`,
+    metaDescription: `Fixed-price contractor compliance and site access for South African operations. Medicals, inductions and expiry alerts in ${TIMEBOX.contractor}, ${RATES.contractor} ex VAT.`,
     symptoms: [
       { t: "Expiry dates live in a spreadsheet nobody opens", d: "Medicals, inductions and certificates all expire on their own schedule, and the register is only checked when something has already gone wrong." },
       { t: "Access is granted on someone's word at the gate", d: "The guard has no way to check, so the answer is whoever is standing there sounding confident." },
@@ -248,7 +248,7 @@ export const PRODUCTS: Product[] = [
     summary: "One register for what you own, where it is and what moved.",
     price: RATES.assetRegister,
     timebox: TIMEBOX.assetRegister,
-    metaDescription: `A fixed-price stock control and asset register system for South African operations. Locations, movements, stock counts and variance reporting in ${TIMEBOX.assetRegister} for ${RATES.assetRegister} ex VAT.`,
+    metaDescription: `Fixed-price stock control and asset register for South African operations. Locations, movements and stock counts in ${TIMEBOX.assetRegister}, ${RATES.assetRegister} ex VAT.`,
     symptoms: [
       { t: "The count never reconciles", d: "Two people counted, one wrote it in a different unit, and the variance is written off rather than explained." },
       { t: "Nobody knows where an asset physically is", d: "It was moved between sites by someone who has since left, and the register still shows the old location." },

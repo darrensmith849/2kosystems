@@ -347,9 +347,9 @@ export default function OpsConsole() {
                 </span>
               </div>
 
-              <h3 className="mt-2.5 text-[15px] font-medium leading-snug tracking-[-0.015em]">
+              <p className="mt-2.5 text-[15px] font-medium leading-snug tracking-[-0.015em]">
                 {selected.title}
-              </h3>
+              </p>
 
               {/* The number first, before any prose */}
               {selected.value > 0 && (
