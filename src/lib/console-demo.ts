@@ -10,6 +10,9 @@ export type Priority = "urgent" | "high" | "normal";
 
 export type Entry = { at: string; who: string; what: string; tone?: "good" | "warn" | "bad" };
 
+/** One step in an approval chain — drawn as a row of avatars in the UI. */
+export type Step = { who: string; role: string; state: "done" | "active" | "waiting" };
+
 export type Request = {
   id: string;
   title: string;
@@ -22,6 +25,11 @@ export type Request = {
   age: string;
   category: string;
   detail: string;
+  /** Short label for the dashboard tiles — the long title is for the detail pane. */
+  short: string;
+  chain: Step[];
+  /** Twelve weeks of the metric this request affects, for the row sparkline. */
+  trend: number[];
   trail: Entry[];
 };
 
@@ -30,6 +38,9 @@ export const SITES = ["Rustenburg", "Steelpoort", "Mokopane", "Central"] as cons
 export const REQUESTS: Request[] = [
   {
     id: "REQ-2418",
+    short: "Gearbox",
+    chain: [{ who: "T. Nkosi", role: "Raised", state: "done" }, { who: "J. Meyer", role: "Supervisor", state: "done" }, { who: "You", role: "Ops Director", state: "active" }, { who: "K. Botha", role: "Finance", state: "waiting" }],
+    trend: [42, 48, 39, 55, 47, 61, 58, 64, 71, 78, 84, 92],
     title: "Conveyor CV-14 gearbox replacement",
     status: "escalated",
     priority: "urgent",
@@ -50,6 +61,9 @@ export const REQUESTS: Request[] = [
   },
   {
     id: "REQ-2417",
+    short: "Contractor",
+    chain: [{ who: "P. Dlamini", role: "Raised", state: "done" }, { who: "System", role: "Compliance", state: "done" }, { who: "You", role: "Site lead", state: "active" }],
+    trend: [30, 34, 31, 38, 36, 41, 39, 44, 42, 47, 45, 50],
     title: "Contractor access — Mavuso Electrical (4 crew)",
     status: "pending",
     priority: "high",
@@ -69,6 +83,9 @@ export const REQUESTS: Request[] = [
   },
   {
     id: "REQ-2416",
+    short: "Diesel",
+    chain: [{ who: "S. Mahlangu", role: "Raised", state: "done" }, { who: "K. Botha", role: "First sign", state: "done" }, { who: "You", role: "Second sign", state: "active" }],
+    trend: [64, 61, 66, 72, 68, 75, 71, 78, 74, 81, 77, 84],
     title: "Diesel bulk order — 12,000 L",
     status: "pending",
     priority: "normal",
@@ -88,6 +105,9 @@ export const REQUESTS: Request[] = [
   },
   {
     id: "REQ-2415",
+    short: "Overtime",
+    chain: [{ who: "L. van Wyk", role: "Raised", state: "done" }, { who: "You", role: "Ops Director", state: "active" }, { who: "K. Botha", role: "Payroll", state: "waiting" }],
+    trend: [20, 24, 22, 28, 26, 33, 30, 37, 34, 41, 38, 45],
     title: "Overtime authorisation — night shift, Section 4",
     status: "pending",
     priority: "high",
@@ -106,6 +126,9 @@ export const REQUESTS: Request[] = [
   },
   {
     id: "REQ-2414",
+    short: "Calibration",
+    chain: [{ who: "System", role: "Raised", state: "done" }, { who: "K. Botha", role: "Approved", state: "done" }],
+    trend: [50, 48, 52, 49, 54, 51, 56, 53, 58, 55, 60, 57],
     title: "Weighbridge calibration certificate renewal",
     status: "approved",
     priority: "normal",
@@ -125,6 +148,9 @@ export const REQUESTS: Request[] = [
   },
   {
     id: "REQ-2413",
+    short: "Laptop",
+    chain: [{ who: "A. Fourie", role: "Raised", state: "done" }, { who: "K. Botha", role: "Declined", state: "done" }],
+    trend: [18, 22, 19, 25, 21, 27, 24, 29, 26, 31, 28, 33],
     title: "Replacement laptop — planning office",
     status: "declined",
     priority: "normal",

@@ -590,3 +590,57 @@ textarea.k-field { height: auto; padding-block: 10px; line-height: 1.5; resize: 
   border-bottom-color: var(--hair);
   backdrop-filter: blur(12px);
 }
+
+/* ============================================================
+   Console — visual layer
+   ============================================================
+   Charts, avatars and progress instead of paragraphs. The point of the
+   demo is that it should read as a dashboard at a glance. */
+
+.k-tile {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 12px;
+  border-right: 1px solid var(--hair);
+}
+.k-tile:last-child { border-right: none; }
+
+.k-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #06120b;
+  flex: 0 0 auto;
+}
+.k-avatar--sm { width: 18px; height: 18px; font-size: 8px; }
+.k-avatar--waiting {
+  background: transparent !important;
+  border: 1px dashed var(--warm-25);
+  color: var(--warm-25) !important;
+}
+.k-avatar--active { box-shadow: 0 0 0 2px rgba(232, 163, 61, 0.35); }
+
+/* Approval chain: avatars joined by a rail that fills as it progresses. */
+.k-chain { display: flex; align-items: center; }
+.k-chain-link {
+  flex: 1;
+  height: 1px;
+  min-width: 12px;
+  background: var(--hair-2);
+}
+.k-chain-link[data-done="true"] { background: var(--signal); }
+
+/* Compact progress pips on each list row. */
+.k-pips { display: inline-flex; gap: 3px; }
+.k-pip { width: 5px; height: 5px; border-radius: 999px; background: var(--warm-25); }
+.k-pip[data-state="done"] { background: var(--signal); }
+.k-pip[data-state="active"] { background: var(--ember); }
+
+.k-bar-track { height: 4px; border-radius: 999px; background: rgba(255,255,255,0.08); overflow: hidden; }
+.k-bar-fill { height: 4px; border-radius: 999px; }
