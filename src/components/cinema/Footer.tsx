@@ -5,23 +5,23 @@ const columns = [
   {
     heading: "Systems",
     links: [
-      { href: "/v2/systems", label: "What we build" },
+      { href: "/systems", label: "What we build" },
       { href: "/get-off-excel", label: `Get Off Excel — ${RATES.getOffExcel}` },
-      { href: "/v2/sectors", label: "Sectors" },
+      { href: "/sectors", label: "Sectors" },
     ],
   },
   {
     heading: "Working together",
     links: [
-      { href: "/v2/method", label: "Method" },
-      { href: "/v2/pricing", label: "Pricing" },
-      { href: "/v2/contact", label: "Contact" },
+      { href: "/method", label: "Method" },
+      { href: "/pricing", label: "Pricing" },
+      { href: "/contact", label: "Contact" },
     ],
   },
   {
     heading: "Company",
     links: [
-      { href: "/v2/studio", label: "Studio" },
+      { href: "/studio", label: "Studio" },
       { href: "https://www.2ko.co.za", label: "Part of the 2KO group" },
       { href: "/privacy", label: "Privacy" },
     ],
@@ -42,7 +42,7 @@ export default function Footer() {
               Operational systems for heavy South African industry. Fixed scope,
               published prices, and code you own from day one.
             </p>
-            <Link href="/v2/contact" className="k-btn k-btn--ghost mt-6">
+            <Link href="/contact" className="k-btn k-btn--ghost mt-6">
               Start a project
             </Link>
           </div>

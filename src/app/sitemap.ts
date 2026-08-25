@@ -3,11 +3,10 @@ import type { MetadataRoute } from "next";
 const SITE_URL = "https://www.2kosystems.com";
 
 /**
- * Bump this when page content is meaningfully revised. It is deliberately a
- * fixed constant rather than `new Date()` — a lastmod that always says "now"
- * is noise, and search engines learn to ignore it.
+ * Bump when page content is meaningfully revised. Deliberately a fixed
+ * constant — a lastmod that always says "now" is noise.
  */
-const LAST_REVIEWED = new Date("2026-08-20");
+const LAST_REVIEWED = new Date("2026-08-25");
 
 type Entry = {
   path: string;
@@ -17,15 +16,13 @@ type Entry = {
 
 const routes: Entry[] = [
   { path: "", priority: 1.0, changeFrequency: "monthly" },
-  { path: "/get-off-excel", priority: 0.9, changeFrequency: "monthly" },
-  { path: "/solutions", priority: 0.9, changeFrequency: "monthly" },
   { path: "/pricing", priority: 0.9, changeFrequency: "monthly" },
-  { path: "/how-we-work", priority: 0.8, changeFrequency: "monthly" },
-  { path: "/industries", priority: 0.8, changeFrequency: "monthly" },
-  { path: "/case-studies", priority: 0.7, changeFrequency: "monthly" },
-  { path: "/about", priority: 0.6, changeFrequency: "yearly" },
+  { path: "/get-off-excel", priority: 0.9, changeFrequency: "monthly" },
+  { path: "/systems", priority: 0.9, changeFrequency: "monthly" },
+  { path: "/method", priority: 0.8, changeFrequency: "monthly" },
+  { path: "/sectors", priority: 0.8, changeFrequency: "monthly" },
+  { path: "/studio", priority: 0.6, changeFrequency: "yearly" },
   { path: "/contact", priority: 0.6, changeFrequency: "yearly" },
-  { path: "/get-started", priority: 0.6, changeFrequency: "yearly" },
   { path: "/privacy", priority: 0.2, changeFrequency: "yearly" },
 ];
 
