@@ -17,6 +17,10 @@
   "images": {
     "binding": "IMAGES"
   },
+  // Cloudflare Email Service. No API key — the binding is the credential.
+  "send_email": [
+    { "name": "EMAIL" }
+  ],
   "observability": {
     "enabled": true
   }

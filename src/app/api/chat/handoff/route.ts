@@ -4,53 +4,13 @@ import type {
   HandoffResponseBody,
   ChatMessage,
 } from "@/lib/chat/types";
+import { escapeHtml, isValidEmail, notifyRecipients, sendRaw } from "@/lib/email";
 import { postSigmafyLead, SigmafyLeadError } from "@/lib/sigmafy/lead-client";
 
 export const runtime = "nodejs";
 
-const BREVO_API_KEY = process.env.BREVO_API_KEY;
-const BREVO_SENDER_EMAIL = process.env.BREVO_SENDER_EMAIL;
-const BREVO_SENDER_NAME = process.env.BREVO_SENDER_NAME || "2KO Systems";
-const BOOK_AUDIT_TO_EMAIL = process.env.BOOK_AUDIT_TO_EMAIL;
 
-function isValidEmail(email: string) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-}
 
-function escapeHtml(value: string) {
-  return value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
-
-async function brevoRequest(path: string, body: unknown) {
-  if (!BREVO_API_KEY) throw new Error("Missing BREVO_API_KEY");
-
-  const res = await fetch(`https://api.brevo.com/v3${path}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "api-key": BREVO_API_KEY,
-    },
-    body: JSON.stringify(body),
-    cache: "no-store",
-  });
-
-  const text = await res.text();
-  let json: unknown = null;
-  try {
-    json = text ? JSON.parse(text) : null;
-  } catch {
-    json = text;
-  }
-
-  if (!res.ok) {
-    throw new Error(`Brevo ${path} failed: ${res.status} ${JSON.stringify(json)}`);
-  }
-  return json;
-}
 
 async function recordSigmafyLead(payload: HandoffRequestBody) {
   const transcriptText = payload.transcript
@@ -117,10 +77,6 @@ function renderTranscriptText(transcript: ChatMessage[]) {
 }
 
 async function sendInternalNotification(payload: HandoffRequestBody) {
-  if (!BREVO_SENDER_EMAIL || !BOOK_AUDIT_TO_EMAIL) {
-    throw new Error("Missing BREVO_SENDER_EMAIL or BOOK_AUDIT_TO_EMAIL");
-  }
-
   const subject = payload.requestedHuman
     ? `Chat handoff — ${payload.lead.name} requested an agent`
     : `New chat lead — ${payload.lead.name}`;
@@ -168,19 +124,16 @@ async function sendInternalNotification(payload: HandoffRequestBody) {
     renderTranscriptText(payload.transcript),
   ].join("\n");
 
-  await brevoRequest("/smtp/email", {
-    sender: { email: BREVO_SENDER_EMAIL, name: BREVO_SENDER_NAME },
-    to: [{ email: BOOK_AUDIT_TO_EMAIL, name: "2KO Systems" }],
-    replyTo: { email: payload.lead.email, name: payload.lead.name },
+  await sendRaw({
+    to: notifyRecipients(),
     subject,
-    htmlContent,
-    textContent,
+    html: htmlContent,
+    text: textContent,
+    replyTo: payload.lead.email,
   });
 }
 
 async function sendUserConfirmation(payload: HandoffRequestBody) {
-  if (!BREVO_SENDER_EMAIL) throw new Error("Missing BREVO_SENDER_EMAIL");
-
   const firstName = payload.lead.name.split(/\s+/)[0] || payload.lead.name;
   const htmlContent = `
     <html>
@@ -198,11 +151,11 @@ async function sendUserConfirmation(payload: HandoffRequestBody) {
     </html>
   `;
 
-  await brevoRequest("/smtp/email", {
-    sender: { email: BREVO_SENDER_EMAIL, name: BREVO_SENDER_NAME },
-    to: [{ email: payload.lead.email, name: payload.lead.name }],
+  await sendRaw({
+    to: payload.lead.email,
     subject: "Thanks — the 2KO team will be in touch",
-    htmlContent,
+    html: htmlContent,
+    text: `Hi ${firstName},\n\nSomeone from the 2KO team will reach out soon with the context from your chat. If you would like to share anything else in the meantime, reply to this email.\n\n— The 2KO Systems team`,
   });
 }
 

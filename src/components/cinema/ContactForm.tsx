@@ -7,7 +7,7 @@ type State = "idle" | "sending" | "sent" | "error";
 
 /**
  * Posts to the same /api/contact endpoint the current site uses, so enquiries
- * land in the existing Brevo pipeline rather than a second inbox.
+ * land in the same pipeline as every other enquiry.
  */
 export default function ContactForm() {
   const [state, setState] = useState<State>("idle");

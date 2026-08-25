@@ -2,8 +2,8 @@
  * Sigmafy is the source of truth for all leads/contacts captured across our
  * properties. This client POSTs to portal.sigmafy.co/api/v1/leads with the
  * shared bearer token (SIGMAFY_INGEST_TOKEN). Lead capture across the 2KO
- * Systems site (audit form + chat handoff) goes here instead of into Brevo's
- * contact list — Brevo is now used only for transactional email.
+ * Systems site (contact form + chat handoff) goes here. Transactional email
+ * is sent separately through Cloudflare Email Service.
  */
 
 export type SigmafyLeadPayload = {
