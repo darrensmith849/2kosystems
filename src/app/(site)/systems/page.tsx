@@ -15,6 +15,7 @@ import {
   ConfidenceBars,
 } from "@/components/cinema/instruments";
 import { RATES } from "@/lib/pricing";
+import { CATALOGUE } from "@/lib/products";
 
 export const metadata: Metadata = {
   title: "Systems We Build",
@@ -54,8 +55,53 @@ export default function SystemsPage() {
         </Rise>
       </section>
 
-      {/* ═══ 01 APPROVALS ═══ */}
+      {/* ═══ READY TO BUILD ═══ */}
       <section className="k-band k-band--2">
+        <div className="k-shell">
+          <Rise>
+            <p className="k-mono k-mono--ember">Ready to build</p>
+          </Rise>
+          <Rise step={1}>
+            <h2 className="k-title mt-6 max-w-[26ch]">
+              Some problems are common enough to have a fixed price.
+            </h2>
+          </Rise>
+          <Rise step={2}>
+            <p className="k-lead k-measure mt-5">
+              These are the ones we are asked for most often, so the scope is
+              already drawn and the price is already published. Everything else is
+              shaped from scratch.
+            </p>
+          </Rise>
+
+          <div className="mt-12">
+            {CATALOGUE.map((item, i) => (
+              <Rise key={item.href}>
+                <Link
+                  href={item.href}
+                  className="k-row grid md:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)_120px_auto] md:items-baseline"
+                  style={i === 0 ? { borderTop: "1px solid var(--hair-2)" } : undefined}
+                >
+                  <span className="k-sub">{item.name}</span>
+                  <span className="k-sm">{item.summary}</span>
+                  <span className="k-mono">{item.timebox}</span>
+                  <span className="k-num text-[20px] md:text-right">{item.price}</span>
+                </Link>
+              </Rise>
+            ))}
+          </div>
+
+          <Rise className="mt-10">
+            <p className="k-sm k-measure">
+              If your version is bigger than the box, we say so at scoping rather
+              than sell you the wrong thing — and point you at a pilot instead.
+            </p>
+          </Rise>
+        </div>
+      </section>
+
+      {/* ═══ 01 APPROVALS ═══ */}
+      <section className="k-band">
         <div className="k-shell grid gap-12 lg:grid-cols-[minmax(0,1fr)_460px] lg:items-center">
           <div>
             <Rise>
@@ -105,7 +151,7 @@ export default function SystemsPage() {
       </section>
 
       {/* ═══ 02 CAPTURE ═══ */}
-      <section className="k-band">
+      <section className="k-band k-band--2">
         <div className="k-shell grid gap-12 lg:grid-cols-[460px_minmax(0,1fr)] lg:items-center">
           <Rise className="lg:order-2">
             <Panel label="Capture integrity" meta="30d" float="on">
@@ -151,7 +197,7 @@ export default function SystemsPage() {
       </section>
 
       {/* ═══ 03 ESCALATION ═══ */}
-      <section className="k-band k-band--2">
+      <section className="k-band">
         <div className="k-shell grid gap-12 lg:grid-cols-[minmax(0,1fr)_460px] lg:items-center">
           <div>
             <Rise>
@@ -201,7 +247,7 @@ export default function SystemsPage() {
       </section>
 
       {/* ═══ 04 REPORTING ═══ */}
-      <section className="k-band">
+      <section className="k-band k-band--2">
         <div className="k-shell">
           <Rise>
             <p className="k-mono k-mono--ember">04 — Reporting</p>
@@ -239,7 +285,7 @@ export default function SystemsPage() {
       </section>
 
       {/* ═══ 05 PORTALS ═══ */}
-      <section className="k-band k-band--2">
+      <section className="k-band">
         <div className="k-shell grid gap-12 lg:grid-cols-[minmax(0,1fr)_500px] lg:items-center">
           <div>
             <Rise>
@@ -284,7 +330,7 @@ export default function SystemsPage() {
       </section>
 
       {/* ═══ 06 INTELLIGENCE ═══ */}
-      <section className="k-band">
+      <section className="k-band k-band--2">
         <div className="k-shell grid gap-12 lg:grid-cols-[460px_minmax(0,1fr)] lg:items-center">
           <Rise className="lg:order-2">
             <Panel label="Triage" meta="Last 1,000" float="slow">
@@ -325,7 +371,7 @@ export default function SystemsPage() {
       </section>
 
       {/* ═══ CLOSE ═══ */}
-      <section className="k-band k-band--2">
+      <section className="k-band">
         <div className="k-shell grid gap-12 lg:grid-cols-[1fr_auto] lg:items-end">
           <div>
             <Rise>

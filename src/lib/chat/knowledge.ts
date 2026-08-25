@@ -1,4 +1,5 @@
 import { RATES, TERMS, TIMEBOX } from "@/lib/pricing";
+import { PRODUCTS } from "@/lib/products";
 
 /**
  * The assistant's knowledge base.
@@ -57,6 +58,21 @@ the Control phase written in code instead of onto a form.
 - C — Control: Core System Build. ${RATES.buildFrom} to ${RATES.buildTo}, phased, ${TIMEBOX.buildPhase}.
   Each phase is quoted as a fixed price only once the previous one has shipped.
 - S — Sustain: Managed Retainer. Optional, never a condition.
+
+## Productised systems — fixed scope, published price
+
+Common problems where the scope is already drawn, so the price is already
+published. Each has its own page at /systems/<slug>. If someone's version is
+bigger than the box, say so and point them at a Proof-of-Value Pilot rather
+than selling them the wrong product.
+
+${PRODUCTS.map((p) => `- ${p.name} — ${p.price} ex VAT, ${p.timebox}. ${p.summary} Page: /systems/${p.slug}\n  Not included: ${p.excluded.slice(0, 4).join("; ")}.`).join("\n")}
+
+None of these include an ERP integration (Sage, Pastel, Syspro, Xero). That is
+always a pilot.
+
+We do not sell a custom CRM. Off-the-shelf CRMs are cheap and good, and building
+one bespoke would be the wrong advice. Say so plainly if asked.
 
 ## Get Off Excel — the fast track
 

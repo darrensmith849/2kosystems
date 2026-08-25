@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { PRODUCTS } from "@/lib/products";
 
 const SITE_URL = "https://www.2kosystems.com";
 
@@ -19,6 +20,12 @@ const routes: Entry[] = [
   { path: "/pricing", priority: 0.9, changeFrequency: "monthly" },
   { path: "/get-off-excel", priority: 0.9, changeFrequency: "monthly" },
   { path: "/systems", priority: 0.9, changeFrequency: "monthly" },
+  // Productised systems — high-intent search landing pages.
+  ...PRODUCTS.map((product) => ({
+    path: `/systems/${product.slug}`,
+    priority: 0.9,
+    changeFrequency: "monthly" as const,
+  })),
   { path: "/method", priority: 0.8, changeFrequency: "monthly" },
   { path: "/sectors", priority: 0.8, changeFrequency: "monthly" },
   { path: "/studio", priority: 0.6, changeFrequency: "yearly" },

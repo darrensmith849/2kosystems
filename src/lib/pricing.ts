@@ -24,6 +24,11 @@ export const RATES = {
   retainerCare: "R7,500",
   retainerImprove: "R18,500",
   retainerPartner: "R38,500",
+  /** Productised systems — fixed scope, published price. */
+  jobCard: "R95,000",
+  sheq: "R120,000",
+  contractor: "R95,000",
+  assetRegister: "R79,500",
   /** Out-of-scope and change-request work. */
   dayRate: "R9,500",
   hourlyRate: "R1,250",
@@ -54,6 +59,10 @@ export const TIMEBOX = {
   audit: "2 weeks",
   auditExtended: "3–4 weeks",
   getOffExcel: "4 weeks",
+  jobCard: "5 weeks",
+  sheq: "6 weeks",
+  contractor: "5 weeks",
+  assetRegister: "4 weeks",
   pilot: "4–6 weeks",
   buildPhase: "4–6 weeks per phase",
 } as const;
