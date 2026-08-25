@@ -6,7 +6,7 @@ import { Panel, QueueRows, Sparkline, Pill } from "@/components/cinema/instrumen
 import { RATES } from "@/lib/pricing";
 
 export const metadata: Metadata = {
-  title: "Mining, Agriculture, Logistics & Manufacturing Systems",
+  title: "Systems for Mining, Agriculture & Logistics",
   description:
     "Operational systems for South African mining, agriculture, logistics and manufacturing — where a small process slip carries a large cost.",
   alternates: { canonical: "/sectors" },

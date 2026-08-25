@@ -8,7 +8,7 @@ const PRICE = RATES.getOffExcel;
 const TIMEBOXED = TIMEBOX.getOffExcel;
 
 export const metadata: Metadata = {
-  title: "Get Off Excel — Replace Your Spreadsheet With a Real System",
+  title: "Get Off Excel — Replace a Spreadsheet With a System",
   description: `Replace the spreadsheet your operation runs on with a real multi-user system in ${TIMEBOXED}. Fixed price ${PRICE} ex VAT, fixed scope.`,
   alternates: { canonical: "/get-off-excel" },
 };
