@@ -644,3 +644,161 @@ textarea.k-field { height: auto; padding-block: 10px; line-height: 1.5; resize: 
 
 .k-bar-track { height: 4px; border-radius: 999px; background: rgba(255,255,255,0.08); overflow: hidden; }
 .k-bar-fill { height: 4px; border-radius: 999px; }
+
+/* ============================================================
+   Assistant
+   ============================================================ */
+
+@keyframes kChatIn { from { opacity: 0; transform: translateY(10px) scale(0.99); } to { opacity: 1; transform: none; } }
+@keyframes kTyping { 0%, 60%, 100% { opacity: 0.25; } 30% { opacity: 1; } }
+
+.k-chat-launch {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 60;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding-inline: 16px;
+  border-radius: 999px;
+  border: 1px solid var(--hair-2);
+  background: rgba(15, 16, 18, 0.86);
+  backdrop-filter: blur(14px);
+  color: var(--warm);
+  font-size: 13px;
+  font-weight: 500;
+  box-shadow: 0 12px 34px -14px rgba(0, 0, 0, 0.9);
+  transition: border-color 240ms var(--ease), background-color 240ms var(--ease);
+}
+.k-chat-launch:hover { border-color: var(--warm-25); background: rgba(22, 23, 26, 0.94); }
+
+.k-chat {
+  position: fixed;
+  right: 20px;
+  bottom: 72px;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  width: min(380px, calc(100vw - 40px));
+  max-height: min(560px, calc(100dvh - 120px));
+  border: 1px solid var(--hair);
+  border-radius: 14px;
+  background: var(--panel);
+  box-shadow: 0 40px 90px -40px rgba(0, 0, 0, 0.95);
+  overflow: hidden;
+  animation: kChatIn 260ms var(--ease);
+}
+
+.k-chat-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 40px;
+  padding-inline: 14px;
+  border-bottom: 1px solid var(--hair);
+  background: var(--panel-2);
+  flex: 0 0 auto;
+}
+
+.k-chat-body {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.k-chat-opener {
+  text-align: left;
+  padding: 8px 10px;
+  border: 1px solid var(--hair);
+  border-radius: 8px;
+  background: var(--panel-2);
+  color: var(--warm-70);
+  font-size: 12.5px;
+  transition: color 200ms var(--ease), border-color 200ms var(--ease);
+}
+.k-chat-opener:hover { color: var(--warm); border-color: var(--warm-25); }
+
+.k-chat-msg {
+  max-width: 88%;
+  padding: 9px 12px;
+  border-radius: 10px;
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.k-chat-msg--user {
+  align-self: flex-end;
+  background: var(--panel-3);
+  color: var(--warm);
+}
+.k-chat-msg--assistant {
+  align-self: flex-start;
+  background: transparent;
+  border: 1px solid var(--hair);
+  color: var(--warm-70);
+}
+
+.k-chat-typing { display: inline-flex; gap: 4px; }
+.k-chat-typing span {
+  width: 4px; height: 4px; border-radius: 999px; background: var(--warm-45);
+  animation: kTyping 1200ms ease-in-out infinite;
+}
+.k-chat-typing span:nth-child(2) { animation-delay: 160ms; }
+.k-chat-typing span:nth-child(3) { animation-delay: 320ms; }
+
+.k-chat-foot {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+  padding: 10px 12px;
+  border-top: 1px solid var(--hair);
+  flex: 0 0 auto;
+}
+
+.k-chat-input {
+  flex: 1;
+  min-height: 34px;
+  max-height: 110px;
+  padding: 8px 10px;
+  border: 1px solid var(--hair);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--warm);
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 1.4;
+  resize: none;
+}
+.k-chat-input:focus { outline: none; border-color: var(--signal); }
+.k-chat-input::placeholder { color: var(--warm-45); }
+
+.k-chat-send {
+  width: 34px; height: 34px;
+  border-radius: 8px;
+  background: var(--signal);
+  color: #04140a;
+  font-size: 15px;
+  flex: 0 0 auto;
+  transition: opacity 200ms var(--ease);
+}
+.k-chat-send:disabled { opacity: 0.35; }
+
+.k-chat-note {
+  padding: 0 12px 10px;
+  font-size: 10.5px;
+  line-height: 1.45;
+  color: var(--warm-45);
+  flex: 0 0 auto;
+}
+.k-chat-note a { color: var(--warm-70); text-decoration: underline; }
+
+@media (prefers-reduced-motion: reduce) {
+  .k-chat { animation: none; }
+  .k-chat-typing span { animation: none; opacity: 0.6; }
+}
