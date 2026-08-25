@@ -66,8 +66,8 @@ const sectors = [
   {
     n: "04",
     name: "Industrial and manufacturing",
-    image: "/imagery/industries/industrial.jpg",
-    position: "88% 46%",
+    image: "/imagery/industries/warehouse.jpg",
+    position: "center",
     metric: "Scrap and rework rate",
     line: "The improvement holds, or it quietly comes back.",
     body: "Quality checks, non-conformance, maintenance requests and the control plan a Green Belt wrote eighteen months ago. Almost every control method on that plan depends on a person remembering — which is exactly why the gain decays.",

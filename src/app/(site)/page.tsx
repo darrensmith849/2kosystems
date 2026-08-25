@@ -154,10 +154,10 @@ export default function CinemaHome() {
       <section className="relative isolate flex min-h-[85svh] items-end overflow-hidden">
         <Rise variant="settle" className="absolute inset-0 -z-10">
           <Photo
-            src="/imagery/industries/industrial.jpg"
+            src="/imagery/industries/warehouse.jpg"
             sizes="100vw"
             scrim="bottom"
-            position="88% 46%"
+            position="center"
           />
         </Rise>
 

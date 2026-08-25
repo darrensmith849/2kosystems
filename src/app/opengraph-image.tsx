@@ -1,13 +1,13 @@
 import { ImageResponse } from "next/og";
 
-// Route segment config — static, generated at build time.
-export const alt =
-  "2KO Systems — Custom Operational Systems & Intelligent Automation";
+export const alt = "2KO Systems — operational systems for South African industry";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-// Social/link preview card. Rendered as the site's og:image (and, via
-// twitter-image re-export, the Twitter/X card).
+/**
+ * Link preview card. Matches the site: near-black ground, a soft glow behind
+ * the mark, hairline chrome and the same monospace label treatment.
+ */
 export default function OpengraphImage() {
   return new ImageResponse(
     (
@@ -18,103 +18,95 @@ export default function OpengraphImage() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          padding: "72px 80px",
-          background:
-            "linear-gradient(135deg, #06180d 0%, #0a3517 45%, #0a6e33 100%)",
+          background: "#08090a",
+          padding: 72,
+          position: "relative",
           fontFamily: "sans-serif",
-          color: "#ffffff",
         }}
       >
+        {/*
+          Satori (next/og) renders `radial-gradient(closest-side, …)` as a hard
+          rectangle, so the glow is built from linear gradients instead — they
+          rasterise correctly and read the same at card size.
+        */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            display: "flex",
+            background:
+              "linear-gradient(135deg, rgba(63,185,80,0.20) 0%, rgba(63,185,80,0.05) 34%, rgba(8,9,10,0) 62%)",
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            display: "flex",
+            background:
+              "linear-gradient(215deg, rgba(232,163,61,0.16) 0%, rgba(8,9,10,0) 46%)",
+          }}
+        />
+
         {/* Wordmark */}
-        <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <div
             style={{
+              width: 10,
+              height: 10,
+              borderRadius: 999,
+              background: "#e8a33d",
               display: "flex",
-              fontSize: 60,
-              fontWeight: 800,
-              letterSpacing: -2,
             }}
-          >
-            <span style={{ color: "#ffffff" }}>2</span>
-            <span style={{ color: "#2dd46f" }}>KO</span>
+          />
+          <div style={{ fontSize: 26, color: "#f7f8f8", letterSpacing: -0.4 }}>
+            2KO Systems
           </div>
+        </div>
+
+        <div style={{ display: "flex", flexDirection: "column" }}>
           <div
             style={{
-              fontSize: 22,
-              letterSpacing: 8,
+              fontSize: 19,
+              color: "#8a8f98",
+              letterSpacing: 3,
               textTransform: "uppercase",
-              color: "rgba(255,255,255,0.62)",
-              paddingTop: 8,
+              display: "flex",
             }}
           >
-            Systems
+            Operational systems · South Africa
           </div>
-        </div>
-
-        {/* Headline */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 22 }}>
           <div
             style={{
-              fontSize: 66,
-              fontWeight: 700,
-              lineHeight: 1.08,
-              letterSpacing: -1.5,
+              marginTop: 26,
+              fontSize: 76,
+              lineHeight: 1.02,
+              color: "#f7f8f8",
+              letterSpacing: -2.6,
               maxWidth: 900,
+              display: "flex",
             }}
           >
-            Custom operational systems &amp; intelligent automation.
-          </div>
-          <div
-            style={{
-              fontSize: 27,
-              lineHeight: 1.4,
-              color: "rgba(255,255,255,0.74)",
-              maxWidth: 880,
-            }}
-          >
-            Workflow automation, approvals, dashboards, portals and embedded AI
-            — for established mining, agriculture and logistics businesses.
+            It runs whether you&rsquo;re watching.
           </div>
         </div>
 
-        {/* Footer row */}
+        {/* Baseline strip */}
         <div
           style={{
             display: "flex",
-            alignItems: "center",
             justifyContent: "space-between",
+            alignItems: "center",
+            borderTop: "1px solid rgba(255,255,255,0.10)",
+            paddingTop: 22,
+            fontSize: 19,
+            color: "#8a8f98",
+            letterSpacing: 2,
+            textTransform: "uppercase",
           }}
         >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 14,
-              fontSize: 26,
-              fontWeight: 600,
-              color: "#2dd46f",
-            }}
-          >
-            <div
-              style={{
-                width: 12,
-                height: 12,
-                borderRadius: 12,
-                background: "#2dd46f",
-              }}
-            />
-            www.2kosystems.com
-          </div>
-          <div
-            style={{
-              fontSize: 20,
-              letterSpacing: 3,
-              textTransform: "uppercase",
-              color: "rgba(255,255,255,0.5)",
-            }}
-          >
-            Southern Africa
-          </div>
+          <div style={{ display: "flex" }}>Fixed scope · Published prices</div>
+          <div style={{ display: "flex" }}>2kosystems.com</div>
         </div>
       </div>
     ),
