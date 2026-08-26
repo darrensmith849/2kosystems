@@ -59,12 +59,27 @@ export default async function ReviewPage({
           </Rise>
           <Rise step={2}>
             <p className="k-lead k-measure mt-6">
-              These are the improvement projects your people completed and
-              submitted through {review.cohort}. The numbers are theirs, not ours
-              — each one was costed by the person who ran the project and signed
-              off by a sponsor. We have added one column: what the control plan
-              actually depends on.
+              These are the improvement projects your people completed through{" "}
+              {review.cohort}. The numbers are theirs — each was costed by the
+              person who ran the project. We added one column: what the control
+              plan actually depends on.
             </p>
+          </Rise>
+
+          {/* The ask, stated before anyone has to scroll for it. */}
+          <Rise step={3}>
+            <div
+              className="mt-8 inline-flex flex-wrap items-center gap-x-3 gap-y-2 rounded-[10px] border px-5 py-4"
+              style={{ borderColor: "var(--signal)", background: "rgba(63,185,80,0.06)" }}
+            >
+              <span className="k-mono" style={{ color: "var(--signal)" }}>
+                What we want
+              </span>
+              <span className="text-[15px]" style={{ color: "var(--warm)" }}>
+                Half a day on site and {RATES.review} to tell you whether they
+                held. That is the whole ask.
+              </span>
+            </div>
           </Rise>
 
           {/* Headline numbers */}
@@ -143,88 +158,163 @@ export default async function ReviewPage({
         </div>
       </section>
 
-      {/* ═══ THE ARGUMENT ═══ */}
+      {/* ═══ THE OFFER — the loudest thing on the page ═══ */}
       <section className="k-band">
+        <div className="k-shell">
+          <Rise>
+            <p className="k-mono k-mono--ember">02 — What we are asking for</p>
+          </Rise>
+
+          <Rise step={1}>
+            <div
+              className="mt-8 overflow-hidden rounded-[12px] border"
+              style={{ borderColor: "var(--signal)", background: "rgba(63,185,80,0.05)" }}
+            >
+              <div className="p-7 lg:p-10">
+                <p className="k-mono">The whole offer</p>
+
+                <h2 className="k-state mt-4 max-w-[22ch]">
+                  {t.reviewPrice}. Half a day. One question answered.
+                </h2>
+
+                <p className="k-lead mt-6 max-w-[58ch]">
+                  We come to site for half a day. We pick one of the{" "}
+                  {t.manualCount} improvements above that relies on a person, and
+                  we watch how it actually runs today. Then we tell you one thing:
+                  whether the gain held, or quietly went away.
+                </p>
+
+                <div className="mt-9 grid gap-px overflow-hidden rounded-[10px] border border-[var(--hair)] md:grid-cols-3">
+                  {[
+                    {
+                      label: "What it costs",
+                      value: t.reviewPrice,
+                      note: "ex VAT. Fixed. Nothing else to approve.",
+                      tone: "var(--warm)",
+                    },
+                    {
+                      label: "What it takes from you",
+                      value: "Half a day",
+                      note: "One site visit. A few of your people, briefly.",
+                      tone: "var(--warm)",
+                    },
+                    {
+                      label: "What you get back",
+                      value: "A 4-page memo",
+                      note: "Page one is the answer. The rest is the evidence.",
+                      tone: "var(--signal)",
+                    },
+                  ].map((c) => (
+                    <div key={c.label} className="bg-[var(--panel)] p-6">
+                      <p className="k-mono">{c.label}</p>
+                      <p className="k-num mt-2 text-[26px] leading-none" style={{ color: c.tone }}>
+                        {c.value}
+                      </p>
+                      <p className="k-sm mt-2.5">{c.note}</p>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-9 grid gap-8 md:grid-cols-2">
+                  <div>
+                    <p className="k-mono" style={{ color: "var(--signal)" }}>
+                      What this is
+                    </p>
+                    <ul className="mt-3 flex flex-col gap-2.5">
+                      {[
+                        `A fixed ${t.reviewPrice}, agreed before we arrive`,
+                        "One process, watched end to end, in person",
+                        "A written answer: it held, or it did not",
+                        "Credited in full against anything you commission after it",
+                      ].map((i) => (
+                        <li key={i} className="flex gap-2.5 text-[13.5px] leading-[1.5]">
+                          <span style={{ color: "var(--signal)" }}>—</span>
+                          <span style={{ color: "var(--warm-70)" }}>{i}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="k-mono" style={{ color: "var(--ember)" }}>
+                      What this is not
+                    </p>
+                    <ul className="mt-3 flex flex-col gap-2.5">
+                      {[
+                        "Not a proposal, and not a quote for software",
+                        "Not a commitment to build anything, by either of us",
+                        "Not a sales visit — you get the memo either way",
+                        "Not open-ended: one price, one day, one answer",
+                      ].map((i) => (
+                        <li key={i} className="flex gap-2.5 text-[13.5px] leading-[1.5]">
+                          <span style={{ color: "var(--ember)" }}>—</span>
+                          <span style={{ color: "var(--warm-70)" }}>{i}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+                  <Link href="/contact" className="k-btn k-btn--solid">
+                    Book the {t.reviewPrice} review
+                  </Link>
+                  <Link href="/method" className="k-btn k-btn--ghost">
+                    See exactly how it runs
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </Rise>
+        </div>
+      </section>
+
+      {/* ═══ WHY NOT A BUILD ═══ */}
+      <section className="k-band k-band--2">
         <div className="k-shell grid gap-12 lg:grid-cols-[minmax(0,1fr)_400px] lg:items-start">
           <div>
             <Rise>
-              <p className="k-mono k-mono--ember">02 — What we are actually saying</p>
+              <p className="k-mono k-mono--ember">03 — Why we are not quoting you for software</p>
             </Rise>
             <Rise step={1}>
-              <h2 className="k-title mt-6 max-w-[22ch]">
-                None of this is a criticism of the work.
+              <h2 className="k-title mt-6 max-w-[24ch]">
+                We do not know yet whether it is worth building.
               </h2>
             </Rise>
             <Rise step={2}>
               <p className="k-lead k-measure mt-6">
-                The improvements were real and the numbers were defensible. What
-                we are pointing at is the mechanism holding them in place. Two of
-                your six went into a system and will still be true in three years.
-                The other {t.manualCount} went onto a person — a weekly walk, a
-                monthly review, a book countersigned at shift change.
+                The obvious move here would be to quote you for a system. We are
+                not going to, because on our own published rule it does not yet
+                add up — and we would rather show you the arithmetic than skip it.
               </p>
             </Rise>
             <Rise step={3}>
               <p className="k-lead k-measure mt-5">
-                Those decay. Not because anyone stops caring, but because a
-                resignation, a busy quarter or a new priority moves attention
-                somewhere else. That is the normal outcome, and it is worth{" "}
-                {rand(t.atRisk)} a year on this page alone.
+                Your largest exposure is {rand(rec.problem)} a year. The cheapest
+                build we do starts at {RATES.pilotFrom}, which is {rec.pct}% of
+                one year&rsquo;s cost. We only propose a build under{" "}
+                {TERMS.pilotValueRatio}. So either that number is understated, or
+                this should not be automated at all. Half a day on site is how we
+                find out — and it is a {t.reviewPrice} question, not a{" "}
+                {RATES.pilotFrom} one.
               </p>
             </Rise>
           </div>
 
           <Rise step={1}>
-            <Panel label="Largest single exposure" meta="Your figures">
-              <p className="k-mono">{t.largest.name}</p>
-
-              {/* Explicitly a cost, not a price. The previous version led with
-                  this figure unlabelled, where it read as a quote. */}
-              <p className="k-mono mt-4">Costing you, per year</p>
-              <p className="k-num mt-1 text-[28px] leading-none" style={{ color: "var(--ember)" }}>
-                {rand(rec.problem)}
-              </p>
-              <p className="k-mono mt-1.5">as costed by {t.largest.lead}, not by us</p>
-
-              <div className="k-hairline mt-5 pt-4">
-                {rec.clears ? (
-                  <>
-                    <p className="k-mono">What it would take to fix</p>
-                    <p className="k-num mt-1 text-[24px] leading-none" style={{ color: "var(--signal)" }}>
-                      from {RATES.pilotFrom}
-                    </p>
-                    <div className="mt-4">
-                      <QueueRows
-                        rows={[
-                          { label: "Share of one year's cost", value: `${rec.pct}%`, tone: "good" },
-                          { label: "Our published ceiling", value: TERMS.pilotValueRatio },
-                        ]}
-                      />
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <p className="k-mono" style={{ color: "var(--ember)" }}>
-                      We are not proposing a build for this one
-                    </p>
-                    <div className="mt-3">
-                      <QueueRows
-                        rows={[
-                          { label: "Cheapest pilot we do", value: `from ${RATES.pilotFrom}` },
-                          { label: "That is this much of one year", value: `${rec.pct}%`, tone: "warn" },
-                          { label: "Our published ceiling", value: TERMS.pilotValueRatio, tone: "good" },
-                          { label: "Would have to come in under", value: rand(rec.maxJustifiable) },
-                        ]}
-                      />
-                    </div>
-                    <p className="k-sm mt-4">
-                      On our own rule this does not justify a build yet. Either the
-                      problem is bigger than the project costed it at, or it is not
-                      worth automating. Half a day on site tells us which — and that
-                      is a {t.reviewPrice} question, not a {RATES.pilotFrom} one.
-                    </p>
-                  </>
-                )}
+            <Panel label="The arithmetic" meta="Check it yourself">
+              <QueueRows
+                rows={[
+                  { label: "Costing you, per year", value: rand(rec.problem), tone: "warn" },
+                  { label: "Cheapest build we do", value: `from ${RATES.pilotFrom}` },
+                  { label: "That is this much of a year", value: `${rec.pct}%`, tone: "warn" },
+                  { label: "Our published ceiling", value: TERMS.pilotValueRatio, tone: "good" },
+                  { label: "So a build must come in under", value: rand(rec.maxJustifiable) },
+                ]}
+              />
+              <div className="k-hairline mt-4 pt-3">
+                <p className="k-mono">
+                  That figure was costed by {t.largest.lead}, not by us.
+                </p>
               </div>
             </Panel>
           </Rise>
@@ -240,15 +330,15 @@ export default async function ReviewPage({
             </Rise>
             <Rise step={1}>
               <h2 className="k-title mt-6 max-w-[24ch]">
-                Half a day on site tells you which of these actually slipped.
+                So: {t.reviewPrice}, half a day, and you will know.
               </h2>
             </Rise>
             <Rise step={2}>
               <p className="k-lead k-measure mt-5">
-                We walk one of them end to end and tell you whether the gain held.
-                {" "}{t.reviewPrice} ex VAT, and the fee comes off whatever you
-                commission next. If they all held, that is what the memo will say
-                and you will have spent {t.reviewPrice} to know it.
+                That is the entire ask. If the improvements held, the memo says so
+                and you have spent {t.reviewPrice} to stop wondering. If they did
+                not, you will know which one, what it is costing, and whether it
+                is worth doing anything about.
               </p>
             </Rise>
           </div>
