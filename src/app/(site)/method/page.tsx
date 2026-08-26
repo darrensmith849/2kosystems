@@ -115,9 +115,87 @@ export default function MethodPage() {
         </Rise>
       </section>
 
+      {/* ═══ TWO WAYS IN ═══ */}
+      <section className="k-band k-band--2">
+        <div className="k-shell">
+          <Rise>
+            <p className="k-mono k-mono--ember">Two ways in</p>
+          </Rise>
+          <Rise step={1}>
+            <h2 className="k-title mt-6 max-w-[26ch]">
+              You do not have to start at the beginning.
+            </h2>
+          </Rise>
+          <Rise step={2}>
+            <p className="k-lead k-measure mt-5">
+              The five phases are how a full engagement runs. Most people do not
+              need all of them, and some do not need the first one at all.
+            </p>
+          </Rise>
+
+          <div className="mt-12 grid gap-5 lg:grid-cols-2">
+            <Rise>
+              <div className="k-card h-full">
+                <p className="k-mono k-mono--ember">If you already know what is broken</p>
+                <h3 className="k-sub mt-4">Straight to a fixed price. No site visit.</h3>
+                <p className="k-sm mt-3">
+                  A spreadsheet that has outgrown itself, job cards coming back
+                  late, a contractor register nobody trusts — the problem is
+                  already visible in the artifact. Send it to us on a call and we
+                  scope it from that.
+                </p>
+                <ul className="k-hairline mt-4 flex flex-col gap-2 pt-3">
+                  {[
+                    "A thirty-minute call, free",
+                    "A copy of the spreadsheet or a screenshot of the form",
+                    "Fixed price and a start date",
+                  ].map((item) => (
+                    <li key={item} className="flex gap-2.5 text-[13px]">
+                      <span style={{ color: "var(--signal)" }}>—</span>
+                      <span style={{ color: "var(--warm-70)" }}>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Link href="/systems" className="k-link mt-5 inline-flex">
+                  See the fixed-price systems →
+                </Link>
+              </div>
+            </Rise>
+
+            <Rise step={1}>
+              <div className="k-card h-full">
+                <p className="k-mono k-mono--ember">If something is wrong and you cannot name it</p>
+                <h3 className="k-sub mt-4">Start on site. That is what the review is for.</h3>
+                <p className="k-sm mt-3">
+                  When the problem lives in how work actually moves — a control
+                  that may or may not still be happening, a handover that fails
+                  quietly — no questionnaire will find it. Somebody has to watch
+                  the work.
+                </p>
+                <ul className="k-hairline mt-4 flex flex-col gap-2 pt-3">
+                  {[
+                    "Half a day with the people who do the work",
+                    "What we watched, separated from what we were told",
+                    "A memo naming it, and a go or no-go",
+                  ].map((item) => (
+                    <li key={item} className="flex gap-2.5 text-[13px]">
+                      <span style={{ color: "var(--ember)" }}>—</span>
+                      <span style={{ color: "var(--warm-70)" }}>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Link href="/quote" className="k-link mt-5 inline-flex">
+                  Not sure which? Build a scope →
+                </Link>
+              </div>
+            </Rise>
+          </div>
+        </div>
+      </section>
+
       {/* ═══ PHASES ═══ */}
       {phases.map((phase, i) => (
-        <section key={phase.letter} className={i % 2 === 0 ? "k-band k-band--2" : "k-band"}>
+        <section key={phase.letter} className={i % 2 === 0 ? "k-band" : "k-band k-band--2"}>
           <div className="k-shell grid gap-10 lg:grid-cols-[minmax(0,1fr)_400px] lg:items-start">
             <div>
               <Rise>

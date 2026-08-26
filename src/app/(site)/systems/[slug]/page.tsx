@@ -190,8 +190,9 @@ export default async function ProductPage({
               />
               <div className="k-hairline mt-4 pt-3">
                 <p className="k-mono">
-                  If your version is bigger than this we say so at scoping, and
-                  that conversation costs nothing.
+                  No site visit needed. A call and a look at how you run it now
+                  is enough to scope this. If your version is bigger than the box
+                  we say so then, and that conversation costs nothing.
                 </p>
               </div>
             </Panel>

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Rise from "@/components/cinema/Rise";
 import ContactForm from "@/components/cinema/ContactForm";
 import { Panel, QueueRows, EventFeed, Pill } from "@/components/cinema/instruments";
-import { RATES, TIMEBOX } from "@/lib/pricing";
+import { RATES } from "@/lib/pricing";
 
 export const metadata: Metadata = {
   title: "Contact — Book a R7,500 Half-Day Process Review",
@@ -25,12 +25,18 @@ export default function ContactPage() {
         </Rise>
         <Rise step={2}>
           <p className="k-lead k-measure mt-6">
-            The fastest way in is a Half-Day Process Review — {RATES.review},{" "}
-            {TIMEBOX.review.toLowerCase()} on site, and a short memo naming what is
-            actually broken. The fee comes off whatever you commission next, and if
-            the honest answer is that you should not build anything, that is what
-            the memo will say.
+            If you already know what needs building, this is a thirty-minute call
+            and a fixed price — no site visit required. If something is wrong and
+            you cannot name it, that is what the {RATES.review} Half-Day Process
+            Review is for, and the fee comes off whatever you commission next.
           </p>
+        </Rise>
+        <Rise step={3}>
+          <div className="mt-8 flex flex-wrap gap-2">
+            <Pill tone="good">Free scoping call</Pill>
+            <Pill>No site visit for fixed-price systems</Pill>
+            <Pill tone="warn">On site only when it is needed</Pill>
+          </div>
         </Rise>
       </section>
 

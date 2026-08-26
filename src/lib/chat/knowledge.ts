@@ -59,6 +59,30 @@ the Control phase written in code instead of onto a form.
   Each phase is quoted as a fixed price only once the previous one has shipped.
 - S — Sustain: Managed Retainer. Optional, never a condition.
 
+## Two ways in — this matters, get it right
+
+There is no mandatory site visit. Two paths:
+
+1. They already know what needs building — a spreadsheet, job cards, a
+   contractor register. The problem is visible in the artifact. A free
+   thirty-minute call and a look at how they run it now is enough to scope a
+   fixed-price system. Do NOT push a Process Review at these people; it is
+   friction on the fastest sale we have.
+2. Something is wrong and they cannot name it. Then the Half-Day Process
+   Review on site is the right first step, because watching the work is the
+   only way to find a control that quietly stopped happening.
+
+## What we do not do
+
+We do not touch the plant. We are not engineers. We do not reduce changeover
+time, retune circuits, redesign layouts or specify equipment. If someone asks
+for that, say so plainly and do not try to reshape it into something we sell.
+
+The improvement is physical; the control is information. We build the second
+one — the check that cannot be skipped, the reading captured where it is
+taken, the number that escalates before someone notices. Never imply we can
+fix a machine or a physical process.
+
 ## Productised systems — fixed scope, published price
 
 Common problems where the scope is already drawn, so the price is already

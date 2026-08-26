@@ -192,8 +192,9 @@ export default function GetOffExcelPage() {
               />
               <div className="k-hairline mt-4 pt-3">
                 <p className="k-mono">
-                  If it is bigger than this we say so at scoping, and that
-                  conversation costs nothing.
+                  No site visit needed. Send us the spreadsheet and a call is
+                  enough to scope this. If it is bigger than the box we say so
+                  then, and that conversation costs nothing.
                 </p>
               </div>
             </Panel>

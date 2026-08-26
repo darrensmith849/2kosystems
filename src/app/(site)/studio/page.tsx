@@ -122,8 +122,56 @@ export default function StudioPage() {
         </div>
       </section>
 
-      {/* ═══ PRINCIPLES ═══ */}
+      {/* ═══ WHAT WE DO NOT DO ═══ */}
       <section className="k-band">
+        <div className="k-shell grid gap-12 lg:grid-cols-[minmax(0,1fr)_400px] lg:items-start">
+          <div>
+            <Rise>
+              <p className="k-mono k-mono--ember">Where we stop</p>
+            </Rise>
+            <Rise step={1}>
+              <h2 className="k-title mt-6 max-w-[24ch]">
+                We do not touch the plant.
+              </h2>
+            </Rise>
+            <Rise step={2}>
+              <p className="k-lead k-measure mt-6">
+                We are not engineers and we do not pretend to be. We will not
+                reduce your changeover time, retune a circuit, redesign a layout
+                or specify equipment. Where a physical process needs improving,
+                that is your team&rsquo;s work, or a specialist&rsquo;s.
+              </p>
+            </Rise>
+            <Rise step={3}>
+              <p className="k-lead k-measure mt-5">
+                What we build is the layer that tells you whether the plant is
+                doing what you already decided it should — the check that cannot
+                be skipped, the reading captured where it is taken, the number
+                that escalates before anyone has to notice it. The improvement is
+                physical. The control is information. We only do the second one.
+              </p>
+            </Rise>
+          </div>
+
+          <Rise step={1}>
+            <Panel label="Boundary" meta="Plainly">
+              <QueueRows
+                rows={[
+                  { label: "Reduce changeover time", value: "Not us", tone: "warn" },
+                  { label: "Prove it stayed reduced", value: "Us", tone: "good" },
+                  { label: "Specify equipment", value: "Not us", tone: "warn" },
+                  { label: "Track its availability", value: "Us", tone: "good" },
+                  { label: "Run your safety programme", value: "Not us", tone: "warn" },
+                  { label: "Make its evidence retrievable", value: "Us", tone: "good" },
+                ]}
+              />
+            </Panel>
+          </Rise>
+        </div>
+      </section>
+
+      {/* ═══ PRINCIPLES ═══ */}
+      <section className="k-band k-band--2">
         <div className="k-shell">
           <Rise>
             <p className="k-mono k-mono--ember">02 — How we work</p>
@@ -147,7 +195,7 @@ export default function StudioPage() {
       </section>
 
       {/* ═══ TRUST ═══ */}
-      <section className="k-band k-band--2">
+      <section className="k-band">
         <div className="k-shell grid gap-12 lg:grid-cols-[420px_minmax(0,1fr)] lg:items-start">
           <Rise className="lg:order-2">
             <div className="flex flex-col gap-5">
