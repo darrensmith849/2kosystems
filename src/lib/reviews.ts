@@ -1,4 +1,4 @@
-import { RATES } from "@/lib/pricing";
+import { RATES, TERMS } from "@/lib/pricing";
 
 /**
  * Sponsor Reviews.
@@ -117,9 +117,35 @@ export function reviewTotals(review: Review) {
     projectCount: review.projects.length,
     /** Share of the costed value sitting behind a human control. */
     pct: Math.round((atRisk / total) * 100),
-    /** What a pilot on the largest manual item would cost against its value. */
     largest: manual.slice().sort((a, b) => b.value - a.value)[0],
     reviewPrice: RATES.review,
+  };
+}
+
+/**
+ * What we should actually recommend for the biggest manual item.
+ *
+ * We publish a rule: a pilot should cost under 25% of the annual value of the
+ * problem it fixes. That rule has to bind us, including when it says no. If the
+ * cheapest pilot breaches the ceiling, the honest recommendation is a Process
+ * Review to size the problem properly — not a build we cannot justify.
+ */
+export function recommendation(review: Review) {
+  const t = reviewTotals(review);
+  const problem = t.largest.value;
+  const pilotFrom = Number(RATES.pilotFrom.replace(/[^0-9]/g, ""));
+  const ceiling = Number(TERMS.pilotValueRatio.replace(/[^0-9]/g, ""));
+  const pct = Math.round((pilotFrom / problem) * 100);
+  const clears = pct <= ceiling;
+
+  return {
+    problem,
+    pilotFrom,
+    pct,
+    ceiling,
+    clears,
+    /** The largest pilot that would still satisfy our own rule. */
+    maxJustifiable: Math.floor((problem * ceiling) / 100),
   };
 }
 

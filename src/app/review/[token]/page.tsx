@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import Rise from "@/components/cinema/Rise";
 import { Panel, QueueRows, Pill } from "@/components/cinema/instruments";
-import { getReview, reviewTotals, rand, REVIEWS } from "@/lib/reviews";
+import { getReview, reviewTotals, recommendation, rand, REVIEWS } from "@/lib/reviews";
 import { RATES, TERMS } from "@/lib/pricing";
 
 export function generateStaticParams() {
@@ -38,6 +38,7 @@ export default async function ReviewPage({
   if (!review) notFound();
 
   const t = reviewTotals(review);
+  const rec = recommendation(review);
 
   return (
     <>
@@ -174,30 +175,57 @@ export default async function ReviewPage({
           </div>
 
           <Rise step={1}>
-            <Panel label="Largest exposure" meta="Your figures">
+            <Panel label="Largest single exposure" meta="Your figures">
               <p className="k-mono">{t.largest.name}</p>
-              <p className="k-num mt-3 text-[28px] leading-none" style={{ color: "var(--ember)" }}>
-                {rand(t.largest.value)}
+
+              {/* Explicitly a cost, not a price. The previous version led with
+                  this figure unlabelled, where it read as a quote. */}
+              <p className="k-mono mt-4">Costing you, per year</p>
+              <p className="k-num mt-1 text-[28px] leading-none" style={{ color: "var(--ember)" }}>
+                {rand(rec.problem)}
               </p>
-              <p className="k-mono mt-2">per year, costed by {t.largest.lead}</p>
-              <div className="k-hairline mt-4 pt-3">
-                <QueueRows
-                  rows={[
-                    { label: "Current control", value: "Manual", tone: "warn" },
-                    { label: "Pilot to make it automatic", value: `from ${RATES.pilotFrom}` },
-                    {
-                      label: "Share of one year's value",
-                      value: `${Math.round((Number(RATES.pilotFrom.replace(/[^0-9]/g, "")) / t.largest.value) * 100)}%`,
-                      tone: "good",
-                    },
-                    { label: "Our ceiling", value: TERMS.pilotValueRatio },
-                  ]}
-                />
+              <p className="k-mono mt-1.5">as costed by {t.largest.lead}, not by us</p>
+
+              <div className="k-hairline mt-5 pt-4">
+                {rec.clears ? (
+                  <>
+                    <p className="k-mono">What it would take to fix</p>
+                    <p className="k-num mt-1 text-[24px] leading-none" style={{ color: "var(--signal)" }}>
+                      from {RATES.pilotFrom}
+                    </p>
+                    <div className="mt-4">
+                      <QueueRows
+                        rows={[
+                          { label: "Share of one year's cost", value: `${rec.pct}%`, tone: "good" },
+                          { label: "Our published ceiling", value: TERMS.pilotValueRatio },
+                        ]}
+                      />
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <p className="k-mono" style={{ color: "var(--ember)" }}>
+                      We are not proposing a build for this one
+                    </p>
+                    <div className="mt-3">
+                      <QueueRows
+                        rows={[
+                          { label: "Cheapest pilot we do", value: `from ${RATES.pilotFrom}` },
+                          { label: "That is this much of one year", value: `${rec.pct}%`, tone: "warn" },
+                          { label: "Our published ceiling", value: TERMS.pilotValueRatio, tone: "good" },
+                          { label: "Would have to come in under", value: rand(rec.maxJustifiable) },
+                        ]}
+                      />
+                    </div>
+                    <p className="k-sm mt-4">
+                      On our own rule this does not justify a build yet. Either the
+                      problem is bigger than the project costed it at, or it is not
+                      worth automating. Half a day on site tells us which — and that
+                      is a {t.reviewPrice} question, not a {RATES.pilotFrom} one.
+                    </p>
+                  </>
+                )}
               </div>
-              <p className="k-mono mt-4">
-                We only propose a build when it costs under{" "}
-                {TERMS.pilotValueRatio} of the problem it fixes.
-              </p>
             </Panel>
           </Rise>
         </div>
