@@ -11,7 +11,8 @@
     "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
     "upload": "opennextjs-cloudflare build && opennextjs-cloudflare upload",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
-    "audit": "node scripts/audit.ts"
+    "audit": "node scripts/audit.ts",
+    "build:ads": "node scripts/build-ads.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.91.1",
