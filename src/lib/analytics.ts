@@ -40,8 +40,10 @@ export type ConversionName = keyof typeof LABELS;
  */
 const VALUES: Record<ConversionName, number> = {
   enquiry: 2500,
-  scope: 400,
-  brief: 250,
+  /** Scope built *and* an email handed over. A named lead, not a visitor. */
+  brief: 1200,
+  /** Scope completed anonymously. Real intent, but nobody to call. */
+  scope: 300,
 };
 
 export function track(name: ConversionName, extra?: Record<string, unknown>) {
