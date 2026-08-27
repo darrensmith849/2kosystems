@@ -16,7 +16,15 @@ export type ControlType = "manual" | "systemic";
 export type Project = {
   name: string;
   year: string;
-  lead: string;
+  /**
+   * The ROLE that ran the project, never the person.
+   *
+   * Naming an individual turns company operational data into personal
+   * information, and it also tells a sponsor which of their employees'
+   * improvements decayed — which is a bad thing to do in an email whose
+   * purpose is goodwill. Roles carry the same weight and neither risk.
+   */
+  leadRole: string;
   /** What the sponsor's own team costed the problem at, in rand. */
   value: number;
   /** The control method written into their own control plan. */
@@ -28,6 +36,11 @@ export type Project = {
 
 export type Review = {
   token: string;
+  /**
+   * Set once the sponsor has said yes to being sent this. The page refuses to
+   * render without it, so a review cannot be published by accident.
+   */
+  permissionGranted: boolean;
   company: string;
   sponsor: string;
   sponsorRole: string;
@@ -39,6 +52,7 @@ export const REVIEWS: Review[] = [
   {
     // Illustrative example. Fictional company, invented projects.
     token: "sample-marula",
+    permissionGranted: true,
     company: "Marula Minerals",
     sponsor: "Nomsa Khumalo",
     sponsorRole: "Operations Director",
@@ -47,7 +61,7 @@ export const REVIEWS: Review[] = [
       {
         name: "Changeover time on the secondary crusher",
         year: "2024",
-        lead: "T. Nkosi",
+        leadRole: "the section engineer",
         value: 486000,
         control: "Weekly supervisor check against a printed standard",
         type: "manual",
@@ -56,7 +70,7 @@ export const REVIEWS: Review[] = [
       {
         name: "Contractor induction backlog",
         year: "2024",
-        lead: "P. Dlamini",
+        leadRole: "the SHEQ officer",
         value: 312000,
         control: "Spreadsheet of expiry dates, reviewed monthly",
         type: "manual",
@@ -65,7 +79,7 @@ export const REVIEWS: Review[] = [
       {
         name: "Reagent consumption variance",
         year: "2025",
-        lead: "S. Mahlangu",
+        leadRole: "the process metallurgist",
         value: 274000,
         control: "Automated dosing with an alarm on drift",
         type: "systemic",
@@ -74,7 +88,7 @@ export const REVIEWS: Review[] = [
       {
         name: "Shift handover completeness",
         year: "2025",
-        lead: "L. van Wyk",
+        leadRole: "the shift superintendent",
         value: 198000,
         control: "Handover book countersigned by the incoming supervisor",
         type: "manual",
@@ -83,7 +97,7 @@ export const REVIEWS: Review[] = [
       {
         name: "Weighbridge reconciliation",
         year: "2025",
-        lead: "N. Pillay",
+        leadRole: "the logistics coordinator",
         value: 156000,
         control: "Month-end manual reconciliation against dispatch notes",
         type: "manual",
@@ -92,7 +106,7 @@ export const REVIEWS: Review[] = [
       {
         name: "Planned maintenance compliance",
         year: "2025",
-        lead: "K. Botha",
+        leadRole: "the maintenance planner",
         value: 220000,
         control: "CMMS schedule with automatic work order generation",
         type: "systemic",

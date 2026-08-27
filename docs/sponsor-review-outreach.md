@@ -8,7 +8,30 @@ it look like a campaign, and campaigns get read as campaigns.
 
 ---
 
-## The email
+## Step 1 — ask first (send this before anything else)
+
+Do not send the review cold. Ask permission, in one line. It converts a
+purpose-limitation problem into a conversation, and it is a stronger opener
+than an unsolicited document.
+
+**Subject:** `Your Green Belt projects — worth a look back?`
+
+> Nomsa,
+>
+> We can pull together the improvement projects your teams submitted through
+> the Green Belt cohorts and show you which ones are still holding. No
+> individual named, just the processes and the numbers your people recorded.
+>
+> Want me to?
+>
+> Darren
+
+A reply of "yes" is your permission record. Keep it. Nothing gets generated
+or sent until you have one.
+
+---
+
+## Step 2 — the review email (only after a yes)
 
 **Subject:** `Your team's improvement projects — a look back`
 
@@ -72,10 +95,30 @@ That is the whole sequence. If two of ten reply, the motion works.
 
 ## Before you send any of them
 
-1. **Check the numbers against source.** Getting a client's own figures wrong
+1. **You have a yes in writing.** The page will not render without
+   `permissionGranted: true`, so this is enforced, not remembered.
+2. **Check the numbers against source.** Getting a client's own figures wrong
    is worse than never sending. Every rand value must trace to something their
    team submitted.
-2. **Confirm the control-method reading.** "Weekly supervisor check" has to be
+3. **Confirm the control-method reading.** "Weekly supervisor check" has to be
    what the control plan actually says, not an inference.
-3. **Send to the sponsor whose company it is.** This works because it is their
+4. **Send to the sponsor whose company it is.** This works because it is their
    data going back to them. It stops working the moment it is anyone else's.
+
+## Two rules that do not bend
+
+**One company's data never appears on another's page.** The moment the corpus
+becomes a cross-company asset — "we see this pattern across 59 companies" —
+the purpose-limitation defence collapses and so does the reason this was
+acceptable in the first place.
+
+**No individual is ever named.** Roles only. It removes almost all of the
+personal-information exposure, and it stops the page telling a sponsor which
+of their employees' improvements decayed.
+
+## Still outstanding
+
+Whether returning training-programme data to the sponsoring employer for
+business development is compatible further processing under POPIA is a legal
+question, and it is still unanswered. The measures above shrink the exposure
+considerably. They do not replace that advice.

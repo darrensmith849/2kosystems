@@ -34,7 +34,9 @@ export default async function ReviewPage({
 }) {
   const { token } = await params;
   const review = getReview(token);
-  if (!review) notFound();
+  // No permission recorded, no page. A review must never be publishable by
+  // accident — the sponsor has to have said yes first.
+  if (!review || !review.permissionGranted) notFound();
 
   const t = reviewTotals(review);
   const rec = recommendation(review);
@@ -141,7 +143,7 @@ export default async function ReviewPage({
                       <span className="min-w-0 flex-1">
                         <span className="block text-[13px] font-medium">{p.name}</span>
                         <span className="k-mono mt-1 block">
-                          {p.year} · {p.lead} · {p.control}
+                          {p.year} · {p.leadRole} · {p.control}
                         </span>
                       </span>
                       <span className="k-num hidden shrink-0 text-[14px] sm:inline">
@@ -163,10 +165,81 @@ export default async function ReviewPage({
 
           <Rise className="mt-5">
             <p className="k-mono">
-              Private to {review.company} · built only from projects your own team
-              submitted · not indexed, not shared
+              Private to {review.company} · no individual named · not indexed,
+              not shared · deleted on request
             </p>
           </Rise>
+        </div>
+      </section>
+
+      {/* ═══ PROVENANCE ═══ */}
+      <section className="k-band">
+        <div className="k-shell">
+          <Rise>
+            <p className="k-mono k-mono--ember">Where this came from</p>
+          </Rise>
+          <Rise step={1}>
+            <h2 className="k-title mt-6 max-w-[24ch]">
+              Your data, and only yours.
+            </h2>
+          </Rise>
+
+          <div className="mt-10 grid gap-5 lg:grid-cols-3">
+            <Rise>
+              <Panel label="What is in this" meta="Source">
+                <ul className="flex flex-col gap-2.5">
+                  {[
+                    `Projects your teams submitted through ${review.cohort}`,
+                    "Process names, as your team recorded them",
+                    "The rand values your team costed, unchanged",
+                    "The control method each plan specified",
+                  ].map((i) => (
+                    <li key={i} className="flex gap-2.5 text-[13px] leading-[1.5]">
+                      <span style={{ color: "var(--signal)" }}>—</span>
+                      <span style={{ color: "var(--warm-70)" }}>{i}</span>
+                    </li>
+                  ))}
+                </ul>
+              </Panel>
+            </Rise>
+
+            <Rise step={1}>
+              <Panel label="What is not in this" meta="Excluded">
+                <ul className="flex flex-col gap-2.5">
+                  {[
+                    "No individual is named — roles only",
+                    "No personal information of any employee",
+                    "Nothing from any other company, ever",
+                    "No data we were not given by your own people",
+                  ].map((i) => (
+                    <li key={i} className="flex gap-2.5 text-[13px] leading-[1.5]">
+                      <span style={{ color: "var(--warm-25)" }}>—</span>
+                      <span style={{ color: "var(--warm-45)" }}>{i}</span>
+                    </li>
+                  ))}
+                </ul>
+              </Panel>
+            </Rise>
+
+            <Rise step={2}>
+              <Panel label="Your control" meta="Any time">
+                <QueueRows
+                  rows={[
+                    { label: "Sent with your agreement", value: "Yes", tone: "good" },
+                    { label: "Indexed by search engines", value: "Never", tone: "good" },
+                    { label: "Shared with anyone else", value: "Never", tone: "good" },
+                    { label: "Deleted on request", value: "Same day", tone: "good" },
+                  ]}
+                />
+                <div className="k-hairline mt-4 pt-3">
+                  <p className="k-sm">
+                    Reply to the email this came from and this page is removed the
+                    same day, no questions and no discussion.
+                  </p>
+                </div>
+              </Panel>
+            </Rise>
+          </div>
         </div>
       </section>
 
@@ -178,77 +251,110 @@ export default async function ReviewPage({
           </Rise>
           <Rise step={1}>
             <h2 className="k-title mt-6 max-w-[22ch]">
-              {RATES.review}. Half a day. One question answered.
+              Half a day. One question answered.
             </h2>
           </Rise>
-          <Rise step={2}>
-            <p className="k-lead k-measure mt-5">
-              We come to site for half a day, pick one of the {t.manualCount}{" "}
-              improvements that relies on a person, and watch how it runs today.
-              Then we tell you one thing: whether the gain held, or quietly went
-              away.
-            </p>
-          </Rise>
 
-          <div className="mt-12 grid gap-5 lg:grid-cols-3">
-            {[
-              { label: "What it costs", value: RATES.review, note: "ex VAT. Fixed. Nothing else to approve.", tone: "neutral" as const },
-              { label: "What it takes from you", value: "Half a day", note: "One site visit, a few of your people briefly.", tone: "neutral" as const },
-              { label: "What you get back", value: "A 4-page memo", note: "Page one is the answer. The rest is evidence.", tone: "good" as const },
-            ].map((c, i) => (
-              <Rise key={c.label} step={(i % 3) as 0 | 1 | 2}>
-                <Panel label={c.label}>
-                  <Readout value={c.value} tone={c.tone} />
-                  <p className="k-sm mt-3">{c.note}</p>
-                </Panel>
-              </Rise>
-            ))}
-          </div>
+          {/* Framed like the register above it, so it reads as the offer rather
+              than as another content band. */}
+          <Rise step={2} className="mt-10">
+            <div className="k-app">
+              <div className="k-app-bar">
+                <div className="flex items-center gap-2">
+                  <span className="k-app-dot" style={{ background: "#e5534b" }} />
+                  <span className="k-app-dot" style={{ background: "#e8a33d" }} />
+                  <span className="k-app-dot" style={{ background: "#3fb950" }} />
+                </div>
+                <span className="k-mono">The offer · fixed price</span>
+                <span className="k-mono hidden sm:inline">
+                  Credited against anything after
+                </span>
+              </div>
 
-          <div className="mt-5 grid gap-5 lg:grid-cols-2">
-            <Rise>
-              <Panel label="What this is" meta="Included">
-                <ul className="flex flex-col gap-2.5">
+              <div className="p-6 lg:p-9">
+                {/* The price is the headline, at the same scale the product
+                    pages give it. */}
+                <p className="k-mono">The whole price</p>
+                <p
+                  className="k-num mt-3 leading-none"
+                  style={{ fontSize: "clamp(48px, 7vw, 88px)", color: "var(--signal)" }}
+                >
+                  {RATES.review}
+                </p>
+                <p className="k-mono mt-3">
+                  ex VAT · half a day on site · one written answer
+                </p>
+
+                <p className="k-lead k-measure mt-7">
+                  We come to site, pick one of the {t.manualCount} improvements
+                  that relies on a person, and watch how it runs today. Then we
+                  tell you one thing: whether the gain held, or quietly went away.
+                </p>
+
+                <div className="mt-9 grid gap-px overflow-hidden rounded-[10px] border border-[var(--hair)] sm:grid-cols-2">
                   {[
-                    `A fixed ${RATES.review}, agreed before we arrive`,
-                    "One process, watched end to end, in person",
-                    "A written answer: it held, or it did not",
-                    "Credited in full against anything you commission after",
-                  ].map((i) => (
-                    <li key={i} className="flex gap-2.5 text-[13px] leading-[1.5]">
-                      <span style={{ color: "var(--signal)" }}>—</span>
-                      <span style={{ color: "var(--warm-70)" }}>{i}</span>
-                    </li>
+                    {
+                      label: "What it takes from you",
+                      value: "Half a day",
+                      note: "One site visit, and a few of your people briefly.",
+                    },
+                    {
+                      label: "What you get back",
+                      value: "A 4-page memo",
+                      note: "Page one is the answer. The rest is the evidence.",
+                    },
+                  ].map((c) => (
+                    <div key={c.label} className="bg-[var(--panel)] p-6">
+                      <p className="k-mono">{c.label}</p>
+                      <p className="k-num mt-2 text-[24px] leading-none">{c.value}</p>
+                      <p className="k-sm mt-2.5">{c.note}</p>
+                    </div>
                   ))}
-                </ul>
-              </Panel>
-            </Rise>
-            <Rise step={1}>
-              <Panel label="What this is not" meta="Excluded">
-                <ul className="flex flex-col gap-2.5">
-                  {[
-                    "Not a proposal, and not a quote for software",
-                    "Not a commitment to build anything, by either of us",
-                    "Not a sales visit — you get the memo either way",
-                    "Not open-ended: one price, one day, one answer",
-                  ].map((i) => (
-                    <li key={i} className="flex gap-2.5 text-[13px] leading-[1.5]">
-                      <span style={{ color: "var(--warm-25)" }}>—</span>
-                      <span style={{ color: "var(--warm-45)" }}>{i}</span>
-                    </li>
-                  ))}
-                </ul>
-              </Panel>
-            </Rise>
-          </div>
+                </div>
 
-          <Rise step={2} className="mt-10 flex flex-wrap items-center gap-3">
-            <Link href="/contact" className="k-btn k-btn--solid">
-              Book the {RATES.review} review
-            </Link>
-            <Link href="/method" className="k-btn k-btn--ghost">
-              See exactly how it runs
-            </Link>
+                <div className="mt-5 grid gap-5 lg:grid-cols-2">
+                  <Panel label="What this is" meta="Included">
+                    <ul className="flex flex-col gap-2.5">
+                      {[
+                        `A fixed ${RATES.review}, agreed before we arrive`,
+                        "One process, watched end to end, in person",
+                        "A written answer: it held, or it did not",
+                        "Credited in full against anything you commission after",
+                      ].map((i) => (
+                        <li key={i} className="flex gap-2.5 text-[13px] leading-[1.5]">
+                          <span style={{ color: "var(--signal)" }}>—</span>
+                          <span style={{ color: "var(--warm-70)" }}>{i}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </Panel>
+                  <Panel label="What this is not" meta="Excluded">
+                    <ul className="flex flex-col gap-2.5">
+                      {[
+                        "Not a proposal, and not a quote for software",
+                        "Not a commitment to build anything, by either of us",
+                        "Not a sales visit — you get the memo either way",
+                        "Not open-ended: one price, one day, one answer",
+                      ].map((i) => (
+                        <li key={i} className="flex gap-2.5 text-[13px] leading-[1.5]">
+                          <span style={{ color: "var(--warm-25)" }}>—</span>
+                          <span style={{ color: "var(--warm-45)" }}>{i}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </Panel>
+                </div>
+
+                <div className="mt-8 flex flex-wrap items-center gap-3">
+                  <Link href="/contact" className="k-btn k-btn--solid">
+                    Book the {RATES.review} review
+                  </Link>
+                  <Link href="/method" className="k-btn k-btn--ghost">
+                    See exactly how it runs
+                  </Link>
+                </div>
+              </div>
+            </div>
           </Rise>
         </div>
       </section>
@@ -297,7 +403,7 @@ export default async function ReviewPage({
                 />
               </div>
               <div className="k-hairline mt-4 pt-3">
-                <p className="k-mono">Costed by {t.largest.lead}, not by us.</p>
+                <p className="k-mono">Costed by {t.largest.leadRole}, not by us.</p>
               </div>
             </Panel>
           </Rise>
