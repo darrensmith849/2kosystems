@@ -14,7 +14,7 @@ ZAR 15,115 of confirmed waste over the window, recovered at 75% and annualised. 
 | Probable waste | ZAR 0 | Strong negative signal, not proof |
 | Unmeasured | ZAR 51,268 | May be working. Nobody can currently tell |
 
-A further **ZAR 7,375** sits in categories only you can rule on (see below). Approve those and the annual figure becomes **ZAR 68,408**.
+A further **ZAR 323** sits in categories only you can rule on (see below). Approve those and the annual figure becomes **ZAR 46,956**.
 
 **One caveat, stated up front.** Google discloses only ZAR 16,951 of your ZAR 44,274 search spend at search-term level; ZAR 27,322 is withheld as low-volume. Everything above is measured on the disclosed portion only. If the withheld 62% behaves the same way — likely, since it is the same broad matching — the true figure is roughly ZAR 24,363 higher over the window. We have not put that in the headline, because we cannot prove it.
 
@@ -125,7 +125,7 @@ Deliberately excluded from the number above, because only you can say whether th
 
 | Bucket | Spend | Terms | Why it is not counted |
 |---|---:|---:|---|
-| Other institutions by name | ZAR 7,375 | 79 | Someone searching a named competitor is rarely persuadable at click cost. High-yield for training providers, but validate the list before it goes live. |
+| Other institutions by name | ZAR 323 | 12 | Someone searching a named competitor is rarely persuadable at click cost. High-yield for training providers, but validate the list before it goes live. |
 
 ## Order of work
 

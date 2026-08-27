@@ -707,10 +707,22 @@ export const RULES: Rule[] = [
   G1, G3,
 ];
 
+/**
+ * Candidate buckets overlap heavily with what is already confirmed — "iq academy"
+ * is both off-theme (C4b) and a named institution (rival_institutions). Counting
+ * it in both puts confirmed + candidates above 100% of disclosed spend, which is
+ * impossible and would be obvious in a client report. Anything already counted
+ * as confirmed waste is excluded here.
+ */
 export function candidateSpend(ctx: Ctx) {
   const active = activeBuckets(ctx.config.bucketsOn, ctx.config.bucketsOff);
+  const theme = themeOf(ctx);
   const rows = ctx.reports.search_terms?.rows ?? [];
   const out: { bucket: string; spend: number; terms: number }[] = [];
+
+  const alreadyCounted = (term: string) =>
+    Boolean(classify(term, active, ctx.config.brandTerms)) ||
+    (theme.distinctive.size >= 2 && isOffTheme(term, theme, ctx.config.brandTerms));
 
   for (const bucket of candidateBuckets(active)) {
     const only = new Set([bucket.name]);
@@ -719,7 +731,9 @@ export function candidateSpend(ctx: Ctx) {
     for (const r of rows) {
       const cost = num(r, "cost");
       if (cost <= 0) continue;
-      if (classify(str(r, "search_term"), only, ctx.config.brandTerms)) {
+      const term = str(r, "search_term");
+      if (alreadyCounted(term)) continue;
+      if (classify(term, only, ctx.config.brandTerms)) {
         spend += cost;
         terms += 1;
       }
