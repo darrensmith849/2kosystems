@@ -86,6 +86,8 @@ export type Enquiry = {
   phone?: string;
   website?: string;
   message?: string;
+  /** Which ad or campaign paid for this visit, when there was one. */
+  attribution?: Record<string, string>;
 };
 
 const WRAP = (body: string) => `<!doctype html>
@@ -110,12 +112,20 @@ export async function sendEnquiryNotification(enquiry: Enquiry) {
     ["Website", enquiry.website || "—"],
   ];
 
+  // So you can tell a R2,000 cost-per-enquiry that converts from one that does not.
+  const source = enquiry.attribution ?? {};
+  const sourceRows = Object.entries(source).map(([k, v]) => [k, v] as [string, string]);
+
   const html = WRAP(`
 <p style="margin:0 0 4px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#7c8079;">New enquiry</p>
 <h1 style="margin:0 0 20px;font-size:20px;font-weight:600;">${escapeHtml(name)} · ${escapeHtml(enquiry.company)}</h1>
 <table style="width:100%;border-collapse:collapse;font-size:14px;">
 ${rows.map(([k, v]) => `<tr><td style="padding:6px 0;color:#7c8079;width:96px;">${k}</td><td style="padding:6px 0;">${escapeHtml(v)}</td></tr>`).join("")}
 </table>
+${sourceRows.length ? `<p style="margin:20px 0 6px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#7c8079;">Came from</p>
+<table style="width:100%;border-collapse:collapse;font-size:13px;">
+${sourceRows.map(([k, v]) => `<tr><td style="padding:4px 0;color:#7c8079;width:96px;">${escapeHtml(k)}</td><td style="padding:4px 0;">${escapeHtml(v)}</td></tr>`).join("")}
+</table>` : ""}
 ${enquiry.message ? `<p style="margin:20px 0 6px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#7c8079;">The process that keeps going wrong</p><p style="margin:0;font-size:14px;line-height:1.6;white-space:pre-wrap;">${escapeHtml(enquiry.message)}</p>` : ""}
 <p style="margin:24px 0 0;"><a href="mailto:${escapeHtml(enquiry.email)}" style="display:inline-block;background:#0f6b34;color:#fff;text-decoration:none;padding:10px 18px;border-radius:6px;font-size:14px;font-weight:600;">Reply to ${escapeHtml(enquiry.firstName)}</a></p>`);
 

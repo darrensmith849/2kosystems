@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { QUESTIONS, resolve, outcomeHeadline, type Answers } from "@/lib/quote";
 import { RATES } from "@/lib/pricing";
+import { track, attribution } from "@/lib/analytics";
 
 /**
  * Structured scope builder.
@@ -22,6 +23,16 @@ export default function QuoteBuilder() {
   const [error, setError] = useState<string | null>(null);
 
   const outcome = useMemo(() => resolve(answers), [answers]);
+
+  // Once per visitor, on the first complete scope. Changing an answer
+  // afterwards must not log a second conversion.
+  const scopeLogged = useRef(false);
+  useEffect(() => {
+    if (outcome && !scopeLogged.current) {
+      scopeLogged.current = true;
+      track("scope");
+    }
+  }, [outcome]);
   const answered = QUESTIONS.filter((q) => answers[q.id]).length;
   const headline = outcome ? outcomeHeadline(outcome) : null;
 
@@ -38,7 +49,7 @@ export default function QuoteBuilder() {
       const res = await fetch("/api/quote", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, answers }),
+        body: JSON.stringify({ email, answers, attribution: attribution() }),
       });
       const json = await res.json();
       if (!res.ok || !json.ok) {
@@ -46,6 +57,7 @@ export default function QuoteBuilder() {
         setState("error");
         return;
       }
+      track("brief");
       setState("sent");
     } catch {
       setError("Could not reach the server. Please try again.");

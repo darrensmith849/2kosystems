@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { RATES } from "@/lib/pricing";
+import { track, attribution } from "@/lib/analytics";
 
 type State = "idle" | "sending" | "sent" | "error";
 
@@ -18,7 +19,11 @@ export default function ContactForm() {
     setState("sending");
     setError(null);
 
-    const data = Object.fromEntries(new FormData(event.currentTarget));
+    const data = {
+      ...Object.fromEntries(new FormData(event.currentTarget)),
+      // Which ad, if any, paid for this visit.
+      attribution: attribution(),
+    };
 
     try {
       const response = await fetch("/api/contact", {
@@ -33,6 +38,7 @@ export default function ContactForm() {
         setState("error");
         return;
       }
+      track("enquiry");
       setState("sent");
     } catch {
       setError("Could not reach the server. Please try again.");
