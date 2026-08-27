@@ -219,8 +219,9 @@ by rand-value and working down actively causes damage.
 
 1. **Install measurement** (A1–A5). Nothing else can be evaluated. No
    exceptions, no parallel tracks.
-2. **Stop the unsteered spend** (D1, E1, E2, F1). These are pure Tier-1 and
-   need no history to justify — a dead URL is dead today.
+2. **Stop the unsteered spend** (D1, E1, E2, F1). E2 and F1 are Tier 1; D1 is
+   Tier 3 but still urgent, because an unsteerable campaign cannot improve.
+   None of these need history to justify — a dead URL is dead today.
 3. **Take bidding off the false signal** (B1). Move to Maximise Clicks with a
    CPC cap until conversion data accumulates. Honest beats optimistic.
 4. **Apply negatives** (C1, C4). Immediate, low-risk, reversible.
