@@ -15,12 +15,16 @@ import { RATES, TIMEBOX, TERMS } from "@/lib/pricing";
  */
 
 /**
- * Taken from the group's own client list. VERIFY THIS BEFORE THE PAGE GOES
- * LIVE — it is the single strongest claim here and the first thing a sceptical
- * buyer will test.
+ * Both figures are taken from the group's own site at 2ko.co.za, which states
+ * "ESTABLISHED 1998", "1,000+ COMPANIES" and "28 YEARS".
+ *
+ * They were previously 2001 and 1,300+ — the latter derived from a row count
+ * in a client-list export. Two of the group's own sites disagreeing on when it
+ * started and how many companies it has served is exactly the detail a
+ * sceptical buyer checks, so these now match the parent and will stay matched.
  */
-const COMPANIES = "1,300+";
-const SINCE = 2001;
+const COMPANIES = "1,000+";
+const SINCE = 1998;
 
 export const metadata: Metadata = {
   title: "Websites — Built by 2KO. Priced Up Front.",
