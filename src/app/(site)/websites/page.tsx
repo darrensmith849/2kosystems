@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Rise from "@/components/cinema/Rise";
+import BuildReel from "@/components/cinema/BuildReel";
 import { RATES, TIMEBOX, TERMS } from "@/lib/pricing";
 
 /**
@@ -154,6 +155,9 @@ export default function WebsitesPage() {
                 Send us your current site
               </Link>
             </div>
+          </Rise>
+          <Rise step={3}>
+            <BuildReel />
           </Rise>
           <Rise step={3}>
             <div className="k-web-facts">
