@@ -1403,10 +1403,10 @@ fieldset[disabled] .k-choice { cursor: not-allowed; }
 /* The mask is the whole trick: the SVG supplies only a silhouette, and the
    background-color supplies the one grey every mark shares. */
 .k-logo {
-  --h: clamp(20px, 2.1vw, 28px);
+  --h: clamp(19px, 1.9vw, 25px);
   display: block;
-  height: calc(var(--h) * var(--scale));
-  width: calc(var(--h) * var(--scale) * var(--ratio));
+  height: var(--h);
+  width: calc(var(--h) * var(--ratio));
   background-color: var(--warm-45);
   mask-image: var(--logo);
   -webkit-mask-image: var(--logo);

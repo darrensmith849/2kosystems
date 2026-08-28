@@ -17,26 +17,25 @@
  * lockup unreadable at strip height, and Coca-Cola because its mark filled
  * only 31% of the box it shipped in.
  *
- * `scale` is optical, not mathematical. A square mark reads heavier than a
- * wordmark at the same height, so the square ones are set smaller until the row
- * looks evenly weighted.
+ * Horizontal wordmarks only. Square badges — Absa, Nedbank, John Deere, MTN,
+ * ACSA — were dropped even though several are stronger names, because mixing
+ * a 1:1 mark with a 5:1 wordmark in one row makes the row look broken however
+ * carefully each is scaled. Toyota survives on its wordmark lockup rather than
+ * the badge. Everything here is between 3.2:1 and 7.9:1, so a single
+ * height is all the sizing the strip needs — no per-logo fudge factors.
  */
 
-type Client = { name: string; file: string; ratio: number; scale: number };
+type Client = { name: string; file: string; ratio: number };
 
 const CLIENTS: Client[] = [
-  { name: "Anglo American", file: "anglo-american", ratio: 4.54, scale: 1 },
-  { name: "Toyota", file: "toyota", ratio: 1.47, scale: 0.86 },
-  { name: "Eskom", file: "eskom", ratio: 3.91, scale: 1 },
-  { name: "Absa", file: "absa", ratio: 1, scale: 0.76 },
-  { name: "Discovery", file: "discovery", ratio: 4.89, scale: 1 },
-  { name: "MTN", file: "mtn", ratio: 2, scale: 0.86 },
-  { name: "Transnet", file: "transnet", ratio: 7.9, scale: 0.82 },
-  { name: "Sanlam", file: "sanlam", ratio: 4.87, scale: 1 },
-  { name: "John Deere", file: "john-deere", ratio: 1.11, scale: 0.9 },
-  { name: "Airports Company South Africa", file: "acsa", ratio: 2.19, scale: 0.95 },
-  { name: "Nedbank", file: "nedbank", ratio: 0.98, scale: 0.76 },
-  { name: "Coca-Cola", file: "coca-cola", ratio: 3.2, scale: 0.95 },
+  { name: "Anglo American", file: "anglo-american", ratio: 4.54 },
+  { name: "Telkom", file: "telkom", ratio: 3.98 },
+  { name: "Discovery", file: "discovery", ratio: 4.89 },
+  { name: "Toyota", file: "toyota", ratio: 3.29 },
+  { name: "Transnet", file: "transnet", ratio: 7.9 },
+  { name: "Eskom", file: "eskom", ratio: 3.91 },
+  { name: "Sanlam", file: "sanlam", ratio: 4.87 },
+  { name: "Coca-Cola", file: "coca-cola", ratio: 3.2 },
 ];
 
 function Row({ hidden = false }: { hidden?: boolean }) {
@@ -51,7 +50,6 @@ function Row({ hidden = false }: { hidden?: boolean }) {
             style={{
               ["--logo" as string]: `url(/logos/${c.file}.svg)`,
               ["--ratio" as string]: c.ratio,
-              ["--scale" as string]: c.scale,
             }}
           />
         </li>
