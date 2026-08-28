@@ -130,6 +130,16 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        {/* Every reveal on this site starts at opacity 0 and is switched on by
+            an IntersectionObserver. With no JavaScript that switch never
+            happens and the page renders blank — which on a page we pay per
+            click for is a bill with nothing shown for it. */}
+        <noscript
+          dangerouslySetInnerHTML={{
+            __html:
+              "<style>.k-rise,.k-settle{opacity:1!important;transform:none!important}</style>",
+          }}
+        />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} ${plexMono.variable} antialiased`}
