@@ -22,6 +22,8 @@ import { useEffect, useRef, useState } from "react";
 
 type Phase = 0 | 1 | 2 | 3; // typing · loading · resolving · live
 
+export type ReelKind = Build["kind"];
+
 type Build = {
   domain: string;
   kind: "trades" | "legal" | "shop" | "portal";
@@ -74,7 +76,9 @@ const BUILDS: Build[] = [
 /** Phase durations in ms. The hold on "live" is what makes it read as finished. */
 const TIMING: Record<Phase, number> = { 0: 1100, 1: 1500, 2: 900, 3: 2300 };
 
-export default function BuildReel() {
+export default function BuildReel({ only }: { only?: Build["kind"][] } = {}) {
+  // A tier page shows its own kind being built; the landing page shows all four.
+  const builds = only?.length ? BUILDS.filter((b) => only.includes(b.kind)) : BUILDS;
   const [index, setIndex] = useState(0);
   const [phase, setPhase] = useState<Phase>(0);
   const [active, setActive] = useState(false);
@@ -99,16 +103,16 @@ export default function BuildReel() {
     if (!active) return;
     const id = setTimeout(() => {
       if (phase === 3) {
-        setIndex((i) => (i + 1) % BUILDS.length);
+        setIndex((i) => (i + 1) % builds.length);
         setPhase(0);
       } else {
         setPhase((p) => (p + 1) as Phase);
       }
     }, TIMING[phase]);
     return () => clearTimeout(id);
-  }, [active, phase, index]);
+  }, [active, phase, index, builds.length]);
 
-  const build = BUILDS[index];
+  const build = builds[index] ?? builds[0];
   const built = phase >= 2;
 
   return (
@@ -155,7 +159,9 @@ export default function BuildReel() {
       <p className="k-reel-caption">
         <span className="k-reel-caption-label">{build.label}</span>
         <span className="k-reel-caption-note">
-          Four different builds. Not one template with the words changed.
+          {builds.length > 1
+            ? "Four different builds. Not one template with the words changed."
+            : "Illustrative — a build of this kind, not a template we would hand you."}
         </span>
       </p>
     </div>

@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { WEB_TIERS } from "@/lib/websites";
 import { PRODUCTS } from "@/lib/products";
 
 const SITE_URL = "https://www.2kosystems.com";
@@ -19,6 +20,12 @@ const routes: Entry[] = [
   { path: "", priority: 1.0, changeFrequency: "monthly" },
   // The paid-search landing page. Highest-intent commercial page on the site.
   { path: "/websites", priority: 1.0, changeFrequency: "monthly" },
+  // One landing page per tier, each targeting a different search intent.
+  ...WEB_TIERS.map((t) => ({
+    path: `/websites/${t.slug}`,
+    priority: 0.9,
+    changeFrequency: "monthly" as const,
+  })),
   { path: "/pricing", priority: 0.9, changeFrequency: "monthly" },
   { path: "/quote", priority: 0.9, changeFrequency: "monthly" },
   { path: "/get-off-excel", priority: 0.9, changeFrequency: "monthly" },

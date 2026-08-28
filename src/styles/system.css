@@ -1433,3 +1433,74 @@ fieldset[disabled] .k-choice { cursor: not-allowed; }
   .k-clients-track { animation: none; flex-wrap: wrap; row-gap: 20px; }
   .k-clients-track[aria-hidden] { display: none; }
 }
+
+/* ---------- Tier icons ---------- */
+
+.k-tier-icon {
+  width: 26px;
+  height: 26px;
+  display: block;
+  margin-bottom: 14px;
+  color: var(--warm-45);
+  transition: color 260ms var(--ease);
+}
+.k-web-tier--lead .k-tier-icon { color: var(--ember); }
+.k-web-tier--link:hover .k-tier-icon { color: var(--warm); }
+.k-tier-icon--hero {
+  width: 34px;
+  height: 34px;
+  margin-top: 18px;
+  margin-bottom: 4px;
+  color: var(--ember);
+}
+
+/* ---------- Tier cards as links, and the work grid ---------- */
+
+.k-web-tier--link {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 240ms var(--ease), transform 240ms var(--ease);
+}
+.k-web-tier--link:hover {
+  border-color: var(--hair-2);
+  transform: translateY(-2px);
+}
+.k-web-tier--link.k-web-tier--lead:hover { border-color: rgba(232, 163, 61, 0.6); }
+
+.k-web-tier-more {
+  margin-top: auto;
+  padding-top: 18px;
+  font-size: var(--t-sm);
+  color: var(--warm-45);
+  transition: color 240ms var(--ease);
+}
+.k-web-tier--link:hover .k-web-tier-more { color: var(--ember); }
+
+/* The tier detail page runs three cards, not four. */
+.k-web-tiers--three { grid-template-columns: 1fr; }
+@media (min-width: 760px) {
+  .k-web-tiers--three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+.k-work {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 240ms var(--ease), transform 240ms var(--ease);
+}
+.k-work:hover { border-color: var(--hair-2); transform: translateY(-2px); }
+
+.k-work-domain {
+  margin-top: auto;
+  padding-top: 16px;
+  font-family: var(--mono);
+  font-size: var(--t-mono);
+  letter-spacing: 0.04em;
+  color: var(--warm-45);
+  transition: color 240ms var(--ease);
+  overflow-wrap: anywhere;
+}
+.k-work:hover .k-work-domain { color: var(--ember); }

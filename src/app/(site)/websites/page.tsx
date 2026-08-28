@@ -4,6 +4,8 @@ import Rise from "@/components/cinema/Rise";
 import BuildReel from "@/components/cinema/BuildReel";
 import ClientStrip from "@/components/cinema/ClientStrip";
 import { RATES, TIMEBOX, TERMS } from "@/lib/pricing";
+import { WEB_TIERS } from "@/lib/websites";
+import TierIcon from "@/components/cinema/TierIcon";
 
 /**
  * The websites landing page.
@@ -32,69 +34,8 @@ export const metadata: Metadata = {
   alternates: { canonical: "/websites" },
 };
 
-const TIERS = [
-  {
-    name: "Launch",
-    price: RATES.siteLaunch,
-    time: TIMEBOX.siteLaunch,
-    line: "One page that does the job properly.",
-    for: "Trades, consultants, single-service businesses — anyone whose customers just need to find them, believe them, and call them.",
-    has: [
-      "A single, long-scrolling page",
-      "Written for you, not templated",
-      "Mobile-first — most of your traffic is a phone",
-      "Contact form and click-to-call",
-      "Google Business Profile connected",
-      "Live on your own domain",
-    ],
-  },
-  {
-    name: "Business",
-    price: RATES.siteBusiness,
-    time: TIMEBOX.siteBusiness,
-    line: "The site most companies actually need.",
-    for: "Established businesses with services to explain, a team to introduce and work to show. The version people expect when they look you up.",
-    has: [
-      "Up to eight pages",
-      "Custom design — not a bought theme",
-      "You edit the content yourself",
-      "Built to be found: speed, structure, schema",
-      "Enquiry routing to the right inbox",
-      "Analytics that report on enquiries, not hits",
-    ],
-    featured: true,
-  },
-  {
-    name: "Commerce",
-    price: `from ${RATES.siteCommerceFrom}`,
-    time: TIMEBOX.siteCommerce,
-    line: "A shop that takes money properly.",
-    for: "Anyone selling online — products, bookings or subscriptions. The bit most website builds get wrong is everything after the customer clicks buy.",
-    has: [
-      "Everything in Business",
-      "Product catalogue you manage yourself",
-      "South African payment gateway",
-      "Stock, shipping rules and VAT",
-      "Order and customer emails that arrive",
-      "Abandoned-cart recovery",
-    ],
-  },
-  {
-    name: "Bespoke",
-    price: `from ${RATES.siteBespokeFrom}`,
-    time: TIMEBOX.siteBespoke,
-    line: "When the site has to do something.",
-    for: "Booking, member areas, quoting, portals, integrations. Where the website stops being a brochure and starts being part of how the business runs.",
-    has: [
-      "Everything in Business",
-      "Custom functionality, scoped in week one",
-      "Integrations with what you already run",
-      "Roles and secure logins",
-      "Built by the team that builds our systems",
-      "Quoted against a written scope, fixed after that",
-    ],
-  },
-];
+const TIERS = WEB_TIERS;
+
 
 const EVERY = [
   ["Yours outright", "Design, code, content and domain. No platform holding it hostage, no licence to keep paying."],
@@ -246,9 +187,13 @@ export default function WebsitesPage() {
 
           <div className="k-web-tiers">
             {TIERS.map((t, i) => (
-              <Rise key={t.name} step={(i + 1) as 1 | 2 | 3}>
-                <article className={`k-web-tier${t.featured ? " k-web-tier--lead" : ""}`}>
+              <Rise key={t.slug} step={(i + 1) as 1 | 2 | 3}>
+                <Link
+                  href={`/websites/${t.slug}`}
+                  className={`k-web-tier k-web-tier--link${t.featured ? " k-web-tier--lead" : ""}`}
+                >
                   {t.featured && <span className="k-web-flag">Most businesses</span>}
+                  <TierIcon slug={t.slug} />
                   <h3 className="k-web-tier-name">{t.name}</h3>
                   <p className="k-web-price">{t.price}</p>
                   <p className="k-web-time">{t.time} · ex VAT</p>
@@ -259,7 +204,10 @@ export default function WebsitesPage() {
                       <li key={h}>{h}</li>
                     ))}
                   </ul>
-                </article>
+                  <span className="k-web-tier-more">
+                    See {t.examples.length} we have built ↗
+                  </span>
+                </Link>
               </Rise>
             ))}
           </div>
