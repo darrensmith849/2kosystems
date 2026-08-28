@@ -347,8 +347,23 @@ writeFileSync(`${OUT}/7-callouts.csv`, csv([
   ...CALLOUTS.map((c) => [CAMPAIGN, c]),
 ]));
 
-// Single combined sheet, Google Ads Editor column convention. The web bulk
-// uploader is built on the same engine, and one upload beats seven.
+/**
+ * Combined sheet for the web bulk uploader — ad groups, keywords and ads only.
+ *
+ * Deliberately excludes the campaign row and the negatives. A first upload
+ * proved the ad group / keyword / RSA columns are accepted (those rows failed
+ * only with "entity does not exist", cascading from the campaign row), while
+ * two things are not publicly documented and cannot be guessed reliably:
+ *
+ *   - the campaign row needs an "EU political ads" column whose accepted
+ *     values Google documents nowhere except inside its downloadable template;
+ *   - "Campaign Negative Phrase" is rejected as a Criterion Type.
+ *
+ * So the campaign is created once in the UI, where the political-ads
+ * declaration is a normal radio button, and the negatives are pasted into the
+ * campaign's negative keyword screen, which takes a plain newline-separated
+ * list. Both are one-time actions; everything repeatable stays in this file.
+ */
 const HEAD = [
   "Campaign", "Campaign Type", "Campaign Status", "Budget", "Budget Type",
   "Bid Strategy Type", "Search Network", "Display Network", "Search Partners",
@@ -359,15 +374,6 @@ const HEAD = [
 ];
 const blank = () => Object.fromEntries(HEAD.map((h) => [h, ""])) as Record<string, string>;
 const rows: Record<string, string>[] = [];
-
-const campaignRow = blank();
-Object.assign(campaignRow, {
-  Campaign: CAMPAIGN, "Campaign Type": "Search", "Campaign Status": "Paused",
-  Budget: "200", "Budget Type": "Daily", "Bid Strategy Type": "Maximize clicks",
-  "Search Network": "Enabled", "Display Network": "Disabled",
-  "Search Partners": "Disabled", Languages: "en",
-});
-rows.push(campaignRow);
 
 for (const g of GROUPS) {
   const ag = blank();
@@ -395,11 +401,9 @@ for (const g of GROUPS) {
   rows.push(ad);
 }
 
-for (const n of Object.values(NEGATIVES).flat()) {
-  const r = blank();
-  Object.assign(r, { Campaign: CAMPAIGN, Keyword: n, "Criterion Type": "Campaign Negative Phrase", Status: "Enabled" });
-  rows.push(r);
-}
+// Negatives are pasted into the UI, not uploaded — see the note above. Written
+// out as a plain list so it is one copy-paste.
+writeFileSync(`${OUT}/negatives.txt`, Object.values(NEGATIVES).flat().join("\n") + "\n");
 
 writeFileSync(`${OUT}/0-ALL.csv`, csv([HEAD, ...rows.map((r) => HEAD.map((h) => r[h]))]));
 
