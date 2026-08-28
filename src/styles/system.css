@@ -1356,3 +1356,67 @@ fieldset[disabled] .k-choice { cursor: not-allowed; }
   .k-reel-badge { opacity: 1; transform: none; }
   .k-sk { animation: none; }
 }
+
+/* ============================================================
+   Client strip
+   ============================================================ */
+
+.k-clients {
+  padding-block: clamp(34px, 4vw, 54px);
+  border-bottom: 1px solid var(--hair);
+  background: var(--black-2);
+}
+
+.k-clients-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 16px;
+}
+.k-clients-note { font-size: var(--t-sm); color: var(--warm-45); }
+
+/* The rail is deliberately full-bleed — running the names off both edges is
+   what makes ten of them read as "and more" rather than "and that is all". */
+.k-clients-rail {
+  display: flex;
+  gap: clamp(28px, 4vw, 56px);
+  margin-top: clamp(20px, 2.4vw, 30px);
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+.k-clients-track {
+  display: flex;
+  flex: none;
+  gap: clamp(28px, 4vw, 56px);
+  align-items: center;
+  list-style: none;
+  animation: k-marquee 46s linear infinite;
+}
+.k-clients-rail:hover .k-clients-track { animation-play-state: paused; }
+
+@keyframes k-marquee {
+  to { transform: translateX(calc(-100% - clamp(28px, 4vw, 56px))); }
+}
+
+.k-clients-track li {
+  white-space: nowrap;
+  font-size: clamp(15px, 1.5vw, 19px);
+  font-weight: 480;
+  letter-spacing: -0.012em;
+  color: var(--warm-70);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .k-clients-rail {
+    flex-wrap: wrap;
+    overflow: visible;
+    mask-image: none;
+    -webkit-mask-image: none;
+    row-gap: 12px;
+  }
+  .k-clients-track { animation: none; flex-wrap: wrap; }
+  /* One copy is enough when it is not scrolling. */
+  .k-clients-track[aria-hidden] { display: none; }
+}

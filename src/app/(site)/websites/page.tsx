@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Rise from "@/components/cinema/Rise";
 import BuildReel from "@/components/cinema/BuildReel";
+import ClientStrip from "@/components/cinema/ClientStrip";
 import { RATES, TIMEBOX, TERMS } from "@/lib/pricing";
 
 /**
@@ -181,6 +182,8 @@ export default function WebsitesPage() {
           </Rise>
         </div>
       </section>
+
+      <ClientStrip />
 
       {/* ------------------------------------------------------- pricing */}
       <section id="pricing" className="k-band">
