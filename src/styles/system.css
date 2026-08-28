@@ -927,7 +927,8 @@ fieldset[disabled] .k-choice { cursor: not-allowed; }
   gap: 18px;
   margin-top: clamp(34px, 4vw, 52px);
 }
-@media (min-width: 900px) { .k-web-tiers { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (min-width: 720px) { .k-web-tiers { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1140px) { .k-web-tiers { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 
 .k-web-tier {
   position: relative;
@@ -963,7 +964,7 @@ fieldset[disabled] .k-choice { cursor: not-allowed; }
 
 .k-web-price {
   margin-top: 12px;
-  font-size: clamp(32px, 3.2vw, 44px);
+  font-size: clamp(28px, 2.6vw, 36px);
   font-weight: 510;
   letter-spacing: -0.026em;
   line-height: 1;
@@ -1041,9 +1042,10 @@ fieldset[disabled] .k-choice { cursor: not-allowed; }
   gap: 18px;
   margin-top: clamp(30px, 3.6vw, 46px);
 }
-@media (min-width: 760px) { .k-web-care { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 760px) { .k-web-care { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 
 .k-web-careplan {
+  position: relative;
   height: 100%;
   padding: 28px 26px 30px;
   border: 1px solid var(--hair);

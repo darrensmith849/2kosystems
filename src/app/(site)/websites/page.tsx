@@ -61,6 +61,21 @@ const TIERS = [
     featured: true,
   },
   {
+    name: "Commerce",
+    price: `from ${RATES.siteCommerceFrom}`,
+    time: TIMEBOX.siteCommerce,
+    line: "A shop that takes money properly.",
+    for: "Anyone selling online — products, bookings or subscriptions. The bit most website builds get wrong is everything after the customer clicks buy.",
+    has: [
+      "Everything in Business",
+      "Product catalogue you manage yourself",
+      "South African payment gateway",
+      "Stock, shipping rules and VAT",
+      "Order and customer emails that arrive",
+      "Abandoned-cart recovery",
+    ],
+  },
+  {
     name: "Bespoke",
     price: `from ${RATES.siteBespokeFrom}`,
     time: TIMEBOX.siteBespoke,
@@ -90,14 +105,38 @@ const CARE = [
   {
     name: "Care",
     price: RATES.careBasic,
-    line: "Keeps the site up, current and safe.",
-    has: ["Hosting, domain and SSL", "Security patching and uptime monitoring", "Daily backups you can actually restore from", "Small text and image changes", "A human who answers"],
+    line: "We keep it alive. You drive.",
+    has: [
+      "Hosting, domain and SSL",
+      "Security patching and uptime monitoring",
+      "Daily backups you can actually restore from",
+      "You edit your own content, whenever you like",
+      "A human who answers when something breaks",
+    ],
   },
   {
     name: "Care+",
     price: RATES.carePlus,
-    line: "The above, plus someone actually working on it.",
-    has: ["Everything in Care", "An hour of changes each month", "New pages and sections as you need them", "A monthly note on what people did on the site", "First call on our build time"],
+    line: "For the things you cannot do yourself.",
+    has: [
+      "Everything in Care",
+      "One hour of our time each month",
+      "New pages and sections as you need them",
+      "A monthly note on what people did on the site",
+    ],
+    featured: true,
+  },
+  {
+    name: "Partner",
+    price: RATES.carePartner,
+    line: "A named person who knows your site.",
+    has: [
+      "Everything in Care+",
+      "Four hours a month, not one",
+      "The same person every time",
+      "Front of the queue on build work",
+      "Quarterly review of what to fix next",
+    ],
   },
 ];
 
@@ -125,6 +164,10 @@ const QA = [
   {
     q: "Do we have to take a care plan?",
     a: `No. The site is yours and you can host it wherever you like. Most people take one because somebody has to patch it, back it up and answer the phone when something breaks — but it is a separate decision from the build, and ${TERMS.postLaunchSupportDays} days of support come with every project regardless.`,
+  },
+  {
+    q: "Does Care include changes?",
+    a: `No, and that is deliberate. Every site we build hands you the controls, so the day-to-day is yours — text, images, new posts, prices. Care keeps the thing running underneath. When you want something you cannot do yourself, Care+ carries an hour a month and Partner carries four. Bundling edits into the cheapest tier is how agencies end up too busy to answer anyone.`,
   },
 ];
 
@@ -252,8 +295,9 @@ export default function WebsitesPage() {
           </Rise>
           <div className="k-web-care">
             {CARE.map((c, i) => (
-              <Rise key={c.name} step={(i + 1) as 1 | 2}>
-                <article className="k-web-careplan">
+              <Rise key={c.name} step={((i % 3) + 1) as 1 | 2 | 3}>
+                <article className={`k-web-careplan${c.featured ? " k-web-tier--lead" : ""}`}>
+                  {c.featured && <span className="k-web-flag">Most take this</span>}
                   <div className="k-web-careplan-head">
                     <h3 className="k-web-tier-name">{c.name}</h3>
                     <p className="k-web-price k-web-price--sm">

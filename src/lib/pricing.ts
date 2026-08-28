@@ -32,13 +32,26 @@ export const RATES = {
   /* ---------- Websites ----------
      A different market from the systems work: smaller, faster, decided in days
      rather than months. Priced to sit above a freelancer and below an agency,
-     which is exactly where the 2KO Group name does the work. */
+     which is exactly where the 2KO Group name does the work.
+
+     Set against delivery cost rather than market feel. At roughly R4,000/day
+     fully loaded, Business at its old R24,500 was a six-day build returning
+     about 2% — and, next to a strip of blue-chip logos, it read as cheap. */
+  /** ~1.5 days. Thin margin on purpose: this one is the hook for a care plan. */
   siteLaunch: "R9,500",
-  siteBusiness: "R24,500",
-  siteBespokeFrom: "R55,000",
-  /** Monthly care. Forty of these is a stable R18,000/month. */
+  siteBusiness: "R39,500",
+  siteCommerceFrom: "R58,000",
+  /** Above Job Card System at R95,000 would be odd; below R75,000 undercuts it. */
+  siteBespokeFrom: "R75,000",
+
+  /* ---------- Website care ----------
+     Care deliberately excludes changes. The moment small edits are bundled into
+     the base tier, forty clients become a support queue and the whole model
+     stops working. Self-service is a build decision, not a retainer feature. */
   careBasic: "R450",
-  carePlus: "R1,200",
+  /** Includes an hour. At the R1,250 hourly below, the old R1,200 sold that hour at a loss. */
+  carePlus: "R1,850",
+  carePartner: "R3,950",
   /** Out-of-scope and change-request work. */
   dayRate: "R9,500",
   hourlyRate: "R1,250",
@@ -67,6 +80,7 @@ export const TERMS = {
 export const TIMEBOX = {
   siteLaunch: "1 week",
   siteBusiness: "3 weeks",
+  siteCommerce: "5 weeks",
   siteBespoke: "6 weeks",
   review: "Half a day",
   audit: "2 weeks",
