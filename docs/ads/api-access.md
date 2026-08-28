@@ -1,6 +1,23 @@
 # Google Ads API access — application pack
 
-**Status: blocked on one thing only, and it needs you.**
+**Status as at 2026-08-28: submitted, pending Google review.**
+
+| | |
+|---|---|
+| Manager account (MCC) | **2KO Group — 434-363-4049** |
+| Linked sub-accounts | 2KO Africa (351-600-6867), Impart Agency (672-553-2284) |
+| Developer token | Created. Access level **Explorer** |
+| Google Cloud project | `ko-ads-api` · **number 41808878114** · Google Ads API enabled |
+| Basic Access application | Design document attached, submitted for review |
+| Expected decision | Within ~5 business days |
+
+The developer token itself lives in the API Center under *View token*. It is a
+**real secret** — unlike the conversion IDs in `.env.production`, it does not
+get committed. Put it in `.env` as `GOOGLE_ADS_DEVELOPER_TOKEN`.
+
+---
+
+## How it went (original blocker, now resolved)
 
 The API Center does not exist on a standard Google Ads account. Checked on
 2026-08-28 against every account on `darren.smith.210193@gmail.com`:
