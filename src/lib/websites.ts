@@ -123,6 +123,20 @@ export const WEB_TIERS: WebTier[] = [
       "If you need to take payment, that is Commerce. If the site has to do something — logins, bookings, a portal — that is Bespoke.",
     examples: [
       {
+        name: "DripTech",
+        shot: "driptech",
+        domain: "driptech.pages.dev",
+        url: "https://driptech.pages.dev/",
+        line: "Zimbabwe's irrigation people since 1995. Eleven branches, four ranges, one scroll.",
+      },
+      {
+        name: "Crimson Media",
+        shot: "crimson-media",
+        domain: "crimson-media.pages.dev",
+        url: "https://crimson-media.pages.dev/",
+        line: "Garden Route film and photography studio. The reel does the selling.",
+      },
+      {
         name: "Coastal Security Systems",
         shot: "coastal-security",
         domain: "coastalsecuritysystems.co.za",
@@ -216,6 +230,13 @@ export const WEB_TIERS: WebTier[] = [
         domain: "vemia.app",
         url: "https://vemia.app",
         line: "AI social planning. Reads a brand's site, drafts channel-aware posts, schedules them.",
+      },
+      {
+        name: "Virgin Estate Agents",
+        shot: "virgin-estate-agents",
+        domain: "virgin-estate-agents",
+        url: "https://virgin-estate-agents.virgin-estate-agents.workers.dev/",
+        line: "Harare property. Filtered search out front, a staff back office behind it.",
       },
       {
         name: "TaxUp",
