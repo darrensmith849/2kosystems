@@ -27,7 +27,7 @@ shoot daniel-jenkins        https://edenlang.vercel.app 25000   # video hero nee
 shoot coastal-security      https://coastalsecuritysystems.co.za
 shoot crosscoders           https://crosscoders.co.za
 shoot smart-home-architects https://smart-home-architects.damp-feather-2944.workers.dev/
-shoot sa-private-schools    https://saprivateschools.vercel.app
+shoot groenkloof-gym        https://groenkloofgym.co.za/
 shoot slabhead              https://slabhead.co.za
 shoot activitar             https://activitar.com
 shoot vemia                 https://my.vemia.app
