@@ -347,7 +347,63 @@ writeFileSync(`${OUT}/7-callouts.csv`, csv([
   ...CALLOUTS.map((c) => [CAMPAIGN, c]),
 ]));
 
+// Single combined sheet, Google Ads Editor column convention. The web bulk
+// uploader is built on the same engine, and one upload beats seven.
+const HEAD = [
+  "Campaign", "Campaign Type", "Campaign Status", "Budget", "Budget Type",
+  "Bid Strategy Type", "Search Network", "Display Network", "Search Partners",
+  "Languages", "Ad Group", "Ad Group Status", "Max CPC", "Keyword",
+  "Criterion Type", "Status", "Final URL", "Ad Type", "Path 1", "Path 2",
+  ...Array.from({ length: 15 }, (_, i) => `Headline ${i + 1}`),
+  ...Array.from({ length: 4 }, (_, i) => `Description ${i + 1}`),
+];
+const blank = () => Object.fromEntries(HEAD.map((h) => [h, ""])) as Record<string, string>;
+const rows: Record<string, string>[] = [];
+
+const campaignRow = blank();
+Object.assign(campaignRow, {
+  Campaign: CAMPAIGN, "Campaign Type": "Search", "Campaign Status": "Paused",
+  Budget: "200", "Budget Type": "Daily", "Bid Strategy Type": "Maximize clicks",
+  "Search Network": "Enabled", "Display Network": "Disabled",
+  "Search Partners": "Disabled", Languages: "en",
+});
+rows.push(campaignRow);
+
+for (const g of GROUPS) {
+  const ag = blank();
+  Object.assign(ag, { Campaign: CAMPAIGN, "Ad Group": g.name, "Ad Group Status": "Enabled", "Max CPC": "25" });
+  rows.push(ag);
+
+  for (const [list, type] of [[g.exact, "Exact"], [g.phrase, "Phrase"]] as const) {
+    for (const k of list) {
+      const r = blank();
+      Object.assign(r, {
+        Campaign: CAMPAIGN, "Ad Group": g.name, Keyword: k,
+        "Criterion Type": type, Status: "Enabled", "Final URL": g.url,
+      });
+      rows.push(r);
+    }
+  }
+
+  const ad = blank();
+  Object.assign(ad, {
+    Campaign: CAMPAIGN, "Ad Group": g.name, "Ad Type": "Responsive search ad",
+    Status: "Enabled", "Final URL": g.url, "Path 1": g.path1, "Path 2": g.path2,
+  });
+  g.headlines.forEach((h, i) => (ad[`Headline ${i + 1}`] = h));
+  g.descriptions.forEach((d, i) => (ad[`Description ${i + 1}`] = d));
+  rows.push(ad);
+}
+
+for (const n of Object.values(NEGATIVES).flat()) {
+  const r = blank();
+  Object.assign(r, { Campaign: CAMPAIGN, Keyword: n, "Criterion Type": "Campaign Negative Phrase", Status: "Enabled" });
+  rows.push(r);
+}
+
+writeFileSync(`${OUT}/0-ALL.csv`, csv([HEAD, ...rows.map((r) => HEAD.map((h) => r[h]))]));
+
 const kw = GROUPS.reduce((t, g) => t + g.exact.length + g.phrase.length, 0);
 console.log(`  ${GROUPS.length} ad groups · ${kw} keywords · ${GROUPS.length} RSAs · ${Object.values(NEGATIVES).flat().length} negatives`);
 console.log(`  all copy within Google's character limits`);
-console.log(`  written to ${OUT}/`);
+console.log(`  written to ${OUT}/ — 0-ALL.csv is the single-upload sheet`);
