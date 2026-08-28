@@ -1550,3 +1550,103 @@ fieldset[disabled] .k-choice { cursor: not-allowed; }
   padding: 20px 22px 22px;
 }
 .k-work-body p { margin-top: 6px; color: var(--warm-45); }
+
+/* ---------- Nav dropdown ---------- */
+
+.k-navlink {
+  font-size: 13.5px;
+  color: var(--warm-70);
+  transition: color 300ms var(--ease);
+}
+.k-navlink:hover { color: var(--warm); }
+.k-navlink[data-active="true"] { color: var(--warm); }
+
+.k-navgroup { position: relative; }
+
+.k-navlink--parent {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.k-navcaret {
+  width: 5px;
+  height: 5px;
+  border-right: 1.2px solid currentColor;
+  border-bottom: 1.2px solid currentColor;
+  transform: translateY(-1.5px) rotate(45deg);
+  opacity: 0.55;
+  transition: transform 260ms var(--ease), opacity 260ms var(--ease);
+}
+.k-navlink--parent[aria-expanded="true"] .k-navcaret {
+  transform: translateY(1px) rotate(-135deg);
+  opacity: 1;
+}
+
+.k-navmenu {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: -14px;
+  width: 340px;
+  padding: 7px;
+  border: 1px solid var(--hair-2);
+  border-radius: 12px;
+  background: var(--panel);
+  box-shadow: 0 26px 60px -28px rgba(0, 0, 0, 0.92);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-5px);
+  transition: opacity 200ms var(--ease), transform 200ms var(--ease), visibility 200ms;
+}
+.k-navmenu[data-open="true"] {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}
+
+/* Bridges the gap between the link and the panel so the pointer can travel
+   down without the menu closing under it. */
+.k-navmenu::before {
+  content: "";
+  position: absolute;
+  inset: -12px 0 100% 0;
+}
+
+.k-navitem {
+  display: block;
+  padding: 9px 11px;
+  border-radius: 8px;
+  transition: background-color 200ms var(--ease);
+}
+.k-navitem:hover { background: var(--panel-3); }
+.k-navitem[aria-current="page"] {
+  background: var(--panel-3);
+  box-shadow: inset 2px 0 0 var(--ember);
+}
+
+.k-navitem-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+.k-navitem-name {
+  font-size: 13.5px;
+  color: var(--warm);
+}
+.k-navitem-price {
+  font-size: 12px;
+  color: var(--warm-70);
+  white-space: nowrap;
+}
+.k-navitem-line {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  line-height: 1.35;
+  color: var(--warm-45);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .k-navmenu, .k-navcaret { transition: none; }
+}
