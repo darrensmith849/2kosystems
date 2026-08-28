@@ -8,8 +8,20 @@
 | Linked sub-accounts | 2KO Africa (351-600-6867), Impart Agency (672-553-2284) |
 | Developer token | Created. Access level **Explorer** |
 | Google Cloud project | `ko-ads-api` · **number 41808878114** · Google Ads API enabled |
-| Basic Access application | Design document attached, submitted for review |
-| Expected decision | Within ~5 business days |
+| Basic Access application | **Submitted and acknowledged by Google, 2026-08-28** |
+| Expected decision | Initial review within ~5 business days |
+
+Google may come back asking for more detail rather than deciding outright, so
+watch **darren@2kosystems.com** — that is the address on the application, and
+an unanswered request stalls the whole thing.
+
+**Optional accelerator.** Google offers to expedite the review if you complete
+[brand verification](https://developers.google.com/google-ads/api/docs/api-policy/brand-verification)
+on the Cloud project. That means configuring the OAuth consent screen and
+verifying ownership of 2kosystems.com. Worth doing regardless, because the
+OAuth consent screen is needed anyway to generate the refresh token once the
+token is approved — but it is not required, and the standard five-day review
+already fits inside the week.
 
 The developer token itself lives in the API Center under *View token*. It is a
 **real secret** — unlike the conversion IDs in `.env.production`, it does not
