@@ -213,9 +213,9 @@ export const WEB_TIERS: WebTier[] = [
       {
         name: "Vemia",
         shot: "vemia",
-        domain: "my.vemia.app",
-        url: "https://my.vemia.app",
-        line: "A platform that builds a real website from the socials a business already runs.",
+        domain: "vemia.app",
+        url: "https://vemia.app",
+        line: "AI social planning. Reads a brand's site, drafts channel-aware posts, schedules them.",
       },
       {
         name: "TaxUp",

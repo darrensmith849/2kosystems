@@ -60,12 +60,12 @@ function Row({ hidden = false }: { hidden?: boolean }) {
 
 export default function ClientStrip() {
   return (
-    <section className="k-clients" aria-label="Companies that have used 2KO software">
+    <section className="k-clients" aria-label="Companies in the 2KO software ecosystem">
       <div className="k-shell">
         <p className="k-clients-head">
           <span className="k-mono k-mono--ember">SOME OF WHO WE HAVE WORKED WITH</span>
           <span className="k-clients-note">
-            Companies that have used 2KO software, or had it built for them.
+            Companies in our software ecosystem.
           </span>
         </p>
       </div>
