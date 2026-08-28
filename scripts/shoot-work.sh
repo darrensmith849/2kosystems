@@ -32,6 +32,6 @@ shoot slabhead              https://slabhead.co.za
 shoot activitar             https://activitar.com
 shoot vemia                 https://my.vemia.app
 shoot taxup                 https://taxup.app
-shoot sigmafy               https://sigmafynew.vercel.app
+shoot sigmafy              https://portal.sigmafy.co
 shoot tori-trades           https://toritradestodamoon.vercel.app
 rm -rf "$TMP"

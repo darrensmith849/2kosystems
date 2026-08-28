@@ -206,9 +206,9 @@ export const WEB_TIERS: WebTier[] = [
     ],
     reel: "portal",
     intro:
-      "At some point a website stops being a brochure and starts being software. Logins, dashboards, calculations, things that talk to other systems. This is the same team that builds our operational systems, working at website scale.",
+      "At some point a website stops being a brochure and starts being software. Look at the four below: one files tax returns, one runs Six Sigma projects and grades them with AI, one is a trading desk, one builds websites out of a business's own socials. Not one of them is a website. They are systems with a public front door — and this is the rung where that starts.",
     notThis:
-      "If it is really an operational system — job cards, incidents, compliance — look at our Systems work instead. Same people, different shape, published prices there too.",
+      "If nobody outside your company will ever see it — job cards, incidents, compliance, a spreadsheet forty people depend on — it is a system, not a website, and the Systems side is the honest place to start. Same team, same rates, and the rung above this one costs R4,500 more than this one does.",
     examples: [
       {
         name: "Vemia",
@@ -227,9 +227,9 @@ export const WEB_TIERS: WebTier[] = [
       {
         name: "Sigmafy",
         shot: "sigmafy",
-        domain: "sigmafynew.vercel.app",
-        url: "https://sigmafynew.vercel.app",
-        line: "288 Six Sigma statistical tools in one studio, running entirely in the browser.",
+        domain: "portal.sigmafy.co",
+        url: "https://portal.sigmafy.co",
+        line: "Six Sigma projects, SPC, training, exams and AI grading in one platform.",
       },
       {
         name: "TORI Trades",

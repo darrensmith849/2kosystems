@@ -7,6 +7,7 @@ import ClientStrip from "@/components/cinema/ClientStrip";
 import { WEB_TIERS, tierBySlug } from "@/lib/websites";
 import { RATES, TERMS } from "@/lib/pricing";
 import TierIcon from "@/components/cinema/TierIcon";
+import Crossover from "@/components/cinema/Crossover";
 
 /**
  * One page per website tier.
@@ -202,6 +203,11 @@ export default async function TierPage({
           </div>
         </div>
       </section>
+
+      {/* Only Bespoke sits on the seam, so only Bespoke carries the ladder.
+          On the other three it would be a price list for work they are not
+          buying. */}
+      {tier.slug === "bespoke" && <Crossover here="Bespoke" />}
 
       {/* ------------------------------------------------------------- cta */}
       <section className="k-band k-web-close">

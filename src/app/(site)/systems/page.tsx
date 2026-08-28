@@ -16,6 +16,7 @@ import {
 } from "@/components/cinema/instruments";
 import { RATES } from "@/lib/pricing";
 import { CATALOGUE } from "@/lib/products";
+import Crossover from "@/components/cinema/Crossover";
 
 export const metadata: Metadata = {
   title: "Operational Systems We Build — Fixed-Price and Custom",
@@ -370,6 +371,10 @@ export default function SystemsPage() {
           </div>
         </div>
       </section>
+
+      {/* The websites work and this work are one ladder. Someone who lands here
+          from an ad for "custom software" is often after the rung below. */}
+      <Crossover />
 
       {/* ═══ CLOSE ═══ */}
       <section className="k-band">

@@ -2,11 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Rise from "@/components/cinema/Rise";
 import { Panel, Readout, QueueRows, Pill, Gauge } from "@/components/cinema/instruments";
+import Crossover from "@/components/cinema/Crossover";
 import { RATES, TERMS, TIMEBOX } from "@/lib/pricing";
 
 export const metadata: Metadata = {
   title: "Pricing — What Custom Software Costs in South Africa",
-  description: `What custom software costs in South Africa. Published prices: reviews ${RATES.review}, systems from ${RATES.getOffExcel}, builds to ${RATES.buildTo}. All ex VAT.`,
+  description: `What software and websites cost in South Africa. Published prices: websites from ${RATES.siteLaunch}, reviews ${RATES.review}, systems from ${RATES.getOffExcel}, builds to ${RATES.buildTo}. All ex VAT.`,
   alternates: { canonical: "/pricing" },
 };
 
@@ -122,6 +123,11 @@ export default function PricingPage() {
           </div>
         </div>
       </section>
+
+      {/* Engagements above are the systems half only. The websites work is the
+          bottom of the same ladder, and someone arriving from a website ad was
+          previously shown a price list with no websites on it. */}
+      <Crossover />
 
       {/* ═══ RETAINERS ═══ */}
       <section className="k-band">
