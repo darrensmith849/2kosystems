@@ -1,59 +1,81 @@
 /**
  * The client strip.
  *
- * Names, not logos. Three reasons: a colour logo wall on a near-black page
- * looks like a ransom note unless every mark is individually treated, wordmarks
- * cost nothing to load on the one page we pay per click for, and setting
- * someone else's trademark in our own type is a smaller claim than reproducing
- * their brand asset.
+ * Real logos, rendered as CSS masks rather than images. A mask throws away the
+ * source colour entirely and paints the shape in one grey, which is the only
+ * way twelve unrelated brand palettes sit on a near-black page without looking
+ * like a ransom note. It also means a logo drawn dark-on-white — most of them —
+ * does not disappear against our background.
  *
- * The framing matters more than the design here. These are companies the 2KO
- * Group has delivered work for — training, IT and systems. They are NOT
- * website clients, and the caption must never let the page imply otherwise.
- * Three of them are banks and one is the revenue service.
+ * Every company here is on the group's own client list. Two from the Six Sigma
+ * site were dropped because no high-quality SVG could be found (SARS, Standard
+ * Bank) and one because its SVG was 987 paths and 252KB (Sasol); all three were
+ * replaced from the same list.
  *
- * Sourced from the group's own sixsigmasouthafrica.co.za, where they are
- * already published.
+ * Several viewBoxes were cropped to their measured ink bounds — Transnet to
+ * its wordmark alone, because the stacked chevron underneath made the whole
+ * lockup unreadable at strip height, and Coca-Cola because its mark filled
+ * only 31% of the box it shipped in.
+ *
+ * `scale` is optical, not mathematical. A square mark reads heavier than a
+ * wordmark at the same height, so the square ones are set smaller until the row
+ * looks evenly weighted.
  */
 
-const CLIENTS = [
-  "Anglo American",
-  "Transnet",
-  "Standard Bank",
-  "SARS",
-  "Toyota",
-  "Nedbank",
-  "John Deere",
-  "ABSA",
-  "Airports Company",
-  "WorldNet",
+type Client = { name: string; file: string; ratio: number; scale: number };
+
+const CLIENTS: Client[] = [
+  { name: "Anglo American", file: "anglo-american", ratio: 4.54, scale: 1 },
+  { name: "Toyota", file: "toyota", ratio: 1.47, scale: 0.86 },
+  { name: "Eskom", file: "eskom", ratio: 3.91, scale: 1 },
+  { name: "Absa", file: "absa", ratio: 1, scale: 0.76 },
+  { name: "Discovery", file: "discovery", ratio: 4.89, scale: 1 },
+  { name: "MTN", file: "mtn", ratio: 2, scale: 0.86 },
+  { name: "Transnet", file: "transnet", ratio: 7.9, scale: 0.82 },
+  { name: "Sanlam", file: "sanlam", ratio: 4.87, scale: 1 },
+  { name: "John Deere", file: "john-deere", ratio: 1.11, scale: 0.9 },
+  { name: "Airports Company South Africa", file: "acsa", ratio: 2.19, scale: 0.95 },
+  { name: "Nedbank", file: "nedbank", ratio: 0.98, scale: 0.76 },
+  { name: "Coca-Cola", file: "coca-cola", ratio: 3.2, scale: 0.95 },
 ];
+
+function Row({ hidden = false }: { hidden?: boolean }) {
+  return (
+    <ul className="k-clients-track" aria-hidden={hidden || undefined}>
+      {CLIENTS.map((c) => (
+        <li key={c.file}>
+          <span
+            className="k-logo"
+            role={hidden ? undefined : "img"}
+            aria-label={hidden ? undefined : c.name}
+            style={{
+              ["--logo" as string]: `url(/logos/${c.file}.svg)`,
+              ["--ratio" as string]: c.ratio,
+              ["--scale" as string]: c.scale,
+            }}
+          />
+        </li>
+      ))}
+    </ul>
+  );
+}
 
 export default function ClientStrip() {
   return (
-    <section className="k-clients" aria-label="Companies the 2KO Group has worked with">
+    <section className="k-clients" aria-label="Companies that have used 2KO software">
       <div className="k-shell">
         <p className="k-clients-head">
           <span className="k-mono k-mono--ember">SOME OF WHO WE HAVE WORKED WITH</span>
           <span className="k-clients-note">
-            Across the 2KO Group — training, IT and systems, since 2001.
+            Companies that have used 2KO software, or had it built for them.
           </span>
         </p>
       </div>
 
       <div className="k-clients-rail">
-        {/* Duplicated once so the translation can loop seamlessly. The copy is
-            hidden from assistive tech to avoid reading every name twice. */}
-        <ul className="k-clients-track">
-          {CLIENTS.map((c) => (
-            <li key={c}>{c}</li>
-          ))}
-        </ul>
-        <ul className="k-clients-track" aria-hidden>
-          {CLIENTS.map((c) => (
-            <li key={c}>{c}</li>
-          ))}
-        </ul>
+        <Row />
+        {/* Second copy exists only so the translation can loop seamlessly. */}
+        <Row hidden />
       </div>
     </section>
   );
