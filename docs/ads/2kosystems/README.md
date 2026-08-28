@@ -8,6 +8,37 @@ keyword blocks one of our own keywords before it writes anything.
 node scripts/build-ads.ts
 ```
 
+## Live now
+
+Campaign **2KOS | Systems | Search | ZA** — id `24193179784`, in 2KO Africa
+(351-600-6867), **paused**, R200/day.
+
+| | |
+|---|---|
+| Ad group `Job cards` | 13 keywords, exact and phrase, zero broad |
+| Responsive search ad | 15 headlines, 4 descriptions, Ad strength Average |
+| Campaign negatives | **74**, phrase match |
+| Networks | Search only — partners and display off |
+| Location | South Africa, **Presence only** |
+| AI Max | Off at campaign and ad group |
+| Bidding | Maximise Clicks, R25 CPC ceiling |
+
+**Still to add:** the four remaining ad groups (`0-ALL.csv`, 53 rows), the four
+sitelinks, then enable.
+
+Two things the campaign wizard does that are worth knowing for next time. It
+pre-selects a budget of its own choosing — it offered **R459.90/day**, more
+than double ours — and it publishes the first ad group as "Ad group 1"
+regardless of anything you type. Both need correcting by hand.
+
+Google's own forecaster estimated **287 clicks/week at R4.88** for the single
+Job cards ad group. That is far above the 20–60 clicks a month estimated
+below. Google's forecasts assume looser matching than we use, so the truth is
+somewhere between; the R200/day cap bounds it either way. Revisit once there
+is a fortnight of real data.
+
+---
+
 **5 ad groups · 58 keywords · 5 responsive search ads · 74 negatives.**
 
 | Ad group | Lands on | Price |
@@ -48,7 +79,7 @@ is not buying a R95,000 build.
    The site code is already wired — `Analytics.tsx` loads gtag, `ContactForm`
    and `QuoteBuilder` call `track()`. Every call is a no-op until these are set.
 3. **Verify** a test enquiry registers in Google Ads.
-4. **Import** files 1–7 in numeric order.
+4. **Import** `0-ALL.csv` for the remaining ad groups.
 5. **Enable** the campaign.
 
 Launching before step 3 would repeat, on a new campaign, the exact mistake the

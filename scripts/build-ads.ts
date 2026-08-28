@@ -375,7 +375,12 @@ const HEAD = [
 const blank = () => Object.fromEntries(HEAD.map((h) => [h, ""])) as Record<string, string>;
 const rows: Record<string, string>[] = [];
 
-for (const g of GROUPS) {
+// Ad groups already built by hand in the UI. The wizard forces one ad group at
+// campaign creation, so "Job cards" exists there and must not be uploaded again
+// or it would duplicate its keywords.
+const ALREADY_LIVE = new Set(["Job cards"]);
+
+for (const g of GROUPS.filter((g) => !ALREADY_LIVE.has(g.name))) {
   const ag = blank();
   Object.assign(ag, { Campaign: CAMPAIGN, "Ad Group": g.name, "Ad Group Status": "Enabled", "Max CPC": "25" });
   rows.push(ag);
