@@ -25,8 +25,13 @@ your behalf. It takes about three minutes.
 https://ads.google.com/home/tools/manager-accounts/ → **Create a manager account**
 
 - Sign in as `darren.smith.210193@gmail.com` so it sits with the existing accounts
-- Name: **2KO Group** (this name appears to clients you later link, so use the
-  group name, not a product name)
+- Name: **2KO Group**. Not a personal name. When you later ask a prospect to
+  grant access to their account, the invitation shows them this name and CID —
+  "2KO Group" reads as the company whose site they just looked at, "Darren
+  Smith" reads as a freelancer or a phishing attempt. It also has to match the
+  company on the token application, and it sits above 2KO Africa, Impart Agency
+  and any client accounts, so it wants the parent name rather than one brand
+  underneath it. The name *can* be changed later, unlike the two settings below.
 - Billing country: South Africa · Currency: ZAR · Time zone: Johannesburg
 - Use it to: *manage other people's accounts*
 
