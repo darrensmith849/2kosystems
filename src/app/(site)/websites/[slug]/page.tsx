@@ -121,18 +121,26 @@ export default async function TierPage({
               judge for yourself — that is worth more than anything we could write here.
             </p>
           </Rise>
-          <div className="k-web-grid">
+          <div className="k-work-grid">
             {tier.examples.map((e, i) => (
-              <Rise key={e.url} step={((i % 3) + 1) as 1 | 2 | 3}>
-                <a
-                  className="k-web-cell k-work"
-                  href={e.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <h3 className="k-sub">{e.name}</h3>
-                  <p className="k-sm">{e.line}</p>
-                  <span className="k-work-domain">{e.domain} ↗</span>
+              <Rise key={e.url} step={((i % 2) + 1) as 1 | 2}>
+                <a className="k-work" href={e.url} target="_blank" rel="noopener noreferrer">
+                  <span className="k-work-shot">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={`/work/${e.shot}.webp`}
+                      alt={`The ${e.name} website`}
+                      width={760}
+                      height={475}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </span>
+                  <span className="k-work-body">
+                    <h3 className="k-sub">{e.name}</h3>
+                    <p className="k-sm">{e.line}</p>
+                    <span className="k-work-domain">{e.domain} ↗</span>
+                  </span>
                 </a>
               </Rise>
             ))}

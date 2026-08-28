@@ -24,6 +24,11 @@ export type Example = {
   line: string;
   /** Shown as the link label. Bare domains read better than full URLs. */
   domain: string;
+  /**
+   * Screenshot in /public/work, captured headless at 1440x900 and written out
+   * at 760px wide. Re-run scripts/shoot-work.sh when any of these sites change.
+   */
+  shot: string;
 };
 
 export type WebTier = {
@@ -67,24 +72,28 @@ export const WEB_TIERS: WebTier[] = [
     examples: [
       {
         name: "Riley's Car Wash",
+        shot: "rileys-car-wash",
         domain: "rileyscarwash.vercel.app",
         url: "https://rileyscarwash.vercel.app",
         line: "Weekend car washes in George. One service, one page, one call to action.",
       },
       {
         name: "Flex & Flow",
+        shot: "flex-and-flow",
         domain: "flexandflow.vercel.app",
         url: "https://flexandflow.vercel.app",
         line: "Stretch and mobility studio. Class times, the method, and a way to book.",
       },
       {
         name: "Moki",
+        shot: "moki",
         domain: "lovelace-moki.vercel.app",
         url: "https://lovelace-moki.vercel.app",
         line: "Original art out of Constantia. The work is the page; everything else gets out of its way.",
       },
       {
         name: "Daniel Jenkins",
+        shot: "daniel-jenkins",
         domain: "edenlang.vercel.app",
         url: "https://edenlang.vercel.app",
         line: "Guitarist, producer and songwriter. Listen, read, book — in that order.",
@@ -115,24 +124,28 @@ export const WEB_TIERS: WebTier[] = [
     examples: [
       {
         name: "Coastal Security Systems",
+        shot: "coastal-security",
         domain: "coastalsecuritysystems.co.za",
         url: "https://coastalsecuritysystems.co.za",
         line: "Connected security installations across the Southern Cape and Garden Route.",
       },
       {
         name: "CrossCoders",
+        shot: "crosscoders",
         domain: "crosscoders.co.za",
         url: "https://crosscoders.co.za",
         line: "A software company that needed a site as considered as the work it sells.",
       },
       {
         name: "Smart Home Architects",
+        shot: "smart-home-architects",
         domain: "smart-home-architects",
         url: "https://smart-home-architects.damp-feather-2944.workers.dev/",
         line: "Luxury home automation in Cape Town. Restrained, photographic, and quiet about it.",
       },
       {
         name: "SA Private Schools",
+        shot: "sa-private-schools",
         domain: "saprivateschools.vercel.app",
         url: "https://saprivateschools.vercel.app",
         line: "Find, compare and enquire across South African private schools. A directory that stays fast.",
@@ -162,12 +175,14 @@ export const WEB_TIERS: WebTier[] = [
     examples: [
       {
         name: "Slabhead",
+        shot: "slabhead",
         domain: "slabhead.co.za",
         url: "https://slabhead.co.za",
         line: "South Africa's home for graded trading cards. Catalogue, cart and PayFast checkout.",
       },
       {
         name: "Activitar",
+        shot: "activitar",
         domain: "activitar.com",
         url: "https://activitar.com",
         line: "Go. Do. Enjoy. Activity bookings taken and paid for online.",
@@ -197,24 +212,28 @@ export const WEB_TIERS: WebTier[] = [
     examples: [
       {
         name: "Vemia",
+        shot: "vemia",
         domain: "my.vemia.app",
         url: "https://my.vemia.app",
         line: "A platform that builds a real website from the socials a business already runs.",
       },
       {
         name: "TaxUp",
+        shot: "taxup",
         domain: "taxup.app",
         url: "https://taxup.app",
         line: "An AI tool for accountants. Income statements and returns, filed with one tap.",
       },
       {
         name: "Sigmafy",
+        shot: "sigmafy",
         domain: "sigmafynew.vercel.app",
         url: "https://sigmafynew.vercel.app",
         line: "288 Six Sigma statistical tools in one studio, running entirely in the browser.",
       },
       {
         name: "TORI Trades",
+        shot: "tori-trades",
         domain: "toritradestodamoon.vercel.app",
         url: "https://toritradestodamoon.vercel.app",
         line: "A premium trading operating system — live data, strategy and execution in one place.",

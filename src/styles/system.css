@@ -1484,15 +1484,6 @@ fieldset[disabled] .k-choice { cursor: not-allowed; }
   .k-web-tiers--three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 
-.k-work {
-  display: flex;
-  flex-direction: column;
-  text-decoration: none;
-  color: inherit;
-  transition: border-color 240ms var(--ease), transform 240ms var(--ease);
-}
-.k-work:hover { border-color: var(--hair-2); transform: translateY(-2px); }
-
 .k-work-domain {
   margin-top: auto;
   padding-top: 16px;
@@ -1504,3 +1495,58 @@ fieldset[disabled] .k-choice { cursor: not-allowed; }
   overflow-wrap: anywhere;
 }
 .k-work:hover .k-work-domain { color: var(--ember); }
+
+/* ---------- Work cards ---------- */
+
+.k-work-grid {
+  display: grid;
+  gap: 22px;
+  margin-top: clamp(30px, 3.6vw, 46px);
+}
+@media (min-width: 860px) { .k-work-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+.k-work {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid var(--hair);
+  border-radius: 14px;
+  background: var(--black-2);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 260ms var(--ease), transform 260ms var(--ease);
+}
+.k-work:hover { border-color: var(--hair-2); transform: translateY(-3px); }
+
+/* The screenshot sits under a hairline and a slight grade, so fourteen
+   unrelated sites read as one wall rather than fourteen loose rectangles. */
+.k-work-shot {
+  display: block;
+  position: relative;
+  border-bottom: 1px solid var(--hair);
+  background: var(--panel);
+  aspect-ratio: 760 / 475;
+  overflow: hidden;
+}
+.k-work-shot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+  filter: saturate(0.92) brightness(0.94);
+  transition: filter 320ms var(--ease), transform 420ms var(--ease);
+}
+.k-work:hover .k-work-shot img {
+  filter: none;
+  transform: scale(1.015);
+}
+
+.k-work-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 20px 22px 22px;
+}
+.k-work-body p { margin-top: 6px; color: var(--warm-45); }
