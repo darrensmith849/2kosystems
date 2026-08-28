@@ -29,6 +29,16 @@ export const RATES = {
   sheq: "R120,000",
   contractor: "R95,000",
   assetRegister: "R79,500",
+  /* ---------- Websites ----------
+     A different market from the systems work: smaller, faster, decided in days
+     rather than months. Priced to sit above a freelancer and below an agency,
+     which is exactly where the 2KO Group name does the work. */
+  siteLaunch: "R9,500",
+  siteBusiness: "R24,500",
+  siteBespokeFrom: "R55,000",
+  /** Monthly care. Forty of these is a stable R18,000/month. */
+  careBasic: "R450",
+  carePlus: "R1,200",
   /** Out-of-scope and change-request work. */
   dayRate: "R9,500",
   hourlyRate: "R1,250",
@@ -55,6 +65,9 @@ export const TERMS = {
 } as const;
 
 export const TIMEBOX = {
+  siteLaunch: "1 week",
+  siteBusiness: "3 weeks",
+  siteBespoke: "6 weeks",
   review: "Half a day",
   audit: "2 weeks",
   auditExtended: "3–4 weeks",

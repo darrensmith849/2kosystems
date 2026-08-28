@@ -17,6 +17,8 @@ type Entry = {
 
 const routes: Entry[] = [
   { path: "", priority: 1.0, changeFrequency: "monthly" },
+  // The paid-search landing page. Highest-intent commercial page on the site.
+  { path: "/websites", priority: 1.0, changeFrequency: "monthly" },
   { path: "/pricing", priority: 0.9, changeFrequency: "monthly" },
   { path: "/quote", priority: 0.9, changeFrequency: "monthly" },
   { path: "/get-off-excel", priority: 0.9, changeFrequency: "monthly" },
