@@ -34,8 +34,17 @@ const SECTIONS: { title: string; paragraphs: string[] }[] = [
   {
     title: "The chat assistant",
     paragraphs: [
-      "Our chat assistant uses an AI language model to draft responses. Conversations are kept in your browser session for the duration of your visit. When you escalate to a real agent, we send the chat transcript and your contact details through our email and CRM partner (Brevo) so the team has context for the follow-up.",
+      "Our chat assistant uses an AI language model to draft responses. Conversations are kept in your browser session for the duration of your visit. When you escalate to a real agent, we email the chat transcript and your contact details to our team through Cloudflare Email Service so that whoever replies has the context.",
       "The assistant is not a substitute for legal, contractual or financial advice. Please verify any details with our team before acting on them.",
+    ],
+  },
+  {
+    title: "Cookies and advertising",
+    paragraphs: [
+      "We advertise on Google. If you reach this site from one of our ads, Google sets cookies in your browser so that we can tell whether the ad led to an enquiry or to nothing at all. Through this we see the pages visited on this site, and three specific actions: a contact form submitted, the scope builder completed, and a brief requested.",
+      "We see that those actions happened. We do not send Google what you typed into them — not your answers, not your message, not your email address.",
+      "When you arrive from an ad, Google adds an identifier to the link. We keep it in your browser's session storage for the duration of your visit so that an enquiry can be matched back to the ad it came from. It is discarded when you close the tab.",
+      "You can turn off personalised Google advertising at myadcenter.google.com, or block cookies in your browser settings. Neither stops you using this site or contacting us.",
     ],
   },
   {
