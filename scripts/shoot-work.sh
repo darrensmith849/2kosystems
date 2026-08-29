@@ -41,10 +41,10 @@ CROP
   echo "  $1"
 }
 
-shoot rileys-car-wash       https://rileyscarwash.vercel.app
+shoot ground-control        https://ground-control.factory-previews-d8j.pages.dev/
+shoot town-planner          https://townplannercapetown.co.za/
 shoot flex-and-flow         https://flexandflow.vercel.app
-shoot moki                  https://lovelace-moki.vercel.app
-shoot daniel-jenkins        https://edenlang.vercel.app 25000   # video hero needs longer
+shoot spaconcepts           https://spaconcepts.crosscoders-preview.pages.dev/
 shoot driptech              https://driptech.pages.dev/
 shoot crimson-media         https://crimson-media.pages.dev/ 22000   # video hero
 shoot coastal-security      https://coastalsecuritysystems.co.za
@@ -52,9 +52,8 @@ shoot crosscoders           https://crosscoders.co.za
 shoot smart-home-architects https://smart-home-architects.damp-feather-2944.workers.dev/
 shoot groenkloof-gym        https://groenkloofgym.co.za/
 shoot slabhead              https://slabhead.co.za
-shoot activitar             https://activitar.com
+shoot activitar             https://activitar.2ko.co.za/
 shoot vemia                 https://vemia.app 12000 90    # cookie note pinned to the foot
-shoot virgin-estate-agents  https://virgin-estate-agents.virgin-estate-agents.workers.dev/
 shoot taxup                 https://taxup.app
 shoot sigmafy              https://portal.sigmafy.co
 shoot tori-trades           https://toritradestodamoon.vercel.app

@@ -71,11 +71,18 @@ export const WEB_TIERS: WebTier[] = [
       "If you have several services to explain, a team to introduce, or anything to sell, you want Business or Commerce instead. We will say so rather than sell you a page you outgrow in a month.",
     examples: [
       {
-        name: "Riley's Car Wash",
-        shot: "rileys-car-wash",
-        domain: "rileyscarwash.vercel.app",
-        url: "https://rileyscarwash.vercel.app",
-        line: "Weekend car washes in George. One service, one page, one call to action.",
+        name: "Ground Control Coffee Shop",
+        shot: "ground-control",
+        domain: "ground-control.pages.dev",
+        url: "https://ground-control.factory-previews-d8j.pages.dev/",
+        line: "A George institution on York Street. The menu, the reviews, and a number that rings.",
+      },
+      {
+        name: "M. A. Smith Town Planner",
+        shot: "town-planner",
+        domain: "townplannercapetown.co.za",
+        url: "https://townplannercapetown.co.za/",
+        line: "Cape Town land use since 1996. Feasibility to municipal decision, on one page.",
       },
       {
         name: "Flex & Flow",
@@ -83,20 +90,6 @@ export const WEB_TIERS: WebTier[] = [
         domain: "flexandflow.vercel.app",
         url: "https://flexandflow.vercel.app",
         line: "Stretch and mobility studio. Class times, the method, and a way to book.",
-      },
-      {
-        name: "Moki",
-        shot: "moki",
-        domain: "lovelace-moki.vercel.app",
-        url: "https://lovelace-moki.vercel.app",
-        line: "Original art out of Constantia. The work is the page; everything else gets out of its way.",
-      },
-      {
-        name: "Daniel Jenkins",
-        shot: "daniel-jenkins",
-        domain: "edenlang.vercel.app",
-        url: "https://edenlang.vercel.app",
-        line: "Guitarist, producer and songwriter. Listen, read, book — in that order.",
       },
     ],
   },
@@ -122,6 +115,13 @@ export const WEB_TIERS: WebTier[] = [
     notThis:
       "If you need to take payment, that is Commerce. If the site has to do something — logins, bookings, a portal — that is Bespoke.",
     examples: [
+      {
+        name: "SPACONCEPTS",
+        shot: "spaconcepts",
+        domain: "spaconcepts.pages.dev",
+        url: "https://spaconcepts.crosscoders-preview.pages.dev/",
+        line: "Bespoke wellness destinations across Africa. Method, portfolio, product and legacy.",
+      },
       {
         name: "DripTech",
         shot: "driptech",
@@ -197,9 +197,9 @@ export const WEB_TIERS: WebTier[] = [
       {
         name: "Activitar",
         shot: "activitar",
-        domain: "activitar.com",
-        url: "https://activitar.com",
-        line: "Go. Do. Enjoy. Activity bookings taken and paid for online.",
+        domain: "activitar.2ko.co.za",
+        url: "https://activitar.2ko.co.za/",
+        line: "Curated tours and activities. Live supplier availability, four currencies, hosted checkout.",
       },
     ],
   },
@@ -230,13 +230,6 @@ export const WEB_TIERS: WebTier[] = [
         domain: "vemia.app",
         url: "https://vemia.app",
         line: "AI social planning. Reads a brand's site, drafts channel-aware posts, schedules them.",
-      },
-      {
-        name: "Virgin Estate Agents",
-        shot: "virgin-estate-agents",
-        domain: "virgin-estate-agents",
-        url: "https://virgin-estate-agents.virgin-estate-agents.workers.dev/",
-        line: "Harare property. Filtered search out front, a staff back office behind it.",
       },
       {
         name: "TaxUp",
