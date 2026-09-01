@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import PageHero from "@/components/cinema/PageHero";
 import Link from "next/link";
 import Rise from "@/components/cinema/Rise";
 import { Panel, Readout, QueueRows, EventFeed, Pill, StatusGrid } from "@/components/cinema/instruments";
@@ -47,24 +48,16 @@ const principles = [
 export default function StudioPage() {
   return (
     <>
-      <section className="k-shell pt-32 pb-12 lg:pt-40">
-        <Rise>
-          <p className="k-mono k-mono--ember">Studio</p>
-        </Rise>
-        <Rise step={1}>
-          <h1 className="k-state mt-6 max-w-[18ch]">
-            Process improvement people who build software.
-          </h1>
-        </Rise>
-        <Rise step={2}>
-          <p className="k-lead k-measure mt-6">
-            2KO Systems is the systems and automation arm of the 2KO group. The
-            group has spent years inside South African operations doing
-            operational improvement, training and accreditation — which is why we
-            start with a process map rather than a feature list.
-          </p>
-        </Rise>
-      </section>
+      <PageHero
+        eyebrow="STUDIO"
+        title="Process improvement people who build software."
+        titleClass="max-w-[16ch]"
+        lead="2KO Systems is the systems and automation arm of the 2KO group. The group has spent years inside South African operations doing operational improvement, training and accreditation — which is why we start with a process map rather than a feature list."
+        ctas={[
+          { href: "/contact", label: "Start a project" },
+          { href: "/method", label: "How we work", ghost: true },
+        ]}
+      />
 
       {/* ═══ THE GROUP ═══ */}
       <section className="k-band k-band--2">

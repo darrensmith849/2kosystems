@@ -17,6 +17,8 @@ import {
 import { RATES } from "@/lib/pricing";
 import { CATALOGUE } from "@/lib/products";
 import Crossover from "@/components/cinema/Crossover";
+import PageHero from "@/components/cinema/PageHero";
+import ClientStrip from "@/components/cinema/ClientStrip";
 
 export const metadata: Metadata = {
   title: "Operational Systems We Build — Fixed-Price and Custom",
@@ -29,22 +31,23 @@ export default function SystemsPage() {
   return (
     <>
       {/* ═══ OPENING ═══ */}
-      <section className="k-shell pt-32 pb-12 lg:pt-40">
-        <Rise>
-          <p className="k-mono k-mono--ember">Systems</p>
-        </Rise>
-        <Rise step={1}>
-          <h1 className="k-state mt-6 max-w-[16ch]">Six layers. One operation.</h1>
-        </Rise>
-        <Rise step={2}>
-          <p className="k-lead k-measure mt-6">
-            Nothing here is a product you buy off a shelf. Each layer is shaped to
-            the way your operation already runs — the same six concerns show up
-            everywhere, but never in the same arrangement twice.
-          </p>
-        </Rise>
-
-        <Rise step={3} className="mt-10">
+      <PageHero
+        eyebrow="SYSTEMS"
+        title="Six layers. One operation."
+        titleClass="max-w-[15ch]"
+        lead="Nothing here is a product you buy off a shelf. Each layer is shaped to the way your operation already runs — the same six concerns show up everywhere, but never in the same arrangement twice."
+        ctas={[
+          { href: "/contact", label: "Book a process review" },
+          { href: "/pricing", label: "See the price list", ghost: true },
+        ]}
+        facts={[
+          { value: RATES.review, label: "half a day on site" },
+          { value: RATES.getOffExcel, label: "fixed-price systems from" },
+          { value: RATES.buildTo, label: "phased builds to" },
+          { value: "Fixed", label: "priced per phase" },
+        ]}
+      >
+        <div className="mt-10">
           <PipelineFlow
             stages={[
               { name: "Request", meta: "captured at source" },
@@ -54,8 +57,10 @@ export default function SystemsPage() {
               { name: "Record", meta: "audit written" },
             ]}
           />
-        </Rise>
-      </section>
+        </div>
+      </PageHero>
+
+      <ClientStrip />
 
       {/* ═══ READY TO BUILD ═══ */}
       <section className="k-band k-band--2">

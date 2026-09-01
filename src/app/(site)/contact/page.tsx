@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import PageHero from "@/components/cinema/PageHero";
 import Rise from "@/components/cinema/Rise";
 import ContactForm from "@/components/cinema/ContactForm";
 import { Panel, QueueRows, EventFeed, Pill } from "@/components/cinema/instruments";
@@ -14,31 +15,25 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <>
-      <section className="k-shell pt-40 pb-20 lg:pt-48">
-        <Rise>
-          <p className="k-mono k-mono--ember">Contact</p>
-        </Rise>
-        <Rise step={1}>
-          <h1 className="k-state mt-6 max-w-[18ch]">
-            Bring us the process that keeps going wrong.
-          </h1>
-        </Rise>
-        <Rise step={2}>
-          <p className="k-lead k-measure mt-6">
+      <PageHero
+        eyebrow="CONTACT"
+        title="Bring us the process that keeps going wrong."
+        titleClass="max-w-[16ch]"
+        lead={
+          <>
             If you already know what needs building, this is a thirty-minute call
             and a fixed price — no site visit required. If something is wrong and
             you cannot name it, that is what the {RATES.review} Half-Day Process
             Review is for, and the fee comes off whatever you commission next.
-          </p>
-        </Rise>
-        <Rise step={3}>
-          <div className="mt-8 flex flex-wrap gap-2">
-            <Pill tone="good">Free scoping call</Pill>
-            <Pill>No site visit for fixed-price systems</Pill>
-            <Pill tone="warn">On site only when it is needed</Pill>
-          </div>
-        </Rise>
-      </section>
+          </>
+        }
+      >
+        <div className="mt-8 flex flex-wrap gap-2">
+          <Pill tone="good">Free scoping call</Pill>
+          <Pill>No site visit for fixed-price systems</Pill>
+          <Pill tone="warn">On site only when it is needed</Pill>
+        </div>
+      </PageHero>
 
       <section className="k-band k-band--2">
         <div className="k-shell grid gap-12 lg:grid-cols-[minmax(0,1fr)_400px] lg:items-start">

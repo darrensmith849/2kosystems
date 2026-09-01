@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import PageHero from "@/components/cinema/PageHero";
 import Link from "next/link";
 import Rise from "@/components/cinema/Rise";
 import { Panel, Readout, QueueRows, Pill, EventFeed, Sparkline } from "@/components/cinema/instruments";
@@ -87,33 +88,23 @@ const phases = [
 export default function MethodPage() {
   return (
     <>
-      <section className="k-shell pt-32 pb-12 lg:pt-40">
-        <Rise>
-          <p className="k-mono k-mono--ember">Method</p>
-        </Rise>
-        <Rise step={1}>
-          <h1 className="k-state mt-6 max-w-[17ch]">
-            Five phases. Stop after any of them.
-          </h1>
-        </Rise>
-        <Rise step={2}>
-          <p className="k-lead k-measure mt-6">
-            You do not have to learn our process, because it is the one your team
-            already works in. Define, Measure, Analyse, Improve, Control — with the
-            Control phase written in code instead of onto a form that somebody has
-            to remember to fill in.
-          </p>
-        </Rise>
-
-        <Rise step={3} className="mt-12">
-          <div className="flex flex-wrap gap-2.5">
-            <Pill tone="good">Fixed price per phase</Pill>
-            <Pill tone="good">Scope written before work starts</Pill>
-            <Pill>Never billed hourly</Pill>
-            <Pill tone="warn">Changes quoted in advance</Pill>
-          </div>
-        </Rise>
-      </section>
+      <PageHero
+        eyebrow="METHOD"
+        title="Five phases. Stop after any of them."
+        titleClass="max-w-[16ch]"
+        lead="You do not have to learn our process, because it is the one your team already works in. Define, Measure, Analyse, Improve, Control — with the Control phase written in code instead of onto a form that somebody has to remember to fill in."
+        ctas={[
+          { href: "/contact", label: "Start with a review" },
+          { href: "/pricing", label: "What each phase costs", ghost: true },
+        ]}
+      >
+        <div className="mt-12 flex flex-wrap gap-2.5">
+          <Pill tone="good">Fixed price per phase</Pill>
+          <Pill tone="good">Scope written before work starts</Pill>
+          <Pill>Never billed hourly</Pill>
+          <Pill tone="warn">Changes quoted in advance</Pill>
+        </div>
+      </PageHero>
 
       {/* ═══ TWO WAYS IN ═══ */}
       <section className="k-band k-band--2">

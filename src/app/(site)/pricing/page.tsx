@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import PageHero from "@/components/cinema/PageHero";
+import ClientStrip from "@/components/cinema/ClientStrip";
 import Link from "next/link";
 import Rise from "@/components/cinema/Rise";
 import { Panel, Readout, QueueRows, Pill, Gauge } from "@/components/cinema/instruments";
@@ -60,31 +62,31 @@ export default function PricingPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-      <section className="k-shell pt-32 pb-12 lg:pt-40">
-        <Rise>
-          <p className="k-mono k-mono--ember">Pricing</p>
-        </Rise>
-        <Rise step={1}>
-          <h1 className="k-state mt-6 max-w-[15ch]">
-            Every price, published.
-          </h1>
-        </Rise>
-        <Rise step={2}>
-          <p className="k-lead k-measure mt-6">
-            Fixed prices against scopes agreed in writing before work starts. No
-            hourly billing, no discovery invoices, and nothing you have to book a
-            call to find out. Every figure below excludes VAT.
-          </p>
-        </Rise>
-        <Rise step={3}>
-          <div className="mt-7 flex flex-wrap gap-2.5">
-            <Pill tone="good">Fixed scope</Pill>
-            <Pill tone="good">You own the code</Pill>
-            <Pill>Audit fee credited</Pill>
-            <Pill tone="warn">No lock-in</Pill>
-          </div>
-        </Rise>
-      </section>
+      <PageHero
+        eyebrow="PRICING"
+        title="Every price, published."
+        titleClass="max-w-[13ch]"
+        lead="Fixed prices against scopes agreed in writing before work starts. No hourly billing, no discovery invoices, and nothing you have to book a call to find out. Every figure below excludes VAT."
+        ctas={[
+          { href: "/contact", label: "Start a project" },
+          { href: "/quote", label: "Build a scope yourself", ghost: true },
+        ]}
+        facts={[
+          { value: RATES.siteLaunch, label: "websites from" },
+          { value: RATES.getOffExcel, label: "systems from" },
+          { value: RATES.buildTo, label: "phased builds to" },
+          { value: "Ex VAT", label: "every figure here" },
+        ]}
+      >
+        <div className="mt-7 flex flex-wrap gap-2.5">
+          <Pill tone="good">Fixed scope</Pill>
+          <Pill tone="good">You own the code</Pill>
+          <Pill>Audit fee credited</Pill>
+          <Pill tone="warn">No lock-in</Pill>
+        </div>
+      </PageHero>
+
+      <ClientStrip />
 
       {/* ═══ LADDER ═══ */}
       <section className="k-band k-band--2">

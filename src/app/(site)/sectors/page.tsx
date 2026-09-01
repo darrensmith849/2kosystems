@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import PageHero from "@/components/cinema/PageHero";
 import Link from "next/link";
 import Rise from "@/components/cinema/Rise";
 import Photo from "@/components/cinema/Photo";
@@ -86,30 +87,22 @@ const sectors = [
 export default function SectorsPage() {
   return (
     <>
-      <section className="k-shell pt-32 pb-12 lg:pt-40">
-        <Rise>
-          <p className="k-mono k-mono--ember">Sectors</p>
-        </Rise>
-        <Rise step={1}>
-          <h1 className="k-state mt-6 max-w-[16ch]">
-            Where a small slip costs a large amount.
-          </h1>
-        </Rise>
-        <Rise step={2}>
-          <p className="k-lead k-measure mt-6">
-            Heavy process, thin admin capacity, and a workflow that lives across
-            four tools and a group chat. The sector changes and the vocabulary
-            changes; the failure almost never does.
-          </p>
-        </Rise>
-        <Rise step={3}>
-          <div className="mt-7 flex flex-wrap gap-2.5">
-            {sectors.map((sector) => (
-              <Pill key={sector.n}>{sector.name}</Pill>
-            ))}
-          </div>
-        </Rise>
-      </section>
+      <PageHero
+        eyebrow="SECTORS"
+        title="Where a small slip costs a large amount."
+        titleClass="max-w-[15ch]"
+        lead="Heavy process, thin admin capacity, and a workflow that lives across four tools and a group chat. The sector changes and the vocabulary changes; the failure almost never does."
+        ctas={[
+          { href: "/contact", label: "Book a process review" },
+          { href: "/systems", label: "See what we build", ghost: true },
+        ]}
+      >
+        <div className="mt-7 flex flex-wrap gap-2.5">
+          {sectors.map((sector) => (
+            <Pill key={sector.n}>{sector.name}</Pill>
+          ))}
+        </div>
+      </PageHero>
 
       {sectors.map((sector, i) => (
         <div key={sector.n}>
