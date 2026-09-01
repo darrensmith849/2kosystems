@@ -13,14 +13,28 @@ export const metadata: Metadata = {
   alternates: { canonical: "/pricing" },
 };
 
+/**
+ * The engagement ladder.
+ *
+ * `phase` is not decoration. Every one of these IS a DMAIC phase — /method
+ * describes the same five things under D, M, A/I, C and S — and until now the
+ * two pages never referenced each other. The rail on each row shows which
+ * phase you are buying, and the row links to the section that explains it.
+ *
+ * Extended Audit is a larger Measure; Get Off Excel is a productised Improve,
+ * so it points at its own page rather than at a phase.
+ */
 const ladder = [
-  { name: "Half-Day Process Review", price: RATES.review, time: TIMEBOX.review, note: `Credited against whatever you commission next`, tone: "neutral" as const },
-  { name: "Systems Opportunity Audit", price: RATES.audit, time: TIMEBOX.audit, note: `Credited in full against a pilot within ${TERMS.auditCreditDays} days`, tone: "good" as const },
-  { name: "Extended Audit", price: RATES.auditExtended, time: TIMEBOX.auditExtended, note: "Multi-site or multi-process fieldwork", tone: "neutral" as const },
-  { name: "Get Off Excel", price: RATES.getOffExcel, time: TIMEBOX.getOffExcel, note: "One spreadsheet, rebuilt. Scope published in full", tone: "neutral" as const, href: "/get-off-excel" },
-  { name: "Proof-of-Value Pilot", price: `from ${RATES.pilotFrom}`, time: TIMEBOX.pilot, note: "One workflow. Rolls forward into the build", tone: "neutral" as const },
-  { name: "Core System Build", price: `${RATES.buildFrom} – ${RATES.buildTo}`, time: TIMEBOX.buildPhase, note: "Fixed price per phase, quoted in sequence", tone: "neutral" as const },
+  { name: "Half-Day Process Review", price: RATES.review, time: TIMEBOX.review, note: `Credited against whatever you commission next`, tone: "neutral" as const, phase: [0], href: "/method#phase-define" },
+  { name: "Systems Opportunity Audit", price: RATES.audit, time: TIMEBOX.audit, note: `Credited in full against a pilot within ${TERMS.auditCreditDays} days`, tone: "good" as const, phase: [1], href: "/method#phase-measure" },
+  { name: "Extended Audit", price: RATES.auditExtended, time: TIMEBOX.auditExtended, note: "Multi-site or multi-process fieldwork", tone: "neutral" as const, phase: [1], href: "/method#phase-measure" },
+  { name: "Get Off Excel", price: RATES.getOffExcel, time: TIMEBOX.getOffExcel, note: "One spreadsheet, rebuilt. Scope published in full", tone: "neutral" as const, phase: [2], href: "/get-off-excel" },
+  { name: "Proof-of-Value Pilot", price: `from ${RATES.pilotFrom}`, time: TIMEBOX.pilot, note: "One workflow. Rolls forward into the build", tone: "neutral" as const, phase: [2], href: "/method#phase-analyse-improve" },
+  { name: "Core System Build", price: `${RATES.buildFrom} – ${RATES.buildTo}`, time: TIMEBOX.buildPhase, note: "Fixed price per phase, quoted in sequence", tone: "neutral" as const, phase: [3], href: "/method#phase-control" },
 ];
+
+/** D · M · A/I · C · S — the same five the method page walks through. */
+const PHASE_LETTERS = ["D", "M", "A/I", "C", "S"];
 
 const retainers = [
   { name: "Care", price: RATES.retainerCare, tagline: "Keep it running", rows: ["Next business day", "—", "—", "—"] },
@@ -95,34 +109,48 @@ export default function PricingPage() {
             <p className="k-mono">01 — Engagements</p>
           </Rise>
 
-          <div className="mt-10">
-            {ladder.map((tier, i) => (
+          <ol className="k-eng">
+            {ladder.map((tier) => (
               <Rise key={tier.name}>
-                <div
-                  className="k-row md:grid-cols-[minmax(0,1.1fr)_minmax(0,1.4fr)_180px_auto] md:items-baseline"
-                  style={i === 0 ? { borderTop: "1px solid var(--line-dark)" } : undefined}
-                >
-                  <h2 className="k-sub">
-                    {tier.href ? (
-                      <Link href={tier.href} className="hover:opacity-70">
-                        {tier.name}
-                      </Link>
-                    ) : (
-                      tier.name
-                    )}
-                  </h2>
-                  <p className="k-sm">{tier.note}</p>
-                  <span className="k-mono">{tier.time}</span>
-                  <span
-                    className="k-num text-[22px] md:text-right"
-                    style={{ color: tier.tone === "good" ? "var(--signal)" : "var(--warm)" }}
-                  >
-                    {tier.price}
-                  </span>
-                </div>
+                <li>
+                  <Link href={tier.href} className="k-eng-row">
+                    <span className="k-eng-main">
+                      <span className="k-eng-name">{tier.name}</span>
+                      {/* Which DMAIC phase you are actually buying. Derived from
+                          the method, not drawn for decoration. */}
+                      <span className="k-eng-rail" aria-hidden>
+                        {PHASE_LETTERS.map((letter, p) => (
+                          <i key={letter} data-on={tier.phase.includes(p) ? "1" : "0"}>
+                            {letter}
+                          </i>
+                        ))}
+                      </span>
+                    </span>
+                    <span className="k-eng-note">{tier.note}</span>
+                    <span className="k-eng-time">{tier.time}</span>
+                    <span
+                      className="k-eng-price"
+                      style={{ color: tier.tone === "good" ? "var(--signal)" : "var(--warm)" }}
+                    >
+                      {tier.price}
+                    </span>
+                    <span className="k-eng-go" aria-hidden>→</span>
+                  </Link>
+                </li>
               </Rise>
             ))}
-          </div>
+          </ol>
+          <Rise>
+            <p className="k-eng-foot">
+              The rail on each row is the{" "}
+              <Link href="/method" className="k-link">
+                DMAIC phase
+              </Link>{" "}
+              you are buying — Define, Measure, Analyse &amp; Improve, Control, Sustain.
+              Sustain is the retainers below; every other row links to the phase that
+              explains it.
+            </p>
+          </Rise>
         </div>
       </section>
 

@@ -188,7 +188,11 @@ export default function MethodPage() {
 
       {/* ═══ PHASES ═══ */}
       {phases.map((phase, i) => (
-        <section key={phase.letter} className={i % 2 === 0 ? "k-band" : "k-band k-band--2"}>
+        <section
+          key={phase.letter}
+          id={`phase-${phase.phase.toLowerCase().replace(/[^a-z]+/g, "-")}`}
+          className={i % 2 === 0 ? "k-band" : "k-band k-band--2"}
+        >
           <div className="k-shell grid gap-10 lg:grid-cols-[minmax(0,1fr)_400px] lg:items-start">
             <div>
               <Rise>
