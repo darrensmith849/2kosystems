@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Rise from "@/components/cinema/Rise";
+import PageHero from "@/components/cinema/PageHero";
 import { Panel, QueueRows, Pill, PipelineFlow } from "@/components/cinema/instruments";
 import { PRODUCTS, getProduct } from "@/lib/products";
-import { RATES } from "@/lib/pricing";
+import { RATES, TERMS } from "@/lib/pricing";
 
 export function generateStaticParams() {
   return PRODUCTS.map((product) => ({ slug: product.slug }));
@@ -93,39 +94,31 @@ export default async function ProductPage({
       </nav>
 
       {/* ═══ OPENING ═══ */}
-      <section className="relative isolate overflow-hidden pt-8 pb-16">
-        <div className="k-glow -z-10" style={{ top: "40px" }} aria-hidden="true" />
-        <div className="k-shell">
-          <Rise>
-            <p className="k-mono k-mono--ember">
-              Fixed price · Fixed scope · {product.timebox}
-            </p>
-          </Rise>
-          <Rise step={1}>
-            <h1 className="k-hero mt-6 max-w-[20ch]">{product.headline}</h1>
-          </Rise>
-          <Rise step={2}>
-            <div className="mt-6 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-              <p className="k-lead max-w-[54ch]">
-                {product.summary} {product.price} ex VAT, agreed up front, with the
-                scope written down before we start.
-              </p>
-              <div className="flex shrink-0 gap-3">
-                <Link href="/contact" className="k-btn k-btn--solid">
-                  Book a free scoping call
-                </Link>
-                <Link href="#scope" className="k-btn k-btn--ghost">
-                  What&rsquo;s included
-                </Link>
-              </div>
-            </div>
-          </Rise>
-
-          <Rise step={3} className="mt-14">
-            <PipelineFlow stages={product.stages} />
-          </Rise>
+      <PageHero
+        eyebrow={`FIXED PRICE · FIXED SCOPE · ${product.timebox.toUpperCase()}`}
+        title={product.headline}
+        titleClass="max-w-[17ch]"
+        lead={
+          <>
+            {product.summary} {product.price} ex VAT, agreed up front, with the scope
+            written down before we start.
+          </>
+        }
+        ctas={[
+          { href: "/contact", label: "Book a free scoping call" },
+          { href: "#scope", label: "What’s included", ghost: true },
+        ]}
+        facts={[
+          { value: product.price, label: "ex VAT, fixed" },
+          { value: product.timebox, label: "to go-live" },
+          { value: `${TERMS.postLaunchSupportDays} days`, label: "support included" },
+          { value: "Yours", label: "code and data, day one" },
+        ]}
+      >
+        <div className="mt-14">
+          <PipelineFlow stages={product.stages} />
         </div>
-      </section>
+      </PageHero>
 
       {/* ═══ SYMPTOMS ═══ */}
       <section className="k-band k-band--2">

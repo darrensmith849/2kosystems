@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import PageHero from "@/components/cinema/PageHero";
+import PhaseReel from "@/components/cinema/PhaseReel";
 import Link from "next/link";
 import Rise from "@/components/cinema/Rise";
 import { Panel, Readout, QueueRows, Pill, EventFeed, Sparkline } from "@/components/cinema/instruments";
@@ -104,6 +105,7 @@ export default function MethodPage() {
           <Pill>Never billed hourly</Pill>
           <Pill tone="warn">Changes quoted in advance</Pill>
         </div>
+        <PhaseReel />
       </PageHero>
 
       {/* ═══ TWO WAYS IN ═══ */}
