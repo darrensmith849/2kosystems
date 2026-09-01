@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import PageHero from "@/components/cinema/PageHero";
 import PhaseReel from "@/components/cinema/PhaseReel";
+import PhaseArtefact from "@/components/cinema/PhaseArtefact";
 import Link from "next/link";
 import Rise from "@/components/cinema/Rise";
 import { Panel, Readout, QueueRows, Pill, EventFeed, Sparkline } from "@/components/cinema/instruments";
@@ -16,6 +17,7 @@ export const metadata: Metadata = {
 const phases = [
   {
     letter: "D",
+    artefact: "memo" as const,
     phase: "Define",
     engagement: "Half-Day Process Review",
     price: RATES.review,
@@ -30,6 +32,7 @@ const phases = [
   },
   {
     letter: "M",
+    artefact: "findings" as const,
     phase: "Measure",
     engagement: "Systems Opportunity Audit",
     price: RATES.audit,
@@ -44,6 +47,7 @@ const phases = [
   },
   {
     letter: "A/I",
+    artefact: "pilot" as const,
     phase: "Analyse & Improve",
     engagement: "Proof-of-Value Pilot",
     price: `from ${RATES.pilotFrom}`,
@@ -58,6 +62,7 @@ const phases = [
   },
   {
     letter: "C",
+    artefact: "phases" as const,
     phase: "Control",
     engagement: "Core System Build",
     price: `${RATES.buildFrom} – ${RATES.buildTo}`,
@@ -72,6 +77,7 @@ const phases = [
   },
   {
     letter: "S",
+    artefact: "service" as const,
     phase: "Sustain",
     engagement: "Managed Retainer",
     price: `from ${RATES.retainerCare}/mo`,
@@ -191,34 +197,27 @@ export default function MethodPage() {
         <section
           key={phase.letter}
           id={`phase-${phase.phase.toLowerCase().replace(/[^a-z]+/g, "-")}`}
-          className={i % 2 === 0 ? "k-band" : "k-band k-band--2"}
+          className={`k-band k-phase-section${i % 2 === 0 ? "" : " k-band--2"}`}
         >
-          <div className="k-shell grid gap-10 lg:grid-cols-[minmax(0,1fr)_400px] lg:items-start">
+          <div className="k-shell k-phase-grid">
             <div>
               <Rise>
-                <div className="flex items-baseline gap-5">
-                  <span
-                    className="k-num text-[40px] leading-none"
-                    style={{ color: "var(--ember)" }}
-                  >
-                    {phase.letter}
-                  </span>
-                  <div>
-                    <p className="k-mono">{phase.phase}</p>
-                    <h2 className="k-sub mt-1.5">{phase.engagement}</h2>
-                  </div>
-                </div>
+                <p className="k-mono k-mono--ember">
+                  Phase {i + 1} of 5 · {phase.phase}
+                </p>
+                <p className="k-phase-letter">{phase.letter}</p>
+                <h2 className="k-phase-eng">{phase.engagement}</h2>
               </Rise>
               <Rise step={1}>
                 <p className="k-lead k-measure mt-6">{phase.body}</p>
               </Rise>
-            </div>
-
-            <Rise step={2}>
-              <Panel label={`Phase ${i + 1} of 5`} meta={phase.time}>
-                <Readout value={phase.price} />
-                <p className="k-mono mt-2">ex VAT · fixed</p>
-                <ul className="k-hairline mt-4 flex flex-col gap-2 pt-3">
+              <Rise step={2}>
+                <p className="k-phase-price">
+                  <b>{phase.price}</b>
+                  <span>ex VAT · fixed</span>
+                  <span style={{ marginLeft: "auto" }}>{phase.time}</span>
+                </p>
+                <ul className="mt-5 flex flex-col gap-2">
                   {phase.outputs.map((output) => (
                     <li key={output} className="flex gap-3 text-[12.5px] leading-[1.5]">
                       <span style={{ color: "var(--signal)" }}>—</span>
@@ -226,7 +225,13 @@ export default function MethodPage() {
                     </li>
                   ))}
                 </ul>
-              </Panel>
+              </Rise>
+            </div>
+
+            {/* Not what happens in the phase — the reel above shows that. This is
+                the thing that lands in your inbox at the end of it. */}
+            <Rise step={2}>
+              <PhaseArtefact kind={phase.artefact} />
             </Rise>
           </div>
         </section>
