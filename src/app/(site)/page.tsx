@@ -4,6 +4,7 @@ import Rise from "@/components/cinema/Rise";
 import Photo from "@/components/cinema/Photo";
 import AfricaMap from "@/components/cinema/AfricaMap";
 import OpsConsole from "@/components/cinema/OpsConsole";
+import PageHero from "@/components/cinema/PageHero";
 import { UptimeCard } from "@/components/cinema/HeroCards";
 import { RATES } from "@/lib/pricing";
 
@@ -65,53 +66,33 @@ export default function CinemaHome() {
   return (
     <>
       {/* ══════════ HERO — the product, working ══════════ */}
-      <section className="relative isolate overflow-hidden pt-32 pb-24 lg:pt-40">
-        {/* Light seated behind the app frame, not washed over the section */}
-        <div className="k-glow -z-10" style={{ top: "120px" }} aria-hidden="true" />
-
-        <div className="k-shell">
-          <Rise>
-            <p className="k-mono">Operational systems · South Africa</p>
-          </Rise>
-
-          <Rise step={1}>
-            <h1 className="k-hero mt-6 max-w-[21ch]">
-              The operations system your business is missing.
-            </h1>
-          </Rise>
-
-          <Rise step={2}>
-            <div className="mt-6 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-              <p className="k-lead max-w-[52ch]">
-                Approvals, capture, escalation and reporting in one place — built
-                around how your operation already runs. This is one we built.
-                Click it.
-              </p>
-              <div className="flex shrink-0 gap-3">
-                <Link href="/contact" className="k-btn k-btn--solid">
-                  Start a project
-                </Link>
-                <Link href="/pricing" className="k-btn k-btn--ghost">
-                  See pricing
-                </Link>
-              </div>
-            </div>
-          </Rise>
-
-          {/* The demo itself */}
-          <Rise step={3} className="relative mt-16">
-            <div className="k-horizon" style={{ top: "-1px" }} aria-hidden="true" />
-            <OpsConsole />
-          </Rise>
-
-          <Rise className="mt-5">
-            <p className="k-mono">
-              Live demo · approve a request and watch the queue, the counts and the
-              audit trail update · records are invented
-            </p>
-          </Rise>
+      <PageHero
+        eyebrow="OPERATIONAL SYSTEMS · SOUTH AFRICA"
+        title="The operations system your business is missing."
+        titleClass="max-w-[18ch]"
+        lead="Approvals, capture, escalation and reporting in one place — built around how your operation already runs. This is one we built. Click it."
+        ctas={[
+          { href: "/contact", label: "Start a project" },
+          { href: "/pricing", label: "See pricing", ghost: true },
+        ]}
+        facts={[
+          { value: RATES.siteLaunch, label: "websites from" },
+          { value: RATES.getOffExcel, label: "systems from" },
+          { value: RATES.review, label: "half a day on site" },
+          { value: "Fixed", label: "against a written scope" },
+        ]}
+      >
+        {/* The demo itself — the strongest proof on the site, so it stays
+            directly under the CTAs rather than behind a scroll. */}
+        <div className="relative mt-16">
+          <div className="k-horizon" style={{ top: "-1px" }} aria-hidden="true" />
+          <OpsConsole />
+          <p className="k-mono mt-5">
+            Live demo · approve a request and watch the queue, the counts and the
+            audit trail update · records are invented
+          </p>
         </div>
-      </section>
+      </PageHero>
 
       {/* ══════════ STATEMENT ══════════ */}
       <section className="k-band">

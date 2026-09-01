@@ -10,7 +10,6 @@ import {
   QueueRows,
   EventFeed,
   Pill,
-  PipelineFlow,
   RoleMatrix,
   ConfidenceBars,
 } from "@/components/cinema/instruments";
@@ -18,6 +17,7 @@ import { RATES } from "@/lib/pricing";
 import { CATALOGUE } from "@/lib/products";
 import Crossover from "@/components/cinema/Crossover";
 import PageHero from "@/components/cinema/PageHero";
+import LayerReel from "@/components/cinema/LayerReel";
 import ClientStrip from "@/components/cinema/ClientStrip";
 
 export const metadata: Metadata = {
@@ -47,17 +47,9 @@ export default function SystemsPage() {
           { value: "Fixed", label: "priced per phase" },
         ]}
       >
-        <div className="mt-10">
-          <PipelineFlow
-            stages={[
-              { name: "Request", meta: "captured at source" },
-              { name: "Route", meta: "owner assigned" },
-              { name: "Approve", meta: "threshold checked" },
-              { name: "Execute", meta: "work scheduled" },
-              { name: "Record", meta: "audit written" },
-            ]}
-          />
-        </div>
+        {/* The static pipeline said the words; the reel makes the argument —
+            one record, carried through all six layers in turn. */}
+        <LayerReel />
       </PageHero>
 
       <ClientStrip />
