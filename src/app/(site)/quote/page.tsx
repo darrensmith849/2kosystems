@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import PageHero from "@/components/cinema/PageHero";
 import Link from "next/link";
 import Rise from "@/components/cinema/Rise";
 import QuoteBuilder from "@/components/cinema/QuoteBuilder";
@@ -14,34 +15,18 @@ export const metadata: Metadata = {
 export default function QuotePage() {
   return (
     <>
-      <section className="relative isolate overflow-hidden pt-32 pb-12 lg:pt-40">
-        <div className="k-glow -z-10" style={{ top: "20px" }} aria-hidden="true" />
-        <div className="k-shell">
-          <Rise>
-            <p className="k-mono k-mono--ember">Scope builder</p>
-          </Rise>
-          <Rise step={1}>
-            <h1 className="k-hero mt-6 max-w-[19ch]">
-              Five questions. Then the price, on screen.
-            </h1>
-          </Rise>
-          <Rise step={2}>
-            <p className="k-lead k-measure mt-6">
-              This lands on one of our published prices, or it tells you that your
-              problem does not fit a fixed-price box and why. It will not invent a
-              number — every figure it shows is one you can already find on this
-              site.
-            </p>
-          </Rise>
-          <Rise step={3}>
-            <div className="mt-7 flex flex-wrap gap-2">
-              <Pill tone="good">No email to see the price</Pill>
-              <Pill>Exclusions shown, not hidden</Pill>
-              <Pill tone="warn">Says no when it should</Pill>
-            </div>
-          </Rise>
+      <PageHero
+        eyebrow="SCOPE BUILDER"
+        title="Five questions. Then the price, on screen."
+        titleClass="max-w-[16ch]"
+        lead="This lands on one of our published prices, or it tells you that your problem does not fit a fixed-price box and why. It will not invent a number — every figure it shows is one you can already find on this site."
+      >
+        <div className="mt-7 flex flex-wrap gap-2">
+          <Pill tone="good">No email to see the price</Pill>
+          <Pill>Exclusions shown, not hidden</Pill>
+          <Pill tone="warn">Says no when it should</Pill>
         </div>
-      </section>
+      </PageHero>
 
       <section className="k-shell pb-16">
         <Rise>
