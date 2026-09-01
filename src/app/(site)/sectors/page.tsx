@@ -3,7 +3,8 @@ import PageHero from "@/components/cinema/PageHero";
 import Link from "next/link";
 import Rise from "@/components/cinema/Rise";
 import Photo from "@/components/cinema/Photo";
-import { Panel, QueueRows, Sparkline, Pill } from "@/components/cinema/instruments";
+import SectorArtefact from "@/components/cinema/SectorArtefact";
+import { Pill } from "@/components/cinema/instruments";
 import { RATES } from "@/lib/pricing";
 
 export const metadata: Metadata = {
@@ -16,6 +17,7 @@ export const metadata: Metadata = {
 const sectors = [
   {
     n: "01",
+    artefact: "mining" as const,
     name: "Mining and minerals",
     image: "/imagery/home/hero.jpg",
     position: "58% 45%",
@@ -23,16 +25,10 @@ const sectors = [
     line: "The shift plan survives contact with reality, or it does not.",
     body: "Permit-to-work, equipment availability, contractor compliance and shift handover — each one a chain of approvals that currently lives across a radio call, a printed form and somebody's spreadsheet. When the handover fails, the cost is measured in hours of a stopped section.",
     builds: ["Permit and isolation workflows", "Contractor compliance registers", "Shift handover with an audit trail", "Availability and downtime reporting"],
-    readouts: [
-      { label: "Sections reporting", value: "14 / 14", tone: "good" as const },
-      { label: "Permits open", value: "6" },
-      { label: "Expired certifications", value: "0", tone: "good" as const },
-      { label: "Handover gaps this week", value: "0", tone: "good" as const },
-    ],
-    points: [42, 48, 39, 55, 47, 61, 44, 38, 33, 29, 24, 21],
   },
   {
     n: "02",
+    artefact: "agriculture" as const,
     name: "Agriculture and agri-processing",
     image: "/imagery/industries/agriculture.jpg",
     position: "center",
@@ -40,16 +36,10 @@ const sectors = [
     line: "The clock starts the moment it leaves the field.",
     body: "Intake, grading, cold chain, traceability and the packhouse's own paperwork — most of it captured on paper and rekeyed at night. By the time a discrepancy is visible in a report, the consignment has shipped and the window has closed.",
     builds: ["Intake and grading capture at the weighbridge", "Cold-chain exception alerting", "Traceability from block to pallet", "Compliance packs generated, not assembled"],
-    readouts: [
-      { label: "Intake captured on site", value: "100%", tone: "good" as const },
-      { label: "Grading disputes", value: "2" },
-      { label: "Cold-chain breaches", value: "0", tone: "good" as const },
-      { label: "Trace time per pallet", value: "8 sec", tone: "good" as const },
-    ],
-    points: [30, 36, 33, 44, 52, 61, 68, 74, 79, 86, 91, 96],
   },
   {
     n: "03",
+    artefact: "logistics" as const,
     name: "Logistics and distribution",
     image: "/imagery/industries/logistics.jpg",
     position: "center",
@@ -57,16 +47,10 @@ const sectors = [
     line: "Thousands of moving parts, one place they are accounted for.",
     body: "Proof of delivery, exception handling, sub-contractor rates, claims and the invoice that has to reconcile against all of it. The margin is thin enough that a percentage point of unrecovered exceptions is the whole quarter.",
     builds: ["Proof of delivery captured by the driver", "Exception and claims workflow", "Sub-contractor rate cards and reconciliation", "Consignment-level cost reporting"],
-    readouts: [
-      { label: "PODs captured digitally", value: "98.6%", tone: "good" as const },
-      { label: "Open exceptions", value: "11", tone: "warn" as const },
-      { label: "Claims outside window", value: "0", tone: "good" as const },
-      { label: "Invoice queries", value: "−62%", tone: "good" as const },
-    ],
-    points: [70, 66, 71, 62, 58, 54, 49, 45, 41, 38, 34, 31],
   },
   {
     n: "04",
+    artefact: "manufacturing" as const,
     name: "Industrial and manufacturing",
     image: "/imagery/industries/warehouse.jpg",
     position: "center",
@@ -74,13 +58,6 @@ const sectors = [
     line: "The improvement holds, or it quietly comes back.",
     body: "Quality checks, non-conformance, maintenance requests and the control plan a Green Belt wrote eighteen months ago. Almost every control method on that plan depends on a person remembering — which is exactly why the gain decays.",
     builds: ["In-line quality capture with validation", "Non-conformance and CAPA workflow", "Planned maintenance scheduling", "Control charts generated from live capture"],
-    readouts: [
-      { label: "First-time-right", value: "99.4%", tone: "good" as const },
-      { label: "Open non-conformances", value: "3" },
-      { label: "Overdue maintenance", value: "1", tone: "warn" as const },
-      { label: "Manual control checks", value: "0", tone: "good" as const },
-    ],
-    points: [64, 58, 52, 47, 41, 36, 30, 26, 22, 18, 15, 12],
   },
 ];
 
@@ -107,7 +84,7 @@ export default function SectorsPage() {
       {sectors.map((sector, i) => (
         <div key={sector.n}>
           {/* Plate */}
-          <section className="relative isolate flex min-h-[62svh] items-end overflow-hidden">
+          <section className="relative isolate flex min-h-[72svh] items-end overflow-hidden lg:min-h-[80svh]">
             <Rise variant="settle" className="absolute inset-0 -z-10">
               <Photo src={sector.image} sizes="100vw" scrim="bottom" position={sector.position} />
             </Rise>
@@ -129,8 +106,10 @@ export default function SectorsPage() {
           </section>
 
           {/* Detail */}
-          <section className={i % 2 === 0 ? "k-band" : "k-band k-band--2"}>
-            <div className="k-shell grid gap-12 lg:grid-cols-[minmax(0,1fr)_420px] lg:items-start">
+          <section
+            className={`k-band k-phase-section${i % 2 === 0 ? "" : " k-band--2"}`}
+          >
+            <div className="k-shell k-phase-grid">
               <div>
                 <Rise>
                   <p className="k-lead k-measure">{sector.body}</p>
@@ -154,16 +133,11 @@ export default function SectorsPage() {
                 </Rise>
               </div>
 
+              {/* The same Panel four times made the sectors look interchangeable,
+                  which is the opposite of what the page argues. Each now shows
+                  the document that sector actually runs on. */}
               <Rise step={2}>
-                <Panel label={sector.name.split(" ")[0]} meta="Illustrative" float={i % 2 === 0 ? "on" : "slow"}>
-                  <p className="k-mono">{sector.metric}</p>
-                  <div className="mt-4">
-                    <Sparkline points={sector.points} tone={i % 2 === 0 ? "ember" : "signal"} />
-                  </div>
-                  <div className="k-hairline mt-5 pt-4">
-                    <QueueRows rows={sector.readouts} />
-                  </div>
-                </Panel>
+                <SectorArtefact kind={sector.artefact} />
               </Rise>
             </div>
           </section>

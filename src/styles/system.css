@@ -2513,3 +2513,84 @@ fieldset[disabled] .k-choice { cursor: not-allowed; }
   .k-art-find-cost { text-align: left; }
   .k-art-weeks li { grid-template-columns: minmax(0, 1fr); gap: 2px; }
 }
+
+/* ---------- Sectors: the per-sector records ---------- */
+
+/* Signed-off steps — mining's permit. */
+.k-art-sign { list-style: none; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--hair); }
+.k-art-sign li {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 14px;
+  padding: 7px 0 7px 20px; position: relative;
+}
+.k-art-sign li::before {
+  content: ""; position: absolute; left: 0; top: 11px;
+  width: 9px; height: 9px; border-radius: 99px; border: 1px solid var(--hair-2);
+}
+.k-art-sign li[data-s="done"]::before { background: var(--signal); border-color: var(--signal); }
+.k-art-sign li[data-s="now"]::before { border-color: var(--ember); background: color-mix(in srgb, var(--ember) 45%, transparent); }
+.k-art-sign b { font-size: 13px; font-weight: 500; color: var(--warm); }
+.k-art-sign i { font-style: normal; font-size: 12.5px; color: var(--warm-45); text-align: right; }
+.k-art-sign li[data-s="now"] i { color: var(--ember); }
+
+/* Vertical chain — agriculture's trace. */
+.k-art-chain-v { list-style: none; }
+.k-art-chain-v li {
+  display: flex; flex-direction: column; gap: 2px;
+  padding: 9px 0 9px 22px; position: relative;
+}
+.k-art-chain-v li::before {
+  content: ""; position: absolute; left: 3px; top: 15px;
+  width: 8px; height: 8px; border-radius: 99px; border: 1px solid var(--hair-2); z-index: 1;
+}
+.k-art-chain-v li:not(:last-child)::after {
+  content: ""; position: absolute; left: 6.5px; top: 23px; bottom: -3px;
+  width: 1px; background: var(--hair-2);
+}
+.k-art-chain-v li[data-s="done"]::before { background: var(--signal); border-color: var(--signal); }
+.k-art-chain-v li[data-s="now"]::before { border-color: var(--ember); background: color-mix(in srgb, var(--ember) 45%, transparent); }
+.k-art-chain-v b { font-size: 13px; font-weight: 500; color: var(--warm); }
+.k-art-chain-v i { font-style: normal; font-size: 12.5px; color: var(--warm-45); }
+
+/* The exception block — logistics. */
+.k-art-exc {
+  margin: 14px 0;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid color-mix(in srgb, var(--ember) 40%, transparent);
+  background: color-mix(in srgb, var(--ember) 8%, transparent);
+}
+.k-art-exc-h {
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: .07em;
+  text-transform: uppercase; color: var(--ember); margin-bottom: 6px;
+}
+.k-art-exc-b { font-size: 12.5px; line-height: 1.55; color: var(--warm-70); }
+
+.k-art-rows i[data-ok="1"] { color: var(--signal); }
+.k-art-rows i[data-warn="1"] { color: var(--ember); }
+
+/* The spec bar — manufacturing. */
+.k-art-spec { margin-bottom: 16px; }
+.k-art-spec-bar {
+  display: block; position: relative; height: 26px; border-radius: 5px;
+  background: var(--panel-3); overflow: hidden;
+}
+.k-art-spec-lsl, .k-art-spec-usl {
+  position: absolute; top: 0; bottom: 0; width: 1px; background: var(--hair-2);
+}
+.k-art-spec-lsl { left: 22%; }
+.k-art-spec-usl { left: 66%; }
+.k-art-spec-bar::before {
+  content: ""; position: absolute; top: 0; bottom: 0; left: 22%; right: 34%;
+  background: color-mix(in srgb, var(--signal) 12%, transparent);
+}
+.k-art-spec-dot {
+  position: absolute; top: 50%; width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px;
+  border-radius: 99px; background: var(--ember);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--ember) 22%, transparent);
+}
+.k-art-spec-legend { display: flex; justify-content: space-between; margin-top: 7px; }
+.k-art-spec-legend em {
+  font-style: normal; font-family: var(--mono); font-size: 10px;
+  letter-spacing: .05em; color: var(--warm-45);
+}
+.k-art-spec-legend em:nth-child(2) { color: var(--ember); }
