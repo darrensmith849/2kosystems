@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import PageHero from "@/components/cinema/PageHero";
+import ExcelReel from "@/components/cinema/ExcelReel";
 import Link from "next/link";
 import Rise from "@/components/cinema/Rise";
-import { Panel, Readout, QueueRows, EventFeed, Pill, PipelineFlow } from "@/components/cinema/instruments";
+import { Panel, Readout, QueueRows, EventFeed, Pill } from "@/components/cinema/instruments";
 import { RATES, TERMS, TIMEBOX } from "@/lib/pricing";
 
 const PRICE = RATES.getOffExcel;
@@ -113,16 +114,9 @@ export default function GetOffExcelPage() {
           { value: "Yours", label: "code and data, day one" },
         ]}
       >
-        <div className="mt-14">
-          <PipelineFlow
-            stages={[
-              { name: "Week 1 · Capture", meta: "scope signed off" },
-              { name: "Week 2 · Build", meta: "working software" },
-              { name: "Week 3 · Migrate", meta: "data reconciled" },
-              { name: "Week 4 · Go live", meta: "trained and handed over" },
-            ]}
-          />
-        </div>
+        {/* Every visitor to this page already owns the artefact it is about,
+            so show that rather than another four-box pipeline diagram. */}
+        <ExcelReel />
       </PageHero>
 
       {/* ═══ SYMPTOMS ═══ */}

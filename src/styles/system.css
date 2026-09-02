@@ -2613,3 +2613,217 @@ fieldset[disabled] .k-choice { cursor: not-allowed; }
   letter-spacing: .05em; color: var(--warm-45);
 }
 .k-art-spec-legend em:nth-child(2) { color: var(--ember); }
+
+/* ---------- Get Off Excel: the spreadsheet becoming a system ---------- */
+
+.k-xl { margin-top: clamp(40px, 5vw, 72px); }
+
+.k-xl-bar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--hair);
+  background: var(--panel-2);
+}
+.k-xl-name {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--warm-70);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.k-xl-state {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--warm-45);
+  white-space: nowrap;
+}
+.k-xl-bar[data-before="false"] .k-xl-name { color: var(--warm); }
+.k-xl-bar[data-before="false"] .k-xl-state { color: var(--signal); }
+
+.k-xl-view { position: relative; height: clamp(272px, 27vw, 320px); background: var(--black-2); }
+.k-xl-card {
+  position: absolute;
+  inset: 18px 20px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 300ms var(--ease), transform 300ms var(--ease);
+}
+.k-xl-card.is-in { opacity: 1; transform: none; }
+
+/* --- the beats rail --- */
+
+.k-xl-beats {
+  display: flex;
+  list-style: none;
+  border-top: 1px solid var(--hair);
+  background: var(--panel-2);
+}
+.k-xl-beats li {
+  flex: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 10px 14px;
+  border-right: 1px solid var(--hair);
+  border-top: 2px solid transparent;
+  transition: border-color 300ms var(--ease), background-color 300ms var(--ease);
+}
+.k-xl-beats li:last-child { border-right: 0; }
+.k-xl-n { font-family: var(--mono); font-size: 10px; color: var(--warm-45); transition: color 300ms var(--ease); }
+.k-xl-t { font-size: 12px; color: var(--warm-45); transition: color 300ms var(--ease); }
+.k-xl-beats li[data-state="done"] .k-xl-n { color: var(--signal); }
+.k-xl-beats li[data-state="on"] {
+  border-top-color: var(--ember);
+  background: color-mix(in srgb, var(--ember) 7%, transparent);
+}
+.k-xl-beats li[data-state="on"] .k-xl-n { color: var(--ember); }
+.k-xl-beats li[data-state="on"] .k-xl-t { color: var(--warm); }
+
+/* --- the sheet --- */
+
+.k-xl-sheet {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 11px;
+  table-layout: fixed;
+}
+.k-xl-sheet th, .k-xl-sheet td {
+  padding: 5px 8px;
+  border: 1px solid var(--hair);
+  text-align: left;
+  color: var(--warm-70);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.k-xl-sheet th {
+  background: var(--panel-3);
+  color: var(--warm-45);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+.k-xl-rn {
+  width: 26px;
+  background: var(--panel-3);
+  color: var(--warm-45);
+  text-align: right !important;
+}
+.k-xl-sheet td[data-bad="1"] {
+  color: var(--ember);
+  background: color-mix(in srgb, var(--ember) 11%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ember) 45%, transparent);
+}
+.k-xl-empty { color: var(--warm-45); opacity: 0.5; }
+
+.k-xl-faults {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px 8px;
+  margin-top: 13px;
+}
+.k-xl-faults li {
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid color-mix(in srgb, var(--ember) 40%, transparent);
+  font-size: 11px;
+  color: var(--ember);
+  opacity: 0;
+  animation: k-ph-in 360ms var(--ease) both;
+}
+.k-xl-faults li:nth-child(1) { animation-delay: 340ms; }
+.k-xl-faults li:nth-child(2) { animation-delay: 440ms; }
+.k-xl-faults li:nth-child(3) { animation-delay: 540ms; }
+.k-xl-faults li:nth-child(4) { animation-delay: 640ms; }
+.k-xl-faults li:nth-child(5) { animation-delay: 740ms; }
+
+/* --- reading the columns --- */
+
+.k-xl-cols { list-style: none; display: flex; flex-direction: column; gap: 2px; }
+.k-xl-cols li {
+  display: grid;
+  grid-template-columns: 8rem minmax(0, 1fr);
+  gap: 14px;
+  align-items: baseline;
+  padding: 8px 0 8px 20px;
+  position: relative;
+  border-bottom: 1px solid var(--hair);
+  opacity: 0;
+  animation: k-ph-in 380ms var(--ease) both;
+}
+.k-xl-cols li::before {
+  content: "";
+  position: absolute; left: 0; top: 13px;
+  width: 8px; height: 8px; border-radius: 2px;
+  background: var(--signal);
+}
+.k-xl-cols li[data-split="1"]::before { background: var(--ember); }
+.k-xl-cols b { font-family: var(--mono); font-size: 11.5px; font-weight: 500; color: var(--warm); }
+.k-xl-cols i { font-style: normal; font-size: 12.5px; color: var(--warm-45); }
+.k-xl-cols li[data-split="1"] i { color: var(--ember); }
+
+/* --- the rebuilt form, rejecting a value --- */
+
+.k-xl-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 18px; }
+.k-xl-form label {
+  display: flex; flex-direction: column; gap: 4px;
+  padding: 9px 11px;
+  border: 1px solid var(--hair-2);
+  border-radius: 7px;
+  background: var(--panel);
+}
+.k-xl-form span {
+  font-family: var(--mono); font-size: 9.5px; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--warm-45);
+}
+.k-xl-form b { font-size: 13px; font-weight: 500; color: var(--warm); }
+.k-xl-form label:has(em) { border-color: var(--ember); background: color-mix(in srgb, var(--ember) 8%, transparent); }
+.k-xl-form label:has(em) b { color: var(--ember); text-decoration: line-through; text-decoration-color: color-mix(in srgb, var(--ember) 50%, transparent); }
+.k-xl-form em { font-style: normal; font-size: 11px; color: var(--ember); }
+
+.k-xl-foot {
+  margin-top: 15px;
+  padding-top: 12px;
+  border-top: 1px solid var(--hair);
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--warm-45);
+}
+.k-xl-foot b { color: var(--warm-70); font-weight: 600; }
+
+/* --- live --- */
+
+.k-xl-audit { list-style: none; margin-top: 13px; }
+.k-xl-audit li {
+  display: flex; gap: 12px; padding: 5px 0;
+  font-size: 12px; color: var(--warm-70);
+  opacity: 0; animation: k-ph-in 360ms var(--ease) both;
+}
+.k-xl-audit li:nth-child(1) { animation-delay: 320ms; }
+.k-xl-audit li:nth-child(2) { animation-delay: 430ms; }
+.k-xl-audit li:nth-child(3) { animation-delay: 540ms; }
+.k-xl-audit em {
+  font-style: normal; font-family: var(--mono); font-size: 10.5px;
+  color: var(--warm-45); min-width: 3.2rem;
+}
+
+@media (max-width: 760px) {
+  .k-xl-beats { flex-wrap: wrap; }
+  .k-xl-beats li { flex: 1 1 50%; border-bottom: 1px solid var(--hair); }
+  .k-xl-form { grid-template-columns: minmax(0, 1fr); }
+  .k-xl-state { display: none; }
+  .k-xl-view { height: clamp(300px, 62vw, 360px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .k-xl-card, .k-xl-faults li, .k-xl-cols li, .k-xl-audit li {
+    animation: none !important; opacity: 1; transform: none;
+  }
+}
