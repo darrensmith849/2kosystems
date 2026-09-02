@@ -4,12 +4,35 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { WEB_TIERS } from "@/lib/websites";
+import { CATALOGUE } from "@/lib/products";
 
-type NavLink = { href: string; label: string; children?: typeof WEB_TIERS };
+/** A sub-item is anything with a destination, a name and a published price. */
+type Child = { href: string; name: string; price: string; line: string };
+type NavLink = { href: string; label: string; children?: Child[] };
 
 const links: NavLink[] = [
-  { href: "/websites", label: "Websites", children: WEB_TIERS },
-  { href: "/systems", label: "Systems" },
+  {
+    href: "/websites",
+    label: "Websites",
+    children: WEB_TIERS.map((t) => ({
+      href: `/websites/${t.slug}`,
+      name: t.name,
+      price: t.price,
+      line: t.line,
+    })),
+  },
+  {
+    // CATALOGUE already carries Get Off Excel plus the four productised
+    // systems, so the menu cannot drift from the pages it points at.
+    href: "/systems",
+    label: "Systems",
+    children: CATALOGUE.map((c) => ({
+      href: c.href,
+      name: c.name,
+      price: c.price,
+      line: c.summary,
+    })),
+  },
   { href: "/method", label: "Method" },
   { href: "/pricing", label: "Pricing" },
   { href: "/quote", label: "Get a quote" },
@@ -89,10 +112,10 @@ export default function Nav() {
                 <div className="k-navmenu" data-open={open === link.href}>
                   {link.children.map((c) => (
                     <Link
-                      key={c.slug}
-                      href={`/websites/${c.slug}`}
+                      key={c.href}
+                      href={c.href}
                       className="k-navitem"
-                      aria-current={path === `/websites/${c.slug}` ? "page" : undefined}
+                      aria-current={path === c.href ? "page" : undefined}
                       onClick={() => setOpen(null)}
                     >
                       <span className="k-navitem-top">
