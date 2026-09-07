@@ -14,7 +14,8 @@
     "audit": "node scripts/audit.ts",
     "build:ads": "node scripts/build-ads.ts",
     "ads:auth": "node scripts/ads-auth.ts",
-    "env:set": "node scripts/env-set.ts"
+    "env:set": "node scripts/env-set.ts",
+    "ads:check": "node scripts/ads-check.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.91.1",

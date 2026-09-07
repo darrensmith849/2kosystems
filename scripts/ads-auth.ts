@@ -28,7 +28,9 @@ import { readEnv, writeEnvKey } from "./env-file.ts";
 const SCOPE = "https://www.googleapis.com/auth/adwords";
 const AUTH = "https://accounts.google.com/o/oauth2/v2/auth";
 const TOKEN = "https://oauth2.googleapis.com/token";
-const API = "https://googleads.googleapis.com/v21";
+/** Current major version. Check developers.google.com/google-ads/api/docs/release-notes
+ *  before bumping; a wrong version 404s with an HTML page, not a JSON error. */
+const API = "https://googleads.googleapis.com/v25";
 
 /** The 2KO Group manager account — login-customer-id on every call. */
 const LOGIN_CUSTOMER_ID = "4343634049";
@@ -256,10 +258,45 @@ async function main() {
   });
 
   if (!check.ok) {
+    // The useful part is buried: the top-level message is always the generic
+    // "missing required authentication credential", and the actual cause sits
+    // in details[].errors[].errorCode. Dig it out rather than print boilerplate.
     const text = await check.text();
+    let reason = text.slice(0, 300);
+    try {
+      const j = JSON.parse(text) as {
+        error?: { message?: string; details?: { errors?: { errorCode?: Record<string, string>; message?: string }[] }[] };
+      };
+      const inner = j.error?.details?.flatMap((d) => d.errors ?? []) ?? [];
+      if (inner.length) {
+        reason = inner
+          .map((e) => `${Object.values(e.errorCode ?? {})[0] ?? "?"} — ${e.message ?? ""}`)
+          .join("\n    ");
+      } else if (j.error?.message) {
+        reason = j.error.message;
+      }
+    } catch {
+      /* not JSON — an HTML error page, usually a wrong API version */
+    }
+
+    const hints: Record<string, string> = {
+      DEVELOPER_TOKEN_INVALID:
+        "Check GOOGLE_ADS_DEVELOPER_TOKEN in .env. It comes from the Ads API Center " +
+        "and is ~22 characters; a 35-character value starting GOCSPX- is an OAuth " +
+        "client secret in the wrong slot.",
+      DEVELOPER_TOKEN_NOT_APPROVED:
+        "The token is still on Explorer access. Apply for Basic in the API Center.",
+      CUSTOMER_NOT_FOUND:
+        "GOOGLE_ADS_LOGIN_CUSTOMER_ID should be the manager account, digits only.",
+      NOT_ADS_USER:
+        "The Google account you authorised has no access to that Ads account.",
+    };
+    const hint = Object.keys(hints).find((k) => reason.includes(k));
+
     die(
       `Credentials saved, but the test call failed (${check.status}).\n` +
-        `    ${text.slice(0, 400)}`,
+        `    ${reason}` +
+        (hint ? `\n\n    ${hints[hint]}` : ""),
     );
   }
 

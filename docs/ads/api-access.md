@@ -67,6 +67,30 @@ steps remain, and only the first needs Darren:
 Brand verification is no longer needed as an accelerator — it existed to speed
 the review, and the review is done.
 
+## Verifying, and what the errors mean
+
+    npm run ads:check
+
+Re-checks the credentials in .env without sending you back through the browser.
+Use it after correcting a value; `ads:auth` is only needed to mint a refresh
+token in the first place.
+
+The Ads API returns 401 UNAUTHENTICATED for almost everything, with the real
+cause buried in `error.details[].errors[].errorCode`. Both scripts now dig that
+out. The ones worth knowing:
+
+| Error | Cause |
+|---|---|
+| `DEVELOPER_TOKEN_INVALID` | Wrong value in `GOOGLE_ADS_DEVELOPER_TOKEN`. A 35-character value starting `GOCSPX-` is an OAuth client secret in the wrong slot — this happened on 2026-09-07 |
+| `DEVELOPER_TOKEN_NOT_APPROVED` | Token still on Explorer access |
+| `CUSTOMER_NOT_FOUND` | `GOOGLE_ADS_LOGIN_CUSTOMER_ID` wrong; digits only, no dashes |
+| `NOT_ADS_USER` | The authorised Google account has no access to that Ads account |
+
+A **404 with an HTML body** rather than JSON means the API version in the
+script is wrong. Current is **v25** (v25.1, 2026-08-19); check the
+[release notes](https://developers.google.com/google-ads/api/docs/release-notes)
+before bumping.
+
 ## Why Basic Access is enough
 
 Basic covers 15,000 operations a day. The audit tool reads campaign, keyword
