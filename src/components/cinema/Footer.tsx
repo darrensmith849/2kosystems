@@ -24,6 +24,7 @@ const columns = [
       { href: "/studio", label: "Studio" },
       { href: "https://www.2ko.co.za", label: "Part of the 2KO group" },
       { href: "/privacy", label: "Privacy" },
+      { href: "/terms", label: "Terms" },
     ],
   },
 ];
