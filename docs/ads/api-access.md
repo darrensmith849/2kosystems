@@ -9,7 +9,7 @@ submission, not the five Google quoted.
 | Linked sub-accounts | 2KO Africa (351-600-6867), Impart Agency (672-553-2284) |
 | Developer token | **Basic Access — approved and activated 2026-08-30** |
 | Daily quota | **15,000 operations.** Do not apply for Standard until usage genuinely exceeds this; Google only grants it against demonstrated need |
-| Google Cloud project | `ko-ads-api` · **number 41808878114** · Google Ads API enabled |
+| Google Cloud project | `2ko-ads-api` · **number 41808878114** · Google Ads API enabled |
 | Submitted | 2026-08-28 |
 
 The token string itself lives in the API Center (Tools & Settings → Setup →
@@ -20,6 +20,24 @@ as `GOOGLE_ADS_DEVELOPER_TOKEN` and is never committed.
 explicit that this is their only route for reaching us about the token, and a
 bounced address is how tokens get suspended without anyone noticing.
 
+## ⚠ Publishing status — set it to In production, or the token dies in 7 days
+
+Google, verbatim:
+
+> A Google Cloud Platform project with an OAuth consent screen configured for
+> an **external** user type and a publishing status of **"Testing"** is issued
+> a **refresh token expiring in 7 days**, unless the only OAuth scopes
+> requested are a subset of name, email address, and user profile.
+
+`https://www.googleapis.com/auth/adwords` is not in that subset, and the
+manager account sits on a gmail.com address — so there is no Workspace, so the
+user type has to be External. Left on Testing, everything works, and then stops
+a week later looking like a broken script.
+
+After configuring the consent screen, go to **Google Auth Platform → Audience**
+and press **Publish app**. Verification is not required while the only user is
+the owner of the project.
+
 ## What is left before the token can actually call anything
 
 Approval unlocks the token; it does not by itself authenticate anything. Three
@@ -28,9 +46,11 @@ steps remain, and only the first needs Darren:
 1. **Copy the token** from the API Center into `.env` as
    `GOOGLE_ADS_DEVELOPER_TOKEN`. (~1 min, Darren — it is a secret, so it is not
    something to paste into a chat.)
-2. **OAuth client** on the `ko-ads-api` Cloud project: configure the consent
-   screen, then create an OAuth 2.0 Client ID of type *Desktop app*. Yields a
-   client ID and client secret.
+2. **OAuth client** on the `2ko-ads-api` Cloud project. As at 2026-09-07 the
+   Google Auth Platform there is **not configured at all** — the Credentials
+   page lists no OAuth clients — so this is: configure the consent screen,
+   publish it (see the warning above), then create an OAuth 2.0 Client ID of
+   type *Desktop app*. Yields a client ID and client secret.
 3. **Refresh token**: run the OAuth flow once against that client to mint a
    refresh token. After this the three credentials together authenticate every
    call without further sign-in.
