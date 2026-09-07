@@ -1,31 +1,53 @@
-# Google Ads API access — application pack
+# Google Ads API access
 
-**Status as at 2026-08-28: submitted, pending Google review.**
+**Status: APPROVED for Basic Access, 2026-08-30.** Two business days after
+submission, not the five Google quoted.
 
 | | |
 |---|---|
 | Manager account (MCC) | **2KO Group — 434-363-4049** |
 | Linked sub-accounts | 2KO Africa (351-600-6867), Impart Agency (672-553-2284) |
-| Developer token | Created. Access level **Explorer** |
+| Developer token | **Basic Access — approved and activated 2026-08-30** |
+| Daily quota | **15,000 operations.** Do not apply for Standard until usage genuinely exceeds this; Google only grants it against demonstrated need |
 | Google Cloud project | `ko-ads-api` · **number 41808878114** · Google Ads API enabled |
-| Basic Access application | **Submitted and acknowledged by Google, 2026-08-28** |
-| Expected decision | Initial review within ~5 business days |
+| Submitted | 2026-08-28 |
 
-Google may come back asking for more detail rather than deciding outright, so
-watch **darren@2kosystems.com** — that is the address on the application, and
-an unanswered request stalls the whole thing.
+The token string itself lives in the API Center (Tools & Settings → Setup →
+API Center) on the manager account. Treat it as a password: it goes in `.env`
+as `GOOGLE_ADS_DEVELOPER_TOKEN` and is never committed.
 
-**Optional accelerator.** Google offers to expedite the review if you complete
-[brand verification](https://developers.google.com/google-ads/api/docs/api-policy/brand-verification)
-on the Cloud project. That means configuring the OAuth consent screen and
-verifying ownership of 2kosystems.com. Worth doing regardless, because the
-OAuth consent screen is needed anyway to generate the refresh token once the
-token is approved — but it is not required, and the standard five-day review
-already fits inside the week.
+**Keep the developer contact email current.** Google's approval mail is
+explicit that this is their only route for reaching us about the token, and a
+bounced address is how tokens get suspended without anyone noticing.
 
-The developer token itself lives in the API Center under *View token*. It is a
-**real secret** — unlike the conversion IDs in `.env.production`, it does not
-get committed. Put it in `.env` as `GOOGLE_ADS_DEVELOPER_TOKEN`.
+## What is left before the token can actually call anything
+
+Approval unlocks the token; it does not by itself authenticate anything. Three
+steps remain, and only the first needs Darren:
+
+1. **Copy the token** from the API Center into `.env` as
+   `GOOGLE_ADS_DEVELOPER_TOKEN`. (~1 min, Darren — it is a secret, so it is not
+   something to paste into a chat.)
+2. **OAuth client** on the `ko-ads-api` Cloud project: configure the consent
+   screen, then create an OAuth 2.0 Client ID of type *Desktop app*. Yields a
+   client ID and client secret.
+3. **Refresh token**: run the OAuth flow once against that client to mint a
+   refresh token. After this the three credentials together authenticate every
+   call without further sign-in.
+
+Brand verification is no longer needed as an accelerator — it existed to speed
+the review, and the review is done.
+
+## Why Basic Access is enough
+
+Basic covers 15,000 operations a day. The audit tool reads campaign, keyword
+and search-term data for accounts we manage; a full account pull is in the low
+hundreds of operations. Standard is for platforms serving many external
+advertisers, and applying without the usage to justify it is refused.
+
+Internal-only agency tooling is also exempt from the Required Minimum
+Functionality categories, which is what makes the audit product viable without
+building a general-purpose Ads management interface.
 
 ---
 
