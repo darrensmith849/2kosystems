@@ -13,7 +13,8 @@
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
     "audit": "node scripts/audit.ts",
     "build:ads": "node scripts/build-ads.ts",
-    "ads:auth": "node scripts/ads-auth.ts"
+    "ads:auth": "node scripts/ads-auth.ts",
+    "env:set": "node scripts/env-set.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.91.1",

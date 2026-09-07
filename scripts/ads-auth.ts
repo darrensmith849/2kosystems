@@ -20,12 +20,11 @@
  * verification step at the end actually call the API.
  */
 import { createServer, type Server } from "node:http";
-import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { randomBytes } from "node:crypto";
 import { spawn } from "node:child_process";
 import { createInterface } from "node:readline/promises";
+import { readEnv, writeEnvKey } from "./env-file.ts";
 
-const ENV = new URL("../.env", import.meta.url).pathname;
 const SCOPE = "https://www.googleapis.com/auth/adwords";
 const AUTH = "https://accounts.google.com/o/oauth2/v2/auth";
 const TOKEN = "https://oauth2.googleapis.com/token";
@@ -33,35 +32,6 @@ const API = "https://googleads.googleapis.com/v21";
 
 /** The 2KO Group manager account — login-customer-id on every call. */
 const LOGIN_CUSTOMER_ID = "4343634049";
-
-/* ------------------------------------------------------------------ .env io */
-
-function readEnv(): Map<string, string> {
-  const map = new Map<string, string>();
-  if (!existsSync(ENV)) return map;
-  for (const line of readFileSync(ENV, "utf8").split("\n")) {
-    const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*)$/);
-    if (m) map.set(m[1], m[2].replace(/^["']|["']$/g, "").trim());
-  }
-  return map;
-}
-
-/** Rewrites a key in place if present, appends it if not. Never reorders. */
-function writeEnvKey(key: string, value: string) {
-  const line = `${key}=${value}`;
-  if (!existsSync(ENV)) {
-    writeFileSync(ENV, `${line}\n`, { mode: 0o600 });
-    return;
-  }
-  const lines = readFileSync(ENV, "utf8").split("\n");
-  const i = lines.findIndex((l) => new RegExp(`^\\s*${key}\\s*=`).test(l));
-  if (i >= 0) lines[i] = line;
-  else {
-    if (lines.at(-1)?.trim() !== "") lines.push("");
-    lines.push(line);
-  }
-  writeFileSync(ENV, `${lines.join("\n").replace(/\n+$/, "")}\n`, { mode: 0o600 });
-}
 
 /**
  * Prompts only when there is a terminal to prompt at. Piped into, readline
