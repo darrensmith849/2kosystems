@@ -20,9 +20,17 @@ as `GOOGLE_ADS_DEVELOPER_TOKEN` and is never committed.
 explicit that this is their only route for reaching us about the token, and a
 bounced address is how tokens get suspended without anyone noticing.
 
-## ⚠ Publishing status — set it to In production, or the token dies in 7 days
+## OAuth setup — done 2026-09-07
 
-Google, verbatim:
+| | |
+|---|---|
+| Consent screen | Configured. App name **2KO Group Ads Tools** |
+| Branding | Home `https://www.2kosystems.com`, privacy `/privacy`, terms `/terms`, authorised domain `2kosystems.com` |
+| OAuth client | **ads-cli**, type Desktop, on project 2ko-ads-api |
+| Test user | darren.smith.210193@gmail.com |
+| Publishing status | **In production** |
+
+Publishing mattered more than it looks. Google, verbatim:
 
 > A Google Cloud Platform project with an OAuth consent screen configured for
 > an **external** user type and a publishing status of **"Testing"** is issued
@@ -30,22 +38,23 @@ Google, verbatim:
 > requested are a subset of name, email address, and user profile.
 
 `https://www.googleapis.com/auth/adwords` is not in that subset, and the
-manager account sits on a gmail.com address — so there is no Workspace, so the
-user type has to be External. Left on Testing, everything works, and then stops
-a week later looking like a broken script.
+manager account is on gmail.com so there is no Workspace and no Internal
+option. Left on Testing it works, and then stops a week later looking like a
+broken script. In production, the refresh token persists.
 
-After configuring the consent screen, go to **Google Auth Platform → Audience**
-and press **Publish app**. Verification is not required while the only user is
-the owner of the project.
+The consent screen still shows an "unverified app" warning, which is expected
+while only the owner uses it — click through Advanced. Verification is only
+enforced past the 100-user cap.
+
+`/terms` was built for this. It did not exist, and it was the one Branding
+field the site could not already supply.
 
 ## What is left before the token can actually call anything
 
 Approval unlocks the token; it does not by itself authenticate anything. Three
 steps remain, and only the first needs Darren:
 
-1. **Copy the token** from the API Center into `.env` as
-   `GOOGLE_ADS_DEVELOPER_TOKEN`. (~1 min, Darren — it is a secret, so it is not
-   something to paste into a chat.)
+1. ~~Copy the token into `.env`~~ — done.
 2. **OAuth client** on the `2ko-ads-api` Cloud project. As at 2026-09-07 the
    Google Auth Platform there is **not configured at all** — the Credentials
    page lists no OAuth clients — so this is: configure the consent screen,
