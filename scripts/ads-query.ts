@@ -106,7 +106,10 @@ export async function mutate(
       "login-customer-id": (env.get("GOOGLE_ADS_LOGIN_CUSTOMER_ID") ?? "").replace(/\D/g, ""),
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ operations, validateOnly, partialFailure: false }),
+    // Not every mutate service accepts these. customConversionGoals rejects
+    // partialFailure outright ("Cannot find field"), and false is the default
+    // anyway — so send each flag only when it is actually doing something.
+    body: JSON.stringify({ operations, ...(validateOnly ? { validateOnly: true } : {}) }),
   });
   if (!res.ok) die(`Mutate ${service} failed (${res.status}).\n    ${explain(await res.text())}`);
   return (await res.json()) as { results?: { resourceName: string }[] };

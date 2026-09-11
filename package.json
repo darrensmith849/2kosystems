@@ -17,7 +17,8 @@
     "env:set": "node scripts/env-set.ts",
     "ads:check": "node scripts/ads-check.ts",
     "ads:query": "node scripts/ads-query.ts",
-    "ads:build-2kos": "node scripts/ads-build-2kos.ts"
+    "ads:build-2kos": "node scripts/ads-build-2kos.ts",
+    "ads:split-goals": "node scripts/ads-split-goals.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.91.1",
