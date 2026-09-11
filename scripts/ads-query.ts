@@ -85,6 +85,33 @@ export async function query(customerId: string, gaql: string) {
   return rows;
 }
 
+/**
+ * POSTs a mutate request. `validateOnly` asks Google to check the payload and
+ * change nothing, which is how every write here gets rehearsed first.
+ */
+export async function mutate(
+  customerId: string,
+  service: string,
+  operations: unknown[],
+  validateOnly = false,
+) {
+  const env = readEnv();
+  const cid = customerId.replace(/\D/g, "");
+  const token = await accessToken();
+  const res = await fetch(`${API}/customers/${cid}/${service}:mutate`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "developer-token": env.get("GOOGLE_ADS_DEVELOPER_TOKEN") ?? "",
+      "login-customer-id": (env.get("GOOGLE_ADS_LOGIN_CUSTOMER_ID") ?? "").replace(/\D/g, ""),
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ operations, validateOnly, partialFailure: false }),
+  });
+  if (!res.ok) die(`Mutate ${service} failed (${res.status}).\n    ${explain(await res.text())}`);
+  return (await res.json()) as { results?: { resourceName: string }[] };
+}
+
 // CLI
 if (process.argv[1]?.endsWith("ads-query.ts")) {
   const [cid, gaql] = process.argv.slice(2);
