@@ -49,6 +49,33 @@ enforced past the 100-user cap.
 `/terms` was built for this. It did not exist, and it was the one Branding
 field the site could not already supply.
 
+## ⚠ Google moved access levels to the Cloud project (found 2026-09-11)
+
+The Basic Access granted on 2026-08-30 was against the **developer token**.
+Google has since changed the model, and the Ads API Center now carries a
+banner saying so:
+
+> Developer tokens are no longer required for using the Google Ads API.
+> **API access levels are now managed exclusively in the Google Cloud Console.**
+> The levels displayed on this page may no longer be accurate and cannot be
+> upgraded from this page.
+
+So the "Basic Access" still shown in the API Center is stale. From the docs:
+"Your Google Cloud project is assigned an access level… After you've enabled
+Google Ads API, your Google Cloud project is granted the **Test Account Access
+level**."
+
+`2ko-ads-api` was on **Test**, which is why `listAccessibleCustomers` worked —
+it only checks the token — while any actual query returned
+`CLOUD_PROJECT_NOT_APPROVED_FOR_PRODUCTION`.
+
+Access levels now live at
+**https://console.cloud.google.com/google/ads-apis/overview**, and the ladder
+is Test → Explorer → Basic → Standard. Explorer already permits production
+accounts at 2,880 operations/day; Basic raises that to 15,000.
+
+Applied for Explorer on 2026-09-11; the console says review takes a few minutes.
+
 ## Working as at 2026-09-11
 
 `npm run ads:check` returns six accessible accounts through the manager:
