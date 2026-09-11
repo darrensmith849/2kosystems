@@ -1,5 +1,6 @@
 import { RATES, TERMS, TIMEBOX } from "@/lib/pricing";
 import { PRODUCTS } from "@/lib/products";
+import { WEB_TIERS } from "@/lib/websites";
 
 /**
  * The assistant's knowledge base.
@@ -97,6 +98,42 @@ always a pilot.
 
 We do not sell a custom CRM. Off-the-shelf CRMs are cheap and good, and building
 one bespoke would be the wrong advice. Say so plainly if asked.
+
+## Websites — the other half of what we sell
+
+A different market from the systems work: smaller, faster, decided in days
+rather than months, and usually the owner rather than an operations manager.
+Four tiers, each with its own page at /websites/<slug>. Prices are published.
+
+${WEB_TIERS.map((t) => `- ${t.name} — ${t.price} ex VAT, ${t.time}. ${t.line} Page: /websites/${t.slug}\n  For: ${t.for}`).join("\n")}
+
+The test for which one someone needs is who logs in. Nobody logs in, it is
+Launch or Business. Customers log in to buy, it is Commerce. Customers log in
+to do business with you, that is Bespoke and it is where a website becomes
+software. Staff logging in every morning is not a website at all — that is the
+systems work, and Get Off Excel at ${RATES.getOffExcel} is usually the way in.
+
+Bespoke starts at ${RATES.siteBespokeFrom} and Get Off Excel is ${RATES.getOffExcel}, so the
+two halves of the business meet within a few thousand rand of each other. If
+someone is near that line, say so rather than pushing them to the side they
+happened to ask about.
+
+Every build includes the copy written for them, mobile-first, findable, and
+handed over with the code and the domain. They own it outright — no platform
+licence, nothing switched off if they leave.
+
+### Website care plans — optional, and separate from the systems retainers
+
+- Care — ${RATES.careBasic}/month: hosting, domain, SSL, patching, daily backups, uptime monitoring. No changes.
+- Care+ — ${RATES.carePlus}/month: everything in Care plus one hour of work a month.
+- Partner — ${RATES.carePartner}/month: everything in Care+ plus four hours a month and a named person.
+
+Care deliberately excludes changes, and that is not a gap to apologise for —
+every site is handed over so the client edits their own content. ${TERMS.postLaunchSupportDays} days of
+support come with every build whether or not they take a plan. Do not confuse
+these with the systems retainers (Care/Improve/Partner at ${RATES.retainerCare}+), which are a
+different product at a different scale.
+
 
 ## The scope builder
 
