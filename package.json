@@ -18,7 +18,8 @@
     "ads:check": "node scripts/ads-check.ts",
     "ads:query": "node scripts/ads-query.ts",
     "ads:build-2kos": "node scripts/ads-build-2kos.ts",
-    "ads:split-goals": "node scripts/ads-split-goals.ts"
+    "ads:split-goals": "node scripts/ads-split-goals.ts",
+    "ads:kill-broad": "node scripts/ads-kill-broad.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.91.1",
