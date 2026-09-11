@@ -49,23 +49,23 @@ enforced past the 100-user cap.
 `/terms` was built for this. It did not exist, and it was the one Branding
 field the site could not already supply.
 
-## What is left before the token can actually call anything
+## Working as at 2026-09-11
 
-Approval unlocks the token; it does not by itself authenticate anything. Three
-steps remain, and only the first needs Darren:
+`npm run ads:check` returns six accessible accounts through the manager:
 
-1. ~~Copy the token into `.env`~~ — done.
-2. **OAuth client** on the `2ko-ads-api` Cloud project. As at 2026-09-07 the
-   Google Auth Platform there is **not configured at all** — the Credentials
-   page lists no OAuth clients — so this is: configure the consent screen,
-   publish it (see the warning above), then create an OAuth 2.0 Client ID of
-   type *Desktop app*. Yields a client ID and client secret.
-3. **Refresh token**: run the OAuth flow once against that client to mint a
-   refresh token. After this the three credentials together authenticate every
-   call without further sign-in.
+| CID | Account |
+|---|---|
+| 351-600-6867 | 2KO Africa |
+| 672-553-2284 | Impart Agency |
+| 434-363-4049 | 2KO Group (manager) |
+| 858-930-2650, 308-275-8060, 122-174-6117 | cancelled |
 
-Brand verification is no longer needed as an accelerator — it existed to speed
-the review, and the review is done.
+All five credentials are in `.env`, which is gitignored and chmod 600. The
+refresh token does not expire, because the consent screen is in production.
+
+The one thing that went wrong twice was pasting the OAuth client secret into
+`GOOGLE_ADS_DEVELOPER_TOKEN`. Both scripts now refuse a value starting
+`GOCSPX-` before making any network call.
 
 ## Verifying, and what the errors mean
 
