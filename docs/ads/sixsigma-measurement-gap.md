@@ -54,7 +54,44 @@ What it does prove is that **Maximize Conversions has been bidding with no
 signal for at least 90 days**. That strategy optimises toward conversion data;
 there is none, so the spend is unsteered by design.
 
-## Recommended order
+## Done 2026-09-11
+
+Two conversion actions created on **2KO Africa (351-600-6867)** via the API.
+Note the Ads conversion ID is shared with 2kosystems.com — same Ads account,
+told apart by label:
+
+| Action | send_to |
+|---|---|
+| SSSA Enquiry | `AW-1006361911/p4UGCLvviPQcELe6798D` |
+| SSSA Phone Click | `AW-1006361911/DcjTCL7viPQcELe6798D` |
+
+No default conversion value is set. Course prices vary and an invented figure
+is worse than none; add one when enrolment values are known.
+
+## Site change — written, not applied
+
+The site is `~/sixsigma2026` (Next.js, now on Cloudflare). Two small edits:
+
+1. `src/app/layout.tsx` — `gtag.js` is already present via `GoogleAnalytics`,
+   but configured only for the GA4 stream. An Ads conversion needs its own
+   `gtag('config','AW-1006361911')` or `send_to` silently does nothing.
+2. `src/components/ContactForm.tsx` — the success path already fires a GA4
+   `generate_lead`; add a `conversion` event beside it. Direct, so it does not
+   depend on the GA4→Ads import that was broken.
+
+**Held as a patch rather than applied:** that repo has 21 modified files and
+~14 untracked directories of unrelated in-progress SEO work — a new
+`src/seo-kit/`, entity `sameAs` bindings with a `TODO (user-supplied)`, and a
+phone-number change. The live site rebuilds from this repo, so committing
+across that WIP would ship it half-finished.
+
+    cd ~/sixsigma2026 && patch -p0 < ~/sixsigma2026-ads-conversion.patch
+
+Apply when the SEO work is ready to go out, or on a clean branch.
+
+## Still to do
+
+
 
 1. **Pause the PMax remarketing.** R22,091 for 22,435 clicks at R0.98 with no
    measurable outcome and no way to steer it without conversion data.
