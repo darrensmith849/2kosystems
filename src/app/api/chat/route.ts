@@ -1,26 +1,31 @@
-import Anthropic from "@anthropic-ai/sdk";
+import OpenAI from "openai";
 import { NextRequest } from "next/server";
 import { SYSTEM_PROMPT } from "@/lib/chat/knowledge";
 
 /**
  * Site assistant.
  *
- * The knowledge base is a stable ~2k-token prefix, so it carries a
- * `cache_control` breakpoint — every turn after the first reads it from cache
- * at roughly a tenth of the input cost. Nothing volatile goes into `system`;
- * the conversation is the only thing that varies.
+ * The knowledge base is a stable ~2.8k-token prefix carried as the first
+ * message. OpenAI caches identical prompt prefixes over 1,024 tokens
+ * automatically, so from the second turn onward that prefix is billed at a
+ * discount — no explicit cache breakpoint to declare, unlike Anthropic's
+ * cache_control. It only works while the prefix stays byte-identical, which is
+ * why nothing volatile goes into it; the conversation is the only thing that
+ * varies.
  *
- * Effort is deliberately low: this is short-form Q&A over supplied material,
- * not reasoning work, and low effort keeps replies fast.
+ * Short-form Q&A over supplied material rather than reasoning work, so a small
+ * fast model is the right trade and temperature stays low — this answers
+ * questions about published prices, and it should not get inventive about them.
  */
 
-const MODEL = "claude-opus-5";
+/** Change here, not in a dozen places. */
+const MODEL = "gpt-4o-mini";
 const MAX_TURNS = 20;
 
 type IncomingMessage = { role: "user" | "assistant"; content: string };
 
 export async function POST(req: NextRequest) {
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
     return Response.json(
       { error: "The assistant is not configured yet." },
@@ -36,49 +41,40 @@ export async function POST(req: NextRequest) {
     return Response.json({ error: "Malformed request." }, { status: 400 });
   }
 
-  const messages: Anthropic.MessageParam[] = history
+  const turns = history
     .filter((m) => typeof m.content === "string" && m.content.trim())
     .slice(-MAX_TURNS)
     .map((m) => ({
-      role: m.role === "assistant" ? "assistant" : "user",
+      role: m.role === "assistant" ? ("assistant" as const) : ("user" as const),
       content: m.content.slice(0, 4000),
     }));
 
-  if (messages.length === 0 || messages[0].role !== "user") {
+  if (turns.length === 0 || turns[0].role !== "user") {
     return Response.json({ error: "Nothing to answer." }, { status: 400 });
   }
 
-  const client = new Anthropic({ apiKey });
+  const client = new OpenAI({ apiKey });
 
   try {
-    const stream = client.messages.stream({
+    const stream = await client.chat.completions.create({
       model: MODEL,
       max_tokens: 1024,
-      thinking: { type: "adaptive" },
-      output_config: { effort: "low" },
-      system: [
-        {
-          type: "text",
-          text: SYSTEM_PROMPT,
-          cache_control: { type: "ephemeral" },
-        },
-      ],
-      messages,
+      temperature: 0.3,
+      stream: true,
+      messages: [{ role: "system", content: SYSTEM_PROMPT }, ...turns],
     });
 
     const encoder = new TextEncoder();
     const body = new ReadableStream<Uint8Array>({
       async start(controller) {
         try {
-          for await (const event of stream) {
-            if (
-              event.type === "content_block_delta" &&
-              event.delta.type === "text_delta"
-            ) {
-              controller.enqueue(encoder.encode(event.delta.text));
-            }
+          for await (const chunk of stream) {
+            const text = chunk.choices[0]?.delta?.content;
+            if (text) controller.enqueue(encoder.encode(text));
           }
         } catch (error) {
+          // The response has already started, so the only way to tell the
+          // visitor is to write the failure into the stream itself.
           console.error("Chat stream failed:", error);
           controller.enqueue(
             encoder.encode(
@@ -98,20 +94,20 @@ export async function POST(req: NextRequest) {
       },
     });
   } catch (error) {
-    if (error instanceof Anthropic.RateLimitError) {
+    if (error instanceof OpenAI.RateLimitError) {
       return Response.json(
         { error: "Busy right now — try again in a moment." },
         { status: 429 },
       );
     }
-    if (error instanceof Anthropic.AuthenticationError) {
-      console.error("Chat auth failed — check ANTHROPIC_API_KEY");
+    if (error instanceof OpenAI.AuthenticationError) {
+      console.error("Chat auth failed — check OPENAI_API_KEY");
       return Response.json(
         { error: "The assistant is not configured correctly." },
         { status: 503 },
       );
     }
-    if (error instanceof Anthropic.APIError) {
+    if (error instanceof OpenAI.APIError) {
       console.error(`Chat API error ${error.status}:`, error.message);
       return Response.json({ error: "The assistant is unavailable." }, { status: 502 });
     }

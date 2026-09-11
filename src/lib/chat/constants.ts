@@ -22,6 +22,3 @@ export const STORAGE_KEYS = {
   open: "2ko-chat-open",
   contactNudgeShown: "2ko-chat-contact-nudge-shown",
 } as const;
-
-/** Anthropic model. Haiku is fast, cheap and more than capable for FAQ + triage. */
-export const ANTHROPIC_MODEL = "claude-haiku-4-5";

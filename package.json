@@ -22,8 +22,8 @@
     "ads:kill-broad": "node scripts/ads-kill-broad.ts"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.91.1",
     "next": "^16.3.2",
+    "openai": "^7.15.0",
     "pdf-lib": "^1.17.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",
