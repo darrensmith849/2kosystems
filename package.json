@@ -19,7 +19,8 @@
     "ads:query": "node scripts/ads-query.ts",
     "ads:build-2kos": "node scripts/ads-build-2kos.ts",
     "ads:split-goals": "node scripts/ads-split-goals.ts",
-    "ads:kill-broad": "node scripts/ads-kill-broad.ts"
+    "ads:kill-broad": "node scripts/ads-kill-broad.ts",
+    "redirects:report": "node scripts/legacy-redirect-report.ts"
   },
   "dependencies": {
     "next": "^16.3.2",
