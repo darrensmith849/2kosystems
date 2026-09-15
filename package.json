@@ -29,7 +29,8 @@
     "ga:audit": "./scripts/with-node.sh scripts/ga-properties.ts",
     "ga:traffic": "./scripts/with-node.sh scripts/ga-traffic.ts",
     "ga:cleanup": "./scripts/with-node.sh scripts/ga-cleanup.ts",
-    "cf:dns": "./scripts/with-node.sh scripts/cf-dns.ts"
+    "cf:dns": "./scripts/with-node.sh scripts/cf-dns.ts",
+    "ga:realtime": "./scripts/with-node.sh scripts/ga-realtime.ts"
   },
   "dependencies": {
     "next": "^16.3.3",
