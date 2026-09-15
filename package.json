@@ -27,7 +27,8 @@
     "ads:build-sssa": "./scripts/with-node.sh scripts/ads-build-sssa.ts",
     "ga:auth": "./scripts/with-node.sh scripts/ga-auth.ts",
     "ga:audit": "./scripts/with-node.sh scripts/ga-properties.ts",
-    "ga:traffic": "./scripts/with-node.sh scripts/ga-traffic.ts"
+    "ga:traffic": "./scripts/with-node.sh scripts/ga-traffic.ts",
+    "ga:cleanup": "./scripts/with-node.sh scripts/ga-cleanup.ts"
   },
   "dependencies": {
     "next": "^16.3.3",
