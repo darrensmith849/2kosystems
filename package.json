@@ -24,7 +24,9 @@
     "ads:audit-tracking": "node scripts/ads-audit-tracking.ts",
     "ads:negatives": "node scripts/ads-negatives.ts",
     "ads:kill-display": "node scripts/ads-kill-display.ts",
-    "ads:build-sssa": "node scripts/ads-build-sssa.ts"
+    "ads:build-sssa": "node scripts/ads-build-sssa.ts",
+    "ga:auth": "node scripts/ga-auth.ts",
+    "ga:audit": "node scripts/ga-properties.ts"
   },
   "dependencies": {
     "next": "^16.3.3",
