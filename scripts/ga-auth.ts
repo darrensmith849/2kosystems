@@ -20,7 +20,13 @@ import { randomBytes } from "node:crypto";
 import { spawn } from "node:child_process";
 import { readEnv, writeEnvKey } from "./env-file.ts";
 
-const SCOPE = "https://www.googleapis.com/auth/analytics.edit";
+// edit = create properties and streams (Admin API).
+// readonly = ask what a property actually received (Data API); edit does not
+// imply it, and without it every runReport comes back 403.
+const SCOPE = [
+  "https://www.googleapis.com/auth/analytics.edit",
+  "https://www.googleapis.com/auth/analytics.readonly",
+].join(" ");
 const AUTH = "https://accounts.google.com/o/oauth2/v2/auth";
 const TOKEN = "https://oauth2.googleapis.com/token";
 

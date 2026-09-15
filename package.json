@@ -26,7 +26,8 @@
     "ads:kill-display": "./scripts/with-node.sh scripts/ads-kill-display.ts",
     "ads:build-sssa": "./scripts/with-node.sh scripts/ads-build-sssa.ts",
     "ga:auth": "./scripts/with-node.sh scripts/ga-auth.ts",
-    "ga:audit": "./scripts/with-node.sh scripts/ga-properties.ts"
+    "ga:audit": "./scripts/with-node.sh scripts/ga-properties.ts",
+    "ga:traffic": "./scripts/with-node.sh scripts/ga-traffic.ts"
   },
   "dependencies": {
     "next": "^16.3.3",
