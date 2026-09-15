@@ -11,7 +11,7 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { RATES, TIMEBOX } from "../src/lib/pricing.ts";
 
-const SITE = "https://2kosystems.com";
+const SITE = "https://www.2ko.co.za";
 const CAMPAIGN = "2KOS | Systems | Search | ZA";
 const OUT = "docs/ads/2kosystems";
 

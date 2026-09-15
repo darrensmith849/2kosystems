@@ -34,19 +34,30 @@ async function token() {
   return j.access_token as string;
 }
 
-async function api(url: string, init?: RequestInit) {
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+/**
+ * 58 properties means 58 sequential calls, and the Data API returns a
+ * transient 503 often enough that one of them killing the whole run is the
+ * normal case rather than the exception. Retry those; fail fast on anything
+ * that says the request itself is wrong.
+ */
+async function api(url: string, init?: RequestInit, attempt = 0): Promise<any> {
   const r = await fetch(url, {
     ...init,
     headers: { Authorization: `Bearer ${TOKEN}`, "Content-Type": "application/json", ...(init?.headers ?? {}) },
   });
   const j: any = await r.json().catch(() => ({}));
-  if (!r.ok) {
-    const m = j?.error?.message ?? r.statusText;
-    const act = j?.error?.details?.find((d: any) => d.metadata?.activationUrl)?.metadata;
-    if (act) throw new Error(`${act.serviceTitle} is not enabled.\n    Enable: ${act.activationUrl}`);
-    throw new Error(`${r.status} ${m}`);
+  if (r.ok) return j;
+
+  if ((r.status === 503 || r.status === 429 || r.status >= 500) && attempt < 4) {
+    await sleep(500 * 2 ** attempt);
+    return api(url, init, attempt + 1);
   }
-  return j;
+  const m = j?.error?.message ?? r.statusText;
+  const act = j?.error?.details?.find((d: any) => d.metadata?.activationUrl)?.metadata;
+  if (act) throw new Error(`${act.serviceTitle} is not enabled.\n    Enable: ${act.activationUrl}`);
+  throw new Error(`${r.status} ${m}`);
 }
 
 const host = (u?: string) => { try { return new URL(u ?? "").host.replace(/^www\./, ""); } catch { return ""; } };
@@ -70,39 +81,51 @@ async function main() {
   }
 
   console.log(`\n  Asking ${rows.length} properties for 90 days of traffic…\n`);
-  const out: (typeof rows[0] & { users: number; sessions: number })[] = [];
+  const out: (typeof rows[0] & { users: number; ever: number })[] = [];
   let refusal: string | undefined;
   for (const r of rows) {
-    let users = 0, sessions = 0;
+    let users = 0, ever = 0;
     try {
       const rep = await api(`${DATA}/properties/${r.id}:runReport`, {
         method: "POST",
         body: JSON.stringify({
-          dateRanges: [{ startDate: "90daysAgo", endDate: "today" }],
+          // 425 days ≈ the 14-month ceiling on GA4 retention. Deciding which of
+        // three same-named properties to keep needs the long window; the short
+        // one says which are alive now.
+        dateRanges: [
+          { startDate: "90daysAgo", endDate: "today" },
+          { startDate: "425daysAgo", endDate: "today" },
+        ],
           metrics: [{ name: "activeUsers" }, { name: "sessions" }],
         }),
       });
+      // With two date ranges the API returns one row per range.
       users = Number(rep.rows?.[0]?.metricValues?.[0]?.value ?? 0);
-      sessions = Number(rep.rows?.[0]?.metricValues?.[1]?.value ?? 0);
+      ever = Number(rep.rows?.[1]?.metricValues?.[0]?.value ?? 0);
     } catch (e: any) {
       if (/not enabled/.test(e.message)) throw e;
       users = -1; // property exists but the report was refused
       refusal ??= e.message;
     }
-    out.push({ ...r, users, sessions });
+    out.push({ ...r, users, ever });
   }
 
   out.sort((a, b) => b.users - a.users);
   const live = out.filter((r) => r.users > 0);
-  const dead = out.filter((r) => r.users === 0);
+  const stale = out.filter((r) => r.users === 0 && r.ever > 0);
+  const dead = out.filter((r) => r.users === 0 && r.ever === 0);
 
   console.log(`── receiving data (${live.length}) ──`);
   for (const r of live)
-    console.log(`  ${String(r.users).padStart(7)} users ${String(r.sessions).padStart(7)} sess  ${r.hosts.slice(0, 30).padEnd(31)} ${r.mid.padEnd(16)} ${r.acct}`);
+    console.log(`  ${String(r.users).padStart(7)} /90d ${String(r.ever).padStart(8)} /14mo  ${r.hosts.slice(0, 28).padEnd(29)} ${r.mid.padEnd(16)} ${r.acct}`);
 
-  console.log(`\n── silent, last 90 days (${dead.length}) ──`);
+  console.log(`\n── has history, silent now (${stale.length}) ──`);
+  for (const r of stale)
+    console.log(`  ${String(r.ever).padStart(8)} /14mo  ${r.hosts.slice(0, 28).padEnd(29)} ${r.mid.padEnd(16)} ${r.name.slice(0, 30).padEnd(31)} ${r.acct}`);
+
+  console.log(`\n── never received anything (${dead.length}) ──`);
   for (const r of dead)
-    console.log(`  ${r.hosts.slice(0, 30).padEnd(31)} ${r.mid.padEnd(16)} ${r.name.slice(0, 32).padEnd(33)} ${r.acct}`);
+    console.log(`  ${r.hosts.slice(0, 28).padEnd(29)} ${r.mid.padEnd(16)} ${r.name.slice(0, 30).padEnd(31)} ${r.acct}`);
 
   const err = out.filter((r) => r.users < 0);
   if (err.length) {

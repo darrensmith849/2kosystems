@@ -161,4 +161,27 @@ export const TOUR: Arc[] = ${JSON.stringify(arcs)};
 `;
 
 writeFileSync("src/lib/africa-map.ts", out);
-console.log(`countries: ${african.length}, cities: ${cities.length}, arcs: ${arcs.length}`);
+
+// Keep the heavy static geometry in one cacheable asset. The React component
+// overlays the animated routes and city markers, so this file has no script or
+// interaction and can be served directly by the CDN.
+const outline = path(collection);
+const baseSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${WIDTH} ${HEIGHT}">
+<defs>
+  <linearGradient id="landFill" x1="0" y1="0" x2="0.3" y2="1">
+    <stop offset="0%" stop-color="#3fb173"/>
+    <stop offset="45%" stop-color="#1f8149" stop-opacity=".98"/>
+    <stop offset="100%" stop-color="#125733" stop-opacity=".95"/>
+  </linearGradient>
+  <filter id="softGlow" x="-40%" y="-40%" width="180%" height="180%">
+    <feGaussianBlur stdDeviation="3.5" result="blur"/>
+    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+</defs>
+<path d="${path(graticule())}" fill="none" stroke="#6ee7a6" stroke-width=".5" opacity=".09"/>
+<path d="${outline}" fill="url(#landFill)" stroke="#8df0b6" stroke-width="1.4" opacity=".95" filter="url(#softGlow)"/>
+${african.map((country) => `<path d="${path(country)}" fill="none" stroke="#a5eec4" stroke-width=".5" opacity=".34"/>`).join("\n")}
+</svg>`;
+
+writeFileSync("public/imagery/africa-map-base.svg", baseSvg);
+console.log(`countries: ${african.length}, cities: ${cities.length}, arcs: ${arcs.length}, static SVG written`);
