@@ -93,15 +93,20 @@ async function main() {
         // three same-named properties to keep needs the long window; the short
         // one says which are alive now.
         dateRanges: [
-          { startDate: "90daysAgo", endDate: "today" },
-          { startDate: "425daysAgo", endDate: "today" },
+          { startDate: "90daysAgo", endDate: "today", name: "recent" },
+          { startDate: "425daysAgo", endDate: "today", name: "retained" },
         ],
           metrics: [{ name: "activeUsers" }, { name: "sessions" }],
         }),
       });
-      // With two date ranges the API returns one row per range.
-      users = Number(rep.rows?.[0]?.metricValues?.[0]?.value ?? 0);
-      ever = Number(rep.rows?.[1]?.metricValues?.[0]?.value ?? 0);
+      // Two date ranges come back as two rows carrying a dateRange dimension,
+      // ordered by metric descending rather than by range — so the longer
+      // window is usually row 0. Match on the name; row position is a lie.
+      for (const row of rep.rows ?? []) {
+        const n = Number(row.metricValues?.[0]?.value ?? 0);
+        if (row.dimensionValues?.[0]?.value === "recent") users = n;
+        else ever = n;
+      }
     } catch (e: any) {
       if (/not enabled/.test(e.message)) throw e;
       users = -1; // property exists but the report was refused
