@@ -1,62 +1,84 @@
 import type { Metadata } from "next";
+import { completePageMetadata } from "@/lib/siteMetadata";
 import Rise from "@/components/cinema/Rise";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = completePageMetadata({
   title: "Privacy Policy",
   description:
-    "How 2KO Systems collects, uses and retains personal information from this website and its assistant, in line with POPIA. Your rights and how to exercise them.",
+    "How 2KO collects, uses, shares and retains personal information across enquiries, training, consulting, systems, Sigmafy and this website.",
   alternates: { canonical: "/privacy" },
-};
+});
 
-/**
- * Content carried across verbatim from the previous site. Legal wording is not
- * something to re-draft during a redesign — only the presentation changed.
- */
 const SECTIONS: { title: string; paragraphs: string[] }[] = [
   {
-    title: "Who we are",
+    title: "Who is responsible",
     paragraphs: [
-      "2KO Systems is the systems & technology arm of the 2KO Group, based in South Africa. This policy explains how we handle the personal information you share with us through this website and our chat assistant, in line with the Protection of Personal Information Act (POPIA).",
+      "2KO is a South African operational improvement group spanning consulting, Six Sigma training, systems, automation and Sigmafy. The 2KO entity named in a quotation, enrolment or agreement is the responsible party for that engagement. For website enquiries before an entity is named, 2KO coordinates the information centrally and routes it only to the appropriate team.",
+      "Questions, access requests and privacy concerns can be sent to contact@2ko.co.za.",
     ],
   },
   {
     title: "What we collect",
     paragraphs: [
-      "When you interact with the chat assistant or request a Systems Audit, we collect the details you choose to share — typically your name, email address, optional phone number, and any context you provide about your business or workflow.",
+      "When you enquire, request a scope, use the assistant or discuss an engagement, we may collect your name, work contact details, company, site or region, service interest, process description and the answers you choose to provide about sponsorship, workstreams, training population, data readiness and timing.",
+      "We also record limited technical and attribution information such as the page used, browser user-agent, campaign parameters and advertising click identifiers. Please do not submit employee records, medical information, passwords, customer records or other sensitive operational data through the public forms or assistant.",
     ],
   },
   {
-    title: "How we use it",
+    title: "Why we use it",
     paragraphs: [
-      "We use these details only to respond to your enquiry, route the right team member to you, and improve the quality of our service. We do not sell your information. We do not use it for unrelated marketing.",
+      "We use the information to respond to your enquiry, assess fit, route the appropriate person, prepare a scope, administer training or consulting, provide systems or Sigmafy access, support an active engagement, keep an auditable client record and understand which campaigns produce useful enquiries.",
+      "We do not sell personal information. An enquiry is not automatically added to a general marketing list. If we later ask to send marketing communications, that choice will be presented separately and can be withdrawn.",
     ],
   },
   {
-    title: "The chat assistant",
+    title: "Sigmafy and enquiry records",
     paragraphs: [
-      "Our chat assistant uses an AI language model to draft responses. Conversations are kept in your browser session for the duration of your visit. When you escalate to a real agent, we email the chat transcript and your contact details to our team through Cloudflare Email Service so that whoever replies has the context.",
-      "The assistant is not a substitute for legal, contractual or financial advice. Please verify any details with our team before acting on them.",
+      "Website enquiries may be recorded in Sigmafy, the 2KO platform used to coordinate contacts, ownership, follow-up and improvement work. Notification copies may also be delivered to authorised 2KO team members by email. Access is limited to people who need the information for the enquiry or engagement.",
+      "Where Sigmafy is supplied to a client or training organisation, the applicable agreement identifies the responsible party, authorised users, hosting arrangement, retention and any additional data-processing terms.",
+    ],
+  },
+  {
+    title: "The website assistant",
+    paragraphs: [
+      "The assistant sends the questions you type and recent conversation context to an AI service provider so that a response can be drafted. Conversations remain in the browser during the visit unless you choose to send the conversation to a person. If you request a handoff, your contact details and recent transcript are recorded with the enquiry and sent to the relevant team.",
+      "Do not place confidential, personal or regulated records in the assistant. Its answers are informational and must be confirmed by 2KO before they become part of any quotation, agreement or professional advice.",
     ],
   },
   {
     title: "Cookies and advertising",
     paragraphs: [
-      "We advertise on Google. If you reach this site from one of our ads, Google sets cookies in your browser so that we can tell whether the ad led to an enquiry or to nothing at all. Through this we see the pages visited on this site, and three specific actions: a contact form submitted, the scope builder completed, and a brief requested.",
-      "We see that those actions happened. We do not send Google what you typed into them — not your answers, not your message, not your email address.",
-      "When you arrive from an ad, Google adds an identifier to the link. We keep it in your browser's session storage for the duration of your visit so that an enquiry can be matched back to the ad it came from. It is discarded when you close the tab.",
-      "You can turn off personalised Google advertising at myadcenter.google.com, or block cookies in your browser settings. Neither stops you using this site or contacting us.",
+      "The site loads Google advertising and analytics technology on every visit. We use it to measure page visits and specific actions such as a completed scope or successful enquiry, so that we can tell which pages and campaigns produce useful enquiries. We do not send Google the message, answers, name, email address or phone number entered into a form.",
+      "This rests on our legitimate interest in understanding how the site is used, not on your consent, and you are entitled to object to it. Browser privacy settings, tracking protection and Google's own opt-out browser add-on all prevent this technology from loading, and the public site and enquiry forms work normally without it.",
+      "Campaign parameters and advertising click identifiers may be kept in first-party session storage for the current browser session so that an enquiry can be matched to the campaign that produced it. Session storage is normally discarded when the tab is closed.",
     ],
   },
   {
-    title: "Data retention",
+    title: "Service providers and location",
     paragraphs: [
-      "Lead and enquiry details are retained for as long as we have an ongoing business relationship, after which they are deleted on request or in line with our standard retention schedule.",
+      "We use service providers for hosting, security, email delivery, analytics, AI-assisted responses and controlled client records. They receive only the information needed to provide that function and are subject to their own security and contractual safeguards.",
+      "Some providers may process or store information outside South Africa. Where personal information crosses borders, 2KO applies the contractual and organisational safeguards required for the relevant engagement and the nature of the information.",
+    ],
+  },
+  {
+    title: "How long we keep it",
+    paragraphs: [
+      "Unsuccessful or inactive enquiry records are normally retained for no longer than 24 months after the last meaningful interaction, unless a shorter period is requested or a longer period is reasonably required for a dispute, fraud prevention or legal obligation.",
+      "Active client, training, financial, contractual and system records are retained for the engagement and for the periods required by the applicable agreement and South African law. Records are then deleted, anonymised or securely archived according to their purpose.",
     ],
   },
   {
     title: "Your rights",
     paragraphs: [
-      "You have the right to access, correct, or request deletion of any personal information we hold about you. To exercise these rights, contact darren@2kosystems.com.",
+      "Subject to POPIA and any lawful record-keeping obligation, you may ask whether we hold personal information about you, request access or correction, object to particular processing, withdraw consent where consent is the basis, or request deletion of information that no longer has to be kept.",
+      "Send a request to contact@2ko.co.za. We may need to verify your identity before disclosing or changing a record. You may also lodge a complaint with the Information Regulator of South Africa at inforegulator.org.za.",
+    ],
+  },
+  {
+    title: "Security and incidents",
+    paragraphs: [
+      "2KO uses access controls, encryption in transit, restricted administrative access, backups and operational monitoring appropriate to the system and engagement. No internet service can promise absolute security.",
+      "If a security compromise creates a material risk to personal information, 2KO will investigate, contain it and make the notifications required by applicable law.",
     ],
   },
   {
@@ -77,7 +99,7 @@ export default function PrivacyPage() {
         <h1 className="k-title mt-6">Privacy Policy</h1>
       </Rise>
       <Rise step={2}>
-        <p className="k-mono mt-4">Last updated: April 2026</p>
+        <p className="k-mono mt-4">Last updated: September 2026</p>
       </Rise>
 
       <div className="mt-12">
