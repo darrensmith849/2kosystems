@@ -34,14 +34,25 @@ async function token() {
   return j.access_token as string;
 }
 
-async function api(url: string, init?: RequestInit) {
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+/**
+ * The Data API returns a transient 503 often enough that a single one used to
+ * abort the whole check — which reads as "the tag is not working" when the tag
+ * is fine. Retry those; fail fast on anything that says the request is wrong.
+ */
+async function api(url: string, init?: RequestInit, attempt = 0): Promise<any> {
   const r = await fetch(url, {
     ...init,
     headers: { Authorization: `Bearer ${TOKEN}`, "Content-Type": "application/json", ...(init?.headers ?? {}) },
   });
   const j: any = await r.json().catch(() => ({}));
-  if (!r.ok) throw new Error(`${r.status} ${j?.error?.message ?? r.statusText}`);
-  return j;
+  if (r.ok) return j;
+  if (r.status >= 500 && attempt < 4) {
+    await sleep(500 * 2 ** attempt);
+    return api(url, init, attempt + 1);
+  }
+  throw new Error(`${r.status} ${j?.error?.message ?? r.statusText}`);
 }
 
 async function main() {
