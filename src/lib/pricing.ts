@@ -20,10 +20,17 @@ export const RATES = {
   /** Phased custom build. */
   buildFrom: "R350,000",
   buildTo: "R1.2m",
-  /** Managed retainer tiers, per month. */
-  retainerCare: "R7,500",
-  retainerImprove: "R18,500",
-  retainerPartner: "R38,500",
+  /** Proactive care and bounded monthly improvement for one production system. */
+  retainerCare: "R25,000",
+  /** Ongoing operation and planned evolution of one production system. */
+  managedSystems: "R65,000",
+  /** Integrated Improvement Partnerships, per month. */
+  partnershipProgramme: "R125,000",
+  partnershipOperational: "R225,000",
+  partnershipTransformation: "R395,000",
+  /** One-off mobilisation before the annual operating cadence begins. */
+  mobilisationProgramme: "R150,000",
+  mobilisationOperational: "R250,000",
   /** Productised systems — fixed scope, published price. */
   jobCard: "R95,000",
   sheq: "R120,000",
@@ -57,14 +64,27 @@ export const RATES = {
   hourlyRate: "R1,250",
 } as const;
 
+/**
+ * Standalone Sigmafy Statistics subscriptions are listed in US dollars on the
+ * specialist product. Keep them separate from RATES, which is deliberately the
+ * South African rand price book for 2KO services and partnerships.
+ */
+export const SIGMAFY_RATES = {
+  free: "$0",
+  practitioner: "$49",
+  team: "$199",
+} as const;
+
 export const TERMS = {
   /** Window in which an audit fee is credited against a commissioned pilot. */
   auditCreditDays: 60,
-  /** Minimum retainer commitment before it goes month-to-month. */
-  retainerMinMonths: 6,
-  /** Discount for paying a retainer twelve months up front. */
-  annualPrepayDiscount: "10%",
-  /** Annual retainer escalation. */
+  /** Minimum production-system Care commitment before it goes month-to-month. */
+  careMinMonths: 6,
+  /** Managed Systems is an annual operating relationship beginning at go-live. */
+  managedSystemsMinMonths: 12,
+  /** Integrated Improvement Partnerships are annual operating agreements. */
+  partnershipMinMonths: 12,
+  /** Annual service and partnership escalation. */
   escalation: "CPI + 2%",
   /** Margin on AI usage and third-party licences billed through at cost. */
   passthroughMargin: "15%",

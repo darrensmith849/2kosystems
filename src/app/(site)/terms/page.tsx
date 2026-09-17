@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
+import { completePageMetadata } from "@/lib/siteMetadata";
 import Rise from "@/components/cinema/Rise";
 import { RATES, TERMS } from "@/lib/pricing";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = completePageMetadata({
   title: "Terms of Service",
   description:
-    "How 2KO Systems engagements work: fixed prices against a written scope, changes quoted in advance, and code you own from day one.",
+    "How 2KO consulting, training, automation, systems, Sigmafy and improvement partnership engagements work.",
   alternates: { canonical: "/terms" },
-};
+});
 
 /**
  * Terms of service.
@@ -25,7 +26,7 @@ const SECTIONS: { title: string; paragraphs: string[] }[] = [
   {
     title: "Who these terms are between",
     paragraphs: [
-      "These terms apply to work carried out by 2KO Systems, part of the 2KO group, for the client named on the quotation or statement of work. They are governed by the law of the Republic of South Africa, and any dispute falls to the South African courts.",
+      "These terms apply to work carried out by the 2KO entity named on the quotation, enrolment, subscription schedule or statement of work for the client identified there. They are governed by the law of the Republic of South Africa, and any dispute falls to the South African courts unless the signed agreement states otherwise.",
       "Where a signed statement of work says something different from this page, the statement of work wins. This page covers everything it does not.",
     ],
   },
@@ -47,8 +48,9 @@ const SECTIONS: { title: string; paragraphs: string[] }[] = [
   {
     title: "What you own",
     paragraphs: [
-      "You own the source code, the documentation and the data, from the first day of the engagement rather than on final payment. It is built on mainstream technology that any competent developer can pick up, and it is handed over with credentials and a written handover document.",
-      "We retain no proprietary platform, no licence you must keep paying, and no ability to switch off something you have paid for. Where we reuse general techniques, patterns or non-client-specific tooling on other work, that is ours to reuse; your business logic, your data and your brand are not.",
+      "For a custom system build, you own the client-specific source code, documentation and data from the first day of the engagement rather than only on final payment. It is built on mainstream technology and handed over with the agreed credentials and documentation.",
+      "Sigmafy, reusable 2KO tooling, training materials, methods, templates and general non-client-specific components remain the intellectual property of their respective owners and are licensed only for the use stated in the applicable agreement. Your data, confidential business logic and brand remain yours.",
+      "A custom system is not disabled because optional support ends. A hosted subscription such as Sigmafy remains available only while the applicable subscription is active, because the platform itself is licensed rather than transferred.",
     ],
   },
   {
@@ -59,17 +61,33 @@ const SECTIONS: { title: string; paragraphs: string[] }[] = [
     ],
   },
   {
+    title: "Training and certification",
+    paragraphs: [
+      "Training dates, delivery mode, cohort size, prerequisites, attendance requirements, assessments, project requirements, certification route and rescheduling terms are stated in the enrolment or company training schedule.",
+      "Attendance does not by itself guarantee certification. A certificate is issued only when the applicable participation, assessment and project requirements have been met. International or third-party accreditation remains subject to the rules of the relevant accreditation body.",
+    ],
+  },
+  {
+    title: "Sigmafy and hosted services",
+    paragraphs: [
+      "Sigmafy access, modules, user allowances, support, data-processing arrangements, service period and pricing are stated in the subscription or partnership schedule. Trial, pilot or early-access functions may change while the product is being validated, and any such status will be stated before access is granted.",
+      "The client remains responsible for the accuracy and lawful use of information entered into a hosted service, for authorised-user administration and for decisions made from an analysis. Statistical tools support professional judgement; they do not replace it.",
+    ],
+  },
+  {
     title: "Support after go-live",
     paragraphs: [
       `Every fixed-price build includes ${TERMS.postLaunchSupportDays} days of support after go-live, for fixes and questions, whether or not you take a retainer.`,
-      `Retainers run for a minimum of ${TERMS.retainerMinMonths} months and then continue month to month, cancellable with 30 days' notice. Annual prepayment carries a ${TERMS.annualPrepayDiscount} discount. Retainer fees escalate annually at ${TERMS.escalation}.`,
-      "A retainer is never a condition of anything we build. The systems are designed to be operated without us, and taking the hosting and maintenance in-house is a supported outcome, not a penalty.",
+      `System Care runs for a minimum of ${TERMS.careMinMonths} months and then continues month to month, cancellable with 30 days' notice. It covers one named production system, an agreed support boundary and one planned maintenance or minor improvement day each month; major features, modules and integrations are separately scoped. A Managed Systems Partnership is a ${TERMS.managedSystemsMinMonths}-month operating agreement beginning at go-live. The initial build remains a separately scoped engagement; the partnership covers the named production system, agreed service boundary and planned monthly adaptation capacity.`,
+      `Integrated Improvement Partnerships are ${TERMS.partnershipMinMonths}-month operating agreements with mobilisation and annual capacity schedules.`,
+      `Fees escalate at ${TERMS.escalation} on renewal. Training redemption, Sigmafy entitlements, delivery capacity and early-termination treatment are stated in the signed partnership schedule.`,
+      "Care and partnerships are optional. Systems are designed to be operated without us, and taking hosting and maintenance in-house is a supported outcome, not a penalty.",
     ],
   },
   {
     title: "Credits on audits and reviews",
     paragraphs: [
-      `The ${RATES.review} Half-Day Process Review fee is credited against whatever you commission next. The ${RATES.audit} Systems Opportunity Audit fee is credited in full against a pilot commissioned within ${TERMS.auditCreditDays} days.`,
+      `The ${RATES.review} Half-Day Process Review fee is credited against whatever you commission next. The ${RATES.audit} Process and Automation Opportunity Audit fee is credited in full against a pilot commissioned within ${TERMS.auditCreditDays} days.`,
       "These credits apply once each and are not exchangeable for cash or transferable to another party.",
     ],
   },

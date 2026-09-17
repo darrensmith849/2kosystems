@@ -1,13 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
-import { isValidEmail, sendRaw, notifyRecipients, escapeHtml } from "@/lib/email";
+import {
+  isValidEmail,
+  sendRaw,
+  notifyRecipients,
+  escapeHtml,
+  renderBrandedEmail,
+  renderEmailButton,
+  renderEmailDetailRows,
+  renderEmailStatusPanel,
+} from "@/lib/email";
 import { resolve, outcomeHeadline, QUESTIONS, type Answers } from "@/lib/quote";
 import { RATES } from "@/lib/pricing";
-
-const SITE = "https://www.2kosystems.com";
+import { SITE_URL as SITE } from "@/lib/site";
+import { apiErrorResponse, readProtectedJson } from "@/lib/api-protection";
 
 export async function POST(req: NextRequest) {
   try {
-    const body = (await req.json()) as { email?: string; answers?: Answers };
+    const body = await readProtectedJson<{ email?: string; answers?: Answers }>(req, {
+      endpoint: "quote",
+      limit: 12,
+      windowMs: 10 * 60 * 1000,
+    });
     const email = String(body.email ?? "").trim().toLowerCase();
     const answers = body.answers ?? {};
 
@@ -28,51 +41,33 @@ export async function POST(req: NextRequest) {
       return option ? { q: q.label, a: option.label } : null;
     }).filter(Boolean) as { q: string; a: string }[];
 
-    const row = (k: string, v: string) =>
-      `<tr><td style="padding:5px 0;color:#7c8079;font-size:13px;">${escapeHtml(k)}</td><td style="padding:5px 0;font-size:13px;text-align:right;">${escapeHtml(v)}</td></tr>`;
-
-    const html = `<!doctype html><html><body style="margin:0;padding:24px;background:#f5f5f3;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#101311;">
-<div style="max-width:600px;margin:0 auto;background:#fff;border:1px solid #e4e4e0;border-radius:10px;padding:28px;">
-<p style="margin:0 0 4px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#7c8079;">Scope brief</p>
-<h1 style="margin:0 0 6px;font-size:22px;font-weight:600;">${escapeHtml(head.name)}</h1>
-<p style="margin:0 0 20px;font-size:26px;font-weight:600;letter-spacing:-.02em;">${escapeHtml(head.price)}
-<span style="font-size:13px;font-weight:400;color:#7c8079;">ex VAT · ${escapeHtml(head.timebox)}</span></p>
-
-<p style="margin:0 0 8px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#7c8079;">Why this</p>
-<ul style="margin:0 0 20px;padding-left:18px;font-size:13px;line-height:1.65;color:#3f4642;">
-${outcome.because.map((b) => `<li>${escapeHtml(b)}</li>`).join("")}
+    const html = renderBrandedEmail({
+      eyebrow: "Scope builder · indicative brief",
+      title: head.name,
+      intro: "A published starting point assembled from the five scope decisions you made on the 2KO site.",
+      identityLabel: "2KO Scope Builder",
+      identityMeta: "Published price · human confirmation",
+      preheader: `${head.name} · ${head.price} ex VAT · ${head.timebox}`,
+      accent: "ember",
+      footer: "Sent because you asked the scope builder to email this brief",
+      body: `
+${renderEmailStatusPanel({
+  label: "Published starting price",
+  title: `${head.price} ex VAT · ${head.timebox}`,
+  body: "The price becomes fixed once the boundary is confirmed in a free scoping call.",
+  accent: "ember",
+})}
+<p style="margin:0 0 7px;color:#8a8f98;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;">Why this route</p>
+<ul style="margin:0 0 28px;padding-left:20px;color:#b4b8bf;font-size:13px;line-height:1.75;">
+${outcome.because.map((reason) => `<li style="padding-left:3px;">${escapeHtml(reason)}</li>`).join("")}
 </ul>
-
-<p style="margin:0 0 8px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#7c8079;">What you told us</p>
-<table style="width:100%;border-collapse:collapse;margin-bottom:20px;">
-${chosen.map((c) => row(c.q, c.a)).join("")}
-</table>
-
-${
-  outcome.kind === "product"
-    ? `<p style="margin:0 0 8px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#7c8079;">Not included</p>
-<ul style="margin:0 0 20px;padding-left:18px;font-size:13px;line-height:1.65;color:#7c8079;">
-${outcome.product.excluded.slice(0, 5).map((e) => `<li>${escapeHtml(e)}</li>`).join("")}
-</ul>`
-    : ""
-}
-
-<p style="margin:0 0 20px;font-size:13px;line-height:1.65;color:#3f4642;">
-This is indicative. A fixed price is confirmed after a scoping call, which is free and takes about
-thirty minutes. If your version turns out to be bigger than this box, we say so then rather than
-after the invoice. Out-of-scope work is ${escapeHtml(RATES.dayRate)} per day, quoted and approved before it starts.
-</p>
-
-<p style="margin:0 0 22px;">
-<a href="${SITE}${head.href}" style="color:#0f6b34;font-weight:600;text-decoration:none;">Full scope →</a>
-&nbsp;&nbsp;
-<a href="${SITE}/contact" style="color:#0f6b34;font-weight:600;text-decoration:none;">Book a scoping call →</a>
-</p>
-
-<hr style="border:none;border-top:1px solid #e4e4e0;margin:0 0 16px;" />
-<p style="margin:0;font-size:12px;color:#7c8079;">2KO Systems · Operational systems for South African industry<br />
-<a href="${SITE}" style="color:#0f6b34;">2kosystems.com</a></p>
-</div></body></html>`;
+<p style="margin:0 0 7px;color:#8a8f98;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;">What you told us</p>
+${renderEmailDetailRows(chosen.map((choice) => [choice.q, choice.a]))}
+${outcome.kind === "product" ? `<div style="margin-top:28px;padding:19px 20px;border:1px solid #292c31;border-radius:8px;background:#0b0c0d;"><p style="margin:0 0 9px;color:#8a8f98;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;">Not included in this box</p><ul style="margin:0;padding-left:19px;color:#8a8f98;font-size:12px;line-height:1.75;">${outcome.product.excluded.slice(0, 5).map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul></div>` : ""}
+<p style="margin:25px 0 0;color:#b4b8bf;font-size:13px;line-height:1.7;">If your version is bigger than this scope, we will say so before work begins. Out-of-scope work is ${escapeHtml(RATES.dayRate)} per day and is always quoted for approval first.</p>
+${renderEmailButton("View the full scope", `${SITE}${head.href}`, "ember")}
+<p style="margin:16px 0 0;color:#8a8f98;font-size:12px;line-height:1.6;"><a href="${SITE}/contact" style="color:#b4b8bf;text-decoration:underline;">Book the free scoping call</a> to confirm the boundary.</p>`,
+    });
 
     const text = [
       `Scope brief — ${head.name}`,
@@ -99,12 +94,31 @@ after the invoice. Out-of-scope work is ${escapeHtml(RATES.dayRate)} per day, qu
     // Tell the team a scope was built. Best-effort: the visitor already has
     // their brief, so a failure here must not surface to them.
     try {
+      const internalHtml = renderBrandedEmail({
+        eyebrow: "Scope builder activity",
+        title: `${email} built a ${head.name} scope`,
+        intro: "The visitor has received their own copy. This is the internal follow-up record.",
+        identityLabel: "2KO Scope Builder",
+        identityMeta: "Commercial signal · follow-up required",
+        preheader: `${head.name} · ${head.price} · ${email}`,
+        accent: "info",
+        footer: "Internal notification · verify fit before quoting",
+        body: `
+${renderEmailStatusPanel({
+  label: "Indicative outcome",
+  title: `${head.name} · ${head.price}`,
+  body: `${head.timebox}. Confirm scope and fit with the visitor before treating this as a fixed quotation.`,
+  accent: "info",
+})}
+<p style="margin:0 0 7px;color:#8a8f98;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;">Scope answers</p>
+${renderEmailDetailRows([["Email", email], ...chosen.map((choice) => [choice.q, choice.a] as [string, string])])}
+${renderEmailButton("Reply to visitor", `mailto:${email}`, "info")}`,
+      });
+
       await sendRaw({
         to: notifyRecipients(),
         subject: `Scope built — ${head.name} (${head.price}) · ${email}`,
-        html: `<p><strong>${escapeHtml(email)}</strong> built a scope on the site.</p>
-<p>Outcome: <strong>${escapeHtml(head.name)}</strong> — ${escapeHtml(head.price)}, ${escapeHtml(head.timebox)}</p>
-<table style="border-collapse:collapse;">${chosen.map((c) => row(c.q, c.a)).join("")}</table>`,
+        html: internalHtml,
         text: `${email} built a scope.\n\n${head.name} — ${head.price}, ${head.timebox}\n\n${chosen.map((c) => `${c.q} ${c.a}`).join("\n")}`,
         replyTo: email,
       });
@@ -114,6 +128,8 @@ after the invoice. Out-of-scope work is ${escapeHtml(RATES.dayRate)} per day, qu
 
     return NextResponse.json({ ok: true });
   } catch (error) {
+    const guarded = apiErrorResponse(error);
+    if (guarded) return guarded;
     console.error("/api/quote failed", error);
     return NextResponse.json({ ok: false, error: "Could not send that. Please try again." }, { status: 500 });
   }

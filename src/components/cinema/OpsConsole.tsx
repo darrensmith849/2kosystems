@@ -45,23 +45,6 @@ function Avatar({ name, size = "md", state }: { name: string; size?: "md" | "sm"
   );
 }
 
-/** Twelve-week trend, drawn small enough to sit inside a list row. */
-function MiniTrend({ points, tone = "signal" }: { points: number[]; tone?: "signal" | "ember" }) {
-  const w = 64;
-  const h = 18;
-  const max = Math.max(...points);
-  const min = Math.min(...points);
-  const span = max - min || 1;
-  const d = points
-    .map((p, i) => `${i ? "L" : "M"}${((i / (points.length - 1)) * w).toFixed(1)},${(h - ((p - min) / span) * (h - 3) - 1.5).toFixed(1)}`)
-    .join(" ");
-  return (
-    <svg viewBox={`0 0 ${w} ${h}`} width={w} height={h} aria-hidden="true" className="shrink-0">
-      <path d={d} fill="none" stroke={tone === "ember" ? "var(--ember)" : "var(--signal)"} strokeWidth="1.4" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
 const STATUS_META: Record<Status, { label: string; colour: string }> = {
   pending: { label: "Pending", colour: "var(--ember)" },
   escalated: { label: "Escalated", colour: "var(--alert)" },
@@ -202,7 +185,7 @@ export default function OpsConsole() {
   const decidable = selected && (selected.status === "pending" || selected.status === "escalated");
 
   return (
-    <div className="k-app">
+    <div className="k-app k-ops">
       {/* ── Title bar ── */}
       <div className="k-app-bar">
         <div className="flex items-center gap-2">
@@ -210,7 +193,7 @@ export default function OpsConsole() {
           <span className="k-app-dot" style={{ background: "#e8a33d" }} />
           <span className="k-app-dot" style={{ background: "#3fb950" }} />
         </div>
-        <span className="k-mono">Rustenburg Operations · demo</span>
+        <span className="k-mono">Approval control · Rustenburg Operations</span>
         <span className="k-mono hidden sm:inline">
           <kbd className="k-kbd">A</kbd> approve <kbd className="k-kbd">D</kbd> decline{" "}
           <kbd className="k-kbd">J</kbd>/<kbd className="k-kbd">K</kbd> move
@@ -220,11 +203,12 @@ export default function OpsConsole() {
       <div className="k-app-body">
         {/* ── Sidebar ── */}
         <aside className="k-app-side">
-          <div className="flex h-[30px] items-center gap-2 px-1.5">
+          <div className="k-ops-brand">
             <span className="k-app-mark">2K</span>
-            <span className="text-[13px] font-medium">Rustenburg Ops</span>
+            <span>Operations OS<small>Decision workspace</small></span>
           </div>
 
+          <p className="k-mono mt-5 px-1.5">Workspace</p>
           <nav className="mt-2 flex flex-col gap-[1px]">
             {VIEWS.map((item) => (
               <button
@@ -252,30 +236,36 @@ export default function OpsConsole() {
             ))}
           </nav>
 
-          <div className="mt-auto px-1.5 pb-2">
-            <p className="k-mono">Avg. to decision</p>
-            <p className="mt-1 text-[19px] font-medium tabular-nums tracking-[-0.02em]">4h 12m</p>
+          <div className="k-ops-sidecard">
+            <div><span>CONTROL HEALTH</span><b>On target</b></div>
+            <strong>4h 12m</strong>
+            <p>Average decision time</p>
+            <i><span style={{ width: "72%" }} /></i>
+            <small>Target · under 6 hours</small>
           </div>
         </aside>
 
         {/* ── List ── */}
         <div className="k-app-list">
           {/* Headline numbers, so the shape of the day reads before any text does */}
-          <div className="flex border-b border-[var(--hair)]">
+          <div className="k-ops-metrics">
             <div className="k-tile">
               <p className="k-mono">Awaiting you</p>
-              <p className="k-num mt-1 text-[20px] leading-none">{counts.queue}</p>
+              <p className="k-num mt-1 text-[20px] leading-none">{String(counts.queue).padStart(2, "0")}</p>
+              <span>1 past threshold</span>
             </div>
             <div className="k-tile">
               <p className="k-mono">Value pending</p>
               <p className="k-num mt-1 text-[20px] leading-none">R{rand(pendingValue)}</p>
+              <span>3 financial decisions</span>
             </div>
             <div className="k-tile">
               <p className="k-mono">Avg. decision</p>
-              <div className="mt-1 flex items-center justify-between gap-2">
+              <div className="mt-1 flex items-center gap-3">
                 <span className="k-num text-[20px] leading-none">4h 12m</span>
-                <MiniTrend points={[52, 47, 44, 46, 38, 34, 31, 27, 24, 22, 19, 17]} />
+                <span className="k-ops-target"><i /><b>6h</b></span>
               </div>
+              <span data-tone="good">↓ 38% this quarter</span>
             </div>
             <div className="k-tile hidden sm:block">
               <p className="k-mono">Cleared today</p>
@@ -287,6 +277,7 @@ export default function OpsConsole() {
                   <div className="k-bar-fill" style={{ width: `${Math.min(cleared * 3, 100)}%`, background: "var(--signal)" }} />
                 </div>
               </div>
+              <span data-tone="good">92% within target</span>
             </div>
           </div>
 
@@ -306,15 +297,13 @@ export default function OpsConsole() {
                 >
                   <StatusDot status={request.status} />
                   <Avatar name={request.raisedBy} size="sm" />
-                  <span className="k-app-rowtitle">{request.title}</span>
+                  <span className="k-app-rowtitle"><span>{request.title}</span><small>{request.category} · {request.age}</small></span>
                   <span className="k-pips hidden sm:inline-flex" title="Approval progress">
                     {request.chain.map((step, i) => (
                       <span key={i} className="k-pip" data-state={step.state} />
                     ))}
                   </span>
-                  <span className="hidden lg:block">
-                    <MiniTrend points={request.trend} tone={request.status === "escalated" ? "ember" : "signal"} />
-                  </span>
+                  <span className="k-ops-row-age hidden lg:inline-flex" data-state={request.status}>{request.age}</span>
                   <PriorityGlyph priority={request.priority} />
                   <span className="k-mono hidden w-[52px] shrink-0 text-right tabular-nums sm:inline">
                     {request.value ? `R${Math.round(request.value / 1000)}k` : "—"}
@@ -328,6 +317,25 @@ export default function OpsConsole() {
               </li>
             )}
           </ul>
+
+          {selected && (
+            <div className="k-ops-brief">
+              <article>
+                <header><span>DECISION BRIEF</span><b>{selected.id}</b></header>
+                <p>{selected.detail}</p>
+                <div className="k-ops-brief-facts">
+                  <span><small>Age</small><b>{selected.age}</b></span>
+                  <span><small>Owner</small><b>{selected.owner}</b></span>
+                  <span><small>Evidence</small><b>{selected.trail.length} events</b></span>
+                </div>
+              </article>
+              <article className="k-ops-path">
+                <header><span>CONTROL PATH</span><b data-tone="live">LIVE</b></header>
+                <div><span data-state="done"><i>✓</i><small>Trigger</small></span><em>→</em><span data-state="done"><i>✓</i><small>Policy check</small></span><em>→</em><span data-state="active"><i>03</i><small>Human decision</small></span><em>→</em><span><i>04</i><small>Record</small></span></div>
+                <p>Consequential decisions stay with an authorised person. The system carries the context and records the action.</p>
+              </article>
+            </div>
+          )}
         </div>
 
         {/* ── Detail ── */}
@@ -347,7 +355,7 @@ export default function OpsConsole() {
                 </span>
               </div>
 
-              <p className="mt-2.5 text-[15px] font-medium leading-snug tracking-[-0.015em]">
+              <p className="k-ops-detail-title">
                 {selected.title}
               </p>
 
@@ -360,7 +368,7 @@ export default function OpsConsole() {
               </p>
 
               {/* Who still has to touch it, and how far along it is */}
-              <p className="k-mono mt-5">Approval chain</p>
+              <div className="k-ops-section-label"><span>Approval chain</span><b>{selected.chain.filter((c) => c.state === "done").length}/{selected.chain.length} cleared</b></div>
               <div className="k-chain mt-2.5">
                 {selected.chain.map((step, i) => (
                   <Fragment key={`${step.who}-${i}`}>
@@ -374,25 +382,19 @@ export default function OpsConsole() {
                   </Fragment>
                 ))}
               </div>
-              <div className="mt-2 flex justify-between">
-                <span className="k-mono">{selected.raisedBy} raised</span>
-                <span className="k-mono">
-                  {selected.chain.filter((c) => c.state === "done").length}/
-                  {selected.chain.length} cleared
-                </span>
+              <div className="k-ops-chain-roles">
+                {selected.chain.map((step, index) => <span key={`${step.role}-${index}`}>{step.role}</span>)}
               </div>
 
-              {/* Trend on the metric this request moves */}
-              <p className="k-mono mt-5">Twelve-week trend</p>
-              <div className="mt-2">
-                <MiniTrend
-                  points={selected.trend}
-                  tone={selected.status === "escalated" ? "ember" : "signal"}
-                />
+              {/* A single request has elapsed time, not a trend. Show its control state directly. */}
+              <div className="k-ops-section-label"><span>Time control</span><b>{selected.age} open</b></div>
+              <div className="k-ops-time-control" data-state={selected.status}>
+                <div><i /><span /></div>
+                <p><span>Raised</span><b>{selected.status === "escalated" ? "Threshold exceeded" : selected.status === "pending" ? "Within target" : "Closed"}</b><span>6h target</span></p>
               </div>
 
-              <p className="k-mono mt-5">Activity</p>
-              <ol className="mt-2.5 flex flex-col gap-2">
+              <div className="k-ops-section-label"><span>Audit activity</span><b>{selected.trail.length} events</b></div>
+              <ol className="k-ops-audit">
                 {selected.trail.slice(-3).map((entry, i) => (
                   <li key={i} className="flex items-start gap-2 text-[11.5px] leading-[1.4]">
                     <span

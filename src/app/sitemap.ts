@@ -1,14 +1,13 @@
 import type { MetadataRoute } from "next";
 import { WEB_TIERS } from "@/lib/websites";
 import { PRODUCTS } from "@/lib/products";
-
-const SITE_URL = "https://www.2kosystems.com";
+import { SITE_URL } from "@/lib/site";
 
 /**
  * Bump when page content is meaningfully revised. Deliberately a fixed
  * constant — a lastmod that always says "now" is noise.
  */
-const LAST_REVIEWED = new Date("2026-08-25");
+const LAST_REVIEWED = new Date("2026-09-12");
 
 type Entry = {
   path: string;
@@ -18,8 +17,18 @@ type Entry = {
 
 const routes: Entry[] = [
   { path: "", priority: 1.0, changeFrequency: "monthly" },
-  // The paid-search landing page. Highest-intent commercial page on the site.
-  { path: "/websites", priority: 1.0, changeFrequency: "monthly" },
+  { path: "/process-review", priority: 1.0, changeFrequency: "monthly" },
+  { path: "/audit", priority: 1.0, changeFrequency: "monthly" },
+  { path: "/automation", priority: 1.0, changeFrequency: "monthly" },
+  { path: "/training", priority: 1.0, changeFrequency: "monthly" },
+  { path: "/sigmafy", priority: 1.0, changeFrequency: "monthly" },
+  { path: "/systems", priority: 0.9, changeFrequency: "monthly" },
+  { path: "/managed-improvement", priority: 0.9, changeFrequency: "monthly" },
+  { path: "/method", priority: 0.9, changeFrequency: "monthly" },
+  { path: "/results", priority: 0.9, changeFrequency: "monthly" },
+  // Retained for paid-search and direct website-service demand, but no longer
+  // positioned as the primary operational offer.
+  { path: "/websites", priority: 0.7, changeFrequency: "monthly" },
   // One landing page per tier, each targeting a different search intent.
   ...WEB_TIERS.map((t) => ({
     path: `/websites/${t.slug}`,
@@ -29,14 +38,12 @@ const routes: Entry[] = [
   { path: "/pricing", priority: 0.9, changeFrequency: "monthly" },
   { path: "/quote", priority: 0.9, changeFrequency: "monthly" },
   { path: "/get-off-excel", priority: 0.9, changeFrequency: "monthly" },
-  { path: "/systems", priority: 0.9, changeFrequency: "monthly" },
   // Productised systems — high-intent search landing pages.
   ...PRODUCTS.map((product) => ({
     path: `/systems/${product.slug}`,
     priority: 0.9,
     changeFrequency: "monthly" as const,
   })),
-  { path: "/method", priority: 0.8, changeFrequency: "monthly" },
   { path: "/sectors", priority: 0.8, changeFrequency: "monthly" },
   { path: "/studio", priority: 0.6, changeFrequency: "yearly" },
   { path: "/contact", priority: 0.6, changeFrequency: "yearly" },

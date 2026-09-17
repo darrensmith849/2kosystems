@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { completePageMetadata } from "@/lib/siteMetadata";
 import PageHero from "@/components/cinema/PageHero";
 import Link from "next/link";
 import Rise from "@/components/cinema/Rise";
@@ -6,11 +7,11 @@ import QuoteBuilder from "@/components/cinema/QuoteBuilder";
 import { Pill } from "@/components/cinema/instruments";
 import { RATES } from "@/lib/pricing";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = completePageMetadata({
   title: "Build a Scope — What Would It Cost",
   description: `Answer five questions and see what your system would cost, with the scope and the exclusions. Prices from ${RATES.review} to ${RATES.buildTo}, all published. No email required to see the price.`,
   alternates: { canonical: "/quote" },
-};
+});
 
 export default function QuotePage() {
   return (

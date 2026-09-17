@@ -1,4 +1,4 @@
-import { MAP, COUNTRIES, OUTLINE, GRATICULE, CITIES, TOUR } from "@/lib/africa-map";
+import { MAP, CITIES, TOUR } from "@/lib/africa-map";
 import TourArcs from "@/components/cinema/TourArcs";
 
 /**
@@ -22,12 +22,6 @@ export default function AfricaMap() {
       aria-label="A map of Africa with connections radiating from Johannesburg to major cities across the continent."
     >
       <defs>
-        <linearGradient id="landFill" x1="0" y1="0" x2="0.3" y2="1">
-          <stop offset="0%" stopColor="#3fb173" stopOpacity="1" />
-          <stop offset="45%" stopColor="#1f8149" stopOpacity="0.98" />
-          <stop offset="100%" stopColor="#125733" stopOpacity="0.95" />
-        </linearGradient>
-
         <linearGradient id="arcFill" x1="0" y1="0" x2="1" y2="0">
           <stop offset="0%" stopColor="var(--ember)" stopOpacity="0.15" />
           <stop offset="45%" stopColor="#ffd9a0" stopOpacity="0.95" />
@@ -42,46 +36,9 @@ export default function AfricaMap() {
           </feMerge>
         </filter>
 
-        <filter id="softGlow" x="-40%" y="-40%" width="180%" height="180%">
-          <feGaussianBlur stdDeviation="3.5" result="blur" />
-          <feMerge>
-            <feMergeNode in="blur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
       </defs>
 
-      {/* Graticule — a real ten-degree grid, not a decorative lattice */}
-      <path
-        d={GRATICULE}
-        fill="none"
-        stroke="#6ee7a6"
-        strokeWidth="0.5"
-        opacity="0.09"
-      />
-
-      {/* Landmass */}
-      <g className="km-land">
-        <path d={OUTLINE} fill="url(#landFill)" />
-        {COUNTRIES.map((d, i) => (
-          <path
-            key={i}
-            d={d}
-            fill="none"
-            stroke="#a5eec4"
-            strokeWidth="0.5"
-            opacity="0.34"
-          />
-        ))}
-        <path
-          d={OUTLINE}
-          fill="none"
-          stroke="#8df0b6"
-          strokeWidth="1.4"
-          opacity="0.95"
-          filter="url(#softGlow)"
-        />
-      </g>
+      <image href="/imagery/africa-map-base.svg" width={MAP.width} height={MAP.height} className="km-land" />
 
       {/* Connections — one line, travelling the route hop by hop */}
       <g filter="url(#glow)">
@@ -97,7 +54,7 @@ export default function AfricaMap() {
               cy={city.y}
               r={city.home ? 5 : 3}
               fill={city.home ? "var(--ember)" : "#dcfbe8"}
-              filter="url(#softGlow)"
+              filter="url(#glow)"
             />
           </g>
         ))}

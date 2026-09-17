@@ -76,7 +76,7 @@ export default function Crossover({ here }: { here?: string }) {
           <p className="k-ladder-foot">
             Ex VAT, fixed against the scope agreed in week one. Tell us the problem
             rather than the tier — we will say which rung it actually is, including
-            when that is a cheaper one than you asked about.
+            when that means starting with a smaller, lower-risk scope.
           </p>
         </Rise>
       </div>

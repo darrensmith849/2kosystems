@@ -23,6 +23,8 @@ declare global {
 }
 
 export const GADS_ID = process.env.NEXT_PUBLIC_GADS_ID ?? "";
+export const GA_ID = process.env.NEXT_PUBLIC_GA_ID ?? "";
+export const ANALYTICS_ID = GA_ID || GADS_ID;
 
 /** One label per conversion action, created in Google Ads. */
 const LABELS = {
@@ -59,6 +61,30 @@ export function track(name: ConversionName, extra?: Record<string, unknown>) {
   });
 }
 
+export type GeneralEventName =
+  | "cta_click"
+  | "form_start"
+  | "service_interest"
+  | "enquiry_submit"
+  | "journey_complete";
+
+/**
+ * Diagnostic events describe the journey but are deliberately not advertising
+ * conversions. Only a successful enquiry calls `track("enquiry")`.
+ */
+export function trackEvent(
+  name: GeneralEventName,
+  properties: Record<string, unknown> = {},
+) {
+  if (typeof window === "undefined" || !window.gtag) return;
+
+  window.gtag("event", name, {
+    source_page: window.location.pathname,
+    first_landing_page: firstLandingPage(),
+    ...properties,
+  });
+}
+
 /**
  * Captures the click identifier on landing and keeps it for the session, so a
  * conversion that happens three pages later still attributes to the ad that
@@ -67,7 +93,27 @@ export function track(name: ConversionName, extra?: Record<string, unknown>) {
 export function captureClickId() {
   if (typeof window === "undefined") return;
   const params = new URLSearchParams(window.location.search);
-  for (const key of ["gclid", "wbraid", "gbraid", "utm_source", "utm_campaign", "utm_term"]) {
+  try {
+    if (!sessionStorage.getItem("k_first_landing_page")) {
+      sessionStorage.setItem(
+        "k_first_landing_page",
+        `${window.location.pathname}${window.location.search}`,
+      );
+    }
+  } catch {
+    // Private browsing — attribution degrades, nothing breaks.
+  }
+
+  for (const key of [
+    "gclid",
+    "wbraid",
+    "gbraid",
+    "utm_source",
+    "utm_medium",
+    "utm_campaign",
+    "utm_content",
+    "utm_term",
+  ]) {
     const value = params.get(key);
     if (value) {
       try {
@@ -79,11 +125,29 @@ export function captureClickId() {
   }
 }
 
+export function firstLandingPage() {
+  if (typeof window === "undefined") return "";
+  try {
+    return sessionStorage.getItem("k_first_landing_page") ?? window.location.pathname;
+  } catch {
+    return window.location.pathname;
+  }
+}
+
 /** Read back what brought them here, for the enquiry notification email. */
 export function attribution(): Record<string, string> {
   if (typeof window === "undefined") return {};
   const out: Record<string, string> = {};
-  for (const key of ["gclid", "utm_source", "utm_campaign", "utm_term"]) {
+  for (const key of [
+    "gclid",
+    "wbraid",
+    "gbraid",
+    "utm_source",
+    "utm_medium",
+    "utm_campaign",
+    "utm_content",
+    "utm_term",
+  ]) {
     try {
       const value = sessionStorage.getItem(`k_${key}`);
       if (value) out[key] = value;
@@ -91,5 +155,8 @@ export function attribution(): Record<string, string> {
       // ignore
     }
   }
+  const landing = firstLandingPage();
+  if (landing) out.first_landing_page = landing;
+  out.source_page = window.location.pathname;
   return out;
 }

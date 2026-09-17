@@ -30,7 +30,8 @@
     "ga:traffic": "./scripts/with-node.sh scripts/ga-traffic.ts",
     "ga:cleanup": "./scripts/with-node.sh scripts/ga-cleanup.ts",
     "cf:dns": "./scripts/with-node.sh scripts/cf-dns.ts",
-    "ga:realtime": "./scripts/with-node.sh scripts/ga-realtime.ts"
+    "ga:realtime": "./scripts/with-node.sh scripts/ga-realtime.ts",
+    "cf:secrets": "./scripts/with-node.sh scripts/cf-secrets.ts"
   },
   "dependencies": {
     "next": "^16.3.3",

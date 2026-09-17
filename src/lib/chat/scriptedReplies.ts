@@ -15,21 +15,21 @@ export type QuickReply = {
 export const QUICK_REPLIES: QuickReply[] = [
   {
     intent: "what-do-you-build",
-    label: "What do you build?",
+    label: "What does 2KO do?",
     reply:
-      "2KO Systems builds custom operational software, workflow automation, internal tools, client portals, dashboards, and AI-assisted systems for businesses that are still relying too heavily on spreadsheets, manual admin, WhatsApp, email, or disconnected tools. The usual starting point is a Systems Audit so we can map the process before quoting a build.",
+      "2KO improves operational processes, builds capability through Six Sigma South Africa, automates repeatable work through 2KO Systems and measures whether the result holds with Sigmafy. The right starting point depends on the constraint—not on which service is easiest to sell.",
   },
   {
     intent: "how-pricing-works",
     label: "How does pricing work?",
     reply:
-      "Pricing is scoped around the workflow, complexity, integrations, users, and the level of automation needed. We usually frame work in three steps: a Systems Audit, a focused Proof-of-Value Pilot, and then a fuller Core System Build. The audit is where we lock down the real number instead of guessing publicly.",
+      "A Half-Day Process Review is R7,500 and a standard Process and Automation Opportunity Audit is R24,500, both ex VAT. A Workflow Automation Pilot starts at R145,000. Each step has a written scope, and you can stop when you have the answer you need.",
   },
   {
     intent: "start-smaller",
     label: "Can we start smaller?",
     reply:
-      "Yes — that is often the smartest path. Instead of jumping straight into a full build, many clients start with a focused pilot around one painful workflow. It lowers risk, proves value quickly, and if the bigger system goes ahead later, the pilot thinking and assets can inform the full build.",
+      "Yes. If the constraint is unclear, start with one half-day Process Review. If the process is already agreed, a focused pilot can prove one measurable workflow before a larger build. The smallest useful step should still leave you with a defensible decision.",
   },
   {
     intent: "talk-to-human",

@@ -12,7 +12,13 @@
  * empty, and the Xneelo mail IPs return 421 for the web hostnames. The origin
  * is in the zone's own records, and this reads them.
  *
- * Needs CLOUDFLARE_API_TOKEN in .env with Zone:Read + DNS:Read on all zones.
+ * Needs CLOUDFLARE_DNS_READ_TOKEN in .env with Zone:Read + DNS:Read.
+ *
+ * Deliberately NOT named CLOUDFLARE_API_TOKEN: wrangler auto-loads .env from
+ * the working directory and would adopt that name as its own credential —
+ * so every `wrangler secret put` and deploy run from this directory would
+ * authenticate as a read-only DNS token and fail with a confusing
+ * "Failed to automatically retrieve account IDs" error.
  * Wrangler's OAuth session cannot be reused for this; it has no DNS command.
  */
 import { readEnv } from "./env-file.ts";
@@ -21,7 +27,7 @@ const API = "https://api.cloudflare.com/client/v4";
 const ONLY = process.argv.slice(2).filter((a) => !a.startsWith("-"));
 
 const env = readEnv();
-const TOKEN = env.get("CLOUDFLARE_API_TOKEN");
+const TOKEN = env.get("CLOUDFLARE_DNS_READ_TOKEN");
 
 async function api(path: string) {
   const r = await fetch(`${API}/${path}`, { headers: { Authorization: `Bearer ${TOKEN}` } });
@@ -42,14 +48,14 @@ const CF_IP = /^(104\.1[6-9]\.|104\.2[0-7]\.|172\.6[4-9]\.|172\.7[01]\.|188\.114
 async function main() {
   if (!TOKEN) {
     console.error(`
-  ✖ No CLOUDFLARE_API_TOKEN in .env
+  ✖ No CLOUDFLARE_DNS_READ_TOKEN in .env
 
     Create one at https://dash.cloudflare.com/profile/api-tokens
       · Create Token → Custom token
       · Permissions:  Zone → Zone → Read
                       Zone → DNS  → Read
       · Zone Resources: Include → All zones
-    Then:  npm run env:set CLOUDFLARE_API_TOKEN
+    Then:  npm run env:set CLOUDFLARE_DNS_READ_TOKEN
 `);
     process.exit(1);
   }

@@ -1,11 +1,38 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { SITE_URL } from "@/lib/site";
+import { completePageMetadata } from "@/lib/siteMetadata";
 import Rise from "@/components/cinema/Rise";
 import PageHero from "@/components/cinema/PageHero";
+import JobCardProductPage from "@/components/cinema/JobCardProductPage";
+import Photo from "@/components/cinema/Photo";
 import { Panel, QueueRows, Pill, PipelineFlow } from "@/components/cinema/instruments";
 import { PRODUCTS, getProduct } from "@/lib/products";
 import { RATES, TERMS } from "@/lib/pricing";
+
+const PRODUCT_PHOTOS: Record<string, { src: string; eyebrow: string; title: string; body: string; align?: "right" }> = {
+  "sheq-incident-reporting": {
+    src: "/imagery/systems/products/sheq-v1.webp",
+    eyebrow: "EVIDENCE AT THE SCENE",
+    title: "Capture the incident while the evidence is still on site.",
+    body: "The report, physical context, accountable owner and corrective action begin together—without turning safety judgement into a software decision.",
+    align: "right",
+  },
+  "contractor-compliance": {
+    src: "/imagery/systems/products/contractor-v1.webp",
+    eyebrow: "FROM GATE TO WORKFACE",
+    title: "One verified route into compliant work.",
+    body: "Credentials, induction, PPE requirements and expiry rules become a visible process before the contractor enters the site.",
+  },
+  "stock-and-asset-register": {
+    src: "/imagery/systems/products/stock-v1.webp",
+    eyebrow: "THE PHYSICAL RECORD",
+    title: "Know what moved, who issued it and where the asset belongs.",
+    body: "The store, maintenance team and asset owner share one traceable record from receipt to issue, return and verification.",
+    align: "right",
+  },
+};
 
 export function generateStaticParams() {
   return PRODUCTS.map((product) => ({ slug: product.slug }));
@@ -20,15 +47,13 @@ export async function generateMetadata({
   const product = getProduct(slug);
   if (!product) return {};
 
-  return {
-    title: `${product.name} — ${product.price}, ${product.timebox}`,
+  const title = `${product.name} — ${product.price}, ${product.timebox}`;
+
+  return completePageMetadata({
+    title,
     description: product.metaDescription,
     alternates: { canonical: `/systems/${product.slug}` },
-    openGraph: {
-      title: `${product.name} | 2KO Systems`,
-      description: product.metaDescription,
-    },
-  };
+  });
 }
 
 export default async function ProductPage({
@@ -45,14 +70,14 @@ export default async function ProductPage({
     "@type": "Product",
     name: product.name,
     description: product.metaDescription,
-    brand: { "@type": "Brand", name: "2KO Systems" },
+    brand: { "@type": "Brand", name: "2KO" },
     offers: {
       "@type": "Offer",
       price: product.price.replace(/[^0-9]/g, ""),
       priceCurrency: "ZAR",
       availability: "https://schema.org/InStock",
       priceValidUntil: "2027-12-31",
-      url: `https://www.2kosystems.com/systems/${product.slug}`,
+      url: `${SITE_URL}/systems/${product.slug}`,
     },
   };
 
@@ -70,13 +95,25 @@ export default async function ProductPage({
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: "https://www.2kosystems.com" },
-      { "@type": "ListItem", position: 2, name: "Systems", item: "https://www.2kosystems.com/systems" },
+      { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+      { "@type": "ListItem", position: 2, name: "Systems", item: `${SITE_URL}/systems` },
       { "@type": "ListItem", position: 3, name: product.name },
     ],
   };
 
   const others = PRODUCTS.filter((p) => p.slug !== product.slug);
+  const productPhoto = PRODUCT_PHOTOS[product.slug];
+
+  if (product.slug === "job-card-system") {
+    return (
+      <>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+        <JobCardProductPage product={product} others={others} />
+      </>
+    );
+  }
 
   return (
     <>
@@ -105,7 +142,7 @@ export default async function ProductPage({
           </>
         }
         ctas={[
-          { href: "/contact", label: "Book a free scoping call" },
+          { href: `/contact?interest=${product.slug}`, label: "Book a free scoping call" },
           { href: "#scope", label: "What’s included", ghost: true },
         ]}
         facts={[
@@ -145,6 +182,14 @@ export default async function ProductPage({
           </div>
         </div>
       </section>
+
+      {productPhoto && (
+        <section className="pd-photo" data-align={productPhoto.align ?? "left"}>
+          <Rise variant="settle" className="pd-photo__media"><Photo src={productPhoto.src} sizes="100vw" position="center" /></Rise>
+          <div className="pd-photo__shade" aria-hidden="true" />
+          <div className="k-shell pd-photo__copy"><Rise><p className="k-mono k-mono--ember">{productPhoto.eyebrow}</p></Rise><Rise step={1}><h2>{productPhoto.title}</h2></Rise><Rise step={2}><p className="image-chapter-lead">{productPhoto.body}</p></Rise></div>
+        </section>
+      )}
 
       {/* ═══ PRICE ═══ */}
       <section className="k-band">
@@ -337,7 +382,7 @@ export default async function ProductPage({
             </Rise>
           </div>
           <Rise step={3} className="flex flex-col gap-3">
-            <Link href="/contact" className="k-btn k-btn--solid">
+            <Link href={`/contact?interest=${product.slug}`} className="k-btn k-btn--solid">
               Book a free scoping call
             </Link>
             <Link href="/pricing" className="k-btn k-btn--ghost">

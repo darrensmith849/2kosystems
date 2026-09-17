@@ -1,27 +1,26 @@
 import type { Metadata } from "next";
-import PageHero from "@/components/cinema/PageHero";
-import ExcelReel from "@/components/cinema/ExcelReel";
+import { completePageMetadata } from "@/lib/siteMetadata";
 import Link from "next/link";
 import Rise from "@/components/cinema/Rise";
-import { Panel, Readout, QueueRows, EventFeed, Pill } from "@/components/cinema/instruments";
+import Photo from "@/components/cinema/Photo";
+import ExcelReel, { ExcelAuditScene, ExcelWorkflowScenes } from "@/components/cinema/ExcelReel";
 import { RATES, TERMS, TIMEBOX } from "@/lib/pricing";
+import { SITE_URL } from "@/lib/site";
 
 const PRICE = RATES.getOffExcel;
 const TIMEBOXED = TIMEBOX.getOffExcel;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = completePageMetadata({
   title: "Get Off Excel — Replace a Spreadsheet With a System",
   description: `Replace the spreadsheet your operation runs on with a real multi-user system in ${TIMEBOXED}. Fixed price ${PRICE} ex VAT, fixed scope.`,
   alternates: { canonical: "/get-off-excel" },
-};
+});
 
 const symptoms = [
-  { t: "“Locked for editing by another user”", d: "Two people need the file at once and one of them waits, asks, or works in a copy that never gets merged back." },
-  { t: "Someone overwrote the master", d: "A week of captures gone, with no way to tell what changed or who did it. The backup is a copy on somebody's desktop." },
-  { t: "Final_v3_USE_THIS_ONE.xlsx", d: "Nobody is certain which file is current. Decisions get made off whichever version was attached to the last email." },
-  { t: "The formula broke and nobody knows why", d: "The person who built it left. The logic lives in nested formulas across four sheets and one hidden tab." },
-  { t: "It only works on one laptop", d: "A macro, a plugin or a mapped drive means one machine can run it. When they are on leave, the process stops." },
-  { t: "Month-end is three days of copy-paste", d: "The same numbers rekeyed into the same report every month, with a fresh chance to fat-finger a figure." },
+  { code: "FILE LOCK", title: "Locked for editing", detail: "Two people need the file. One waits or starts another copy." },
+  { code: "VERSION", title: "Final_v3_USE_THIS_ONE", detail: "The latest attachment becomes the master until the next email." },
+  { code: "FORMULA", title: "#REF! in the monthly report", detail: "The logic lives in hidden tabs only one person understands." },
+  { code: "RE-ENTRY", title: "Three days of copy-paste", detail: "The same figures are retyped into the same report every month." },
 ];
 
 const included = [
@@ -64,272 +63,156 @@ const jsonLd = {
   "@type": "Product",
   name: "Get Off Excel — spreadsheet replacement system",
   description: `A fixed-price, fixed-scope engagement that replaces one business-critical spreadsheet with a secure multi-user web system in ${TIMEBOXED}.`,
-  brand: { "@type": "Brand", name: "2KO Systems" },
-  offers: {
-    "@type": "Offer",
-    price: "79500",
-    priceCurrency: "ZAR",
-    availability: "https://schema.org/InStock",
-    priceValidUntil: "2027-12-31",
-    url: "https://www.2kosystems.com/get-off-excel",
-  },
+  brand: { "@type": "Brand", name: "2KO" },
+  offers: { "@type": "Offer", price: "79500", priceCurrency: "ZAR", availability: "https://schema.org/InStock", priceValidUntil: "2027-12-31", url: `${SITE_URL}/get-off-excel` },
 };
 
 const faqJsonLd = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  mainEntity: faqs.map((f) => ({
-    "@type": "Question",
-    name: f.q,
-    acceptedAnswer: { "@type": "Answer", text: f.a },
-  })),
+  mainEntity: faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
 };
 
 export default function GetOffExcelPage() {
   return (
-    <>
+    <div className="gx-page">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
 
-      {/* ═══ OPENING ═══ */}
-      <PageHero
-        eyebrow="FIXED PRICE · FIXED SCOPE · FIXED DATE"
-        title="Everyone has the file. Nobody trusts it."
-        titleClass="max-w-[15ch]"
-        lead={
-          <>
-            The spreadsheet your operation runs on, rebuilt as a real multi-user
-            system in {TIMEBOXED}. {PRICE} ex VAT, agreed up front, with the scope
-            written down before we start.
-          </>
-        }
-        ctas={[
-          { href: "/contact", label: "Book a free scoping call" },
-          { href: "#scope", label: "What’s included", ghost: true },
-        ]}
-        facts={[
-          { value: PRICE, label: "ex VAT, fixed" },
-          { value: TIMEBOXED, label: "to go-live" },
-          { value: "Week 1", label: "scope signed off" },
-          { value: "Yours", label: "code and data, day one" },
-        ]}
-      >
-        {/* Every visitor to this page already owns the artefact it is about,
-            so show that rather than another four-box pipeline diagram. */}
-        <ExcelReel />
-      </PageHero>
+      <section className="gx-hero">
+        <div className="gx-hero-grid" aria-hidden />
+        <div className="k-shell gx-hero-inner">
+          <div className="gx-visual-hero-head">
+            <div>
+              <Rise><p className="k-mono k-mono--ember">GET OFF EXCEL · FIXED PRICE · {TIMEBOXED}</p></Rise>
+              <Rise step={1}><h1>Get off Excel.</h1></Rise>
+            </div>
+            <Rise step={2}><p>One critical spreadsheet<br />becomes one live operational system.</p></Rise>
+          </div>
+          <Rise step={3} className="gx-hero-visual"><ExcelReel /></Rise>
+        </div>
+      </section>
 
-      {/* ═══ SYMPTOMS ═══ */}
-      <section className="k-band k-band--2">
+      <section className="gx-hero-story">
         <div className="k-shell">
-          <Rise>
-            <p className="k-mono">01 — Sound familiar?</p>
-          </Rise>
-          <Rise step={1}>
-            <h2 className="k-title mt-6 max-w-[24ch]">
-              You are probably here because one of these happened this week.
-            </h2>
-          </Rise>
-          <div className="mt-12 grid gap-x-12 gap-y-8 md:grid-cols-2 lg:grid-cols-3">
-            {symptoms.map((s, i) => (
-              <Rise key={s.t} step={(i % 3) as 0 | 1 | 2}>
-                <div style={{ borderTop: "1px solid var(--hair-2)" }} className="pt-5">
-                  <h3 className="text-[15px] font-medium tracking-[-0.015em]">{s.t}</h3>
-                  <p className="k-sm mt-2.5">{s.d}</p>
-                </div>
+          <div className="gx-story-layout">
+            <div className="gx-story-main">
+              <Rise><p className="k-mono">THE PROPOSITION</p></Rise>
+              <Rise step={1}><h2>The spreadsheet did its job. Now build the system around it.</h2></Rise>
+            </div>
+            <div className="gx-story-side">
+              <Rise step={1}><p>We turn the file your operation depends on into one clean, secure workspace—where people capture, approve, resolve and report without version hunting.</p></Rise>
+              <Rise step={2} className="gx-hero-actions">
+                <Link href="/contact?interest=get-off-excel" className="k-btn k-btn--solid">Book a free scoping call</Link>
+                <Link href="#scope" className="k-btn k-btn--ghost">See the fixed scope</Link>
               </Rise>
-            ))}
+            </div>
           </div>
-          <Rise className="mt-12">
-            <p className="k-lead k-measure">
-              None of this is a discipline problem. It is a tooling problem — you
-              are using a calculator as a database, and it has held on longer than
-              it was ever designed to.
-            </p>
+          <Rise step={2} className="gx-hero-facts">
+            <span><b>{PRICE}</b><small>ex VAT · fixed</small></span>
+            <span><b>{TIMEBOXED}</b><small>to go-live</small></span>
+            <span><b>One</b><small>live source of truth</small></span>
+            <span><b>Yours</b><small>code and data</small></span>
           </Rise>
         </div>
       </section>
 
-      {/* ═══ PRICE ═══ */}
-      <section className="k-band">
-        <div className="k-shell grid gap-12 lg:grid-cols-[minmax(0,1fr)_400px] lg:items-center">
-          <div>
-            <Rise>
-              <p className="k-mono k-mono--ember">02 — The whole price</p>
-            </Rise>
-            <Rise step={1}>
-              <p className="k-num mt-6 text-[clamp(48px,7vw,92px)] leading-none">{PRICE}</p>
-            </Rise>
-            <Rise step={2}>
-              <p className="k-mono mt-4">ex VAT · {TIMEBOXED} · one spreadsheet · no surprises</p>
-            </Rise>
-            <Rise step={3}>
-              <p className="k-lead k-measure mt-6">
-                Not an estimate, not a starting point, and not billed by the hour.
-                It is what the work costs, agreed before we begin. If we
-                under-estimated the build, that is ours to carry.
-              </p>
-            </Rise>
+      <section id="spreadsheet-problems" className="gx-friction">
+        <div className="k-shell gx-friction-layout">
+          <div className="gx-friction-copy">
+            <Rise><p className="k-mono">01 · THE BREAKING POINT</p></Rise>
+            <Rise step={1}><h2>You do not need another spreadsheet. You need the process it was trying to become.</h2></Rise>
+            <Rise step={2}><p>The clues are already in the file: the dropdowns are rules, the colour coding is status, the email chain is approval and the hidden formula is business logic. We make those things explicit, reliable and usable by everyone.</p></Rise>
           </div>
-          <Rise step={1}>
-            <Panel label="Terms" meta="Fixed">
-              <QueueRows
-                rows={[
-                  { label: "On signature", value: "50%" },
-                  { label: "On go-live", value: "50%" },
-                  { label: "Scope changes", value: `${RATES.dayRate}/day`, tone: "warn" },
-                  { label: "Applied retrospectively", value: "Never", tone: "good" },
-                ]}
-              />
-              <div className="k-hairline mt-4 pt-3">
-                <p className="k-mono">
-                  No site visit needed. Send us the spreadsheet and a call is
-                  enough to scope this. If it is bigger than the box we say so
-                  then, and that conversation costs nothing.
-                </p>
-              </div>
-            </Panel>
-          </Rise>
-        </div>
-      </section>
-
-      {/* ═══ SCOPE ═══ */}
-      <section id="scope" className="k-band k-band--2 scroll-mt-20">
-        <div className="k-shell">
-          <Rise>
-            <p className="k-mono k-mono--ember">03 — The scope box</p>
-          </Rise>
-          <Rise step={1}>
-            <h2 className="k-title mt-6 max-w-[26ch]">
-              Exactly what the price buys — and what it does not.
-            </h2>
-          </Rise>
-          <Rise step={2}>
-            <p className="k-lead k-measure mt-5">
-              Both lists are published in the same size type, because the second one
-              is the reason the first can be a fixed price.
-            </p>
-          </Rise>
-
-          <div className="mt-12 grid gap-5 lg:grid-cols-2">
-            <Rise>
-              <Panel label={`Included in ${PRICE}`} meta="12 items">
-                <ul className="flex flex-col gap-2.5">
-                  {included.map((item) => (
-                    <li key={item} className="flex gap-2.5 text-[13px] leading-[1.5]">
-                      <span style={{ color: "var(--signal)" }}>—</span>
-                      <span style={{ color: "var(--warm-70)" }}>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </Panel>
+          <div className="gx-friction-stack">
+            <Rise className="gx-friction-photo">
+              <Photo src="/imagery/get-off-excel/process-detail-v1.webp" sizes="(min-width: 1024px) 48vw, 100vw" position="center" />
+              <div><span>THE HIDDEN SYSTEM</span><p>The file already contains the first draft of the workflow. We make its rules, routes and ownership explicit.</p></div>
             </Rise>
-            <Rise step={1}>
-              <Panel label="Not included — quoted separately" meta="8 items">
-                <ul className="flex flex-col gap-2.5">
-                  {excluded.map((item) => (
-                    <li key={item} className="flex gap-2.5 text-[13px] leading-[1.5]">
-                      <span style={{ color: "var(--warm-25)" }}>—</span>
-                      <span style={{ color: "var(--warm-45)" }}>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-                <div className="k-hairline mt-4 pt-3">
-                  <p className="k-mono">
-                    Real work we do — it just changes the shape and the risk, so it
-                    gets its own scope and its own price.
-                  </p>
-                </div>
-              </Panel>
-            </Rise>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ AFTER ═══ */}
-      <section className="k-band">
-        <div className="k-shell grid gap-12 lg:grid-cols-[minmax(0,1fr)_400px] lg:items-center">
-          <div>
-            <Rise>
-              <p className="k-mono k-mono--ember">04 — After go-live</p>
-            </Rise>
-            <Rise step={1}>
-              <h2 className="k-title mt-6 max-w-[22ch]">
-                What actually changes on the Monday.
-              </h2>
-            </Rise>
-            <Rise step={2}>
-              <div className="mt-8 flex flex-wrap gap-2">
-                <Pill tone="good">Everyone works at once</Pill>
-                <Pill tone="good">Every change attributable</Pill>
-                <Pill>Reports come out on their own</Pill>
-                <Pill tone="warn">It survives people leaving</Pill>
-              </div>
-            </Rise>
-          </div>
-          <Rise step={1}>
-            <Panel label="Capture log" meta="After">
-              <Readout value="99.4%" unit="first-time-right" tone="good" />
-              <div className="k-hairline mt-4 pt-3">
-                <EventFeed
-                  lines={[
-                    { time: "07:12", text: "Record captured on site", tone: "good" },
-                    { time: "07:12", text: "Validated · within range", tone: "good" },
-                    { time: "07:14", text: "Out-of-range entry rejected", tone: "warn" },
-                    { time: "07:14", text: "Re-entered · accepted", tone: "good" },
-                    { time: "07:15", text: "Audit trail written" },
-                  ]}
-                />
-              </div>
-            </Panel>
-          </Rise>
-        </div>
-      </section>
-
-      {/* ═══ FAQ ═══ */}
-      <section className="k-band k-band--2">
-        <div className="k-shell max-w-4xl">
-          <Rise>
-            <p className="k-mono k-mono--ember">05 — Before you sign anything</p>
-          </Rise>
-          <div className="mt-12">
-            {faqs.map((faq, i) => (
-              <Rise key={faq.q}>
-                <div className="k-row" style={i === 0 ? { borderTop: "1px solid var(--hair-2)" } : undefined}>
-                  <h3 className="k-sub text-[17px]">{faq.q}</h3>
-                  <p className="k-sm mt-2.5">{faq.a}</p>
-                </div>
+            {symptoms.map((symptom, index) => (
+              <Rise key={symptom.code} step={(index % 3) as 0 | 1 | 2}>
+                <article><span>{symptom.code}</span><div><h3>{symptom.title}</h3><p>{symptom.detail}</p></div><i>{String(index + 1).padStart(2, "0")}</i></article>
               </Rise>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ═══ CLOSE ═══ */}
-      <section className="k-band">
-        <div className="k-shell grid gap-12 lg:grid-cols-[1fr_auto] lg:items-end">
-          <div>
-            <Rise>
-              <p className="k-mono">Start</p>
-            </Rise>
-            <Rise step={1}>
-              <h2 className="k-title mt-6 max-w-[24ch]">
-                Send us the spreadsheet. We will tell you what it takes.
-              </h2>
-            </Rise>
-            <Rise step={2}>
-              <p className="k-lead k-measure mt-5">
-                A scoping call costs nothing and takes about thirty minutes. You will
-                leave it knowing whether {PRICE} covers your process — or what would.
-              </p>
-            </Rise>
+      <section id="system" className="gx-workspace-band">
+        <div className="k-shell">
+          <div className="gx-section-head">
+            <Rise><p className="k-mono k-mono--ember">02 · THE WORKING SYSTEM</p></Rise>
+            <Rise step={1}><h2>Not a prettier table. A place where the work can move.</h2></Rise>
+            <Rise step={2}><p>Every screen exists because somebody has a job to do: capture a clean record, route an exception, make a decision or prove what happened.</p></Rise>
           </div>
-          <Rise step={3} className="flex flex-col gap-3">
-            <Link href="/contact" className="k-btn k-btn--solid">Book a free scoping call</Link>
-            <Link href="/pricing" className="k-btn k-btn--ghost">See the full price list</Link>
+          <Rise step={2}><ExcelWorkflowScenes /></Rise>
+        </div>
+      </section>
+
+      <section id="audit-trail" className="gx-history-band">
+        <div className="k-shell">
+          <div className="gx-history-head">
+            <div><Rise><p className="k-mono">03 · THE RECORD REMEMBERS</p></Rise><Rise step={1}><h2>Every edit becomes evidence.</h2></Rise></div>
+            <Rise step={2}><p>Instead of reconstructing the story from filenames and messages, the system keeps the decision, owner, previous value and time together.</p></Rise>
+          </div>
+          <Rise step={2}><ExcelAuditScene /></Rise>
+        </div>
+      </section>
+
+      <section id="pricing" className="gx-commercial">
+        <div className="k-shell gx-commercial-layout">
+          <div className="gx-price-lockup">
+            <Rise><p className="k-mono k-mono--ember">04 · ONE DEFINED BUILD</p></Rise>
+            <Rise step={1}><strong>{PRICE}</strong></Rise>
+            <Rise step={2}><span>ex VAT · {TIMEBOXED} · one spreadsheet</span></Rise>
+            <Rise step={3}><p>Not an estimate and not billed by the hour. We agree the scope in week one. If we under-estimate the build, that is ours to carry.</p></Rise>
+          </div>
+          <Rise step={2} className="gx-terms-card">
+            <header><span>Commercial terms</span><small>FIXED</small></header>
+            <dl><div><dt>On signature</dt><dd>50%</dd></div><div><dt>On go-live</dt><dd>50%</dd></div><div><dt>Scope additions</dt><dd>{RATES.dayRate}/day</dd></div><div><dt>Surprise invoices</dt><dd>Never</dd></div></dl>
+            <p>Send the spreadsheet and a call is enough to scope it. If the workflow is bigger than this product, we say so before you pay anything.</p>
           </Rise>
         </div>
       </section>
-    </>
+
+      <section id="scope" className="gx-scope">
+        <div className="k-shell">
+          <div className="gx-section-head gx-section-head--scope">
+            <Rise><p className="k-mono">05 · THE SCOPE BOX</p></Rise>
+            <Rise step={1}><h2>Exactly what the price buys. Exactly where the box ends.</h2></Rise>
+          </div>
+          <div className="gx-scope-grid">
+            <Rise className="gx-scope-list" step={1}>
+              <header><span>Included in {PRICE}</span><small>{included.length} DELIVERABLES</small></header>
+              <ol>{included.map((item, index) => <li key={item}><i>✓</i><span>{item}</span><b>{String(index + 1).padStart(2, "0")}</b></li>)}</ol>
+            </Rise>
+            <Rise className="gx-scope-list gx-scope-list--muted" step={2}>
+              <header><span>Quoted separately</span><small>CHANGES THE SHAPE</small></header>
+              <ol>{excluded.map((item, index) => <li key={item}><i>—</i><span>{item}</span><b>{String(index + 1).padStart(2, "0")}</b></li>)}</ol>
+              <p>Real work we do—it simply gets its own scope and price because it changes the delivery risk.</p>
+            </Rise>
+          </div>
+        </div>
+      </section>
+
+      <section className="gx-faq">
+        <div className="k-shell gx-faq-layout">
+          <div><Rise><p className="k-mono k-mono--ember">06 · BEFORE YOU SIGN</p></Rise><Rise step={1}><h2>The questions that should be answered before a build begins.</h2></Rise></div>
+          <div className="gx-faq-list">
+            {faqs.map((faq, index) => <Rise key={faq.q} step={(index % 3) as 0 | 1 | 2}><details open={index === 0}><summary><span>{faq.q}</span><i>＋</i></summary><p>{faq.a}</p></details></Rise>)}
+          </div>
+        </div>
+      </section>
+
+      <section className="gx-close">
+        <div className="gx-close-grid" aria-hidden />
+        <div className="k-shell gx-close-inner">
+          <Rise><p className="k-mono">START WITH THE FILE</p></Rise>
+          <Rise step={1}><h2>Send us the spreadsheet. We will show you the system hiding inside it.</h2></Rise>
+          <Rise step={2}><p>A scoping call costs nothing and takes about thirty minutes. You will leave knowing whether {PRICE} covers the process—or what would.</p></Rise>
+          <Rise step={3} className="gx-close-actions"><Link href="/contact?interest=get-off-excel" className="k-btn k-btn--solid">Book a free scoping call</Link><Link href="/pricing" className="k-btn k-btn--ghost">See all pricing</Link></Rise>
+        </div>
+      </section>
+    </div>
   );
 }

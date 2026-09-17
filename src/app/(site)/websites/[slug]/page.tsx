@@ -5,9 +5,42 @@ import Rise from "@/components/cinema/Rise";
 import BuildReel from "@/components/cinema/BuildReel";
 import ClientStrip from "@/components/cinema/ClientStrip";
 import { WEB_TIERS, tierBySlug } from "@/lib/websites";
+import { completePageMetadata } from "@/lib/siteMetadata";
 import { RATES, TERMS } from "@/lib/pricing";
 import TierIcon from "@/components/cinema/TierIcon";
 import Crossover from "@/components/cinema/Crossover";
+import LaunchWebsiteAnatomy from "@/components/cinema/LaunchWebsiteAnatomy";
+import BusinessWebsiteAnatomy from "@/components/cinema/BusinessWebsiteAnatomy";
+import CommerceWebsiteAnatomy from "@/components/cinema/CommerceWebsiteAnatomy";
+import BespokeWebsiteAnatomy from "@/components/cinema/BespokeWebsiteAnatomy";
+import WebsiteTierSwitcher from "@/components/cinema/WebsiteTierSwitcher";
+
+const anatomyCopy = {
+  launch: {
+    title: "One page. Every section earns its place.",
+    lead: "A Launch site is not a shortened version of a larger website. It is one deliberately ordered journey—from understanding the business to making contact.",
+    fact: "One page",
+    factLabel: "complete journey",
+  },
+  business: {
+    title: "A place for every question.",
+    lead: "A Business site gives buyers room to investigate without losing the thread. Services, people, proof and contact each have a proper home—and every page leads somewhere useful.",
+    fact: "Up to 8",
+    factLabel: "connected pages",
+  },
+  commerce: {
+    title: "The sale is only the beginning.",
+    lead: "A Commerce site has to carry a customer from discovery to payment, then turn that payment into an order your team can fulfil. The visible shop and the operational machinery are one build.",
+    fact: "One journey",
+    factLabel: "click to fulfilment",
+  },
+  bespoke: {
+    title: "The front door to working software.",
+    lead: "A Bespoke site connects the public experience to secure roles, real workflows, existing systems and a reliable record. This is where a website becomes part of how the business operates.",
+    fact: "Custom",
+    factLabel: "to the workflow",
+  },
+} as const;
 
 /**
  * One page per website tier.
@@ -34,11 +67,13 @@ export async function generateMetadata({
   const { slug } = await params;
   const tier = tierBySlug(slug);
   if (!tier) return {};
-  return {
-    title: `${tier.name} Websites — ${tier.price}`,
-    description: `${tier.line} ${tier.price} ex VAT, live in ${tier.time}. Built by the 2KO Group. Prices published, no discovery call needed.`,
+  const title = `${tier.name} Websites — ${tier.price}`;
+  const description = `${tier.line} ${tier.price} ex VAT, live in ${tier.time}. Built by 2KO. Prices published, no discovery call needed.`;
+  return completePageMetadata({
+    title,
+    description,
     alternates: { canonical: `/websites/${tier.slug}` },
-  };
+  });
 }
 
 export default async function TierPage({
@@ -51,6 +86,7 @@ export default async function TierPage({
   if (!tier) notFound();
 
   const others = WEB_TIERS.filter((t) => t.slug !== tier.slug);
+  const anatomy = anatomyCopy[tier.slug as keyof typeof anatomyCopy];
 
   return (
     <>
@@ -67,6 +103,9 @@ export default async function TierPage({
             </p>
           </Rise>
           <Rise step={1}>
+            <WebsiteTierSwitcher activeSlug={tier.slug} />
+          </Rise>
+          <Rise step={1}>
             <TierIcon slug={tier.slug} className="k-tier-icon--hero" />
             <h1 className="k-web-h1">{tier.line}</h1>
           </Rise>
@@ -75,11 +114,11 @@ export default async function TierPage({
           </Rise>
           <Rise step={3}>
             <div className="k-web-cta">
-              <Link href="/contact" className="k-btn k-btn--solid">
+              <Link href="/contact?interest=website-project" className="k-btn k-btn--solid">
                 Start a {tier.name} project
               </Link>
-              <Link href="#examples" className="k-btn k-btn--ghost">
-                See the work
+              <Link href="#anatomy" className="k-btn k-btn--ghost">
+                See what is included
               </Link>
             </div>
           </Rise>
@@ -96,10 +135,7 @@ export default async function TierPage({
                 <strong>{tier.time}</strong>
                 <span>to live</span>
               </div>
-              <div>
-                <strong>{tier.examples.length}</strong>
-                <span>examples below</span>
-              </div>
+              <div><strong>{anatomy.fact}</strong><span>{anatomy.factLabel}</span></div>
               <div>
                 <strong>Fixed</strong>
                 <span>against week-one scope</span>
@@ -111,46 +147,23 @@ export default async function TierPage({
 
       <ClientStrip />
 
-      {/* ------------------------------------------------------- examples */}
-      <section id="examples" className="k-band">
+      {/* ------------------------------------------------------- structure */}
+      <section id="anatomy" className={`k-band lwa-section lwa-section--${tier.slug}`}>
         <div className="k-shell">
           <Rise>
-            <p className="k-mono">01 — THE WORK</p>
-            <h2 className="k-title k-web-h2">Built, live, and clickable.</h2>
-            <p className="k-lead k-measure">
-              Every one of these is running right now. Open them, poke at them on your phone, and
-              judge for yourself — that is worth more than anything we could write here.
-            </p>
+            <p className="k-mono">01 — THE SITE, UNFOLDED</p>
+            <h2 className="k-title k-web-h2">{anatomy.title}</h2>
+            <p className="k-lead k-measure">{anatomy.lead}</p>
           </Rise>
-          <div className="k-work-grid">
-            {tier.examples.map((e, i) => (
-              <Rise key={e.url} step={((i % 2) + 1) as 1 | 2}>
-                <a className="k-work" href={e.url} target="_blank" rel="noopener noreferrer">
-                  <span className="k-work-shot">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={`/work/${e.shot}.webp`}
-                      alt={`The ${e.name} website`}
-                      width={760}
-                      height={475}
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </span>
-                  <span className="k-work-body">
-                    <h3 className="k-sub">{e.name}</h3>
-                    <p className="k-sm">{e.line}</p>
-                    <span className="k-work-domain">{e.domain} ↗</span>
-                  </span>
-                </a>
-              </Rise>
-            ))}
-          </div>
+          {tier.slug === "launch" && <LaunchWebsiteAnatomy examples={tier.examples} />}
+          {tier.slug === "business" && <BusinessWebsiteAnatomy examples={tier.examples} />}
+          {tier.slug === "commerce" && <CommerceWebsiteAnatomy examples={tier.examples} />}
+          {tier.slug === "bespoke" && <BespokeWebsiteAnatomy examples={tier.examples} />}
         </div>
       </section>
 
       {/* -------------------------------------------------------- what's in */}
-      <section className="k-band k-band--panel">
+      <section id="included" className="k-band k-band--panel">
         <div className="k-shell">
           <Rise>
             <p className="k-mono">02 — WHAT {tier.name.toUpperCase()} INCLUDES</p>
@@ -218,11 +231,11 @@ export default async function TierPage({
             </h2>
             <p className="k-lead k-measure">
               Send us the address of your current site, or tell us what you need. We will tell you
-              which of the four this actually is — including when it is a cheaper one than you asked
-              about.
+              which of the four this actually is — including when the right answer is a
+              smaller-scope one than you asked about.
             </p>
             <div className="k-web-cta">
-              <Link href="/contact" className="k-btn k-btn--solid">
+              <Link href="/contact?interest=website-project" className="k-btn k-btn--solid">
                 Start a project
               </Link>
               <Link href="/websites" className="k-btn k-btn--ghost">

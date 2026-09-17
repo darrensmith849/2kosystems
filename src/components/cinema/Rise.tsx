@@ -18,11 +18,17 @@ export default function Rise({
   className?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const [shown, setShown] = useState(false);
+  // Server-rendered content starts visible. After hydration we only arm the
+  // reveal for elements that are still below the first viewport, preventing a
+  // slow device or paid landing-page visit from seeing an empty hero.
+  const [shown, setShown] = useState(true);
 
   useEffect(() => {
     const node = ref.current;
     if (!node) return;
+    if (node.getBoundingClientRect().top <= window.innerHeight * 0.92) return;
+
+    const frame = window.requestAnimationFrame(() => setShown(false));
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry.isIntersecting) return;
@@ -32,7 +38,10 @@ export default function Rise({
       { rootMargin: "0px 0px -8% 0px" },
     );
     observer.observe(node);
-    return () => observer.disconnect();
+    return () => {
+      window.cancelAnimationFrame(frame);
+      observer.disconnect();
+    };
   }, []);
 
   const base = variant === "settle" ? "k-settle" : "k-rise";

@@ -49,7 +49,7 @@ const SHARED_FAQS = (price: string, timebox: string): Product["faqs"] => [
   },
   {
     q: "What happens after go-live?",
-    a: `${TERMS.postLaunchSupportDays} days of support are included for fixes and questions. After that the system is built to run without us. Most clients take a Managed Retainer from ${RATES.retainerCare} a month for hosting, monitoring and backups, but it is optional.`,
+    a: `${TERMS.postLaunchSupportDays} days of support are included for fixes and questions. After that the system is built to run without us. System Care starts from ${RATES.retainerCare} a month and adds proactive monitoring, priority support, monthly health reviews and one planned day for maintenance or minor improvement each month. If you want us to operate a larger roadmap and keep actively developing the system, a Managed Systems Partnership starts from ${RATES.managedSystems} a month. Both are optional.`,
   },
   {
     q: `How do we know ${price} covers our version of this?`,

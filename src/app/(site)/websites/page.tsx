@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { completePageMetadata } from "@/lib/siteMetadata";
 import Link from "next/link";
 import Rise from "@/components/cinema/Rise";
 import BuildReel from "@/components/cinema/BuildReel";
@@ -28,11 +29,11 @@ import TierIcon from "@/components/cinema/TierIcon";
 const COMPANIES = "1,000+";
 const SINCE = 1998;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = completePageMetadata({
   title: "Websites — Built by 2KO. Priced Up Front.",
   description: `Business websites from ${RATES.siteLaunch}, live in ${TIMEBOX.siteLaunch}. Designed and built by the group that has delivered for ${COMPANIES} South African companies. Prices published, no discovery call needed.`,
   alternates: { canonical: "/websites" },
-};
+});
 
 const TIERS = WEB_TIERS;
 
@@ -140,7 +141,7 @@ export default function WebsitesPage() {
               <Link href="#pricing" className="k-btn k-btn--solid">
                 See the prices
               </Link>
-              <Link href="/contact" className="k-btn k-btn--ghost">
+              <Link href="/contact?interest=website-project" className="k-btn k-btn--ghost">
                 Send us your current site
               </Link>
             </div>
@@ -302,7 +303,7 @@ export default function WebsitesPage() {
               is &ldquo;less than you think&rdquo;. No call required to get that.
             </p>
             <div className="k-web-cta">
-              <Link href="/contact" className="k-btn k-btn--solid">
+              <Link href="/contact?interest=website-project" className="k-btn k-btn--solid">
                 Start a project
               </Link>
               <Link href="/quote" className="k-btn k-btn--ghost">

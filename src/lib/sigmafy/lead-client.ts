@@ -9,6 +9,7 @@
 export type SigmafyLeadPayload = {
   source: string;
   sourcePage?: string | null;
+  externalReference?: string | null;
   name: string;
   email: string;
   phone?: string | null;
@@ -22,6 +23,15 @@ export type SigmafyLeadPayload = {
     | "audit-request"
     | "general";
   message: string;
+  routeKey?: string | null;
+  routeCode?: string | null;
+  routeLabel?: string | null;
+  routeOwner?: string | null;
+  routingConfidence?: "explicit" | "provisional" | null;
+  nextAction?: string | null;
+  routingSignals?: string[] | null;
+  humanReviewRequired?: boolean | null;
+  nextFollowUpAt?: string | null;
   utm?: Record<string, string> | null;
   userAgent?: string | null;
   receivedAt: string;

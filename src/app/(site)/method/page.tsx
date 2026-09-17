@@ -1,26 +1,30 @@
 import type { Metadata } from "next";
+import { completePageMetadata } from "@/lib/siteMetadata";
 import PageHero from "@/components/cinema/PageHero";
 import PhaseReel from "@/components/cinema/PhaseReel";
 import PhaseArtefact from "@/components/cinema/PhaseArtefact";
 import Link from "next/link";
 import Rise from "@/components/cinema/Rise";
+import Photo from "@/components/cinema/Photo";
+import TrackedLink from "@/components/cinema/TrackedLink";
 import { Panel, Readout, QueueRows, Pill, EventFeed, Sparkline } from "@/components/cinema/instruments";
 import { RATES, TERMS, TIMEBOX } from "@/lib/pricing";
 
-export const metadata: Metadata = {
-  title: "How We Work — DMAIC, Fixed Price at Every Phase",
+export const metadata: Metadata = completePageMetadata({
+  title: "How Process Improvement Becomes Operational Control",
   description:
-    "Define, Measure, Analyse, Improve, Control. Five phases, each a fixed price against a written scope. Stop after any of them.",
+    "Diagnose, measure, improve, train, automate, systemise and sustain. One improvement lifecycle with fixed decision gates.",
   alternates: { canonical: "/method" },
-};
+});
 
 const phases = [
   {
     letter: "D",
     artefact: "memo" as const,
-    phase: "Define",
+    phase: "Diagnose",
     engagement: "Half-Day Process Review",
     price: RATES.review,
+    terms: "ex VAT · fixed",
     time: TIMEBOX.review,
     body: "Half a day on site with the people who actually do the work. We walk the process end to end, note the current control method, and write three or four pages naming what is broken and whether it is worth building anything at all.",
     outputs: [
@@ -34,8 +38,9 @@ const phases = [
     letter: "M",
     artefact: "findings" as const,
     phase: "Measure",
-    engagement: "Systems Opportunity Audit",
+    engagement: "Process & Automation Opportunity Audit",
     price: RATES.audit,
+    terms: "ex VAT · fixed",
     time: TIMEBOX.audit,
     body: "A day of fieldwork across at least two levels of the operation — someone who does the work and someone who owns the outcome. Then eight to fourteen pages: three findings, each costed with the arithmetic shown, marked Observed or Reported, never blurred.",
     outputs: [
@@ -48,24 +53,26 @@ const phases = [
   {
     letter: "A/I",
     artefact: "pilot" as const,
-    phase: "Analyse & Improve",
-    engagement: "Proof-of-Value Pilot",
-    price: `from ${RATES.pilotFrom}`,
-    time: TIMEBOX.pilot,
-    body: "One workflow, built properly, against success criteria agreed in writing before anyone starts. Working software you can use from week two, weekly demos, and nothing thrown away — the pilot is the first phase of the build, not a prototype.",
+    phase: "Improve & Train",
+    engagement: "Applied Improvement Programme",
+    price: "Programme scope",
+    terms: "defined before delivery",
+    time: "bounded cohort / cycle",
+    body: "The future-state process is designed around the measured constraint. Where capability is part of the answer, training and coaching connect directly to a live improvement project—not a classroom exercise detached from the operation.",
     outputs: [
-      "Success criteria agreed before work starts",
-      "Weekly demos against real data",
-      "Source and documentation from day one",
-      "Rolls forward into the Core Build",
+      "Future-state process and benefit target agreed",
+      "Applied Six Sigma pathway where capability is required",
+      "Live project coaching and sponsor reviews",
+      "Control plan ready for automation or adoption",
     ],
   },
   {
     letter: "C",
     artefact: "phases" as const,
-    phase: "Control",
-    engagement: "Core System Build",
-    price: `${RATES.buildFrom} – ${RATES.buildTo}`,
+    phase: "Automate & Systemise",
+    engagement: "Workflow Pilot / System Build",
+    price: `from ${RATES.pilotFrom}`,
+    terms: "ex VAT · fixed by phase",
     time: TIMEBOX.buildPhase,
     body: "The control plan becomes the system. Delivered in phases, each quoted as a fixed price only once the previous one has shipped — so you are never asked to commit to a number for work that nobody can scope yet.",
     outputs: [
@@ -78,16 +85,17 @@ const phases = [
   {
     letter: "S",
     artefact: "service" as const,
-    phase: "Sustain",
-    engagement: "Managed Retainer",
-    price: `from ${RATES.retainerCare}/mo`,
-    time: `${TERMS.retainerMinMonths}-month minimum`,
-    body: "Hosting, monitoring, automated backups, security patching and an SLA, with development time included on the upper tiers. Optional, and never a condition of anything we build — the system is designed to be operated without us.",
+    phase: "Measure & Sustain",
+    engagement: "Integrated Improvement Partnership",
+    price: "Annual agreement",
+    terms: "scope and capacity defined",
+    time: "12-month cadence",
+    body: "The workstream stays on a recurring measurement and improvement rhythm. Senior process support, applied training, automation capacity and Sigmafy access can be combined around the operating result and adjusted as the constraint moves.",
     outputs: [
-      "Three tiers, published",
-      `Annual prepay takes ${TERMS.annualPrepayDiscount} off`,
-      `Escalation fixed at ${TERMS.escalation}`,
-      "Cancel to month-to-month after the minimum",
+      "Scorecard, benefits register and operating reviews",
+      "Training credits tied to the capability plan",
+      "Bounded automation and systems capacity",
+      "Sigmafy allowance and evidence protocol",
     ],
   },
 ];
@@ -97,12 +105,12 @@ export default function MethodPage() {
     <>
       <PageHero
         eyebrow="METHOD"
-        title="Five phases. Stop after any of them."
-        titleClass="max-w-[16ch]"
-        lead="You do not have to learn our process, because it is the one your team already works in. Define, Measure, Analyse, Improve, Control — with the Control phase written in code instead of onto a form that somebody has to remember to fill in."
+        title="One improvement loop. Clear decisions at every stage."
+        titleClass="max-w-[18ch]"
+        lead="We diagnose and measure before choosing an intervention. Process redesign, training, automation and operational systems then work together only where the evidence requires them. Every delivery phase has a written scope and a stop decision."
         ctas={[
-          { href: "/contact", label: "Start with a review" },
-          { href: "/pricing", label: "What each phase costs", ghost: true },
+          { href: "/process-review", label: "Start with a review", offer: "process review" },
+          { href: "/audit", label: "Quantify the opportunity", ghost: true, offer: "opportunity audit" },
         ]}
       >
         <div className="mt-12 flex flex-wrap gap-2.5">
@@ -114,9 +122,31 @@ export default function MethodPage() {
         <PhaseReel />
       </PageHero>
 
+      <section className="relative isolate flex min-h-[92svh] items-end overflow-hidden">
+        <Rise variant="settle" className="absolute inset-0 -z-20">
+          <Photo src="/imagery/method/lifecycle-v1.webp" priority sizes="100vw" scrim="bottom" position="center" />
+        </Rise>
+        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-black/65 via-black/15 to-black/55" aria-hidden="true" />
+        <div className="k-shell pb-20 pt-40">
+          <Rise><p className="k-mono k-mono--ember">The client improvement lifecycle</p></Rise>
+          <Rise step={1}><h2 className="k-state mt-8 max-w-[16ch]">The intervention changes. The measurement loop does not.</h2></Rise>
+          <Rise step={2}><p className="k-lead mt-8 max-w-[50ch]">Automate where the rules repeat. Train where judgement matters. Measure both.</p></Rise>
+          <ol className="mt-14 grid overflow-hidden rounded-2xl border border-white/10 bg-black/72 backdrop-blur-xl sm:grid-cols-2 lg:grid-cols-7">
+            {["Diagnose", "Measure", "Improve", "Train", "Automate", "Systemise", "Sustain"].map((stage, index) => (
+              <li key={stage} className="relative min-h-[126px] border-b border-r border-white/10 p-5 lg:border-b-0">
+                <span className="absolute left-0 top-0 h-[2px] bg-gradient-to-r from-[var(--ember)] to-transparent" style={{ width: `${38 + index * 8}%` }} />
+                <span className="k-mono k-mono--ember">0{index + 1}</span>
+                <h3 className="k-sub mt-8">{stage}</h3>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
       {/* ═══ TWO WAYS IN ═══ */}
-      <section className="k-band k-band--2">
-        <div className="k-shell">
+      <section className="k-band k-band--2 relative overflow-hidden">
+        <div className="pointer-events-none absolute -right-12 top-1/2 -translate-y-1/2 text-[clamp(120px,24vw,360px)] font-semibold leading-none tracking-[-.09em] text-white/[.018]" aria-hidden="true">CHOOSE</div>
+        <div className="k-shell relative">
           <Rise>
             <p className="k-mono k-mono--ember">Two ways in</p>
           </Rise>
@@ -127,17 +157,18 @@ export default function MethodPage() {
           </Rise>
           <Rise step={2}>
             <p className="k-lead k-measure mt-5">
-              The five phases are how a full engagement runs. Most people do not
-              need all of them, and some do not need the first one at all.
+              The lifecycle explains how improvement holds. The five delivery
+              phases below explain what you can commission, price and stop.
             </p>
           </Rise>
 
-          <div className="mt-12 grid gap-5 lg:grid-cols-2">
+          <div className="mt-14 grid gap-12 lg:grid-cols-2 lg:gap-20">
             <Rise>
-              <div className="k-card h-full">
+              <article className="border-t border-[var(--signal)] pt-8">
                 <p className="k-mono k-mono--ember">If you already know what is broken</p>
-                <h3 className="k-sub mt-4">Straight to a fixed price. No site visit.</h3>
-                <p className="k-sm mt-3">
+                <p className="mt-6 text-[clamp(52px,8vw,104px)] font-medium leading-none tracking-[-.065em] text-white/10">KNOWN</p>
+                <h3 className="k-title mt-5">Straight to a fixed price. No site visit.</h3>
+                <p className="k-sm mt-5 max-w-[52ch]">
                   A spreadsheet that has outgrown itself, job cards coming back
                   late, a contractor register nobody trusts — the problem is
                   already visible in the artifact. Send it to us on a call and we
@@ -158,14 +189,15 @@ export default function MethodPage() {
                 <Link href="/systems" className="k-link mt-5 inline-flex">
                   See the fixed-price systems →
                 </Link>
-              </div>
+              </article>
             </Rise>
 
             <Rise step={1}>
-              <div className="k-card h-full">
+              <article className="border-t border-[var(--ember)] pt-8">
                 <p className="k-mono k-mono--ember">If something is wrong and you cannot name it</p>
-                <h3 className="k-sub mt-4">Start on site. That is what the review is for.</h3>
-                <p className="k-sm mt-3">
+                <p className="mt-6 text-[clamp(52px,8vw,104px)] font-medium leading-none tracking-[-.065em] text-white/10">UNCLEAR</p>
+                <h3 className="k-title mt-5">Start on site. That is what the review is for.</h3>
+                <p className="k-sm mt-5 max-w-[52ch]">
                   When the problem lives in how work actually moves — a control
                   that may or may not still be happening, a handover that fails
                   quietly — no questionnaire will find it. Somebody has to watch
@@ -186,9 +218,18 @@ export default function MethodPage() {
                 <Link href="/quote" className="k-link mt-5 inline-flex">
                   Not sure which? Build a scope →
                 </Link>
-              </div>
+              </article>
             </Rise>
           </div>
+        </div>
+      </section>
+
+      <section className="mt-method-plate">
+        <Rise variant="settle" className="mt-method-media"><Photo src="/imagery/method/process-map-v1.webp" sizes="100vw" position="center" /></Rise>
+        <div className="k-shell mt-method-copy">
+          <Rise><p className="k-mono k-mono--ember">FROM OBSERVATION TO CONTROL</p></Rise>
+          <Rise step={1}><h2>Make the route visible. Move the constraint. Test the new path.</h2></Rise>
+          <Rise step={2}><p className="mt-method-lead">Each phase changes the operating record. That visible change is what earns the decision to continue.</p></Rise>
         </div>
       </section>
 
@@ -214,7 +255,7 @@ export default function MethodPage() {
               <Rise step={2}>
                 <p className="k-phase-price">
                   <b>{phase.price}</b>
-                  <span>ex VAT · fixed</span>
+                  <span>{phase.terms}</span>
                   <span style={{ marginLeft: "auto" }}>{phase.time}</span>
                 </p>
                 <ul className="mt-5 flex flex-col gap-2">
@@ -232,6 +273,7 @@ export default function MethodPage() {
                 the thing that lands in your inbox at the end of it. */}
             <Rise step={2}>
               <PhaseArtefact kind={phase.artefact} />
+              <p className="k-mono mt-4">Illustrative delivery artefact · example records and values · not a client result</p>
             </Rise>
           </div>
         </section>
@@ -245,7 +287,7 @@ export default function MethodPage() {
           </Rise>
           <Rise step={1}>
             <h2 className="k-title mt-6 max-w-[22ch]">
-              Working software in week two. Not a slide deck in month six.
+              A visible artefact in every cycle. Not a transformation deck at the end.
             </h2>
           </Rise>
 
@@ -290,31 +332,20 @@ export default function MethodPage() {
         </div>
       </section>
 
-      <section className="k-band k-band--2">
-        <div className="k-shell grid gap-12 lg:grid-cols-[1fr_auto] lg:items-end">
+      <section className="relative isolate flex min-h-[90svh] items-end overflow-hidden">
+        <Rise variant="settle" className="absolute inset-0 -z-20">
+          <Photo src="/imagery/method/start-review-v1.webp" sizes="100vw" scrim="bottom" position="center" />
+        </Rise>
+        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-black/60 via-transparent to-black/35" aria-hidden="true" />
+        <div className="k-shell grid gap-12 pb-20 pt-44 lg:grid-cols-[1fr_auto] lg:items-end">
           <div>
-            <Rise>
-              <p className="k-mono">Start</p>
-            </Rise>
-            <Rise step={1}>
-              <h2 className="k-title mt-6 max-w-[18ch]">
-                Phase one costs {RATES.review} and half a day.
-              </h2>
-            </Rise>
-            <Rise step={2}>
-              <p className="k-lead k-measure mt-5">
-                And it comes off whatever you commission next, so proceeding makes
-                it free and stopping still leaves you with the memo.
-              </p>
-            </Rise>
+            <Rise><p className="k-mono k-mono--ember">Start</p></Rise>
+            <Rise step={1}><h2 className="k-state mt-8 max-w-[15ch]">Phase one costs {RATES.review} and half a day.</h2></Rise>
+            <Rise step={2}><p className="k-lead mt-8 max-w-[52ch]">It comes off whatever you commission next, so proceeding makes it free and stopping still leaves you with the memo.</p></Rise>
           </div>
           <Rise step={3} className="flex flex-col gap-3">
-            <Link href="/contact" className="k-btn k-btn--solid">
-              Book a process review
-            </Link>
-            <Link href="/pricing" className="k-btn k-btn--ghost">
-              Full price list
-            </Link>
+            <TrackedLink href="/contact?interest=process-review" eventOffer="process review" className="k-btn k-btn--solid">Book a process review</TrackedLink>
+            <Link href="/pricing" className="k-btn k-btn--ghost">Full price list</Link>
           </Rise>
         </div>
       </section>

@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { QUESTIONS, resolve, outcomeHeadline, type Answers } from "@/lib/quote";
 import { RATES } from "@/lib/pricing";
 import { track, attribution } from "@/lib/analytics";
+import TurnstileWidget, { verifyTurnstileToken } from "@/components/cinema/TurnstileWidget";
 
 /**
  * Structured scope builder.
@@ -21,6 +22,8 @@ export default function QuoteBuilder() {
   const [email, setEmail] = useState("");
   const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const [turnstileReset, setTurnstileReset] = useState(0);
 
   const outcome = useMemo(() => resolve(answers), [answers]);
 
@@ -43,8 +46,14 @@ export default function QuoteBuilder() {
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setState("sending");
     setError(null);
+    if (!(await verifyTurnstileToken(turnstileToken))) {
+      setError("Please complete the security check and try again.");
+      setState("error");
+      setTurnstileReset((value) => value + 1);
+      return;
+    }
+    setState("sending");
     try {
       const res = await fetch("/api/quote", {
         method: "POST",
@@ -55,6 +64,7 @@ export default function QuoteBuilder() {
       if (!res.ok || !json.ok) {
         setError(json.error ?? "Could not send that. Please try again.");
         setState("error");
+        setTurnstileReset((value) => value + 1);
         return;
       }
       track("brief");
@@ -62,6 +72,7 @@ export default function QuoteBuilder() {
     } catch {
       setError("Could not reach the server. Please try again.");
       setState("error");
+      setTurnstileReset((value) => value + 1);
     }
   }
 
@@ -242,6 +253,9 @@ export default function QuoteBuilder() {
                   placeholder="you@company.co.za"
                   className="k-field mt-4"
                 />
+                <div className="mt-4">
+                  <TurnstileWidget onToken={setTurnstileToken} resetKey={turnstileReset} />
+                </div>
                 {error && (
                   <p className="k-mono mt-2" style={{ color: "var(--alert)" }}>
                     {error}
@@ -249,7 +263,7 @@ export default function QuoteBuilder() {
                 )}
                 <button
                   type="submit"
-                  disabled={state === "sending"}
+                  disabled={state === "sending" || !turnstileToken}
                   className="k-btn k-btn--ghost mt-3 w-full disabled:opacity-60"
                 >
                   {state === "sending" ? "Sending…" : "Email me the brief"}

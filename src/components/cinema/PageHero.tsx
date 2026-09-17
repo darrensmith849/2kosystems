@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
-import Link from "next/link";
 import Rise from "@/components/cinema/Rise";
+import TrackedLink from "@/components/cinema/TrackedLink";
 
 /**
  * The house hero.
@@ -22,8 +22,8 @@ import Rise from "@/components/cinema/Rise";
  * pass figures that are true and already published elsewhere on the site.
  */
 
-type Cta = { href: string; label: string; ghost?: boolean };
-type Fact = { value: string; label: string };
+type Cta = { href: string; label: string; ghost?: boolean; offer?: string };
+type Fact = { value: string; label: string; emphasis?: boolean };
 
 export default function PageHero({
   eyebrow,
@@ -63,13 +63,14 @@ export default function PageHero({
           <Rise step={3}>
             <div className="k-web-cta">
               {ctas.map((c) => (
-                <Link
+                <TrackedLink
                   key={c.href + c.label}
                   href={c.href}
+                  eventOffer={c.offer}
                   className={`k-btn ${c.ghost ? "k-btn--ghost" : "k-btn--solid"}`}
                 >
                   {c.label}
-                </Link>
+                </TrackedLink>
               ))}
             </div>
           </Rise>
@@ -79,7 +80,7 @@ export default function PageHero({
           <Rise step={3}>
             <div className="k-web-facts">
               {facts.map((f) => (
-                <div key={f.label}>
+                <div key={f.label} data-emphasis={f.emphasis || undefined}>
                   <strong>{f.value}</strong>
                   <span>{f.label}</span>
                 </div>

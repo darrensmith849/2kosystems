@@ -1,263 +1,206 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 
-/**
- * The spreadsheet, becoming a system.
- *
- * /get-off-excel described the product in words and showed a five-stage
- * pipeline diagram — which is the same diagram every consultancy draws. The one
- * thing this page has that nothing else on the site has is that every visitor
- * already owns the artefact it is about. So show it: the merged cell, the
- * #REF!, the three date formats, the name typed into a notes column.
- *
- * Four beats — the file as it is, the read, the rebuild, the system running —
- * which is the whole four-week engagement in about fourteen seconds.
- *
- * Everything is invented. The filename is not: some version of it is on every
- * shared drive in the country.
- */
+type View = "register" | "approvals" | "reports";
 
-type Beat = {
-  n: string;
-  title: string;
-  note: string;
-  kind: "file" | "read" | "build" | "live";
-};
-
-const BEATS: Beat[] = [
-  { n: "01", title: "The file, as it is", note: "Six problems visible without scrolling", kind: "file" },
-  { n: "02", title: "Reading it", note: "Every column typed, every rule inferred", kind: "read" },
-  { n: "03", title: "Rebuilding it", note: "The rules become validation", kind: "build" },
-  { n: "04", title: "Live", note: "One set of records, three people, full history", kind: "live" },
+const rows = [
+  { id: "STK-1847", item: "Bearing 6205-2RS", site: "Store A", owner: "J. Mokoena", status: "Review", age: "4 min" },
+  { id: "STK-1846", item: "Hydraulic hose ¾\"", site: "Store B", owner: "T. Dlamini", status: "Approved", age: "18 min" },
+  { id: "STK-1845", item: "V-belt B52", site: "Store A", owner: "J. Mokoena", status: "Approved", age: "42 min" },
+  { id: "STK-1844", item: "Gasket set — CAT", site: "Store B", owner: "D. Nkosi", status: "Exception", age: "1 hr" },
 ];
 
-const DWELL = 3600;
-const SWAP = 170;
+const spreadsheetRows = [
+  ["Bearing 6205", "48", "Store A", "03/04/24"],
+  ["Bearing 6205 2RS", "12 units", "store a", "4 Mar"],
+  ["V-belt B52", "#REF!", "Store A", "45356"],
+  ["Hyd. hose 3/4", "~30", "Store B", ""],
+];
 
 export default function ExcelReel() {
-  const [index, setIndex] = useState(0);
-  const [live, setLive] = useState(true);
-  const [active, setActive] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const node = ref.current;
-    if (!node) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => setActive(entry.isIntersecting),
-      { rootMargin: "0px 0px -10% 0px" },
-    );
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    if (!active) return;
-    if (live) {
-      const id = setTimeout(() => setLive(false), DWELL);
-      return () => clearTimeout(id);
-    }
-    const id = setTimeout(() => {
-      setIndex((i) => (i + 1) % BEATS.length);
-      setLive(true);
-    }, SWAP);
-    return () => clearTimeout(id);
-  }, [active, live, index]);
-
-  const beat = BEATS[index];
-  const before = beat.kind === "file" || beat.kind === "read";
+  const [view, setView] = useState<View>("register");
 
   return (
-    <div className="k-xl" ref={ref}>
-      <div className="k-reel-frame">
-        {/* ------------------------------------------------------ title bar */}
-        <div className="k-xl-bar" data-before={before}>
-          <span className="k-reel-dots" aria-hidden>
-            <i />
-            <i />
-            <i />
-          </span>
-          <span className="k-xl-name">
-            {before ? "Stock Register Final_v3_USE_THIS_ONE.xlsx" : "Stock Register · live"}
-          </span>
-          <span className="k-xl-state">
-            {before ? "Read-only · locked by D. Nkosi" : "3 people · saving as you type"}
-          </span>
-        </div>
+    <figure id="workspace-preview" className="gx-product">
+      <div className="gx-product-bar">
+        <div className="gx-window-dots" aria-hidden><i /><i /><i /></div>
+        <span>Spreadsheet replacement · illustrative workspace</span>
+        <span className="gx-live"><i /> Live system</span>
+      </div>
 
-        {/* ---------------------------------------------------- the stage */}
-        <div className="k-xl-view" aria-hidden>
-          <div key={index} className={`k-xl-card${live ? " is-in" : ""}`}>
-            <Stage kind={beat.kind} />
+      <div className="gx-product-stage">
+        <section className="gx-source" aria-label="Spreadsheet before replacement">
+          <div className="gx-source-top">
+            <span className="gx-file-icon">X</span>
+            <span><b>Stock Register Final_v3</b><small>USE_THIS_ONE.xlsx</small></span>
+          </div>
+          <div className="gx-sheet-wrap">
+            <table className="gx-sheet">
+              <thead><tr><th /><th>Item</th><th>Qty</th><th>Location</th><th>Last count</th></tr></thead>
+              <tbody>
+                {spreadsheetRows.map((row, rowIndex) => (
+                  <tr key={rowIndex}>
+                    <th>{rowIndex + 2}</th>
+                    {row.map((cell, cellIndex) => (
+                      <td key={cellIndex} data-fault={rowIndex > 0 && (cellIndex === 0 || cellIndex === 1 || cellIndex === 3) ? "true" : undefined}>{cell || "—"}</td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="gx-source-alerts"><span>2 duplicates</span><span>3 date formats</span><span>#REF!</span></div>
+          <div className="gx-locked"><i /> Locked for editing by D. Nkosi</div>
+        </section>
+
+        <div className="gx-transfer" aria-hidden><span>Clean</span><i>→</i><span>Structure</span></div>
+
+        <section className="gx-app" aria-label="Central operations platform after replacement">
+          <aside className="gx-app-side">
+            <div className="gx-app-brand"><i>2</i><span>Northstar<br /><small>Operations</small></span></div>
+            <nav aria-label="Illustrative workspace navigation">
+              <button type="button" data-active={view === "register"} onClick={() => setView("register")}><i>R</i><span>Stock register</span></button>
+              <button type="button" data-active={view === "approvals"} onClick={() => setView("approvals")}><i>A</i><span>Approvals</span><b>3</b></button>
+              <button type="button"><i>E</i><span>Exceptions</span><b>2</b></button>
+              <button type="button" data-active={view === "reports"} onClick={() => setView("reports")}><i>↗</i><span>Reports</span></button>
+            </nav>
+            <div className="gx-app-user"><span>JM</span><small>J. Mokoena<br /><b>Operations</b></small></div>
+          </aside>
+
+          <div className="gx-app-main">
+            <header className="gx-app-head">
+              <span>Operations / Inventory</span>
+              <div><button type="button" aria-label="Search">⌕</button><span className="gx-avatars"><i>JM</i><i>DN</i><i>TD</i></span></div>
+            </header>
+            {view === "register" && <RegisterView />}
+            {view === "approvals" && <ApprovalsView />}
+            {view === "reports" && <ReportsView />}
+          </div>
+        </section>
+      </div>
+
+      <figcaption><span>One live set of records. No file lock. No version hunt.</span><span>Illustrative interface and records — not a client result.</span></figcaption>
+    </figure>
+  );
+}
+
+function RegisterView() {
+  return (
+    <div className="gx-view gx-register">
+      <div className="gx-view-title"><div><small>LIVE REGISTER</small><h3>Stock records</h3></div><button type="button"><span>＋</span> New record</button></div>
+      <div className="gx-metrics">
+        <article><small>Total records</small><strong>1,847</strong><span>Across 2 stores</span></article>
+        <article><small>Awaiting review</small><strong>03</strong><span>Oldest: 22 min</span></article>
+        <article><small>Exceptions</small><strong>02</strong><span>Owners notified</span></article>
+      </div>
+      <div className="gx-tools"><span>⌕ Search records</span><span>All sites⌄</span><span>All statuses⌄</span><i>Updated now</i></div>
+      <div className="gx-table-scroll">
+        <table className="gx-record-table">
+          <thead><tr><th>Record</th><th>Item</th><th>Site</th><th>Owner</th><th>Status</th><th>Updated</th></tr></thead>
+          <tbody>{rows.map((row) => (
+            <tr key={row.id}>
+              <td>{row.id}</td><td><b>{row.item}</b></td><td>{row.site}</td><td>{row.owner}</td>
+              <td><span data-status={row.status.toLowerCase()}><i />{row.status}</span></td><td>{row.age}</td>
+            </tr>
+          ))}</tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+function ApprovalsView() {
+  return (
+    <div className="gx-view gx-approval-view">
+      <div className="gx-view-title"><div><small>REVIEW QUEUE</small><h3>Three records need a decision</h3></div><span className="gx-sla"><i /> Within response target</span></div>
+      <div className="gx-review-layout">
+        <div className="gx-review-list">
+          <button type="button" data-active="true"><span><b>STK-1847</b><small>Bearing 6205-2RS</small></span><em>Qty change</em></button>
+          <button type="button"><span><b>STK-1839</b><small>Coolant concentrate</small></span><em>New item</em></button>
+          <button type="button"><span><b>STK-1828</b><small>Cutting disc 230mm</small></span><em>Variance</em></button>
+        </div>
+        <article className="gx-review-card">
+          <header><span>STK-1847</span><small>Submitted 4 minutes ago</small></header>
+          <h4>Bearing 6205-2RS</h4>
+          <dl><div><dt>Quantity</dt><dd><s>48</s> → <b>60</b></dd></div><div><dt>Reason</dt><dd>Duplicate stock merged</dd></div><div><dt>Submitted by</dt><dd>J. Mokoena · Store A</dd></div></dl>
+          <footer><button type="button">Send back</button><button type="button">Approve change</button></footer>
+        </article>
+      </div>
+    </div>
+  );
+}
+
+function ReportsView() {
+  const bars = [38, 54, 48, 72, 66, 84, 78, 92, 88, 96, 90, 98];
+  return (
+    <div className="gx-view gx-report-view">
+      <div className="gx-view-title"><div><small>STANDARD REPORT</small><h3>Record quality</h3></div><button type="button">Export report ↗</button></div>
+      <div className="gx-report-grid">
+        <article className="gx-chart-card">
+          <header><span>Validated first time</span><strong>94.8%</strong></header>
+          <div className="gx-bars" aria-label="Illustrative twelve period bar chart">{bars.map((height, index) => <i key={index} style={{ height: `${height}%` }} />)}</div>
+          <footer><span>Week 1</span><span>Week 12</span></footer>
+        </article>
+        <article className="gx-summary-card">
+          <span><i data-tone="good" /> Accepted first time <b>1,751</b></span>
+          <span><i data-tone="warn" /> Corrected at entry <b>91</b></span>
+          <span><i data-tone="alert" /> Open exceptions <b>5</b></span>
+          <small>Generated from the live register — no monthly copy-and-paste.</small>
+        </article>
+      </div>
+    </div>
+  );
+}
+
+export function ExcelWorkflowScenes() {
+  return (
+    <div className="gx-scenes">
+      <article className="gx-scene gx-scene--capture">
+        <div className="gx-scene-ui">
+          <header><span>New stock record</span><i>Draft saved</i></header>
+          <div className="gx-form-grid">
+            <label><span>Item</span><b>Bearing 6205-2RS</b></label>
+            <label data-invalid="true"><span>Quantity</span><b>12 units</b><em>Enter a whole number</em></label>
+            <label><span>Location</span><b>Store A <i>⌄</i></b></label>
+            <label><span>Counted by</span><b>J. Mokoena</b></label>
+          </div>
+          <footer><button type="button">Cancel</button><button type="button">Create record</button></footer>
+        </div>
+        <div className="gx-scene-copy"><span>01 · Capture</span><h3>Bad data stops at the door.</h3><p>Required fields, permitted values and business rules become part of the interface—not knowledge somebody has to remember.</p></div>
+      </article>
+
+      <article className="gx-scene gx-scene--route">
+        <div className="gx-scene-ui">
+          <header><span>Workflow rule</span><i data-on="true">On</i></header>
+          <div className="gx-rule">
+            <small>WHEN</small><p>Quantity changes by <b>more than 10%</b></p>
+            <span>↓</span><small>THEN</small><p>Send to <b>Store manager</b> for approval</p>
+            <span>↓</span><small>AND</small><p>Write decision to the <b>record history</b></p>
           </div>
         </div>
-
-        {/* ---------------------------------------------------- the beats */}
-        <ol className="k-xl-beats">
-          {BEATS.map((b, i) => (
-            <li key={b.n} data-state={i === index ? "on" : i < index ? "done" : "off"}>
-              <span className="k-xl-n">{b.n}</span>
-              <span className="k-xl-t">{b.title}</span>
-            </li>
-          ))}
-        </ol>
-      </div>
-
-      <p className="k-reel-caption">
-        <span className="k-reel-caption-label">{beat.note}</span>
-        <span className="k-reel-caption-note">
-          Illustrative. An invented register, and a filename you have probably seen.
-        </span>
-      </p>
+        <div className="gx-scene-copy"><span>02 · Route</span><h3>The process moves without chasing.</h3><p>Exceptions go to a named owner, decisions happen in one place and overdue work stays visible until it is resolved.</p></div>
+      </article>
     </div>
   );
 }
 
-/* ------------------------------------------------------------------ stages */
-
-const DIRTY_HEAD = ["Item", "Qty", "Location", "Last count", "Notes"];
-
-/** The rows carry the faults the copy on this page describes. */
-const DIRTY: { cells: string[]; bad?: number[] }[] = [
-  { cells: ["Bearing 6205-2RS", "48", "Store A", "03/04/2024", ""] },
-  { cells: ["Bearing 6205 2RS", "12 units", "store a", "4 Mar", "dup?"], bad: [0, 1, 2, 3] },
-  { cells: ["V-belt B52", "#REF!", "Store A", "45356", "ask Thabo"], bad: [1, 3, 4] },
-  { cells: ["Hyd. hose 3/4", "~30", "Store B", "", "counted by JM"], bad: [1, 3, 4] },
-  { cells: ["Gasket set — CAT", "6", "Store B", "12/03/24", ""] },
-];
-
-/**
- * The same register after the rebuild — and it has to actually be different.
- * The duplicate is merged, the quantities are integers, the dates are one
- * format, the broken reference is resolved, and "counted by JM" has become a
- * column of its own, which is what beat 02 promised would happen to it.
- */
-const CLEAN_HEAD = ["Item", "Qty", "Location", "Last count", "Counted by"];
-
-const CLEAN: string[][] = [
-  ["Bearing 6205-2RS", "60", "Store A", "2024-03-04", "J. Mokoena"],
-  ["V-belt B52", "18", "Store A", "2024-03-04", "J. Mokoena"],
-  ["Hyd. hose 3/4", "30", "Store B", "2024-03-12", "J. Mokoena"],
-  ["Gasket set — CAT", "6", "Store B", "2024-03-12", "T. Dlamini"],
-];
-
-function Sheet({ clean = false }: { clean?: boolean }) {
-  const head = clean ? CLEAN_HEAD : DIRTY_HEAD;
-  const rows = clean ? CLEAN.map((cells) => ({ cells, bad: undefined })) : DIRTY;
+export function ExcelAuditScene() {
   return (
-    <table className="k-xl-sheet" data-clean={clean ? "1" : "0"}>
-      <thead>
-        <tr>
-          <th className="k-xl-rn" />
-          {head.map((h) => (
-            <th key={h}>{h}</th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {rows.map((r, ri) => (
-          <tr key={ri}>
-            <td className="k-xl-rn">{ri + 2}</td>
-            {r.cells.map((c, ci) => (
-              <td key={ci} data-bad={!clean && r.bad?.includes(ci) ? "1" : undefined}>
-                {c || <span className="k-xl-empty">—</span>}
-              </td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
-}
-
-function Stage({ kind }: { kind: Beat["kind"] }) {
-  if (kind === "file") {
-    return (
-      <div className="k-xl-file">
-        <Sheet />
-        <ul className="k-xl-faults">
-          <li>Same bearing, twice, spelled two ways</li>
-          <li>Quantity as a number, a phrase and a guess</li>
-          <li>Three date formats and one serial</li>
-          <li>A broken reference nobody has fixed</li>
-          <li>A person&rsquo;s name living in a notes column</li>
-        </ul>
+    <figure className="gx-audit-scene">
+      <div className="gx-audit-record">
+        <header><div><small>RECORD</small><strong>STK-1847</strong></div><span data-status="approved"><i />Approved</span></header>
+        <div className="gx-audit-item"><span>Item</span><b>Bearing 6205-2RS</b></div>
+        <div className="gx-audit-fields"><span><small>Quantity</small><b>60</b></span><span><small>Location</small><b>Store A</b></span><span><small>Owner</small><b>J. Mokoena</b></span></div>
       </div>
-    );
-  }
-
-  if (kind === "read") {
-    const cols = [
-      { c: "Item", t: "Text · required · unique", ok: true },
-      { c: "Qty", t: "Integer · ≥ 0 · required", ok: true },
-      { c: "Location", t: "List of 2 · from the data", ok: true },
-      { c: "Last count", t: "Date · 3 formats reconciled", ok: true },
-      { c: "Notes", t: "Split — 'counted by' becomes a person", ok: false },
-    ];
-    return (
-      <div className="k-xl-read">
-        <ul className="k-xl-cols">
-          {cols.map((c, i) => (
-            <li key={c.c} style={{ animationDelay: `${i * 110}ms` }} data-split={c.ok ? "0" : "1"}>
-              <b>{c.c}</b>
-              <i>{c.t}</i>
-            </li>
-          ))}
-        </ul>
-        <p className="k-xl-foot">
-          <b>1,847 rows read.</b> The spreadsheet is the specification — nobody has to
-          write one.
-        </p>
-      </div>
-    );
-  }
-
-  if (kind === "build") {
-    return (
-      <div className="k-xl-build">
-        <div className="k-xl-form">
-          <label>
-            <span>Item</span>
-            <b>Bearing 6205-2RS</b>
-          </label>
-          <label>
-            <span>Qty</span>
-            <b>12 units</b>
-            <em>Whole number only</em>
-          </label>
-          <label>
-            <span>Location</span>
-            <b>Store A</b>
-          </label>
-          <label>
-            <span>Counted by</span>
-            <b>J. Mokoena</b>
-          </label>
-        </div>
-        <p className="k-xl-foot">
-          <b>Rejected on entry.</b> The bad value never reaches the register, which is
-          the difference between a system and a shared file.
-        </p>
-      </div>
-    );
-  }
-
-  return (
-    <div className="k-xl-live">
-      <Sheet clean />
-      <ul className="k-xl-audit">
-        <li>
-          <em>14:02</em> J. Mokoena set Qty 48 → 60 · duplicate row merged
-        </li>
-        <li>
-          <em>14:02</em> D. Nkosi viewing · no lock, no copy
-        </li>
-        <li>
-          <em>02:00</em> Backup completed · restore tested
-        </li>
-      </ul>
-    </div>
+      <div className="gx-audit-line" aria-hidden><i /><i /><i /><i /></div>
+      <ol className="gx-history">
+        <li><time>14:06</time><i data-tone="good" /><div><b>Change approved</b><span>D. Nkosi approved quantity 48 → 60</span></div></li>
+        <li><time>14:02</time><i data-tone="warn" /><div><b>Approval requested</b><span>Variance exceeded the 10% control</span></div></li>
+        <li><time>14:02</time><i /><div><b>Duplicate merged</b><span>J. Mokoena combined two matching stock lines</span></div></li>
+        <li><time>13:58</time><i /><div><b>Record validated</b><span>Required fields and location rules passed</span></div></li>
+      </ol>
+      <figcaption>Illustrative interface and records — not a client result.</figcaption>
+    </figure>
   );
 }
