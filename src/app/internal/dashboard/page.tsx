@@ -7,6 +7,7 @@ import {
   type SiteTraffic,
 } from "@/lib/dashboard/ga";
 import { searchBySite, type SearchSummary } from "@/lib/dashboard/gsc";
+import { emailQuota, quotaUse, hoursUntilReset, type EmailQuota } from "@/lib/dashboard/email-quota";
 import { StatCard, BarList, Panel, Sparkline } from "@/components/dashboard/Charts";
 
 /**
@@ -79,6 +80,54 @@ function SiteRow({ s }: { s: SiteTraffic }) {
   );
 }
 
+/**
+ * Email sending headroom.
+ *
+ * The cap is per ACCOUNT, so this one number governs every domain at once —
+ * Sigmafy's transactional mail, 2ko.co.za's enquiries and sixsigmauk.com's
+ * alike. Sigmafy on its own peaked at 208/day in the month before it moved,
+ * which is why this sits on the overview rather than buried on a site page.
+ */
+function QuotaPanel({ q }: { q: EmailQuota }) {
+  if (q.error) {
+    return (
+      <Panel title="Email sending quota">
+        <p className="text-[13px] leading-relaxed text-amber-400">{q.error}</p>
+      </Panel>
+    );
+  }
+
+  const use = quotaUse(q);
+  const hours = hoursUntilReset(q);
+  // Amber well before the cliff: at 75% a single busy hour can finish it.
+  const tone = q.overQuota || (use ?? 0) >= 1 ? "#f87171" : (use ?? 0) >= 0.75 ? "#fbbf24" : "#34d399";
+
+  return (
+    <Panel
+      title="Email sending quota"
+      note={`Cloudflare, account-wide${hours !== null ? ` · resets in ${hours.toFixed(1)}h` : ""}`}
+    >
+      <div className="flex items-baseline gap-2">
+        <span className="text-[30px] font-semibold leading-none tabular-nums" style={{ color: tone }}>
+          {num(q.sent)}
+        </span>
+        <span className="text-[15px] text-[var(--warm-45)]">/ {num(q.limit)} today</span>
+      </div>
+      <div className="mt-3 h-[6px] w-full overflow-hidden rounded-full bg-white/[0.06]">
+        <div
+          className="h-full rounded-full transition-[width]"
+          style={{ width: `${Math.min(100, Math.max(1.5, (use ?? 0) * 100))}%`, background: tone }}
+        />
+      </div>
+      <p className="mt-3 text-[11px] leading-relaxed text-[var(--warm-45)]">
+        {q.overQuota
+          ? "Quota exhausted — sends are being refused across every domain until the reset."
+          : "One counter for the whole account. Sigmafy, 2KO and the UK site all draw on it, so a busy day on one stops the others."}
+      </p>
+    </Panel>
+  );
+}
+
 function SearchPanel({ s }: { s: SearchSummary }) {
   if (s.error) {
     // Some of these errors end in the URL that fixes them. Make it clickable.
@@ -140,6 +189,11 @@ export default async function DashboardPage() {
   let search: SearchSummary[] = [];
   let failure: string | null = null;
 
+  // Cloudflare's quota is a different API on a different credential, so it runs
+  // alongside rather than inside the analytics try — neither can take the other
+  // down.
+  const quotaPromise = emailQuota();
+
   try {
     const { token, sites: rows } = await trafficBySite();
     sites = rows;
@@ -149,6 +203,8 @@ export default async function DashboardPage() {
   } catch (e) {
     failure = e instanceof Error ? e.message : String(e);
   }
+
+  const quota = await quotaPromise;
 
   const ok = sites.filter((s) => !s.error);
   const total7 = ok.reduce((a, s) => a + s.users7, 0);
@@ -226,7 +282,9 @@ export default async function DashboardPage() {
           )}
         </Panel>
 
-        <Panel title="Busiest sites" note="Engaged sessions, last 28 days" wide>
+        <QuotaPanel q={quota} />
+
+        <Panel title="Busiest sites" note="Engaged sessions, last 28 days">
           <BarList rows={ok.slice(0, 8).map((s) => ({ label: s.label, value: s.engaged28 }))} />
         </Panel>
       </div>

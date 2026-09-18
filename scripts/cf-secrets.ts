@@ -29,6 +29,10 @@ const REQUIRED = [
   // Write-only credential for /api/enquiries. The other sites in the estate
   // hold it so they can file an enquiry; it reads nothing back.
   "ENQUIRY_INGEST_TOKEN",
+  // Read-only use here: the dashboard shows the account's daily email sending
+  // quota, which is the ceiling every domain in the estate shares.
+  "CLOUDFLARE_ACCOUNT_ID",
+  "CLOUDFLARE_EMAIL_TOKEN",
 ] as const;
 
 function put(key: string, value: string): Promise<boolean> {
