@@ -12,6 +12,7 @@ import {
   sigmafySubjectForRoute,
 } from "@/lib/enquiry-routing";
 import { apiErrorResponse, readProtectedJson } from "@/lib/api-protection";
+import { insertEnquiry } from "@/lib/enquiries/store";
 
 const partnershipInterests = new Set([
   "improvement-programme",
@@ -144,11 +145,45 @@ export async function POST(req: NextRequest) {
     // A lead must reach at least one independent internal channel before the
     // visitor sees success. Sigmafy remains the preferred controlled record;
     // the notification email is the fallback when that service is unavailable.
-    const [sigmafyDelivery, internalNotification] = await Promise.allSettled([
+    const [sigmafyDelivery, internalNotification, recorded] = await Promise.allSettled([
       postSigmafyLead(leadRecord),
       sendEnquiryNotification(enquiry, routing),
+      // The estate's own record. Best-effort on purpose: it is a third channel
+      // alongside Sigmafy and the notification email, not a new way for a
+      // submission to fail. The visitor's success does not depend on it.
+      insertEnquiry({
+        site: "2ko.co.za",
+        kind: "contact",
+        sourcePage: leadRecord.sourcePage ?? undefined,
+        name: leadRecord.name,
+        email: leadRecord.email,
+        phone: leadRecord.phone ?? undefined,
+        company: leadRecord.company ?? undefined,
+        subject: leadRecord.subject,
+        message: leadRecord.message,
+        utm: leadRecord.utm ?? undefined,
+        country: req.headers.get("cf-ipcountry") ?? undefined,
+        userAgent: leadRecord.userAgent ?? undefined,
+        // The routing decision, kept whole. It is what makes the difference
+        // between "an enquiry arrived" and "an enquiry arrived, was classified
+        // this way, and is owed a reply by then" — which is what the
+        // autoresponder will need.
+        extra: {
+          reference: leadRecord.externalReference,
+          routeKey: leadRecord.routeKey,
+          routeLabel: leadRecord.routeLabel,
+          owner: leadRecord.routeOwner,
+          confidence: leadRecord.routingConfidence,
+          nextAction: leadRecord.nextAction,
+          nextFollowUpAt: leadRecord.nextFollowUpAt,
+          humanReviewRequired: leadRecord.humanReviewRequired,
+        },
+      }),
     ]);
 
+    if (recorded.status === "rejected") {
+      console.error("contact enquiry record failed:", recorded.reason);
+    }
     if (sigmafyDelivery.status === "rejected") {
       console.error("contact Sigmafy delivery failed:", sigmafyDelivery.reason);
     }

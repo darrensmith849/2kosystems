@@ -26,6 +26,9 @@ const REQUIRED = [
   "GOOGLE_ANALYTICS_REFRESH_TOKEN",
   "INTERNAL_ACCESS_USERNAME",
   "INTERNAL_ACCESS_PASSWORD",
+  // Write-only credential for /api/enquiries. The other sites in the estate
+  // hold it so they can file an enquiry; it reads nothing back.
+  "ENQUIRY_INGEST_TOKEN",
 ] as const;
 
 function put(key: string, value: string): Promise<boolean> {

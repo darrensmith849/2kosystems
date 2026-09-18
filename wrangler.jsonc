@@ -17,6 +17,17 @@
   "images": {
     "binding": "IMAGES"
   },
+  // Enquiries from every site in the estate. Created 2026-09-18; before it
+  // there was no datastore anywhere in the estate and enquiries were
+  // fire-and-forget email.
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "2ko-enquiries",
+      "database_id": "7300d129-8c81-468d-8077-c5ced9782a8f",
+      "migrations_dir": "./migrations"
+    }
+  ],
   // Cloudflare Email Service. No API key — the binding is the credential.
   "send_email": [
     { "name": "EMAIL" }

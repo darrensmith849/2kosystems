@@ -84,8 +84,8 @@ export default function DashboardNav() {
         </Group>
       ))}
 
-      <Group title="Not built yet">
-        <Item href="/internal/dashboard" label="Enquiries" muted />
+      <Group title="Enquiries">
+        <Item href="/internal/dashboard/enquiries" label="All enquiries" />
         <Item href="/internal/dashboard" label="Autoresponder" muted />
       </Group>
     </nav>
