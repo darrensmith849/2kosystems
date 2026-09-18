@@ -47,7 +47,7 @@ export function dashboardConfigured() {
   return credentials() !== null;
 }
 
-async function accessToken(): Promise<string> {
+export async function accessToken(): Promise<string> {
   const c = credentials();
   if (!c) throw new Error("Analytics credentials are not set on this Worker.");
   const res = await fetch(TOKEN_URL, {
@@ -74,7 +74,7 @@ async function accessToken(): Promise<string> {
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 /** Only the parts of the Data API response this page reads. */
-type ReportRow = {
+export type ReportRow = {
   dimensionValues?: { value: string }[];
   metricValues?: { value: string }[];
 };

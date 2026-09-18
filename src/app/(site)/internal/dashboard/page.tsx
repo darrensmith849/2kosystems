@@ -171,7 +171,7 @@ export default async function DashboardPage() {
   );
 
   return (
-    <main className="mx-auto max-w-[1240px] px-6 py-20">
+    <>
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--warm-50)]">Internal</p>
@@ -290,6 +290,6 @@ export default async function DashboardPage() {
           Console lags roughly two days. Google Ads and Sigmafy panels are not here yet.
         </p>
       </section>
-    </main>
+    </>
   );
 }

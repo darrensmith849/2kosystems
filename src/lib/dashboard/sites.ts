@@ -19,12 +19,20 @@ export type DashboardSite = {
   host: string;
   label: string;
   group: "Six Sigma" | "2KO" | "Sigmafy";
+  /**
+   * True where the estate owns this host in Search Console, so the drill-down
+   * can show queries and positions. Eight of the ten cannot — they are either
+   * unverified or not added at all — and their pages show traffic only. The
+   * flag lives here rather than being derived from SEARCH_SITES because the
+   * nav is a client component and gsc.ts is server code.
+   */
+  search?: true;
 };
 
 export const SITES: DashboardSite[] = [
-  { id: "319206502", mid: "G-NLFDVKD836", host: "sixsigmasouthafrica.co.za", label: "Six Sigma South Africa", group: "Six Sigma" },
+  { id: "319206502", mid: "G-NLFDVKD836", host: "sixsigmasouthafrica.co.za", label: "Six Sigma South Africa", group: "Six Sigma", search: true },
   { id: "367822365", mid: "G-G12VG51THV", host: "leansixsigmatraining.co.za", label: "Lean Six Sigma Training", group: "Six Sigma" },
-  { id: "379342137", mid: "G-S7ZQBB3WHV", host: "sixsigmauk.com", label: "Six Sigma UK", group: "Six Sigma" },
+  { id: "379342137", mid: "G-S7ZQBB3WHV", host: "sixsigmauk.com", label: "Six Sigma UK", group: "Six Sigma", search: true },
   { id: "362689848", mid: "G-7EM76QCC22", host: "sixsigmacertification.co.za", label: "Six Sigma Certification", group: "Six Sigma" },
   { id: "366743695", mid: "G-ZGHJPXXL68", host: "i2ko.com", label: "i2KO / Six Sigma Johannesburg", group: "Six Sigma" },
   { id: "364749990", mid: "G-3X2L3TMWHX", host: "2ko.co.za", label: "2KO", group: "2KO" },
