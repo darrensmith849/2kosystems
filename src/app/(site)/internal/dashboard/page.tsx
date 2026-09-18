@@ -1,5 +1,11 @@
 import type { Metadata } from "next";
-import { trafficBySite, dashboardConfigured, type SiteTraffic } from "@/lib/dashboard/ga";
+import {
+  trafficBySite,
+  dashboardConfigured,
+  engagementRate,
+  looksAutomated,
+  type SiteTraffic,
+} from "@/lib/dashboard/ga";
 import { searchBySite, type SearchSummary } from "@/lib/dashboard/gsc";
 import { StatCard, BarList, Panel, Sparkline } from "@/components/dashboard/Charts";
 
@@ -37,6 +43,8 @@ function weekDelta(users7: number, users28: number) {
 
 function SiteRow({ s }: { s: SiteTraffic }) {
   const d = s.error ? null : weekDelta(s.users7, s.users28);
+  const rate = engagementRate(s);
+  const automated = looksAutomated(s);
   return (
     <tr className="border-t border-white/[0.07]">
       <td className="py-3 pr-4">
@@ -44,15 +52,24 @@ function SiteRow({ s }: { s: SiteTraffic }) {
         <div className="text-[11px] text-[var(--warm-50)]">{s.host}</div>
       </td>
       {s.error ? (
-        <td colSpan={5} className="py-3 text-[12px] text-amber-400">{s.error}</td>
+        <td colSpan={6} className="py-3 text-[12px] text-amber-400">{s.error}</td>
       ) : (
         <>
-          <td className="py-3 w-[110px]">
+          <td className="py-3">
             {s.daily.length > 1 ? <Sparkline values={s.daily} width={100} height={26} /> : <span className="text-[11px] text-[var(--warm-50)]">—</span>}
           </td>
           <td className="py-3 text-right tabular-nums text-[14px]">{num(s.users7)}</td>
           <td className="py-3 text-right tabular-nums text-[14px]">{num(s.users28)}</td>
           <td className="py-3 text-right tabular-nums text-[14px]">{num(s.users90)}</td>
+          <td className="py-3 text-right tabular-nums text-[14px]">
+            {num(s.engaged28)}
+            {rate !== null && (
+              <div className={`text-[11px] ${automated ? "text-amber-400" : "text-[var(--warm-50)]"}`}>
+                {automated && "⚠ "}
+                {pct(rate)}
+              </div>
+            )}
+          </td>
           <td className={`py-3 pl-4 text-right text-[12px] tabular-nums ${d ? (d.positive ? "text-emerald-400" : "text-amber-400") : "text-[var(--warm-50)]"}`}>
             {d?.label ?? "—"}
           </td>
@@ -136,6 +153,8 @@ export default async function DashboardPage() {
   const ok = sites.filter((s) => !s.error);
   const total7 = ok.reduce((a, s) => a + s.users7, 0);
   const total28 = ok.reduce((a, s) => a + s.users28, 0);
+  const engaged28 = ok.reduce((a, s) => a + s.engaged28, 0);
+  const flooded = ok.filter(looksAutomated);
   const leads28 = ok.reduce((a, s) => a + s.leads, 0);
   const silent = ok.filter((s) => s.users28 === 0);
   const searchOk = search.filter((s) => !s.error);
@@ -146,6 +165,9 @@ export default async function DashboardPage() {
   const span = Math.max(0, ...ok.map((s) => s.daily.length));
   const estateDaily = Array.from({ length: span }, (_, i) =>
     ok.reduce((a, s) => a + (s.daily[s.daily.length - span + i] ?? 0), 0),
+  );
+  const estateEngaged = Array.from({ length: span }, (_, i) =>
+    ok.reduce((a, s) => a + (s.dailyEngaged[s.dailyEngaged.length - span + i] ?? 0), 0),
   );
 
   return (
@@ -166,9 +188,21 @@ export default async function DashboardPage() {
         </div>
       )}
 
+      {flooded.length > 0 && (
+        <div className="mt-8 rounded-2xl border border-amber-500/40 bg-amber-500/5 p-5">
+          <p className="text-[13px] font-semibold text-amber-300">
+            Automated traffic on {flooded.map((s) => s.label).join(", ")}
+          </p>
+          <p className="mt-1 text-[13px] leading-relaxed text-amber-200/80">
+            Real session volume, almost none of it engaged. Read the engaged column, not the user counts — GA4 cannot
+            filter this retrospectively, so the raw figures stay inflated for as long as the flood runs.
+          </p>
+        </div>
+      )}
+
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <StatCard label="Engaged sessions · 28 days" value={num(engaged28)} spark={estateEngaged} />
         <StatCard label="Users · 28 days" value={num(total28)} delta={weekDelta(total7, total28)} spark={estateDaily} />
-        <StatCard label="Users · 7 days" value={num(total7)} />
         <StatCard label="Enquiries · 28 days" value={num(leads28)} tone="#34d399" />
         <StatCard label="Search clicks · 28 days" value={num(searchClicks)} tone="#60a5fa" />
       </div>
@@ -192,8 +226,8 @@ export default async function DashboardPage() {
           )}
         </Panel>
 
-        <Panel title="Busiest sites" note="Active users, last 28 days" wide>
-          <BarList rows={ok.slice(0, 8).map((s) => ({ label: s.label, value: s.users28 }))} />
+        <Panel title="Busiest sites" note="Engaged sessions, last 28 days" wide>
+          <BarList rows={ok.slice(0, 8).map((s) => ({ label: s.label, value: s.engaged28 }))} />
         </Panel>
       </div>
 
@@ -205,7 +239,19 @@ export default async function DashboardPage() {
           </p>
         </div>
         <div className="mt-4 overflow-x-auto">
-          <table className="w-full min-w-[640px]">
+          <table className="w-full min-w-[640px] table-fixed">
+            {/* Pinned widths. Without these the columns size to content, so a
+                property with a six-figure number widens its own column and the
+                groups stop lining up with each other. */}
+            <colgroup>
+              <col />
+              <col className="w-[120px]" />
+              <col className="w-[80px]" />
+              <col className="w-[80px]" />
+              <col className="w-[80px]" />
+              <col className="w-[104px]" />
+              <col className="w-[80px]" />
+            </colgroup>
             <thead>
               <tr className="text-[10px] uppercase tracking-[0.1em] text-[var(--warm-50)]">
                 <th className="text-left font-semibold">Site</th>
@@ -213,36 +259,34 @@ export default async function DashboardPage() {
                 <th className="text-right font-semibold">7d</th>
                 <th className="text-right font-semibold">28d</th>
                 <th className="text-right font-semibold">90d</th>
+                <th className="text-right font-semibold">Engaged 28d</th>
                 <th className="pl-4 text-right font-semibold">Week</th>
               </tr>
             </thead>
-            <tbody>
-              {(["Six Sigma", "2KO", "Sigmafy"] as const).map((group) => {
-                const rows = sites.filter((s) => s.group === group);
-                if (!rows.length) return null;
-                return (
-                  <tr key={group}>
-                    <td colSpan={6} className="p-0">
-                      <table className="w-full">
-                        <tbody>
-                          <tr>
-                            <th colSpan={6} className="pt-6 pb-1 text-left text-[10px] font-semibold uppercase tracking-[0.12em] text-[var(--warm-50)]">
-                              {group}
-                            </th>
-                          </tr>
-                          {rows.map((s) => <SiteRow key={s.id} s={s} />)}
-                        </tbody>
-                      </table>
-                    </td>
+            {/* One tbody per group rather than a nested table per group. A
+                nested table computes its own column widths, which is why the
+                three groups used to sit at three different alignments. */}
+            {(["Six Sigma", "2KO", "Sigmafy"] as const).map((group) => {
+              const rows = sites.filter((s) => s.group === group);
+              if (!rows.length) return null;
+              return (
+                <tbody key={group}>
+                  <tr>
+                    <th colSpan={7} className="pt-6 pb-1 text-left text-[10px] font-semibold uppercase tracking-[0.12em] text-[var(--warm-50)]">
+                      {group}
+                    </th>
                   </tr>
-                );
-              })}
-            </tbody>
+                  {rows.map((s) => <SiteRow key={s.id} s={s} />)}
+                </tbody>
+              );
+            })}
           </table>
         </div>
         <p className="mt-5 text-[11px] leading-relaxed text-[var(--warm-50)]">
-          Week compares the last 7 days against the prior 7-day average, hidden where the numbers are too small to mean
-          anything. Identical figures across 7d, 28d and 90d mean the property only started reporting recently. Search
+          Engaged 28d counts sessions lasting over 10 seconds, converting, or reaching a second page, with the share of
+          all sessions below it. It is the figure to trust: automated traffic inflates users and leaves engagement
+          untouched. Below 10% on real volume is flagged. Week compares the last 7 days against the prior 7-day average,
+          hidden where the numbers are too small to mean anything. Identical figures across 7d, 28d and 90d mean the property only started reporting recently. Search
           Console lags roughly two days. Google Ads and Sigmafy panels are not here yet.
         </p>
       </section>
