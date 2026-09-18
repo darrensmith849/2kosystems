@@ -49,14 +49,14 @@ function SiteRow({ s }: { s: SiteTraffic }) {
     <tr className="border-t border-white/[0.07]">
       <td className="py-3 pr-4">
         <div className="text-[14px] font-medium">{s.label}</div>
-        <div className="text-[11px] text-[var(--warm-50)]">{s.host}</div>
+        <div className="text-[11px] text-[var(--warm-45)]">{s.host}</div>
       </td>
       {s.error ? (
         <td colSpan={6} className="py-3 text-[12px] text-amber-400">{s.error}</td>
       ) : (
         <>
           <td className="py-3">
-            {s.daily.length > 1 ? <Sparkline values={s.daily} width={100} height={26} /> : <span className="text-[11px] text-[var(--warm-50)]">—</span>}
+            {s.daily.length > 1 ? <Sparkline values={s.daily} width={100} height={26} /> : <span className="text-[11px] text-[var(--warm-45)]">—</span>}
           </td>
           <td className="py-3 text-right tabular-nums text-[14px]">{num(s.users7)}</td>
           <td className="py-3 text-right tabular-nums text-[14px]">{num(s.users28)}</td>
@@ -64,13 +64,13 @@ function SiteRow({ s }: { s: SiteTraffic }) {
           <td className="py-3 text-right tabular-nums text-[14px]">
             {num(s.engaged28)}
             {rate !== null && (
-              <div className={`text-[11px] ${automated ? "text-amber-400" : "text-[var(--warm-50)]"}`}>
+              <div className={`text-[11px] ${automated ? "text-amber-400" : "text-[var(--warm-45)]"}`}>
                 {automated && "⚠ "}
                 {pct(rate)}
               </div>
             )}
           </td>
-          <td className={`py-3 pl-4 text-right text-[12px] tabular-nums ${d ? (d.positive ? "text-emerald-400" : "text-amber-400") : "text-[var(--warm-50)]"}`}>
+          <td className={`py-3 pl-4 text-right text-[12px] tabular-nums ${d ? (d.positive ? "text-emerald-400" : "text-amber-400") : "text-[var(--warm-45)]"}`}>
             {d?.label ?? "—"}
           </td>
         </>
@@ -174,10 +174,10 @@ export default async function DashboardPage() {
     <>
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--warm-50)]">Internal</p>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--warm-45)]">Internal</p>
           <h1 className="mt-2 text-[30px] font-semibold tracking-[-0.02em]">Estate dashboard</h1>
         </div>
-        <p className="text-[12px] text-[var(--warm-50)]">
+        <p className="text-[12px] text-[var(--warm-45)]">
           Live from the GA4 and Search Console APIs · {new Date().toLocaleString("en-ZA", { dateStyle: "medium", timeStyle: "short" })}
         </p>
       </div>
@@ -220,7 +220,7 @@ export default async function DashboardPage() {
             tone="#34d399"
           />
           {ok.every((s) => s.leads === 0) && (
-            <p className="mt-3 text-[12px] leading-relaxed text-[var(--warm-50)]">
+            <p className="mt-3 text-[12px] leading-relaxed text-[var(--warm-45)]">
               Only sites firing a <code>generate_lead</code> event appear here.
             </p>
           )}
@@ -234,7 +234,7 @@ export default async function DashboardPage() {
       <section className="mt-4 rounded-2xl border border-white/10 bg-white/[0.02] p-6">
         <div className="flex flex-wrap items-baseline justify-between gap-3">
           <h2 className="text-[15px] font-semibold tracking-[-0.01em]">Every property</h2>
-          <p className="text-[12px] text-[var(--warm-50)]">
+          <p className="text-[12px] text-[var(--warm-45)]">
             {silent.length} of {ok.length} reporting nothing
           </p>
         </div>
@@ -253,7 +253,7 @@ export default async function DashboardPage() {
               <col className="w-[80px]" />
             </colgroup>
             <thead>
-              <tr className="text-[10px] uppercase tracking-[0.1em] text-[var(--warm-50)]">
+              <tr className="text-[10px] uppercase tracking-[0.1em] text-[var(--warm-45)]">
                 <th className="text-left font-semibold">Site</th>
                 <th className="text-left font-semibold">28-day trend</th>
                 <th className="text-right font-semibold">7d</th>
@@ -272,7 +272,7 @@ export default async function DashboardPage() {
               return (
                 <tbody key={group}>
                   <tr>
-                    <th colSpan={7} className="pt-6 pb-1 text-left text-[10px] font-semibold uppercase tracking-[0.12em] text-[var(--warm-50)]">
+                    <th colSpan={7} className="pt-6 pb-1 text-left text-[10px] font-semibold uppercase tracking-[0.12em] text-[var(--warm-45)]">
                       {group}
                     </th>
                   </tr>
@@ -282,7 +282,7 @@ export default async function DashboardPage() {
             })}
           </table>
         </div>
-        <p className="mt-5 text-[11px] leading-relaxed text-[var(--warm-50)]">
+        <p className="mt-5 text-[11px] leading-relaxed text-[var(--warm-45)]">
           Engaged 28d counts sessions lasting over 10 seconds, converting, or reaching a second page, with the share of
           all sessions below it. It is the figure to trust: automated traffic inflates users and leaves engagement
           untouched. Below 10% on real volume is flagged. Week compares the last 7 days against the prior 7-day average,

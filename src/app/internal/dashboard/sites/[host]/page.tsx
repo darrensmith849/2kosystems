@@ -46,7 +46,7 @@ function Demographic({
   if (!total) {
     return (
       <Panel title={title}>
-        <p className="text-[13px] leading-relaxed text-[var(--warm-50)]">
+        <p className="text-[13px] leading-relaxed text-[var(--warm-45)]">
           No data. This needs Google Signals switched on for the property, and Google withholds
           it below a disclosure threshold.
         </p>
@@ -57,7 +57,7 @@ function Demographic({
     <Panel title={title} note={`${note} · ${pct(coverage)} identified`}>
       <BarList rows={known.map((r) => ({ label: r.label, value: r.users }))} tone="#c084fc" />
       {coverage < 0.5 && (
-        <p className="mt-3 text-[11px] leading-relaxed text-[var(--warm-50)]">
+        <p className="mt-3 text-[11px] leading-relaxed text-[var(--warm-45)]">
           Most visitors are unidentified, so read this as a shape rather than a count.
         </p>
       )}
@@ -180,11 +180,11 @@ export default async function SitePage({ params }: { params: Promise<{ host: str
     <>
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--warm-50)]">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--warm-45)]">
             {site.group}
           </p>
           <h1 className="mt-2 text-[30px] font-semibold tracking-[-0.02em]">{site.label}</h1>
-          <p className="mt-1 text-[13px] text-[var(--warm-50)]">
+          <p className="mt-1 text-[13px] text-[var(--warm-45)]">
             {site.host} · property {site.id} · {site.mid}
           </p>
         </div>
@@ -244,7 +244,7 @@ export default async function SitePage({ params }: { params: Promise<{ host: str
           <SearchSection s={search} canonicalHost={site.host} />
         ) : (
           <Panel title="No Search Console data">
-            <p className="text-[13px] leading-relaxed text-[var(--warm-50)]">
+            <p className="text-[13px] leading-relaxed text-[var(--warm-45)]">
               {site.host} is not a verified Search Console property, so there are no queries or
               positions for it. Verifying the domain takes a DNS record and backfills 16 months of
               history the moment it is done.

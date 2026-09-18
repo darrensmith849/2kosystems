@@ -20,7 +20,7 @@ export function Sparkline({
   tone?: string;
 }) {
   if (values.length < 2) {
-    return <div className="text-[12px] text-[var(--warm-50)]">not enough data</div>;
+    return <div className="text-[12px] text-[var(--warm-45)]">not enough data</div>;
   }
   const max = Math.max(...values, 1);
   const step = width / (values.length - 1);
@@ -52,7 +52,7 @@ export function BarList({
   sub?: (row: { label: string; value: number }, i: number) => string;
 }) {
   if (rows.length === 0) {
-    return <p className="text-[13px] text-[var(--warm-50)]">Nothing to show yet.</p>;
+    return <p className="text-[13px] text-[var(--warm-45)]">Nothing to show yet.</p>;
   }
   const max = Math.max(...rows.map((r) => r.value), 1);
   return (
@@ -60,7 +60,7 @@ export function BarList({
       {rows.map((r, i) => (
         <li key={`${r.label}-${i}`}>
           <div className="flex items-baseline justify-between gap-4">
-            <span className="truncate text-[13px] text-[var(--warm-80)]" title={r.label}>
+            <span className="truncate text-[13px] text-[var(--warm-70)]" title={r.label}>
               {r.label}
             </span>
             <span className="shrink-0 text-[13px] tabular-nums">{format(r.value)}</span>
@@ -71,7 +71,7 @@ export function BarList({
               style={{ width: `${Math.max((r.value / max) * 100, 1.5)}%`, background: tone }}
             />
           </div>
-          {sub && <div className="mt-1 text-[11px] text-[var(--warm-50)]">{sub(r, i)}</div>}
+          {sub && <div className="mt-1 text-[11px] text-[var(--warm-45)]">{sub(r, i)}</div>}
         </li>
       ))}
     </ul>
@@ -95,7 +95,7 @@ export function StatCard({
   return (
     <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-5">
       <div className="flex items-start justify-between gap-3">
-        <div className="text-[11px] uppercase tracking-[0.1em] text-[var(--warm-50)]">{label}</div>
+        <div className="text-[11px] uppercase tracking-[0.1em] text-[var(--warm-45)]">{label}</div>
         {delta && (
           <div className={`text-[12px] tabular-nums ${delta.positive ? "text-emerald-400" : "text-amber-400"}`}>
             {delta.label}
@@ -126,7 +126,7 @@ export function Panel({
   return (
     <section className={`rounded-2xl border border-white/10 bg-white/[0.02] p-6 ${wide ? "lg:col-span-2" : ""}`}>
       <h2 className="text-[15px] font-semibold tracking-[-0.01em]">{title}</h2>
-      {note && <p className="mt-1 text-[12px] text-[var(--warm-50)]">{note}</p>}
+      {note && <p className="mt-1 text-[12px] text-[var(--warm-45)]">{note}</p>}
       <div className="mt-5">{children}</div>
     </section>
   );
