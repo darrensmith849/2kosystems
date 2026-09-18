@@ -64,9 +64,23 @@ function SiteRow({ s }: { s: SiteTraffic }) {
 
 function SearchPanel({ s }: { s: SearchSummary }) {
   if (s.error) {
+    // Some of these errors end in the URL that fixes them. Make it clickable.
+    const [text, href] = s.error.split(/(https?:\/\/\S+)/).filter(Boolean);
     return (
       <Panel title={`Search — ${s.site.label}`}>
-        <p className="text-[13px] leading-relaxed text-amber-400">{s.error}</p>
+        <p className="text-[13px] leading-relaxed text-amber-400">
+          {text}
+          {href && (
+            <a
+              href={href}
+              target="_blank"
+              rel="noreferrer"
+              className="underline underline-offset-2 hover:text-amber-300"
+            >
+              open Google Cloud console
+            </a>
+          )}
+        </p>
       </Panel>
     );
   }

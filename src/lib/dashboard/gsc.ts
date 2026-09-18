@@ -8,6 +8,10 @@
 
 const API = "https://searchconsole.googleapis.com/webmasters/v3";
 
+/** One-click enable for the API on the `2ko-ads-api` project (41808878114). */
+const ENABLE_URL =
+  "https://console.developers.google.com/apis/api/searchconsole.googleapis.com/overview?project=41808878114";
+
 export type SearchSite = { host: string; label: string };
 
 export const SEARCH_SITES: SearchSite[] = [
@@ -57,7 +61,12 @@ async function query(
       throw new Error("Token lacks webmasters.readonly — re-run npm run ga:auth, then npm run cf:secrets.");
     }
     if (/has not been used|SERVICE_DISABLED/i.test(msg)) {
-      throw new Error("Search Console API is not enabled on the Cloud project.");
+      // Google's own message carries the enable link; keep it, the panel turns
+      // any trailing URL into a link so this is one click from here.
+      throw new Error(
+        "Search Console API is not enabled on the Cloud project. " +
+          `Enable it: ${ENABLE_URL}`,
+      );
     }
     throw new Error(`${res.status} ${msg}`);
   }
