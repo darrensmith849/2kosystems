@@ -26,6 +26,9 @@ import { readEnv, writeEnvKey } from "./env-file.ts";
 const SCOPE = [
   "https://www.googleapis.com/auth/analytics.edit",
   "https://www.googleapis.com/auth/analytics.readonly",
+  // Search Console, for the internal dashboard. Separate product, separate
+  // scope — analytics.* grants nothing here.
+  "https://www.googleapis.com/auth/webmasters.readonly",
 ].join(" ");
 const AUTH = "https://accounts.google.com/o/oauth2/v2/auth";
 const TOKEN = "https://oauth2.googleapis.com/token";

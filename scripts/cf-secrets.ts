@@ -13,11 +13,19 @@
 import { spawn } from "node:child_process";
 import { readEnv } from "./env-file.ts";
 
-/** Everything the Worker needs that is not already a binding. */
+/**
+ * Everything the Worker needs that is not already a binding.
+ *
+ * The INTERNAL_ACCESS pair gates /internal/*. Without them the Proxy returns
+ * 404 rather than exposing the pages — which is why every internal route on
+ * this site had been invisible in production since it was built.
+ */
 const REQUIRED = [
   "GOOGLE_ADS_CLIENT_ID",
   "GOOGLE_ADS_CLIENT_SECRET",
   "GOOGLE_ANALYTICS_REFRESH_TOKEN",
+  "INTERNAL_ACCESS_USERNAME",
+  "INTERNAL_ACCESS_PASSWORD",
 ] as const;
 
 function put(key: string, value: string): Promise<boolean> {

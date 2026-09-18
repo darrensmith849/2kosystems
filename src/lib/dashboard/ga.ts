@@ -15,6 +15,10 @@ export type SiteTraffic = DashboardSite & {
   users7: number;
   users28: number;
   users90: number;
+  /** Daily active users, oldest first, last 28 days — for the sparklines. */
+  daily: number[];
+  /** generate_lead events, 28 days. Zero where the site does not fire one. */
+  leads: number;
   /** Null when the property could not be read, so the UI can say so rather
    *  than render a zero that looks like "no traffic". */
   error: string | null;
@@ -58,66 +62,95 @@ async function accessToken(): Promise<string> {
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
+/** Only the parts of the Data API response this page reads. */
+type ReportRow = {
+  dimensionValues?: { value: string }[];
+  metricValues?: { value: string }[];
+};
+type BatchResponse = { reports?: { rows?: ReportRow[] }[] };
+
 /** The Data API returns transient 503s often enough to be the normal case. */
-async function report(token: string, propertyId: string, attempt = 0): Promise<number[]> {
-  const res = await fetch(`${DATA}/properties/${propertyId}:runReport`, {
+async function batch(token: string, propertyId: string, attempt = 0): Promise<BatchResponse> {
+  const res = await fetch(`${DATA}/properties/${propertyId}:batchRunReports`, {
     method: "POST",
     headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+    // One round trip per property instead of three. The Data API allows up to
+    // five reports per batch and this page needs three.
     body: JSON.stringify({
-      dateRanges: [
-        { startDate: "7daysAgo", endDate: "today", name: "d7" },
-        { startDate: "28daysAgo", endDate: "today", name: "d28" },
-        { startDate: "90daysAgo", endDate: "today", name: "d90" },
+      requests: [
+        {
+          dateRanges: [
+            { startDate: "7daysAgo", endDate: "today", name: "d7" },
+            { startDate: "28daysAgo", endDate: "today", name: "d28" },
+            { startDate: "90daysAgo", endDate: "today", name: "d90" },
+          ],
+          metrics: [{ name: "activeUsers" }],
+        },
+        {
+          dateRanges: [{ startDate: "28daysAgo", endDate: "today" }],
+          dimensions: [{ name: "date" }],
+          metrics: [{ name: "activeUsers" }],
+          orderBys: [{ dimension: { dimensionName: "date" } }],
+          limit: 40,
+        },
+        {
+          dateRanges: [{ startDate: "28daysAgo", endDate: "today" }],
+          dimensions: [{ name: "eventName" }],
+          metrics: [{ name: "eventCount" }],
+          dimensionFilter: {
+            filter: { fieldName: "eventName", stringFilter: { value: "generate_lead" } },
+          },
+        },
       ],
-      metrics: [{ name: "activeUsers" }],
     }),
   });
 
   if (!res.ok) {
     if (res.status >= 500 && attempt < 3) {
       await sleep(400 * 2 ** attempt);
-      return report(token, propertyId, attempt + 1);
+      return batch(token, propertyId, attempt + 1);
     }
     const body = (await res.json().catch(() => ({}))) as { error?: { message?: string } };
     throw new Error(`${res.status} ${body?.error?.message ?? res.statusText}`);
   }
-
-  const json = (await res.json()) as {
-    rows?: { dimensionValues?: { value: string }[]; metricValues?: { value: string }[] }[];
-  };
-
-  // Multiple date ranges come back as one row each, carrying a dateRange
-  // dimension — and ordered by metric descending, not by range. Match on the
-  // range name; row position lies.
-  const out = [0, 0, 0];
-  for (const row of json.rows ?? []) {
-    const name = row.dimensionValues?.[0]?.value;
-    const n = Number(row.metricValues?.[0]?.value ?? 0);
-    if (name === "d7") out[0] = n;
-    else if (name === "d28") out[1] = n;
-    else if (name === "d90") out[2] = n;
-  }
-  return out;
+  return res.json();
 }
 
 /** Every site, queried in parallel. One failure does not lose the others. */
-export async function trafficBySite(): Promise<SiteTraffic[]> {
+export async function trafficBySite(): Promise<{ token: string; sites: SiteTraffic[] }> {
   const token = await accessToken();
-  const rows = await Promise.all(
+  const sites = await Promise.all(
     SITES.map(async (site): Promise<SiteTraffic> => {
+      const blank = { ...site, users7: 0, users28: 0, users90: 0, daily: [] as number[], leads: 0 };
       try {
-        const [users7, users28, users90] = await report(token, site.id);
-        return { ...site, users7, users28, users90, error: null };
-      } catch (e) {
+        const res = await batch(token, site.id);
+        const [totals, byDate, leadRows] = res.reports ?? [];
+
+        // Multiple date ranges come back as one row each, carrying a dateRange
+        // dimension — and ordered by metric descending, not by range. Match on
+        // the range name; row position lies.
+        const t: Record<string, number> = { d7: 0, d28: 0, d90: 0 };
+        for (const row of totals?.rows ?? []) {
+          const name = row.dimensionValues?.[0]?.value;
+          if (name && name in t) t[name] = Number(row.metricValues?.[0]?.value ?? 0);
+        }
+
         return {
-          ...site,
-          users7: 0,
-          users28: 0,
-          users90: 0,
-          error: e instanceof Error ? e.message : String(e),
+          ...blank,
+          users7: t.d7,
+          users28: t.d28,
+          users90: t.d90,
+          daily: (byDate?.rows ?? []).map((r) => Number(r.metricValues?.[0]?.value ?? 0)),
+          leads: Number(leadRows?.rows?.[0]?.metricValues?.[0]?.value ?? 0),
+          error: null,
         };
+      } catch (e) {
+        return { ...blank, error: e instanceof Error ? e.message : String(e) };
       }
     }),
   );
-  return rows.sort((a, b) => b.users28 - a.users28);
+  sites.sort((a, b) => b.users28 - a.users28);
+  // The token is handed back so the Search Console calls reuse it rather than
+  // doing a second exchange.
+  return { token, sites };
 }
