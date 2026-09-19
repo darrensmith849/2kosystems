@@ -33,6 +33,9 @@ const REQUIRED = [
   // quota, which is the ceiling every domain in the estate shares.
   "CLOUDFLARE_ACCOUNT_ID",
   "CLOUDFLARE_EMAIL_TOKEN",
+  // Signs click-tracking destinations. Without it the redirect refuses every
+  // link, which is the correct failure — an unsigned redirect is an open one.
+  "TRACKING_SECRET",
 ] as const;
 
 function put(key: string, value: string): Promise<boolean> {
