@@ -91,13 +91,57 @@ export function decodeDestination(u: string): string | null {
 }
 
 /**
+ * A link whose URL *is* a credential. These are never rewritten.
+ *
+ * Not a category judgement about transactional versus marketing — it is about
+ * what the URL contains. Sigmafy sends Laravel `temporarySignedRoute` links,
+ * magic logins, password resets and email verifications; the token is in the
+ * query string. Rewriting those would write working auth links into
+ * `message_events.url` in plain text, where the dashboard displays them, and
+ * anyone with read access to the ledger would hold live password resets.
+ *
+ * Losing the click number on a password-reset email costs nothing. The pixel
+ * still fires, so "did it arrive and get opened" is still answered.
+ */
+const CREDENTIAL_PARAMS = [
+  "token", "signature", "expires", "secret", "otp", "code", "key",
+  "auth", "access_token", "id_token", "invite", "confirmation",
+];
+const CREDENTIAL_PATHS =
+  /\/(reset-password|password\/reset|verify-email|email\/verify|magic|magic-login|resume-by-email|auth\/callback|invitation|activate)\b/i;
+
+export function carriesCredential(url: string): boolean {
+  try {
+    const u = new URL(url);
+    if (CREDENTIAL_PATHS.test(u.pathname)) return true;
+    for (const [k] of u.searchParams) {
+      if (CREDENTIAL_PARAMS.includes(k.toLowerCase())) return true;
+    }
+    // A long opaque trailing segment is how most magic links look even when
+    // the route name gives nothing away. But slugs are long too — course URLs
+    // like `core-green-belt-classroom` are 25 characters — so a
+    // lowercase-hyphenated run of words is explicitly not a token.
+    const last = u.pathname.split("/").filter(Boolean).pop() ?? "";
+    const isSlug = /^[a-z0-9]+(?:-[a-z0-9]+)+$/.test(last);
+    const isFile = /\.[a-z0-9]{2,5}$/i.test(last);
+    const looksRandom = /[A-Z]/.test(last) && /[a-z]/.test(last) && /\d/.test(last);
+    if (!isSlug && !isFile && last.length >= 24 && /^[A-Za-z0-9._~-]+$/.test(last) && looksRandom) {
+      return true;
+    }
+    return false;
+  } catch {
+    return true; // unparseable: do not touch it
+  }
+}
+
+/**
  * Rewrite every http(s) link in an HTML body through the click tracker, and
  * append the open pixel.
  *
  * Deliberately conservative. Only `href="..."` on anchors is touched — not
- * images, not CSS urls, not anything inside a `<style>` block. Unsubscribe and
- * mailto links are left alone: breaking an unsubscribe to measure it is both
- * rude and, under POPIA, the wrong side of a line.
+ * images, not CSS urls, not anything inside a `<style>` block. Three kinds of
+ * link are left alone: unsubscribe (breaking it to measure it is the wrong
+ * side of a POPIA line), mailto, and anything `carriesCredential` recognises.
  */
 export async function instrument(
   html: string,
@@ -111,6 +155,7 @@ export async function instrument(
     for (const m of anchors.reverse()) {
       const href = m[1];
       if (/unsubscribe|\/e\/c\//i.test(href)) continue;
+      if (carriesCredential(href)) continue;
       const tracked = await clickUrl(opts.base, opts.secret, opts.messageId, href);
       const start = m.index! + m[0].lastIndexOf(href);
       out = out.slice(0, start) + tracked + out.slice(start + href.length);
