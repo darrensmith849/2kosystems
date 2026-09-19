@@ -97,16 +97,24 @@ export async function recordEvent(args: {
   const at = args.occurredAt ?? new Date().toISOString();
   const proxy = args.event === "open" && looksLikeProxy(args.userAgent ?? null, args.ip ?? null);
 
+  // Only for a message we actually sent. The pixel URL is public by
+  // construction — it sits in the HTML of every email — so without this guard
+  // anyone could fill the ledger with events for invented ids by requesting
+  // /e/o/<anything>.gif. INSERT...SELECT...WHERE EXISTS keeps it to one
+  // statement rather than a read followed by a write.
   await db
     .prepare(
       `INSERT INTO message_events (
          id, message_id, event, source, occurred_at, url, ip, user_agent, likely_proxy, detail
-       ) VALUES (?,?,?,?,?,?,?,?,?,?)`,
+       )
+       SELECT ?,?,?,?,?,?,?,?,?,?
+        WHERE EXISTS (SELECT 1 FROM messages WHERE id = ?)`,
     )
     .bind(
       crypto.randomUUID(), args.messageId, args.event, args.source, at,
       args.url ?? null, args.ip ?? null, args.userAgent ?? null,
       proxy ? 1 : 0, args.detail ? JSON.stringify(args.detail) : null,
+      args.messageId,
     )
     .run();
 
