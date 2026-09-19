@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { LEGACY_SITE_HOSTS, SITE_HOST } from "@/lib/site";
 import { legacyDestination } from "@/lib/legacy-redirects";
+import { isTrackingHost } from "@/lib/tracking/domains";
 import { REQUESTED_PATH } from "@/lib/site";
 
 function constantTimeEqual(left: string, right: string) {
@@ -55,6 +56,23 @@ export default function proxy(request: NextRequest) {
   // `/page` and `/page/` with a 200 — duplicate URLs across the whole site to
   // save a hop on retired ones. Both redirects are permanent and search engines
   // follow them, so the chain costs a round trip and nothing else.
+  // The go.* hostnames exist only to serve open pixels and click redirects.
+  // They resolve to this Worker, which would otherwise happily serve the whole
+  // 2KO marketing site on four extra domains — duplicate content, and a
+  // confusing thing to find if you ever paste a tracking URL into a browser.
+  // Everything outside /e/ is refused before any other rule runs, including
+  // the host canonicalisation below, which would otherwise bounce these to
+  // www.2ko.co.za and break every link in every email.
+  if (isTrackingHost(hostname)) {
+    if (request.nextUrl.pathname.startsWith("/e/")) {
+      return NextResponse.next();
+    }
+    return new NextResponse("Not found", {
+      status: 404,
+      headers: { "Cache-Control": "no-store" },
+    });
+  }
+
   const destination = legacyDestination(request.nextUrl.pathname);
   if (destination) {
     const target = destination.startsWith("http")
