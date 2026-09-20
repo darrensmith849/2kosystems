@@ -235,3 +235,73 @@ export async function messageStats(days = 28): Promise<MessageStats> {
 
   return { sent, delivered, bounced, humanOpens, proxyOpens, clicks, bySite, byTemplate };
 }
+
+/**
+ * The moment replies started being recorded against the enquiry that caused
+ * them.
+ *
+ * Every enquiry older than this has no reply rows, and that is a gap in the
+ * record rather than a gap in the service — the team answered them by email
+ * like always, nothing was filing it. The dashboard has to say which of the two
+ * it is looking at, because "no reply recorded" and "nobody replied" are very
+ * different sentences to put in front of whoever reads this page.
+ */
+export const REPLIES_RECORDED_SINCE = "2026-09-20T03:43:45Z";
+
+export type EnquiryReply = {
+  enquiry_id: string;
+  template: string | null;
+  kind: string | null;
+  to_address: string;
+  sent_at: string;
+  status: string;
+  first_open_at: string | null;
+  /** Opens with the machine fetches excluded. The number worth showing. */
+  human_opens: number;
+  first_click_at: string | null;
+  click_count: number;
+};
+
+/**
+ * Every reply sent for these enquiries, grouped by enquiry.
+ *
+ * One query for the whole page rather than one per row: a list of a hundred
+ * enquiries should cost two round trips, not a hundred and one.
+ */
+export async function repliesForEnquiries(
+  enquiryIds: string[],
+): Promise<Map<string, EnquiryReply[]>> {
+  const grouped = new Map<string, EnquiryReply[]>();
+  if (enquiryIds.length === 0) return grouped;
+
+  const db = database();
+  if (!db) throw new NoDatabase();
+
+  const placeholders = enquiryIds.map(() => "?").join(", ");
+  const { results } = await db
+    .prepare(
+      // open_count on the message counts every pixel fetch, and Apple Mail
+      // Privacy Protection and Gmail's proxy fetch images with no human
+      // involved. Counting those as opens is how a dashboard ends up reporting
+      // 93% and meaning nothing, so the machines are excluded here.
+      `SELECT m.enquiry_id, m.template, m.kind, m.to_address, m.sent_at, m.status,
+              m.first_open_at, m.first_click_at, m.click_count,
+              (SELECT COUNT(*) FROM message_events ev
+                WHERE ev.message_id = m.id
+                  AND ev.event = 'open'
+                  AND ev.likely_proxy = 0) AS human_opens
+         FROM messages m
+        WHERE m.enquiry_id IN (${placeholders})
+        ORDER BY m.sent_at`,
+    )
+    .bind(...enquiryIds)
+    .all<EnquiryReply>();
+
+  for (const row of results ?? []) {
+    const list = grouped.get(row.enquiry_id);
+    if (list) list.push(row);
+    else grouped.set(row.enquiry_id, [row]);
+  }
+
+  return grouped;
+}

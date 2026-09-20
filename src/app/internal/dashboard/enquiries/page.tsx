@@ -2,6 +2,11 @@ import type { Metadata } from "next";
 import { listEnquiries, enquiryStats, NoDatabase } from "@/lib/enquiries/store";
 import type { EnquiryStats } from "@/lib/enquiries/store";
 import type { EnquiryRow } from "@/lib/enquiries/schema";
+import {
+  repliesForEnquiries,
+  REPLIES_RECORDED_SINCE,
+  type EnquiryReply,
+} from "@/lib/tracking/store";
 import { StatCard, BarList, Panel } from "@/components/dashboard/Charts";
 import { SITES } from "@/lib/dashboard/sites";
 
@@ -47,7 +52,73 @@ function StatusPill({ status }: { status: string }) {
   );
 }
 
-function Enquiry({ e }: { e: EnquiryRow }) {
+/** "enquiry-confirmation" reads as a column name. This reads as English. */
+function templateLabel(template: string | null) {
+  if (!template) return "Reply";
+  const words = template.replace(/[-_]+/g, " ").trim();
+  return words.charAt(0).toUpperCase() + words.slice(1);
+}
+
+/**
+ * What we sent back, and whether it landed.
+ *
+ * Nothing negative is ever asserted. Mail that was never instrumented — every
+ * Six Sigma reply, for now — can only ever report zero opens, so printing "not
+ * opened" against it would be stating as fact something we simply did not
+ * measure. An absent marker means "nothing recorded", which is true either way.
+ */
+function Replies({ replies, receivedAt }: { replies: EnquiryReply[]; receivedAt: string }) {
+  if (replies.length === 0) {
+    // Compared as instants, not strings: received_at carries milliseconds and
+    // the cutoff does not, so a lexical compare gets the boundary second wrong.
+    const predatesRecording =
+      Date.parse(receivedAt) < Date.parse(REPLIES_RECORDED_SINCE);
+    return (
+      <p className="mt-2 text-[11px] italic text-[var(--warm-45)]">
+        {predatesRecording
+          ? "Arrived before replies were recorded — it was almost certainly answered by email."
+          : "No reply recorded."}
+      </p>
+    );
+  }
+
+  return (
+    <ul className="mt-2 space-y-1 border-l border-white/[0.07] pl-3">
+      {replies.map((r) => (
+        <li
+          key={`${r.sent_at}-${r.template}`}
+          className="flex flex-wrap items-baseline gap-x-2 text-[11px] text-[var(--warm-45)]"
+        >
+          <span className="text-[var(--warm-70)]">{templateLabel(r.template)}</span>
+          <span>·</span>
+          <span>{when(r.sent_at)}</span>
+          {r.kind === "notification" && (
+            <span className="rounded bg-white/10 px-1 py-0.5 text-[10px] uppercase tracking-[0.06em]">
+              internal
+            </span>
+          )}
+          {r.status === "bounced" || r.status === "failed" ? (
+            <span className="rounded bg-red-400/15 px-1 py-0.5 text-[10px] font-semibold uppercase tracking-[0.06em] text-red-300">
+              {r.status}
+            </span>
+          ) : null}
+          {r.human_opens > 0 && (
+            <span className="text-emerald-300/80">
+              opened{r.human_opens > 1 ? ` ×${r.human_opens}` : ""}
+            </span>
+          )}
+          {r.click_count > 0 && (
+            <span className="text-emerald-300/80">
+              clicked{r.click_count > 1 ? ` ×${r.click_count}` : ""}
+            </span>
+          )}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function Enquiry({ e, replies }: { e: EnquiryRow; replies: EnquiryReply[] }) {
   const campaign = [e.utm_source, e.utm_medium, e.utm_campaign].filter(Boolean).join(" / ");
   return (
     <li className="border-t border-white/[0.07] py-4 first:border-t-0">
@@ -100,6 +171,8 @@ function Enquiry({ e }: { e: EnquiryRow }) {
           {e.source_page && <span>{e.source_page}</span>}
         </div>
       )}
+
+      <Replies replies={replies} receivedAt={e.received_at} />
     </li>
   );
 }
@@ -136,6 +209,19 @@ export default async function EnquiriesPage() {
         : e instanceof Error
           ? e.message
           : String(e);
+  }
+
+  // What we sent back. An enrichment, not the point of the page: if this
+  // lookup fails the enquiries still list, with the reply line absent rather
+  // than the whole page replaced by an error.
+  let replies = new Map<string, EnquiryReply[]>();
+
+  if (rows.length) {
+    try {
+      replies = await repliesForEnquiries(rows.map((row) => row.id));
+    } catch (error) {
+      console.error("[enquiries] reply lookup failed:", error);
+    }
   }
 
   return (
@@ -208,7 +294,7 @@ export default async function EnquiriesPage() {
         {rows.length ? (
           <ul className="mt-2">
             {rows.map((e) => (
-              <Enquiry key={e.id} e={e} />
+              <Enquiry key={e.id} e={e} replies={replies.get(e.id) ?? []} />
             ))}
           </ul>
         ) : (
