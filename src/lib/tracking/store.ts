@@ -33,23 +33,74 @@ export type MessageEvent =
 export type EventSource = "pixel" | "redirect" | "cloudflare" | "brevo";
 
 /**
- * Apple Mail Privacy Protection and Gmail's image proxy fetch remote images
- * without a human involved, so a pixel hit is not an open. Flagged at write
- * time so the dashboard can report the honest number rather than re-deriving
- * a guess from user agents later.
+ * Networks that fetch a message's images on the recipient's behalf.
+ *
+ * Keyed on the autonomous system the request came from, because the user agent
+ * is not reliable. A real Gmail delivery in this estate arrived as an ordinary
+ * "Windows NT 10.0 … AppleWebKit" string from 74.125.217.32, which the old
+ * user-agent check — looking for the literal "googleimageproxy" — did not
+ * catch. It was recorded as a human open, which is the exact inflation this
+ * function exists to prevent.
+ *
+ * Gmail deserves a word of its own. It proxies every remote image and fetches
+ * them when the message arrives, not when anyone reads it, so for a Gmail
+ * recipient a pixel hit means "Google received this" and nothing more. Twelve
+ * of the last twenty-one enquiries here came from gmail.com, so for most leads
+ * an open is simply not knowable. Treating those as proxy fetches undercounts
+ * rather than overcounts, which is the only side of that error worth being on.
+ *
+ * Clicks are the signal to trust.
  */
-export function looksLikeProxy(userAgent: string | null, ip: string | null): boolean {
+const PROXY_ASNS = new Map<number, string>([
+  [15169, "Google"],   // Gmail image proxy, and Gmail in a browser
+  [396982, "Google"],  // Google Cloud, which the proxy also egresses from
+  [714, "Apple"],      // Apple Mail Privacy Protection
+  [6185, "Apple"],
+  [36647, "Yahoo"],
+  [26101, "Yahoo"],
+  [8075, "Microsoft"], // Outlook and Exchange Online link and image prefetch
+]);
+
+/** The provider fetching on the recipient's behalf, or null if it looks like a person. */
+export function proxyProvider(
+  userAgent: string | null,
+  ip: string | null,
+  asn: number | null,
+): string | null {
+  if (asn !== null && PROXY_ASNS.has(asn)) return PROXY_ASNS.get(asn)!;
+
   const ua = (userAgent ?? "").toLowerCase();
-  if (!ua) return true; // no UA at all is a fetcher, not a mail client
-  return (
-    ua.includes("googleimageproxy") ||
-    ua.includes("yahoomailproxy") ||
-    ua.includes("proofpoint") ||
-    ua.includes("barracuda") ||
-    ua.includes("mimecast") ||
-    // Apple's relay presents as a plain Mac Safari-ish agent from Apple ranges.
-    (ua.includes("macintosh") && ua.includes("applewebkit") && !ua.includes("mobile") && (ip ?? "").startsWith("17."))
-  );
+
+  // No user agent at all is a fetcher, not a mail client.
+  if (!ua) return "unknown fetcher";
+
+  if (ua.includes("googleimageproxy")) return "Google";
+  if (ua.includes("yahoomailproxy")) return "Yahoo";
+  if (ua.includes("proofpoint")) return "Proofpoint";
+  if (ua.includes("barracuda")) return "Barracuda";
+  if (ua.includes("mimecast")) return "Mimecast";
+
+  // Apple's relay presents as a plain Mac Safari-ish agent from Apple ranges.
+  // Kept as a fallback for the case where the ASN is unavailable.
+  if (
+    ua.includes("macintosh") &&
+    ua.includes("applewebkit") &&
+    !ua.includes("mobile") &&
+    (ip ?? "").startsWith("17.")
+  ) {
+    return "Apple";
+  }
+
+  return null;
+}
+
+/** Kept for callers that only need the yes/no. */
+export function looksLikeProxy(
+  userAgent: string | null,
+  ip: string | null,
+  asn: number | null = null,
+): boolean {
+  return proxyProvider(userAgent, ip, asn) !== null;
 }
 
 export async function recordMessage(m: MessageInput, sentAt = new Date().toISOString()): Promise<void> {
@@ -89,13 +140,31 @@ export async function recordEvent(args: {
   url?: string;
   ip?: string | null;
   userAgent?: string | null;
+  /** The autonomous system the request came from, when the edge supplies it. */
+  asn?: number | null;
   detail?: Record<string, unknown>;
 }): Promise<void> {
   const db = database();
   if (!db) throw new NoDatabase();
 
   const at = args.occurredAt ?? new Date().toISOString();
-  const proxy = args.event === "open" && looksLikeProxy(args.userAgent ?? null, args.ip ?? null);
+
+  // Opens and clicks are both worth classifying. Outlook and Exchange Online
+  // prefetch links to scan them, so a click can be a machine too — rarer than
+  // a proxied open, and just as misleading when it is not marked.
+  const provider =
+    args.event === "open" || args.event === "click"
+      ? proxyProvider(args.userAgent ?? null, args.ip ?? null, args.asn ?? null)
+      : null;
+  const proxy = provider !== null;
+
+  // Which network it was, kept alongside the flag. A classification you cannot
+  // audit later is one you end up arguing with rather than correcting — and
+  // this detector has been wrong once already.
+  const detail =
+    provider || args.asn
+      ? { ...(args.detail ?? {}), ...(provider ? { proxy_provider: provider } : {}), ...(args.asn ? { asn: args.asn } : {}) }
+      : args.detail;
 
   // Only for a message we actually sent. The pixel URL is public by
   // construction — it sits in the HTML of every email — so without this guard
@@ -113,7 +182,7 @@ export async function recordEvent(args: {
     .bind(
       crypto.randomUUID(), args.messageId, args.event, args.source, at,
       args.url ?? null, args.ip ?? null, args.userAgent ?? null,
-      proxy ? 1 : 0, args.detail ? JSON.stringify(args.detail) : null,
+      proxy ? 1 : 0, detail ? JSON.stringify(detail) : null,
       args.messageId,
     )
     .run();
@@ -259,7 +328,8 @@ export type EnquiryReply = {
   /** Opens with the machine fetches excluded. The number worth showing. */
   human_opens: number;
   first_click_at: string | null;
-  click_count: number;
+  /** Clicks with the link-scanner prefetches excluded. */
+  human_clicks: number;
 };
 
 /**
@@ -285,11 +355,15 @@ export async function repliesForEnquiries(
       // involved. Counting those as opens is how a dashboard ends up reporting
       // 93% and meaning nothing, so the machines are excluded here.
       `SELECT m.enquiry_id, m.template, m.kind, m.to_address, m.sent_at, m.status,
-              m.first_open_at, m.first_click_at, m.click_count,
+              m.first_open_at, m.first_click_at,
               (SELECT COUNT(*) FROM message_events ev
                 WHERE ev.message_id = m.id
                   AND ev.event = 'open'
-                  AND ev.likely_proxy = 0) AS human_opens
+                  AND ev.likely_proxy = 0) AS human_opens,
+              (SELECT COUNT(*) FROM message_events ev
+                WHERE ev.message_id = m.id
+                  AND ev.event = 'click'
+                  AND ev.likely_proxy = 0) AS human_clicks
          FROM messages m
         WHERE m.enquiry_id IN (${placeholders})
         ORDER BY m.sent_at`,

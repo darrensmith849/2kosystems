@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { recordEvent } from "@/lib/tracking/store";
 import { decodeDestination, verify } from "@/lib/tracking/links";
 
@@ -15,6 +16,24 @@ import { decodeDestination, verify } from "@/lib/tracking/links";
  * email and is waiting, so a logging failure must not cost them their
  * destination.
  */
+/**
+ * The network this request came from, when the edge supplies it.
+ *
+ * Cloudflare puts the autonomous system number on the request; it is the only
+ * reliable way to tell a mail provider fetching on someone's behalf from a
+ * person, because the user agent is whatever the fetcher chooses to send.
+ * Absent (local dev, or a runtime that does not populate it) the detector
+ * falls back to matching user agents.
+ */
+function requestAsn(): number | null {
+  try {
+    const asn = (getCloudflareContext().cf as { asn?: number } | undefined)?.asn;
+    return typeof asn === "number" ? asn : null;
+  } catch {
+    return null;
+  }
+}
+
 export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest, ctx: { params: Promise<{ id: string }> }) {
@@ -45,6 +64,7 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ id: string 
       url: destination,
       ip: req.headers.get("cf-connecting-ip"),
       userAgent: req.headers.get("user-agent"),
+      asn: requestAsn(),
     });
   } catch (e) {
     console.error("[track] click failed:", e);

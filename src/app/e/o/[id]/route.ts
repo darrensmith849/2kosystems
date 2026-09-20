@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server";
+import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { recordEvent } from "@/lib/tracking/store";
 
 /**
@@ -13,6 +14,24 @@ import { recordEvent } from "@/lib/tracking/store";
  * opens it, and Gmail proxies images too. The store flags those at write time;
  * the dashboard separates them.
  */
+/**
+ * The network this request came from, when the edge supplies it.
+ *
+ * Cloudflare puts the autonomous system number on the request; it is the only
+ * reliable way to tell a mail provider fetching on someone's behalf from a
+ * person, because the user agent is whatever the fetcher chooses to send.
+ * Absent (local dev, or a runtime that does not populate it) the detector
+ * falls back to matching user agents.
+ */
+function requestAsn(): number | null {
+  try {
+    const asn = (getCloudflareContext().cf as { asn?: number } | undefined)?.asn;
+    return typeof asn === "number" ? asn : null;
+  } catch {
+    return null;
+  }
+}
+
 export const dynamic = "force-dynamic";
 
 // 1×1 transparent GIF.
@@ -44,6 +63,7 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ id: string 
       source: "pixel",
       ip: req.headers.get("cf-connecting-ip"),
       userAgent: req.headers.get("user-agent"),
+      asn: requestAsn(),
     });
   } catch (e) {
     // Never let a logging failure break the image.

@@ -99,9 +99,9 @@ function Replies({ replies, receivedAt }: { replies: EnquiryReply[]; receivedAt:
               opened{r.human_opens > 1 ? ` ×${r.human_opens}` : ""}
             </span>
           )}
-          {r.click_count > 0 && (
+          {r.human_clicks > 0 && (
             <span className="text-emerald-300/80">
-              clicked{r.click_count > 1 ? ` ×${r.click_count}` : ""}
+              clicked{r.human_clicks > 1 ? ` ×${r.human_clicks}` : ""}
             </span>
           )}
         </li>
