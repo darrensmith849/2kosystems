@@ -1,3 +1,6 @@
+import { recordMessage } from "@/lib/tracking/store";
+import { instrument } from "@/lib/tracking/links";
+import { trackingBase } from "@/lib/tracking/domains";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 import type { EnquiryRouting } from "@/lib/enquiry-routing";
 
@@ -35,6 +38,28 @@ type SendInput = {
   html: string;
   text: string;
   replyTo?: string;
+  /**
+   * File this send in the estate ledger, and — for mail going to someone
+   * outside the business — rewrite its links and add an open pixel.
+   *
+   * Omitted entirely for mail that should stay off the record. Everything sent
+   * to a person who enquired should carry it: without `enquiryId` the dashboard
+   * can show that an email went out but not which enquiry it answered, which is
+   * the join that makes the view worth looking at.
+   */
+  ledger?: {
+    /** Groups sends: "enquiry-confirmation", not this one's subject line. */
+    template: string;
+    site?: string;
+    kind?: "transactional" | "notification" | "marketing";
+    enquiryId?: string;
+    /**
+     * Instrument the HTML. False for internal mail — pixels in our own
+     * notifications would record staff reading their inbox as engagement,
+     * which is noise dressed up as a number.
+     */
+    track?: boolean;
+  };
 };
 
 /**
@@ -57,7 +82,7 @@ export async function sendRaw(input: SendInput) {
   return send(input);
 }
 
-async function send({ to, subject, html, text, replyTo }: SendInput) {
+async function send({ to, subject, html, text, replyTo, ledger }: SendInput) {
   const { env } = getCloudflareContext();
   const binding = (env as { EMAIL?: { send: (m: unknown) => Promise<unknown> } })
     .EMAIL;
@@ -68,15 +93,64 @@ async function send({ to, subject, html, text, replyTo }: SendInput) {
     );
   }
 
+  // Minted before the send, so the same id is in the pixel, in every rewritten
+  // link and in the ledger row. An open recorded weeks later still names the
+  // message that caused it.
+  const messageId = crypto.randomUUID();
+  const site = ledger?.site ?? "2ko.co.za";
+  const secret = process.env.TRACKING_SECRET;
+  let body = html;
+
+  if (ledger?.track && secret) {
+    try {
+      body = await instrument(html, {
+        base: trackingBase(site),
+        secret,
+        messageId,
+      });
+    } catch (error) {
+      // An email that goes out unmeasured beats one that does not go out.
+      console.error("[email] instrumenting failed, sending plain:", error);
+    }
+  }
+
   await binding.send({
     to,
     from: { email: FROM_ADDRESS, name: FROM_NAME },
     ...(replyTo ? { replyTo } : {}),
     subject,
-    html,
+    html: body,
     // Always both: some clients render text only, and it improves spam scoring.
     text,
   });
+
+  if (!ledger) return;
+
+  // After the send, and unable to undo it. The ledger records what happened, so
+  // a database problem must not turn a delivered email into a failure the
+  // caller retries — which would send it a second time.
+  try {
+    const recipient = Array.isArray(to) ? to[0] : to;
+
+    await recordMessage({
+      id: messageId,
+      site,
+      provider: "cloudflare",
+      fromAddress: FROM_ADDRESS,
+      fromName: FROM_NAME,
+      toAddress: recipient,
+      subject,
+      template: ledger.template,
+      kind: ledger.kind ?? "transactional",
+      enquiryId: ledger.enquiryId,
+      contactEmail: recipient,
+      status: "sent",
+      meta:
+        Array.isArray(to) && to.length > 1 ? { recipients: to.length } : undefined,
+    });
+  } catch (error) {
+    console.error("[email] ledger record failed:", error);
+  }
 }
 
 export type Enquiry = {
@@ -235,7 +309,11 @@ ${preheader ? `<div style="display:none;max-height:0;overflow:hidden;opacity:0;c
 }
 
 /** Internal notification. Sigmafy remains the durable source of truth. */
-export async function sendEnquiryNotification(enquiry: Enquiry, routing: EnquiryRouting) {
+export async function sendEnquiryNotification(
+  enquiry: Enquiry,
+  routing: EnquiryRouting,
+  enquiryId?: string,
+) {
   const recipients = notifyRecipients();
 
   const name = `${enquiry.firstName} ${enquiry.lastName}`.trim();
@@ -305,11 +383,23 @@ ${renderEmailButton(`Reply to ${enquiry.firstName}`, `mailto:${enquiry.email}`, 
     text,
     // Replying to the notification replies to the enquirer.
     replyTo: enquiry.email,
+    // Recorded, so the dashboard shows the enquiry reached us and when, but
+    // never instrumented: this one goes to our own inbox.
+    ledger: {
+      template: "enquiry-notification",
+      kind: "notification",
+      enquiryId,
+      track: false,
+    },
   });
 }
 
 /** Confirmation to the person who filled the form. */
-export async function sendEnquiryConfirmation(enquiry: Enquiry, routing: EnquiryRouting) {
+export async function sendEnquiryConfirmation(
+  enquiry: Enquiry,
+  routing: EnquiryRouting,
+  enquiryId?: string,
+) {
   const html = renderBrandedEmail({
     eyebrow: "Enquiry received",
     title: `Thanks, ${enquiry.firstName}. Your brief has landed.`,
@@ -350,5 +440,11 @@ Every price we charge is published: https://www.2ko.co.za/pricing
     subject: `${routing.reference} — we have your enquiry — 2KO`,
     html,
     text,
+    ledger: {
+      template: "enquiry-confirmation",
+      kind: "transactional",
+      enquiryId,
+      track: true,
+    },
   });
 }

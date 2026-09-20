@@ -142,16 +142,18 @@ export async function POST(req: NextRequest) {
       receivedAt: routing.receivedAt,
     } as const;
 
-    // A lead must reach at least one independent internal channel before the
-    // visitor sees success. Sigmafy remains the preferred controlled record;
-    // the notification email is the fallback when that service is unavailable.
-    const [sigmafyDelivery, internalNotification, recorded] = await Promise.allSettled([
-      postSigmafyLead(leadRecord),
-      sendEnquiryNotification(enquiry, routing),
-      // The estate's own record. Best-effort on purpose: it is a third channel
-      // alongside Sigmafy and the notification email, not a new way for a
-      // submission to fail. The visitor's success does not depend on it.
-      insertEnquiry({
+    // Recorded first, deliberately. Both emails then carry the enquiry id, so
+    // the dashboard can join "someone asked" to "this is what we sent them".
+    // Without it the two halves sit in separate tables with nothing tying them
+    // together, which is the state this replaces.
+    //
+    // Still best-effort. insertEnquiry owns id generation and de-duplication,
+    // so the id has to come back before the mail goes out, but a D1 failure
+    // costs the link — not the enquiry, and not the reply.
+    let enquiryId: string | undefined;
+
+    try {
+      ({ id: enquiryId } = await insertEnquiry({
         site: "2ko.co.za",
         kind: "contact",
         sourcePage: leadRecord.sourcePage ?? undefined,
@@ -178,12 +180,19 @@ export async function POST(req: NextRequest) {
           nextFollowUpAt: leadRecord.nextFollowUpAt,
           humanReviewRequired: leadRecord.humanReviewRequired,
         },
-      }),
+      }));
+    } catch (error) {
+      console.error("contact enquiry record failed:", error);
+    }
+
+    // A lead must reach at least one independent internal channel before the
+    // visitor sees success. Sigmafy remains the preferred controlled record;
+    // the notification email is the fallback when that service is unavailable.
+    const [sigmafyDelivery, internalNotification] = await Promise.allSettled([
+      postSigmafyLead(leadRecord),
+      sendEnquiryNotification(enquiry, routing, enquiryId),
     ]);
 
-    if (recorded.status === "rejected") {
-      console.error("contact enquiry record failed:", recorded.reason);
-    }
     if (sigmafyDelivery.status === "rejected") {
       console.error("contact Sigmafy delivery failed:", sigmafyDelivery.reason);
     }
@@ -195,7 +204,7 @@ export async function POST(req: NextRequest) {
     }
 
     const confirmation = await Promise.allSettled([
-      sendEnquiryConfirmation(enquiry, routing),
+      sendEnquiryConfirmation(enquiry, routing, enquiryId),
     ]);
     if (confirmation[0].status === "rejected") {
       console.error("contact confirmation failed:", confirmation[0].reason);
