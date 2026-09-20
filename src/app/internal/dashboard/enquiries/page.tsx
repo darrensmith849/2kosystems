@@ -9,6 +9,7 @@ import {
 } from "@/lib/tracking/store";
 import { StatCard, BarList, Panel } from "@/components/dashboard/Charts";
 import { SITES } from "@/lib/dashboard/sites";
+import { when } from "@/lib/dashboard/when";
 
 /**
  * Every enquiry the estate has taken since it had somewhere to put them.
@@ -28,15 +29,6 @@ const num = (n: number) => n.toLocaleString("en-ZA");
 
 const LABELS = new Map(SITES.map((s) => [s.host, s.label]));
 const labelFor = (host: string) => LABELS.get(host) ?? host;
-
-function when(iso: string) {
-  const d = new Date(iso);
-  const days = Math.floor((Date.now() - d.getTime()) / 86_400_000);
-  const stamp = d.toLocaleString("en-ZA", { dateStyle: "medium", timeStyle: "short" });
-  if (days === 0) return `Today · ${d.toLocaleTimeString("en-ZA", { timeStyle: "short" })}`;
-  if (days === 1) return `Yesterday · ${d.toLocaleTimeString("en-ZA", { timeStyle: "short" })}`;
-  return stamp;
-}
 
 function StatusPill({ status }: { status: string }) {
   const tone =

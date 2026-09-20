@@ -8,6 +8,7 @@ import {
 } from "@/lib/dashboard/ga";
 import { searchBySite, type SearchSummary } from "@/lib/dashboard/gsc";
 import { emailQuota, quotaUse, hoursUntilReset, type EmailQuota } from "@/lib/dashboard/email-quota";
+import { stamp } from "@/lib/dashboard/when";
 import { StatCard, BarList, Panel, Sparkline } from "@/components/dashboard/Charts";
 
 /**
@@ -234,7 +235,7 @@ export default async function DashboardPage() {
           <h1 className="mt-2 text-[30px] font-semibold tracking-[-0.02em]">Estate dashboard</h1>
         </div>
         <p className="text-[12px] text-[var(--warm-45)]">
-          Live from the GA4 and Search Console APIs · {new Date().toLocaleString("en-ZA", { dateStyle: "medium", timeStyle: "short" })}
+          Live from the GA4 and Search Console APIs · {stamp(new Date())}
         </p>
       </div>
 
