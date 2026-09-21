@@ -975,15 +975,36 @@ textarea.k-field { height: auto; padding-block: 10px; line-height: 1.5; resize: 
 .k-chat-input:focus { outline: none; border-color: var(--signal); }
 .k-chat-input::placeholder { color: var(--warm-45); }
 
+/*
+ * The chat's affirmative button. Two shapes, because it is used twice: a 34px
+ * square holding the send arrow, and a full-width one holding "Send to 2KO".
+ *
+ * These were one class, sized for the arrow, so the text button inherited a
+ * 34px box and wrapped "Send to 2KO" into three clipped lines. The Tailwind
+ * flex-1 on that button could not win against an explicit width, which is why
+ * it looked like a layout bug rather than a styling one.
+ */
 .k-chat-send {
-  width: 34px; height: 34px;
   border-radius: 8px;
   background: var(--signal);
   color: #04140a;
-  font-size: 15px;
-  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* Never wrap: a squeezed container should overflow visibly rather than
+     produce a button whose label is unreadable. */
+  white-space: nowrap;
   transition: opacity 200ms var(--ease);
 }
+
+/* Icon-only: a fixed square that must not grow or shrink beside the input. */
+.k-chat-send--icon {
+  width: 34px;
+  height: 34px;
+  font-size: 15px;
+  flex: 0 0 auto;
+}
+
 .k-chat-send:disabled { opacity: 0.35; }
 
 .k-chat-note {

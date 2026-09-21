@@ -277,7 +277,7 @@ export default function ChatWidget() {
             />
             <button
               type="submit"
-              className="k-chat-send"
+              className="k-chat-send k-chat-send--icon"
               disabled={busy || !draft.trim()}
               aria-label="Send"
             >
