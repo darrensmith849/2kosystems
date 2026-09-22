@@ -83,7 +83,7 @@ export default async function ReviewPage({
               <div className="k-app-bar">
                 <div className="flex items-center gap-2">
                   <span className="k-app-dot" style={{ background: "#e5534b" }} />
-                  <span className="k-app-dot" style={{ background: "#e8a33d" }} />
+                  <span className="k-app-dot" style={{ background: "#d9a95a" }} />
                   <span className="k-app-dot" style={{ background: "#3fb950" }} />
                 </div>
                 <span className="k-mono">
@@ -262,7 +262,7 @@ export default async function ReviewPage({
               <div className="k-app-bar">
                 <div className="flex items-center gap-2">
                   <span className="k-app-dot" style={{ background: "#e5534b" }} />
-                  <span className="k-app-dot" style={{ background: "#e8a33d" }} />
+                  <span className="k-app-dot" style={{ background: "#d9a95a" }} />
                   <span className="k-app-dot" style={{ background: "#3fb950" }} />
                 </div>
                 <span className="k-mono">The offer · fixed price</span>

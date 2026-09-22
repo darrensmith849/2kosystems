@@ -6,8 +6,8 @@ export const size = OG_IMAGE_SIZE;
 export const contentType = "image/png";
 
 const capabilities = [
-  ["01", "IMPROVE", "Find the constraint", "#e8a33d"],
-  ["02", "TRAIN", "Build capability", "#e8a33d"],
+  ["01", "IMPROVE", "Find the constraint", "#d9a95a"],
+  ["02", "TRAIN", "Build capability", "#d9a95a"],
   ["03", "AUTOMATE", "Remove repeat work", "#3fb950"],
   ["04", "MEASURE", "Hold the result", "#55a7d8"],
 ] as const;
@@ -37,7 +37,7 @@ export default function OpengraphImage() {
             inset: 0,
             display: "flex",
             background:
-              "linear-gradient(120deg, rgba(232,163,61,0.10) 0%, rgba(8,9,10,0) 38%)",
+              "linear-gradient(120deg, rgba(217, 169, 90,0.10) 0%, rgba(8,9,10,0) 38%)",
           }}
         />
         <div
@@ -62,7 +62,7 @@ export default function OpengraphImage() {
 
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", zIndex: 2 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <div style={{ width: 10, height: 10, borderRadius: 999, background: "#e8a33d", display: "flex", boxShadow: "0 0 18px rgba(232,163,61,.65)" }} />
+            <div style={{ width: 10, height: 10, borderRadius: 999, background: "#d9a95a", display: "flex", boxShadow: "0 0 18px rgba(217, 169, 90,.65)" }} />
             <div style={{ fontSize: 27, fontWeight: 600, color: "#f7f8f8", letterSpacing: -0.8 }}>2KO</div>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 9, fontSize: 13, color: "#8a8f98", letterSpacing: 2.4, textTransform: "uppercase" }}>
@@ -73,7 +73,7 @@ export default function OpengraphImage() {
 
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", zIndex: 2, flex: 1 }}>
           <div style={{ width: 570, display: "flex", flexDirection: "column" }}>
-            <div style={{ display: "flex", fontSize: 15, color: "#e8a33d", letterSpacing: 2.7, textTransform: "uppercase" }}>One accountable improvement loop</div>
+            <div style={{ display: "flex", fontSize: 15, color: "#d9a95a", letterSpacing: 2.7, textTransform: "uppercase" }}>One accountable improvement loop</div>
             <div style={{ marginTop: 20, fontSize: 65, lineHeight: 0.98, color: "#f7f8f8", letterSpacing: -3.2, display: "flex", flexDirection: "column" }}>
               <span>Improve the process.</span>
               <span style={{ color: "#b5bac3" }}>Make the result permanent.</span>

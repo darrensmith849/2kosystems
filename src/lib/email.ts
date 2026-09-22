@@ -177,7 +177,7 @@ export type Enquiry = {
 type EmailAccent = "ember" | "signal" | "info";
 
 const EMAIL_ACCENTS: Record<EmailAccent, string> = {
-  ember: "#e8a33d",
+  ember: "#d9a95a",
   signal: "#3fb950",
   info: "#6a8cff",
 };

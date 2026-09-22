@@ -41,7 +41,7 @@ const PHASES: Phase[] = [
     letter: "M",
     name: "Measure",
     doing: "Establishing the baseline",
-    accent: "#e8a33d",
+    accent: "#d9a95a",
     kind: "measure",
   },
   {

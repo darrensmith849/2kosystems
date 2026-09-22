@@ -206,7 +206,7 @@ export default function HomePage() {
             {lifecycle.map((stage, index) => (
               <Rise key={stage} step={(index % 3) as 0 | 1 | 2}>
                 <li className="relative border-t border-[var(--hair-2)] pt-8 lg:pr-5">
-                  <span className="absolute -top-[6px] left-0 h-3 w-3 rounded-full border border-[var(--ember)] bg-[var(--black-2)] shadow-[0_0_18px_rgba(232,163,61,.4)]" />
+                  <span className="absolute -top-[6px] left-0 h-3 w-3 rounded-full border border-[var(--ember)] bg-[var(--black-2)] shadow-[0_0_18px_rgba(217, 169, 90,.4)]" />
                   <span className="k-mono k-mono--ember">0{index + 1}</span>
                   <h3 className="k-sub mt-5">{stage}</h3>
                 </li>

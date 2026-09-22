@@ -38,7 +38,7 @@ const BUILDS: Build[] = [
   {
     domain: "harveys-plumbing.co.za",
     kind: "trades",
-    accent: "#e8a33d",
+    accent: "#d9a95a",
     label: "One-pager · trades",
     headline: "Burst pipe? We answer.",
     cta: "Call now",

@@ -190,7 +190,7 @@ export default function OpsConsole() {
       <div className="k-app-bar">
         <div className="flex items-center gap-2">
           <span className="k-app-dot" style={{ background: "#e5534b" }} />
-          <span className="k-app-dot" style={{ background: "#e8a33d" }} />
+          <span className="k-app-dot" style={{ background: "#d9a95a" }} />
           <span className="k-app-dot" style={{ background: "#3fb950" }} />
         </div>
         <span className="k-mono">Approval control · Rustenburg Operations</span>

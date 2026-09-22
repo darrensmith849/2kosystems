@@ -42,12 +42,12 @@ export default async function ReviewOgImage({
             width: 860,
             height: 660,
             display: "flex",
-            background: "radial-gradient(closest-side, rgba(232,163,61,0.22), rgba(232,163,61,0))",
+            background: "radial-gradient(closest-side, rgba(217, 169, 90,0.22), rgba(217, 169, 90,0))",
           }}
         />
 
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <div style={{ width: 10, height: 10, borderRadius: 999, background: "#e8a33d", display: "flex" }} />
+          <div style={{ width: 10, height: 10, borderRadius: 999, background: "#d9a95a", display: "flex" }} />
           <div style={{ fontSize: 24, color: "#f7f8f8" }}>2KO Systems</div>
         </div>
 
@@ -79,7 +79,7 @@ export default async function ReviewOgImage({
               : "Improvement review"}
           </div>
           {t && (
-            <div style={{ marginTop: 26, fontSize: 34, color: "#e8a33d", display: "flex" }}>
+            <div style={{ marginTop: 26, fontSize: 34, color: "#d9a95a", display: "flex" }}>
               {rand(t.atRisk)} a year sitting behind a manual control
             </div>
           )}
