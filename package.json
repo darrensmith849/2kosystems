@@ -7,32 +7,61 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "verify:agent-ops": "node scripts/verify-agent-ops.mjs",
-    "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate",
-    "db:push": "drizzle-kit push",
-    "db:studio": "drizzle-kit studio"
+    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+    "upload": "opennextjs-cloudflare build && opennextjs-cloudflare upload",
+    "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
+    "audit": "./scripts/with-node.sh scripts/audit.ts",
+    "build:ads": "./scripts/with-node.sh scripts/build-ads.ts",
+    "ads:auth": "./scripts/with-node.sh scripts/ads-auth.ts",
+    "env:set": "./scripts/with-node.sh scripts/env-set.ts",
+    "ads:check": "./scripts/with-node.sh scripts/ads-check.ts",
+    "ads:query": "./scripts/with-node.sh scripts/ads-query.ts",
+    "ads:build-2kos": "./scripts/with-node.sh scripts/ads-build-2kos.ts",
+    "ads:split-goals": "./scripts/with-node.sh scripts/ads-split-goals.ts",
+    "ads:kill-broad": "./scripts/with-node.sh scripts/ads-kill-broad.ts",
+    "redirects:report": "./scripts/with-node.sh scripts/legacy-redirect-report.ts",
+    "ads:audit-tracking": "./scripts/with-node.sh scripts/ads-audit-tracking.ts",
+    "ads:negatives": "./scripts/with-node.sh scripts/ads-negatives.ts",
+    "ads:kill-display": "./scripts/with-node.sh scripts/ads-kill-display.ts",
+    "ads:build-sssa": "./scripts/with-node.sh scripts/ads-build-sssa.ts",
+    "ga:auth": "./scripts/with-node.sh scripts/ga-auth.ts",
+    "ga:audit": "./scripts/with-node.sh scripts/ga-properties.ts",
+    "ga:traffic": "./scripts/with-node.sh scripts/ga-traffic.ts",
+    "ga:cleanup": "./scripts/with-node.sh scripts/ga-cleanup.ts",
+    "cf:dns": "./scripts/with-node.sh scripts/cf-dns.ts",
+    "ga:realtime": "./scripts/with-node.sh scripts/ga-realtime.ts",
+    "cf:secrets": "./scripts/with-node.sh scripts/cf-secrets.ts"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.91.1",
-    "drizzle-orm": "^0.36.4",
-    "next": "16.1.6",
+    "next": "^16.3.3",
+    "openai": "^7.15.0",
     "pdf-lib": "^1.17.1",
-    "postgres": "^3.4.5",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "server-only": "^0.0.1",
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@opennextjs/cloudflare": "^1.20.2",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "drizzle-kit": "^0.30.1",
+    "d3-geo": "^3.1.1",
     "eslint": "^9",
-    "eslint-config-next": "16.1.6",
+    "eslint-config-next": "^16.3.3",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "topojson-client": "^3.1.0",
+    "typescript": "^5",
+    "world-atlas": "^2.0.2",
+    "wrangler": "^4.125.0"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "overrides": {
+    "baseline-browser-mapping": "2.11.0",
+    "sharp": "0.35.4"
   }
 }

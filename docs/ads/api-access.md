@@ -1,0 +1,262 @@
+# Google Ads API access
+
+**Status: APPROVED for Basic Access, 2026-08-30.** Two business days after
+submission, not the five Google quoted.
+
+| | |
+|---|---|
+| Manager account (MCC) | **2KO Group — 434-363-4049** |
+| Linked sub-accounts | 2KO Africa (351-600-6867), Impart Agency (672-553-2284) |
+| Developer token | **Basic Access — approved and activated 2026-08-30** |
+| Daily quota | **15,000 operations.** Do not apply for Standard until usage genuinely exceeds this; Google only grants it against demonstrated need |
+| Google Cloud project | `2ko-ads-api` · **number 41808878114** · Google Ads API enabled |
+| Submitted | 2026-08-28 |
+
+The token string itself lives in the API Center (Tools & Settings → Setup →
+API Center) on the manager account. Treat it as a password: it goes in `.env`
+as `GOOGLE_ADS_DEVELOPER_TOKEN` and is never committed.
+
+**Keep the developer contact email current.** Google's approval mail is
+explicit that this is their only route for reaching us about the token, and a
+bounced address is how tokens get suspended without anyone noticing.
+
+## OAuth setup — done 2026-09-07
+
+| | |
+|---|---|
+| Consent screen | Configured. App name **2KO Group Ads Tools** |
+| Branding | Home `https://www.2kosystems.com`, privacy `/privacy`, terms `/terms`, authorised domain `2kosystems.com` |
+| OAuth client | **ads-cli**, type Desktop, on project 2ko-ads-api |
+| Test user | darren.smith.210193@gmail.com |
+| Publishing status | **In production** |
+
+Publishing mattered more than it looks. Google, verbatim:
+
+> A Google Cloud Platform project with an OAuth consent screen configured for
+> an **external** user type and a publishing status of **"Testing"** is issued
+> a **refresh token expiring in 7 days**, unless the only OAuth scopes
+> requested are a subset of name, email address, and user profile.
+
+`https://www.googleapis.com/auth/adwords` is not in that subset, and the
+manager account is on gmail.com so there is no Workspace and no Internal
+option. Left on Testing it works, and then stops a week later looking like a
+broken script. In production, the refresh token persists.
+
+The consent screen still shows an "unverified app" warning, which is expected
+while only the owner uses it — click through Advanced. Verification is only
+enforced past the 100-user cap.
+
+`/terms` was built for this. It did not exist, and it was the one Branding
+field the site could not already supply.
+
+## ⚠ Google moved access levels to the Cloud project (found 2026-09-11)
+
+The Basic Access granted on 2026-08-30 was against the **developer token**.
+Google has since changed the model, and the Ads API Center now carries a
+banner saying so:
+
+> Developer tokens are no longer required for using the Google Ads API.
+> **API access levels are now managed exclusively in the Google Cloud Console.**
+> The levels displayed on this page may no longer be accurate and cannot be
+> upgraded from this page.
+
+So the "Basic Access" still shown in the API Center is stale. From the docs:
+"Your Google Cloud project is assigned an access level… After you've enabled
+Google Ads API, your Google Cloud project is granted the **Test Account Access
+level**."
+
+`2ko-ads-api` was on **Test**, which is why `listAccessibleCustomers` worked —
+it only checks the token — while any actual query returned
+`CLOUD_PROJECT_NOT_APPROVED_FOR_PRODUCTION`.
+
+Access levels now live at
+**https://console.cloud.google.com/google/ads-apis/overview**, and the ladder
+is Test → Explorer → Basic → Standard. Explorer already permits production
+accounts at 2,880 operations/day; Basic raises that to 15,000.
+
+Applied for Explorer on 2026-09-11; the console says review takes a few minutes.
+
+## Working as at 2026-09-11
+
+`npm run ads:check` returns six accessible accounts through the manager:
+
+| CID | Account |
+|---|---|
+| 351-600-6867 | 2KO Africa |
+| 672-553-2284 | Impart Agency |
+| 434-363-4049 | 2KO Group (manager) |
+| 858-930-2650, 308-275-8060, 122-174-6117 | cancelled |
+
+All five credentials are in `.env`, which is gitignored and chmod 600. The
+refresh token does not expire, because the consent screen is in production.
+
+The one thing that went wrong twice was pasting the OAuth client secret into
+`GOOGLE_ADS_DEVELOPER_TOKEN`. Both scripts now refuse a value starting
+`GOCSPX-` before making any network call.
+
+## Verifying, and what the errors mean
+
+    npm run ads:check
+
+Re-checks the credentials in .env without sending you back through the browser.
+Use it after correcting a value; `ads:auth` is only needed to mint a refresh
+token in the first place.
+
+The Ads API returns 401 UNAUTHENTICATED for almost everything, with the real
+cause buried in `error.details[].errors[].errorCode`. Both scripts now dig that
+out. The ones worth knowing:
+
+| Error | Cause |
+|---|---|
+| `DEVELOPER_TOKEN_INVALID` | Wrong value in `GOOGLE_ADS_DEVELOPER_TOKEN`. A 35-character value starting `GOCSPX-` is an OAuth client secret in the wrong slot — this happened on 2026-09-07 |
+| `DEVELOPER_TOKEN_NOT_APPROVED` | Token still on Explorer access |
+| `CUSTOMER_NOT_FOUND` | `GOOGLE_ADS_LOGIN_CUSTOMER_ID` wrong; digits only, no dashes |
+| `NOT_ADS_USER` | The authorised Google account has no access to that Ads account |
+
+A **404 with an HTML body** rather than JSON means the API version in the
+script is wrong. Current is **v25** (v25.1, 2026-08-19); check the
+[release notes](https://developers.google.com/google-ads/api/docs/release-notes)
+before bumping.
+
+## Why Basic Access is enough
+
+Basic covers 15,000 operations a day. The audit tool reads campaign, keyword
+and search-term data for accounts we manage; a full account pull is in the low
+hundreds of operations. Standard is for platforms serving many external
+advertisers, and applying without the usage to justify it is refused.
+
+Internal-only agency tooling is also exempt from the Required Minimum
+Functionality categories, which is what makes the audit product viable without
+building a general-purpose Ads management interface.
+
+---
+
+## How it went (original blocker, now resolved)
+
+The API Center does not exist on a standard Google Ads account. Checked on
+2026-08-28 against every account on `darren.smith.210193@gmail.com`:
+
+| Account | CID | Manager? |
+|---|---|---|
+| 2KO Africa | 351-600-6867 | No |
+| Impart Agency | 672-553-2284 | No |
+| 790security | 858-930-2650 | Cancelled |
+| (unnamed) | 308-275-8060 | Cancelled |
+| (unnamed) | 122-174-6117 | Cancelled |
+
+Both live accounts return *"The API Center is only available to manager
+accounts."* There is no manager account to apply from, so one has to be
+created — and creating accounts is the one part of this I will not do on
+your behalf. It takes about three minutes.
+
+---
+
+## Step 1 — create the manager account (you, ~3 min)
+
+https://ads.google.com/home/tools/manager-accounts/ → **Create a manager account**
+
+- Sign in as `darren.smith.210193@gmail.com` so it sits with the existing accounts
+- Name: **2KO Group**. Not a personal name. When you later ask a prospect to
+  grant access to their account, the invitation shows them this name and CID —
+  "2KO Group" reads as the company whose site they just looked at, "Darren
+  Smith" reads as a freelancer or a phishing attempt. It also has to match the
+  company on the token application, and it sits above 2KO Africa, Impart Agency
+  and any client accounts, so it wants the parent name rather than one brand
+  underneath it. The name *can* be changed later, unlike the two settings below.
+- Billing country: South Africa · Currency: ZAR · Time zone: Johannesburg
+- Use it to: *manage other people's accounts*
+
+Currency and time zone **cannot be changed afterwards**. Get them right.
+
+## Step 2 — link the existing accounts
+
+Inside the new manager account: **Accounts → + → Link existing account**, add
+`351-600-6867` and `672-553-2284`. Google requires all active accounts to be
+linked to the manager before it will grant Basic access.
+
+## Step 3 — apply for the token
+
+Manager account → **Admin → API Center**. Signing up grants **Test access**
+immediately. Test access only reaches *test* accounts, so it cannot read
+2KO Africa — you then apply in the same screen for **Basic access**, which is
+the one that matters.
+
+| Level | Reaches | Ops/day |
+|---|---|---|
+| Test | Test accounts only | 15,000 |
+| **Basic** ← what we need | Real accounts | 15,000 |
+| Standard | Real accounts | Unlimited |
+
+15,000 operations a day is far more than the audit engine needs — a full
+account pull is a few hundred.
+
+---
+
+## Answers to paste into the application
+
+**Company** — 2KO Group (2KO Systems), South Africa
+**Website** — https://2kosystems.com
+**Contact** — darren@2kosystems.com
+
+**How will you use the Google Ads API?**
+
+> We manage our own Google Ads accounts and those of South African client
+> businesses on their behalf, as an agency. The API is used for two things.
+>
+> First, internal reporting and account hygiene across our own accounts:
+> pulling campaign, keyword and search-term reports, applying negative keyword
+> lists, and monitoring bid strategy and conversion tracking configuration.
+>
+> Second, a diagnostic audit we run for prospective clients. With the account
+> owner's permission we read campaign, keyword, search-term, geographic and
+> conversion-action data, score it against a fixed published rule set, and
+> deliver a written report identifying wasted spend and misconfiguration. The
+> client receives a document. They do not log into anything we operate, and no
+> Google Ads data is exposed to any third party.
+
+**Who uses the tool?** — 2KO staff only. Clients receive reports, not access.
+
+**Type of tool** — Internal-only. We use the API to manage accounts we or our
+clients own, as their agency. There is no external-facing platform.
+
+---
+
+## Why the classification matters
+
+Google's [Required Minimum Functionality](https://developers.google.com/google-ads/api/docs/rmf)
+rules bite differently by tool type:
+
+| Tool type | RMF applies |
+|---|---|
+| Full-service platform (clients log in and manage their own accounts) | All three categories |
+| Reporting-only (a dashboard you give clients) | Reporting functionality |
+| **Internal-only (agency use)** | **Exempt from all of it** |
+
+The audit business is **internal-only**: we run the audit, the client gets a
+document, nobody logs into anything. That exempts it from RMF entirely, which
+would otherwise force a long list of features into a tool that only needs to
+read and score.
+
+The classification has to stay true. The day we hand clients a login to a live
+dashboard, it becomes a reporting-only tool and Reporting RMF applies — every
+report we show must then display Google's full required field set.
+
+---
+
+## When the token arrives
+
+Basic access is typically reviewed within a few business days. Then:
+
+1. Put the token in `.env` as `GOOGLE_ADS_DEVELOPER_TOKEN` — **this one is a
+   real secret**, unlike the conversion IDs in `.env.production`. It does not
+   get committed.
+2. Create an OAuth client (Desktop app) in Google Cloud Console and generate a
+   refresh token for `darren.smith.210193@gmail.com`.
+3. Point the audit engine's Route A at it. `src/lib/audit/` already accepts
+   reports by kind, so the API path only has to produce the same row shapes the
+   CSV parser emits — see the GAQL starting points in
+   [audit-ruleset.md](audit-ruleset.md#6-inputs).
+
+That last step is what turns the audit from "email me five CSV exports" into
+"connect your account, get the number in ninety seconds" — which is the version
+that works as a demo on the site.

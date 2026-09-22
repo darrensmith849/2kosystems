@@ -1,5 +1,5 @@
 /**
- * Shared types for the 2KO Systems site chat widget.
+ * Shared types for the 2KO umbrella site chat widget.
  */
 
 export type ChatRole = "user" | "assistant" | "system";

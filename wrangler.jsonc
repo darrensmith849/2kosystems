@@ -1,0 +1,63 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "2kosystems",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-08-25",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "services": [
+    {
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "2kosystems"
+    }
+  ],
+  "images": {
+    "binding": "IMAGES"
+  },
+  // Cloudflare Access, for /internal. Neither value is a secret: both appear
+  // in the login redirect Access itself issues. They live here rather than in
+  // a secret so a deploy cannot silently lose them — without them the Proxy
+  // stops verifying Access assertions and falls back to basic auth.
+  "vars": {
+    "ACCESS_TEAM_DOMAIN": "2ko.cloudflareaccess.com",
+    "ACCESS_AUD": "150a262892476f2ab3561bc8abd8d4d17aec79c3203c1943d7140936847a216f"
+  },
+
+  // Enquiries from every site in the estate. Created 2026-09-18; before it
+  // there was no datastore anywhere in the estate and enquiries were
+  // fire-and-forget email.
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "2ko-enquiries",
+      "database_id": "7300d129-8c81-468d-8077-c5ced9782a8f",
+      "migrations_dir": "./migrations"
+    }
+  ],
+  // Cloudflare Email Service. No API key — the binding is the credential.
+  "send_email": [
+    { "name": "EMAIL" }
+  ],
+  // Custom domains. Cloudflare manages the DNS records and the certificate for
+  // these, which replaces the Vercel A/CNAME records on the apex and www.
+  "routes": [
+    { "pattern": "2ko.co.za", "custom_domain": true },
+    { "pattern": "www.2ko.co.za", "custom_domain": true },
+    { "pattern": "2kosystems.com", "custom_domain": true },
+    { "pattern": "www.2kosystems.com", "custom_domain": true },
+    // Per-brand tracking hostnames. They serve only /e/o (open pixel) and
+    // /e/c (click redirect) — the Proxy 404s everything else on them, so a
+    // recipient hovering a link in a Six Sigma email sees a Six Sigma domain
+    // rather than 2ko.co.za.
+    { "pattern": "go.2ko.co.za", "custom_domain": true },
+    { "pattern": "go.sigmafy.co", "custom_domain": true },
+    { "pattern": "go.sixsigmasouthafrica.co.za", "custom_domain": true },
+    { "pattern": "go.sixsigmauk.com", "custom_domain": true }
+  ],
+  "observability": {
+    "enabled": true
+  }
+}

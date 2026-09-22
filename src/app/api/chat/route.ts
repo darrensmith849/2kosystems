@@ -1,193 +1,117 @@
-import { NextRequest, NextResponse } from "next/server";
-import { CHAT_TURN_WINDOW } from "@/lib/chat/constants";
-import { SYSTEM_PROMPT, detectIntent } from "@/lib/chat/systemPrompt";
-import type { ChatRequestBody, ChatResponseBody } from "@/lib/chat/types";
-
-export const runtime = "nodejs";
-
-const GEMINI_MODEL = "gemini-2.5-flash";
+import OpenAI from "openai";
+import { NextRequest } from "next/server";
+import { SYSTEM_PROMPT } from "@/lib/chat/knowledge";
 
 /**
- * Server-side chat endpoint for the 2KO Systems site widget.
+ * Site assistant.
  *
- * Calls Google's Gemini API with the server-only NANO_API_KEY. The key
- * never leaves this module. If the key is missing or the upstream call
- * fails, we return a useful intent-aware fallback reply so the visitor
- * always gets a sensible response — never a configuration error.
+ * The knowledge base is a stable ~2.8k-token prefix carried as the first
+ * message. OpenAI caches identical prompt prefixes over 1,024 tokens
+ * automatically, so from the second turn onward that prefix is billed at a
+ * discount — no explicit cache breakpoint to declare, unlike Anthropic's
+ * cache_control. It only works while the prefix stays byte-identical, which is
+ * why nothing volatile goes into it; the conversation is the only thing that
+ * varies.
+ *
+ * Short-form Q&A over supplied material rather than reasoning work, so a small
+ * fast model is the right trade and temperature stays low — this answers
+ * questions about published prices, and it should not get inventive about them.
  */
 
-// ---------- intent-aware fallback (used when Gemini is unreachable) ----------
+/** Change here, not in a dozen places. */
+const MODEL = "gpt-4o-mini";
+const MAX_TURNS = 20;
 
-function fallbackReply(message: string): string {
-  const lower = message.toLowerCase();
+type IncomingMessage = { role: "user" | "assistant"; content: string };
 
-  if (/(cost|price|expensive|budget|quote)/.test(lower)) {
-    return (
-      "The cleanest way to bring scope down is to start with one focused workflow rather than a full system build. " +
-      "A Pilot validates the approach quickly, lowers risk, and the work carries forward into the larger Build later. " +
-      "Which workflow is costing your team the most time each week right now?"
-    );
-  }
-
-  if (/(start smaller|pilot|small|narrow|first step)/.test(lower)) {
-    return (
-      "Yes — starting smaller is usually the smartest path. We focus on one painful workflow, ship a tightly scoped " +
-      "Pilot, and only expand once it proves useful. Which area would you want to fix first: approvals, reporting, " +
-      "admin follow-up, customer communication, or live dashboards?"
-    );
-  }
-
-  if (/(what do you build|services|solutions|do you do)/.test(lower)) {
-    return (
-      "2KO Systems builds custom operational software, dashboards, portals, approval flows, automations and AI-assisted " +
-      "workflows for businesses that have outgrown spreadsheets, manual admin or outdated systems. " +
-      "Are you mainly trying to replace spreadsheets, automate admin, improve reporting, or build a client-facing portal?"
-    );
-  }
-
-  if (/(audit|systems audit|book|next step)/.test(lower)) {
-    return (
-      "The Systems Audit is a paid diagnostic that maps your highest-pain workflow, defines the ROI case and " +
-      "recommends the first system to build. It's typically a short, focused engagement. " +
-      "Which workflow do you suspect is the biggest drag on operations right now?"
-    );
-  }
-
-  return (
-    "Happy to help. 2KO Systems usually starts by understanding the workflow, the bottleneck and the business outcome " +
-    "before recommending a build. What process in your business currently feels the most manual, slow, or hard to track?"
-  );
-}
-
-// ---------- Gemini call ----------
-
-type GeminiPart = { text?: string };
-type GeminiCandidate = { content?: { parts?: GeminiPart[] } };
-type GeminiResponse = { candidates?: GeminiCandidate[]; error?: { message?: string } };
-
-async function callGemini(
-  apiKey: string,
-  history: { role: "user" | "assistant"; content: string }[],
-  message: string,
-): Promise<string | null> {
-  // Gemini wants alternating user/model turns. We prepend the system prompt
-  // as the first "user" turn (Gemini doesn't expose a separate system role
-  // on v1beta), and follow with the trimmed conversation + the new message.
-  const trimmed = history.slice(-CHAT_TURN_WINDOW);
-  const contents = [
-    { role: "user", parts: [{ text: SYSTEM_PROMPT }] },
-    {
-      role: "model",
-      parts: [
-        {
-          text:
-            "Understood. I'll keep replies focused, premium and consultative, and I'll always end with a useful qualifying question.",
-        },
-      ],
-    },
-    ...trimmed.map((m) => ({
-      role: m.role === "assistant" ? "model" : "user",
-      parts: [{ text: m.content }],
-    })),
-    { role: "user", parts: [{ text: message }] },
-  ];
-
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`;
-
-  const res = await fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      contents,
-      generationConfig: {
-        temperature: 0.45,
-        topP: 0.9,
-        maxOutputTokens: 420,
-      },
-    }),
-    cache: "no-store",
-  });
-
-  if (!res.ok) return null;
-
-  const data = (await res.json()) as GeminiResponse;
-  if (data.error) return null;
-
-  const text =
-    data.candidates?.[0]?.content?.parts
-      ?.map((p) => p.text || "")
-      .join("")
-      .trim() || "";
-  return text || null;
-}
-
-// ---------- POST handler ----------
-
-export async function POST(req: NextRequest): Promise<NextResponse<ChatResponseBody>> {
-  let body: ChatRequestBody;
-  try {
-    body = (await req.json()) as ChatRequestBody;
-  } catch {
-    return NextResponse.json(
-      { ok: false, error: "Invalid request body." },
-      { status: 400 },
-    );
-  }
-
-  const messages = Array.isArray(body.messages) ? body.messages : [];
-  if (messages.length === 0) {
-    return NextResponse.json(
-      { ok: false, error: "No messages provided." },
-      { status: 400 },
-    );
-  }
-
-  // The most recent message must be from the user; everything before is history.
-  const last = messages[messages.length - 1];
-  const userMessage =
-    last && last.role === "user" && typeof last.content === "string"
-      ? last.content.trim()
-      : "";
-
-  if (!userMessage) {
-    return NextResponse.json(
-      {
-        ok: true,
-        reply:
-          "Tell me what you're trying to improve and I'll point you in the right direction. " +
-          "What system or workflow are you trying to fix first?",
-      },
-      { status: 200 },
-    );
-  }
-
-  const history = messages
-    .slice(0, -1)
-    .filter(
-      (m): m is { role: "user" | "assistant"; content: string } =>
-        !!m && (m.role === "user" || m.role === "assistant") && typeof m.content === "string",
-    );
-
-  const apiKey = process.env.NANO_API_KEY;
-
-  // Always return ok:true with a useful reply — even when the upstream API
-  // is missing or fails. The visitor never sees a configuration error.
+export async function POST(req: NextRequest) {
+  const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
-    return NextResponse.json({ ok: true, reply: fallbackReply(userMessage) });
+    return Response.json(
+      { error: "The assistant is not configured yet." },
+      { status: 503 },
+    );
   }
 
+  let history: IncomingMessage[];
   try {
-    const reply = await callGemini(apiKey, history, userMessage);
-    if (!reply) {
-      return NextResponse.json({ ok: true, reply: fallbackReply(userMessage) });
-    }
-    return NextResponse.json({
-      ok: true,
-      reply,
-      intent: detectIntent(reply),
+    const body = (await req.json()) as { messages?: IncomingMessage[] };
+    history = Array.isArray(body.messages) ? body.messages : [];
+  } catch {
+    return Response.json({ error: "Malformed request." }, { status: 400 });
+  }
+
+  const turns = history
+    .filter((m) => typeof m.content === "string" && m.content.trim())
+    .slice(-MAX_TURNS)
+    .map((m) => ({
+      role: m.role === "assistant" ? ("assistant" as const) : ("user" as const),
+      content: m.content.slice(0, 4000),
+    }));
+
+  if (turns.length === 0 || turns[0].role !== "user") {
+    return Response.json({ error: "Nothing to answer." }, { status: 400 });
+  }
+
+  const client = new OpenAI({ apiKey });
+
+  try {
+    const stream = await client.chat.completions.create({
+      model: MODEL,
+      max_tokens: 1024,
+      temperature: 0.3,
+      stream: true,
+      messages: [{ role: "system", content: SYSTEM_PROMPT }, ...turns],
+    });
+
+    const encoder = new TextEncoder();
+    const body = new ReadableStream<Uint8Array>({
+      async start(controller) {
+        try {
+          for await (const chunk of stream) {
+            const text = chunk.choices[0]?.delta?.content;
+            if (text) controller.enqueue(encoder.encode(text));
+          }
+        } catch (error) {
+          // The response has already started, so the only way to tell the
+          // visitor is to write the failure into the stream itself.
+          console.error("Chat stream failed:", error);
+          controller.enqueue(
+            encoder.encode(
+              "\n\nSomething went wrong on our side. Please try again, or use the contact page.",
+            ),
+          );
+        } finally {
+          controller.close();
+        }
+      },
+    });
+
+    return new Response(body, {
+      headers: {
+        "Content-Type": "text/plain; charset=utf-8",
+        "Cache-Control": "no-store",
+      },
     });
   } catch (error) {
-    console.error("/api/chat failed", error);
-    return NextResponse.json({ ok: true, reply: fallbackReply(userMessage) });
+    if (error instanceof OpenAI.RateLimitError) {
+      return Response.json(
+        { error: "Busy right now — try again in a moment." },
+        { status: 429 },
+      );
+    }
+    if (error instanceof OpenAI.AuthenticationError) {
+      console.error("Chat auth failed — check OPENAI_API_KEY");
+      return Response.json(
+        { error: "The assistant is not configured correctly." },
+        { status: 503 },
+      );
+    }
+    if (error instanceof OpenAI.APIError) {
+      console.error(`Chat API error ${error.status}:`, error.message);
+      return Response.json({ error: "The assistant is unavailable." }, { status: 502 });
+    }
+    console.error("Chat failed:", error);
+    return Response.json({ error: "The assistant is unavailable." }, { status: 500 });
   }
 }

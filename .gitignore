@@ -33,6 +33,8 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 !.env.example
+# Google Ads IDs only. Public client-side identifiers, no secrets — see the file.
+!.env.production
 
 # vercel
 .vercel
@@ -45,3 +47,8 @@ next-env.d.ts
 
 # local dev DB volume
 /.local-data/
+
+# Cloudflare
+.open-next/
+.wrangler/
+cloudflare-env.d.ts
