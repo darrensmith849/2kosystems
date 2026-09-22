@@ -102,7 +102,12 @@ export default function Nav() {
           }}
         >
           <span className="h-1.5 w-1.5 rounded-full" style={{ background: "var(--ember)" }} />
-          <span className="text-[15px] font-medium tracking-[-0.015em]">2KO</span>
+          <span
+            className="text-[21px] leading-none"
+            style={{ fontFamily: "var(--font-ko-mark)" }}
+          >
+            2KO
+          </span>
         </Link>
 
         <nav className="hidden items-center gap-6 lg:flex" aria-label="Primary navigation">

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter, IBM_Plex_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import "@/styles/system.css";
 import {
@@ -33,6 +34,18 @@ const plexMono = IBM_Plex_Mono({
   subsets: ["latin"],
   weight: ["400", "500"],
   display: "swap",
+});
+
+/* The 2KO mark itself. Three glyphs — 2, K and O — carrying the real
+   letterforms, so typing "2KO" sets the logo with Africa in the counter.
+   display:"block" rather than "swap": the mark is a logo, and swapping it
+   in after a system-font paint reads as a flash of the wrong brand. */
+const koMark = localFont({
+  src: "../fonts/2ko-mark.woff2",
+  variable: "--font-ko-mark",
+  display: "block",
+  weight: "400",
+  style: "normal",
 });
 
 export const metadata: Metadata = {
@@ -161,7 +174,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} ${plexMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} ${plexMono.variable} ${koMark.variable} antialiased`}
       >
         {children}
       </body>
