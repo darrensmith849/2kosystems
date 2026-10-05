@@ -283,18 +283,22 @@ export default function SectorsPage() {
         </section>
       ))}
 
-      <section id="service-operations" className="k-band k-band--2 relative overflow-hidden">
+      <section id="service-operations" className="relative isolate flex min-h-[92svh] items-end overflow-hidden">
+        <Rise variant="settle" className="absolute inset-0 -z-20">
+          <Photo src="/imagery/home/service-coordination-v1.webp" sizes="100vw" scrim="bottom" position="center" />
+        </Rise>
+        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-black/84 via-black/28 to-black/45" aria-hidden="true" />
+        <div className="k-shell pb-20 pt-40">
+          <Rise><p className="k-mono k-mono--ember">Information and service operations</p></Rise>
+          <Rise step={1}><h2 className="k-state mt-8 max-w-[17ch]">The process may be invisible. The delay, rework and risk are not.</h2></Rise>
+          <Rise step={2}><p className="k-lead mt-8 max-w-[54ch]">Cases, conversations, documents and decisions need the same operational discipline as physical work. These sectors are not adjacent to the 2KO proposition—they are a core part of it.</p></Rise>
+        </div>
+      </section>
+
+      <section className="k-band k-band--2 relative overflow-hidden">
         <div className="pointer-events-none absolute -right-14 top-14 text-[clamp(92px,19vw,300px)] font-semibold leading-none tracking-[-.08em] text-white/[.018]" aria-hidden="true">SERVICE</div>
         <div className="k-shell relative">
-          <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(320px,.58fr)] lg:items-end">
-            <div>
-              <Rise><p className="k-mono k-mono--ember">Information and service operations</p></Rise>
-              <Rise step={1}><h2 className="k-state mt-7 max-w-[17ch]">The process may be invisible. The delay, rework and risk are not.</h2></Rise>
-            </div>
-            <Rise step={2}><p className="k-lead">Cases, conversations, documents and decisions need the same operational discipline as physical work. These sectors are not adjacent to the 2KO proposition—they are a core part of it.</p></Rise>
-          </div>
-
-          <div className="mt-16 grid gap-5 lg:grid-cols-12">
+          <div className="grid gap-5 lg:grid-cols-12">
             {serviceSectors.map((sector, index) => (
               <Rise key={sector.slug} step={(index % 3) as 0 | 1 | 2} className={index === 0 || index === 3 ? "lg:col-span-7" : "lg:col-span-5"}>
                 <article id={sector.slug} className="group h-full overflow-hidden rounded-2xl border border-[var(--hair-2)] bg-black/30 shadow-2xl">
