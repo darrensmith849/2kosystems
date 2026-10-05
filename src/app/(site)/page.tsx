@@ -8,6 +8,7 @@ import GroupOperatingSystem from "@/components/cinema/GroupOperatingSystem";
 import PageHero from "@/components/cinema/PageHero";
 import Photo from "@/components/cinema/Photo";
 import Rise from "@/components/cinema/Rise";
+import ServiceFlowCard from "@/components/cinema/ServiceFlowCard";
 import TrackedLink from "@/components/cinema/TrackedLink";
 import { RATES, TIMEBOX } from "@/lib/pricing";
 
@@ -260,23 +261,8 @@ export default function HomePage() {
             </Rise>
           </div>
 
-          <Rise step={2}>
-            <div className="relative overflow-hidden rounded-2xl border border-white/12 bg-black/65 p-3 shadow-2xl backdrop-blur-xl">
-              <div className="relative aspect-[16/10] overflow-hidden rounded-xl">
-                <Photo src="/imagery/home/service-coordination-v1.webp" sizes="(min-width: 1024px) 48vw, 100vw" scrim="bottom" position="center" />
-                <div className="absolute inset-x-0 bottom-0 p-5 sm:p-7">
-                  <div className="flex items-end justify-between gap-6">
-                    <div><p className="k-mono k-mono--ember">SERVICE FLOW · LIVE PATTERN</p><h3 className="k-sub mt-3">One request. One owner. The full context moves with it.</h3></div>
-                    <span className="hidden rounded-full border border-[var(--signal)]/50 bg-[var(--signal)]/10 px-3 py-2 k-mono text-[var(--signal)] sm:block">VISIBLE</span>
-                  </div>
-                </div>
-              </div>
-              <div className="grid grid-cols-3 divide-x divide-white/10 px-2 py-5 text-center">
-                <div><strong className="k-num text-[20px]">01</strong><span className="k-mono mt-2 block">Enter</span></div>
-                <div><strong className="k-num text-[20px]">02</strong><span className="k-mono mt-2 block">Resolve</span></div>
-                <div><strong className="k-num text-[20px]">03</strong><span className="k-mono mt-2 block">Record</span></div>
-              </div>
-            </div>
+          <Rise step={2} className="lg:justify-self-end lg:w-full lg:max-w-[560px]">
+            <ServiceFlowCard />
           </Rise>
         </div>
       </section>
