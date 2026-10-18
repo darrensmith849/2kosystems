@@ -20,3 +20,10 @@ export const OG_IMAGE_PATH = "/opengraph-image?v=20260914";
 export const OG_IMAGE_ALT =
   "2KO — operational improvement, training, automation and measurement";
 export const OG_IMAGE_SIZE = { width: 1200, height: 630 };
+
+/* 2KO Systems — the partner platform — answers on its own domain from this
+   same Worker. Its pages live under app/kos and are only reachable through
+   these hosts; proxy rewrites them there. `kos.localhost` is for local dev. */
+export const KOS_HOST = "2kosystems.com";
+export const KOS_URL = `https://${KOS_HOST}`;
+export const KOS_HOSTS = new Set([KOS_HOST, `www.${KOS_HOST}`, "kos.localhost"]);

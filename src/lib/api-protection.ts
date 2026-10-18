@@ -43,7 +43,12 @@ function allowedOrigin(origin: string) {
     return false;
   }
 
-  if (url.protocol !== "https:" && url.hostname !== "localhost" && url.hostname !== "127.0.0.1") {
+  const local =
+    url.hostname === "localhost" ||
+    url.hostname === "127.0.0.1" ||
+    url.hostname.endsWith(".localhost");
+
+  if (url.protocol !== "https:" && !local) {
     return false;
   }
 
@@ -51,8 +56,7 @@ function allowedOrigin(origin: string) {
     url.hostname === SITE_HOST ||
     url.hostname === "2ko.co.za" ||
     LEGACY_SITE_HOSTS.has(url.hostname) ||
-    url.hostname === "localhost" ||
-    url.hostname === "127.0.0.1"
+    local
   );
 }
 
