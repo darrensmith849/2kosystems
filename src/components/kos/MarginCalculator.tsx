@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { CARD_FEE, PRICE_NOTE, PRODUCTS, rand, type ProductKey } from "@/lib/kos/catalogue";
+import { PRICE_NOTE, PRODUCTS, cardFee, rand, type ProductKey } from "@/lib/kos/catalogue";
 
 /* Pick what you sell, set your price, say how many clients. Shows what you
    keep each month after our price and the card fee. One card charge per
@@ -21,7 +21,7 @@ export default function MarginCalculator() {
   const picked = PRODUCTS.filter((p) => on[p.key]);
   const charge = picked.reduce((sum, p) => sum + price[p.key], 0);
   const wholesale = picked.reduce((sum, p) => sum + p.wholesale, 0);
-  const fee = picked.length ? charge * CARD_FEE.percent + CARD_FEE.fixed : 0;
+  const fee = picked.length ? cardFee(charge) : 0;
   const perClient = charge - wholesale - fee;
   const monthly = perClient * clients;
 
@@ -96,7 +96,7 @@ export default function MarginCalculator() {
         </div>
       </div>
       <p className="k-sm ks-calc-note">
-        After our price and the card fee (about 3%). Business email is counted as one mailbox per client. {PRICE_NOTE}
+        After our price and the card fee (about 3.5%). Business email is counted as one mailbox per client. {PRICE_NOTE}
       </p>
     </div>
   );

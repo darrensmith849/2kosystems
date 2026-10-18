@@ -1,12 +1,11 @@
 import Link from "next/link";
 import Rise from "@/components/cinema/Rise";
-import { CARD_FEE, LANDING_PAGE, PRICE_NOTE, rand, type Product } from "@/lib/kos/catalogue";
+import { LANDING_PAGE, PRICE_NOTE, partnerKeeps, rand, type Product } from "@/lib/kos/catalogue";
 import ProductDemo from "./ProductDemo";
 
 /** The partner's view of one product: what it is, who does what, the money. */
 export default function ProductPartnerPage({ product }: { product: Product }) {
-  const fee = product.suggested * CARD_FEE.percent + CARD_FEE.fixed;
-  const keep = product.suggested - product.wholesale - fee;
+  const keep = partnerKeeps(product.suggested, product.wholesale);
 
   return (
     <>

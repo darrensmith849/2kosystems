@@ -1,6 +1,6 @@
 "use client";
 
-import { CARD_FEE, PRODUCTS, rand, type ProductKey } from "@/lib/kos/catalogue";
+import { PRODUCTS, partnerKeeps, rand, type ProductKey } from "@/lib/kos/catalogue";
 import { useSequence } from "./useSequence";
 
 /* A partner's month: clients sign up one by one under the partner's own
@@ -20,8 +20,7 @@ const CLIENTS = PICKS.map((pick) => {
   const items = pick.what.map((key) => PRODUCTS.find((p) => p.key === key)!);
   const pays = items.reduce((sum, p) => sum + p.suggested, 0);
   const wholesale = items.reduce((sum, p) => sum + p.wholesale, 0);
-  const fee = pays * CARD_FEE.percent + CARD_FEE.fixed;
-  return { name: pick.name, what: items.map((p) => p.name), pays, share: pays - wholesale - fee };
+  return { name: pick.name, what: items.map((p) => p.name), pays, share: partnerKeeps(pays, wholesale) };
 });
 
 const DELAYS = [900, ...CLIENTS.map(() => 1300)];

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import MarginCalculator from "@/components/kos/MarginCalculator";
-import { CARD_FEE, PRODUCTS, rand, type ProductKey } from "@/lib/kos/catalogue";
+import { PRODUCTS, partnerKeeps, rand, type ProductKey } from "@/lib/kos/catalogue";
 
 export const metadata: Metadata = {
   title: "How you earn",
@@ -19,7 +19,7 @@ function monthly(clients: number, what: ProductKey[]) {
   const items = PRODUCTS.filter((p) => what.includes(p.key));
   const charge = items.reduce((s, p) => s + p.suggested, 0);
   const wholesale = items.reduce((s, p) => s + p.wholesale, 0);
-  return clients * (charge - wholesale - (charge * CARD_FEE.percent + CARD_FEE.fixed));
+  return clients * partnerKeeps(charge, wholesale);
 }
 
 export default function EarnPage() {
