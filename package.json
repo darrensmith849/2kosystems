@@ -34,7 +34,7 @@
     "cf:secrets": "./scripts/with-node.sh scripts/cf-secrets.ts"
   },
   "dependencies": {
-    "next": "^16.3.3",
+    "next": "^16.3.8",
     "openai": "^7.15.0",
     "pdf-lib": "^1.17.1",
     "react": "19.2.3",
@@ -50,7 +50,7 @@
     "@types/react-dom": "^19",
     "d3-geo": "^3.1.1",
     "eslint": "^9",
-    "eslint-config-next": "^16.3.3",
+    "eslint-config-next": "^16.3.8",
     "tailwindcss": "^4",
     "topojson-client": "^3.1.0",
     "typescript": "^5",
@@ -62,6 +62,7 @@
   },
   "overrides": {
     "baseline-browser-mapping": "2.11.0",
-    "sharp": "0.35.4"
+    "sharp": "0.35.5",
+    "undici": "7.30.1"
   }
 }
