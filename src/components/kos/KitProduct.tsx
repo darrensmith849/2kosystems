@@ -3,6 +3,8 @@ import Rise from "@/components/cinema/Rise";
 import AskPartner from "@/components/kos/AskPartner";
 import ProductDemo from "@/components/kos/ProductDemo";
 import ReceptionistChat from "@/components/kos/ReceptionistChat";
+import BookingTryLazy from "@/components/kos/BookingTryLazy";
+import EmailTry from "@/components/kos/EmailTry";
 import { PRODUCTS, type Product } from "@/lib/kos/catalogue";
 import { kitBase, type Partner } from "@/lib/kos/partners";
 
@@ -31,6 +33,28 @@ export default function KitProduct({ partner, product }: { partner: Partner; pro
           <ProductDemo k={product.key} />
         </div>
       </section>
+
+      {product.key === "bookings" ? (
+        <section className="k-shell" style={{ paddingBottom: 64 }} id="try">
+          <div className="ks-head" style={{ marginBottom: 32 }}>
+            <p className="k-mono k-mono--ember">Try it yourself</p>
+            <h2 className="k-title">Book a slot, the way your customers would.</h2>
+            <p className="k-lead">Then see every message they get, with real dates.</p>
+          </div>
+          <BookingTryLazy />
+        </section>
+      ) : null}
+
+      {product.key === "business-email" ? (
+        <section className="k-shell" style={{ paddingBottom: 64 }} id="try">
+          <div className="ks-head" style={{ marginBottom: 32 }}>
+            <p className="k-mono k-mono--ember">Try it yourself</p>
+            <h2 className="k-title">See what your address could be.</h2>
+            <p className="k-lead">Type your business name, or the website you already have.</p>
+          </div>
+          <EmailTry />
+        </section>
+      ) : null}
 
       {product.key === "receptionist" ? (
         <section className="k-shell" style={{ paddingBottom: 64 }} id="try">

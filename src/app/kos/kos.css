@@ -474,3 +474,57 @@ a.ks-price-row:hover { background: rgba(255, 255, 255, 0.025); }
 .ks-chatdemo .ks-chat { border-radius: 0; }
 .ks-chatdemo .ks-msg { white-space: pre-wrap; }
 @media (prefers-reduced-motion: reduce) { .ks-chatdemo-typing i { animation: none; } }
+
+/* Book a slot (Bookings demo) */
+.ks-booktry { display: grid; gap: 28px; align-items: start; }
+@media (min-width: 960px) { .ks-booktry { grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); gap: 48px; } }
+.ks-booktry-page { display: grid; gap: 12px; padding: 20px; border-radius: 20px; background: #f7f5f1; color: #1d1a16; box-shadow: 0 40px 90px -30px rgba(0, 0, 0, 0.9); }
+.ks-booktry-head { display: flex; align-items: center; gap: 10px; padding-bottom: 12px; border-bottom: 1px solid #e3ddd3; }
+.ks-booktry-head > span:nth-child(2) { display: grid; line-height: 1.25; flex: 1; }
+.ks-booktry-head small { color: #6b6255; font-size: 12px; }
+.ks-booktry-demo { font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #9a6714; border: 1px solid #e7cf9e; border-radius: 99px; padding: 3px 8px; }
+.ks-booktry .ks-avatar { background: #1d1a16; color: #e9c98d; }
+.ks-booktry-k { margin-top: 6px; font-size: 13px; font-weight: 600; color: #1d1a16; transition: opacity 300ms; }
+.ks-booktry [data-off="true"] { opacity: 0.4; }
+.ks-booktry-services { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.ks-booktry-services button { display: grid; gap: 2px; text-align: left; padding: 12px; border-radius: 12px; border: 1px solid #e3ddd3; background: #fff; color: #1d1a16; cursor: pointer; transition: border-color 200ms, background-color 200ms; }
+.ks-booktry-services b { font-size: 13.5px; font-weight: 600; }
+.ks-booktry-services small { color: #6b6255; font-size: 12px; }
+.ks-booktry-services button[aria-pressed="true"] { border-color: #1d1a16; background: #fffaf0; box-shadow: inset 0 0 0 1px #1d1a16; }
+.ks-booktry-days { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px; }
+.ks-booktry-days button { display: grid; justify-items: center; padding: 8px 0; border-radius: 10px; border: 1px solid #e3ddd3; background: #fff; color: #1d1a16; cursor: pointer; }
+.ks-booktry-days small { font-size: 11px; color: #6b6255; }
+.ks-booktry-days b { font-size: 16px; }
+.ks-booktry-days button[aria-pressed="true"] { background: #1d1a16; color: #fff; border-color: #1d1a16; }
+.ks-booktry-days button[aria-pressed="true"] small { color: #d9cfbe; }
+.ks-booktry-times { display: flex; flex-wrap: wrap; gap: 6px; }
+.ks-booktry-times button { padding: 8px 12px; border-radius: 99px; border: 1px solid #d8cfc0; background: #fff; color: #1d1a16; font-family: var(--mono); font-size: 12.5px; cursor: pointer; }
+.ks-booktry-times button:disabled { cursor: default; color: #b5ab9b; background: transparent; }
+.ks-booktry-times button[aria-pressed="true"] { background: #2f7d4a; border-color: #2f7d4a; color: #fff; }
+.ks-booktry-confirm { display: flex; flex-wrap: wrap; gap: 8px; }
+.ks-booktry-confirm .k-field { flex: 1; min-width: 140px; background: #fff; color: #1d1a16; border-color: #d8cfc0; }
+.ks-booktry-confirm .k-btn--solid { background: #1d1a16; color: #fff; }
+.ks-booktry-confirm .k-btn--solid:disabled { opacity: 0.4; }
+.ks-booktry-done { display: grid; justify-items: center; gap: 6px; padding: 36px 12px; text-align: center; }
+.ks-booktry-done b { font-size: 22px; }
+.ks-booktry-done span { color: #4a443b; }
+.ks-booktry-done .k-link { color: #1d1a16; border-color: #b5ab9b; margin-top: 8px; }
+.ks-booktry-tick { width: 48px; height: 48px; border-radius: 99px; background: #2f7d4a; position: relative; animation: ksIn 400ms var(--ease) both; }
+.ks-booktry-tick::after { content: ""; position: absolute; left: 17px; top: 12px; width: 12px; height: 20px; border: solid #fff; border-width: 0 3px 3px 0; transform: rotate(45deg); }
+.ks-booktry-msgs { display: grid; gap: 12px; }
+.ks-booktry-msgs ol { display: grid; gap: 8px; }
+.ks-booktry-msgs li { display: grid; gap: 4px; padding: 12px 14px; border-radius: 14px 14px 14px 4px; background: var(--panel); border: 1px solid var(--hair); animation: ksIn 450ms var(--ease) both; }
+.ks-booktry-msgs li small { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ember); }
+.ks-booktry-msgs li span { font-size: 13.5px; color: var(--warm); }
+
+/* What would your business email look like */
+.ks-emailtry { display: grid; gap: 28px; align-items: start; }
+@media (min-width: 960px) { .ks-emailtry { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; } }
+.ks-emailtry-out { display: grid; gap: 10px; }
+.ks-emailtry-row { display: grid; gap: 4px; padding: 16px 18px; border-radius: 14px; background: var(--panel); border: 1px solid var(--hair); animation: ksIn 400ms var(--ease) both; }
+.ks-emailtry-row[data-status="free"] { border-color: rgba(63, 185, 80, 0.45); }
+.ks-emailtry-row--ghost { opacity: 0.55; animation: none; }
+.ks-emailtry-addr { font-family: var(--mono); font-size: 15px; color: var(--warm); overflow-wrap: anywhere; }
+.ks-emailtry-row[data-status="free"] .ks-emailtry-addr { color: var(--signal); }
+.ks-emailtry-note { color: var(--warm-70); font-size: 13px; }
+@media (prefers-reduced-motion: reduce) { .ks-booktry-msgs li, .ks-emailtry-row, .ks-booktry-tick { animation: none; } }

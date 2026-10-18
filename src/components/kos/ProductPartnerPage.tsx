@@ -3,6 +3,8 @@ import Rise from "@/components/cinema/Rise";
 import { LANDING_PAGE, PRICE_NOTE, partnerKeeps, rand, type Product } from "@/lib/kos/catalogue";
 import ProductDemo from "./ProductDemo";
 import ReceptionistChat from "./ReceptionistChat";
+import BookingTryLazy from "./BookingTryLazy";
+import EmailTry from "./EmailTry";
 
 /** The partner's view of one product: what it is, who does what, the money. */
 export default function ProductPartnerPage({ product }: { product: Product }) {
@@ -21,12 +23,10 @@ export default function ProductPartnerPage({ product }: { product: Product }) {
           </Rise>
           <Rise step={1}>
             <div className="ks-actions">
-              {product.key === "receptionist" ? (
-                <Link href="#try" className="k-btn k-btn--solid">
-                  Talk to it now
-                </Link>
-              ) : null}
-              <Link href={`/kit/demo/${product.key}`} className={`k-btn ${product.key === "receptionist" ? "k-btn--ghost" : "k-btn--solid"}`}>
+              <Link href="#try" className="k-btn k-btn--solid">
+                {product.key === "receptionist" ? "Talk to it now" : product.key === "bookings" ? "Book a slot now" : "See an address now"}
+              </Link>
+              <Link href={`/kit/demo/${product.key}`} className="k-btn k-btn--ghost">
                 Show your client →
               </Link>
               <Link href="/apply" className="k-btn k-btn--ghost">
@@ -39,6 +39,36 @@ export default function ProductPartnerPage({ product }: { product: Product }) {
           <ProductDemo k={product.key} />
         </div>
       </section>
+
+      {product.key === "bookings" ? (
+        <section className="k-band k-hairline" id="try">
+          <div className="k-shell">
+            <div className="ks-head">
+              <p className="k-mono k-mono--ember">Try it yourself</p>
+              <h2 className="k-title">Book a slot, the way a customer would.</h2>
+              <p className="k-lead">Then see every message that one booking sets off, with real dates.</p>
+            </div>
+            <div style={{ marginTop: 32 }}>
+              <BookingTryLazy />
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      {product.key === "business-email" ? (
+        <section className="k-band k-hairline" id="try">
+          <div className="k-shell">
+            <div className="ks-head">
+              <p className="k-mono k-mono--ember">Try it yourself</p>
+              <h2 className="k-title">What would your client&apos;s email look like?</h2>
+              <p className="k-lead">Type a business name, or the website they already have. We&apos;ll show the addresses that could be theirs.</p>
+            </div>
+            <div style={{ marginTop: 32 }}>
+              <EmailTry />
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       {product.key === "receptionist" ? (
         <section className="k-band k-hairline" id="try">
