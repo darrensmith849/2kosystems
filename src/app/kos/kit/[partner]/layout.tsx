@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import KitShell from "@/components/kos/KitShell";
 import { notFound } from "next/navigation";
 import { PARTNERS, partnerBySlug } from "@/lib/kos/partners";
 
@@ -37,35 +37,5 @@ export default async function KitLayout({
 }) {
   const partner = partnerBySlug((await params).partner);
   if (!partner) notFound();
-
-  return (
-    <div style={{ ["--c" as string]: partner.colour }}>
-      {partner.demo ? (
-        <p className="ks-kit-preview">
-          Preview of a client page. Partners get this with their own name on it. <Link href="/apply">Become a partner</Link>
-        </p>
-      ) : null}
-      <header className="ks-kit-bar">
-        <div className="k-shell">
-          <div className="ks-top-in">
-            <Link href={`/kit/${partner.slug}`} className="ks-kit-name">
-              <i>{partner.name.charAt(0)}</i>
-              {partner.name}
-            </Link>
-            {partner.website ? (
-              <a href={partner.website} className="k-sm">
-                Visit {partner.name}
-              </a>
-            ) : null}
-          </div>
-        </div>
-      </header>
-      <main>{children}</main>
-      <footer className="ks-foot">
-        <div className="k-shell ks-foot-in">
-          <span>Brought to you by {partner.name}</span>
-        </div>
-      </footer>
-    </div>
-  );
+  return <KitShell partner={partner}>{children}</KitShell>;
 }

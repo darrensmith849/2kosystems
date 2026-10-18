@@ -14,17 +14,17 @@ const BRANDS = [
 
 const reduced = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-export default function KitPreview() {
+export default function KitPreview({ brand }: { brand?: { name: string; colour: string } }) {
   const [i, setI] = useState(0);
   const still = useSyncExternalStore(() => () => {}, reduced, () => true);
 
   useEffect(() => {
-    if (still) return;
+    if (still || brand) return;
     const t = window.setInterval(() => setI((n) => (n + 1) % BRANDS.length), 3600);
     return () => window.clearInterval(t);
-  }, [still]);
+  }, [still, brand]);
 
-  const b = BRANDS[i];
+  const b = brand ?? BRANDS[i];
 
   return (
     <div className="ks-kitp" style={{ ["--c" as string]: b.colour }} role="img" aria-label="A client page carrying the partner's name and colour, switching between three partners">
@@ -34,9 +34,9 @@ export default function KitPreview() {
         <i />
         <span className="ks-kitp-url">Link sent by {b.name}</span>
       </div>
-      <div className="ks-kitp-page" key={b.name}>
+      <div className="ks-kitp-page" key={brand ? "fixed" : b.name}>
         <div className="ks-kitp-top">
-          <span className="ks-kitp-mark">{b.name.charAt(0)}</span>
+          <span className="ks-kitp-mark">{(b.name.trim() || "?").charAt(0).toUpperCase()}</span>
           <b>{b.name}</b>
         </div>
         <small className="ks-kitp-eyebrow">For your business</small>
@@ -57,11 +57,13 @@ export default function KitPreview() {
         </ul>
         <span className="ks-kitp-btn">Ask {b.name} about this</span>
       </div>
-      <div className="ks-kitp-dots" aria-hidden="true">
-        {BRANDS.map((x, n) => (
-          <i key={x.name} data-on={n === i} />
-        ))}
-      </div>
+      {brand ? null : (
+        <div className="ks-kitp-dots" aria-hidden="true">
+          {BRANDS.map((x, n) => (
+            <i key={x.name} data-on={n === i} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

@@ -428,3 +428,49 @@ a.ks-price-row:hover { background: rgba(255, 255, 255, 0.025); }
 @media (prefers-reduced-motion: reduce) {
   .ks-ask-row, .ks-asks-reply, .ks-asks-was, .ks-asks-now, .ks-split-seg, .ks-split-legs, .ks-split-pay, .ks-show-demo, .ks-kitp-page { transition: none; animation: none; }
 }
+
+/* See it with your name */
+.ks-builder { display: grid; gap: 40px; align-items: start; }
+@media (min-width: 1024px) { .ks-builder { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 64px; } .ks-builder .ks-visual { position: sticky; top: 96px; } }
+.ks-builder-k { display: block; margin-bottom: 8px; font-size: 12.5px; color: var(--warm-70); }
+.ks-swatches { display: flex; flex-wrap: wrap; gap: 10px; }
+.ks-swatch { position: relative; width: 34px; height: 34px; border-radius: 99px; border: 2px solid transparent; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12); cursor: pointer; transition: transform 200ms var(--ease), border-color 200ms; }
+.ks-swatch:hover { transform: scale(1.08); }
+.ks-swatch[aria-pressed="true"] { border-color: var(--warm); }
+.ks-swatch--own { display: grid; place-items: center; overflow: hidden; background: conic-gradient(#e0664a, #d9a95a, #2fa36b, #4fb3a9, #5b7cfa, #9b6cf0, #e14d8a, #e0664a); }
+.ks-swatch--own input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+.ks-builder-links .k-link { font-size: 13px; }
+
+/* Talk to the Receptionist */
+.ks-chatdemo { display: grid; gap: 32px; align-items: start; }
+@media (min-width: 960px) { .ks-chatdemo { grid-template-columns: minmax(0, 1fr) auto; gap: 56px; } }
+.ks-chatdemo-side { display: grid; gap: 16px; }
+.ks-chatdemo-modes { display: inline-grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; border-radius: 12px; background: var(--panel); border: 1px solid var(--hair); justify-self: start; }
+.ks-chatdemo-modes button { padding: 9px 14px; border-radius: 9px; font-size: var(--t-sm); color: var(--warm-70); transition: background-color var(--dur) var(--ease), color var(--dur); }
+.ks-chatdemo-modes button[aria-selected="true"] { background: var(--warm); color: var(--black); }
+.ks-chatdemo-about { padding: 20px; border-radius: 14px; background: var(--panel); border: 1px solid var(--hair); display: grid; gap: 8px; }
+.ks-chatdemo-own textarea.k-field { min-height: 140px; }
+.ks-chatdemo-note { color: var(--warm-45); font-size: 12.5px; }
+.ks-chatdemo-phone { width: min(360px, 100%); aspect-ratio: auto; height: 600px; justify-self: center; }
+.ks-chatdemo-list { overflow-y: auto; scrollbar-width: thin; }
+.ks-chatdemo-start { margin: auto 0 0; display: grid; gap: 10px; color: var(--warm-45); font-size: 13px; text-align: center; }
+.ks-chatdemo-suggest { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+.ks-chatdemo-suggest button { padding: 7px 11px; border-radius: 99px; border: 1px solid rgba(217, 169, 90, 0.4); color: var(--ember); font-size: 12.5px; background: transparent; cursor: pointer; }
+.ks-chatdemo-suggest button:disabled { opacity: 0.4; cursor: default; }
+.ks-chatdemo-typing { display: inline-flex; gap: 4px; padding: 12px 14px; }
+.ks-chatdemo-typing i { width: 6px; height: 6px; border-radius: 99px; background: currentColor; opacity: 0.5; animation: ksDot 1s infinite; }
+.ks-chatdemo-typing i:nth-child(2) { animation-delay: 160ms; }
+.ks-chatdemo-typing i:nth-child(3) { animation-delay: 320ms; }
+@keyframes ksDot { 50% { opacity: 1; transform: translateY(-2px); } }
+.ks-chatdemo-check { display: flex; justify-content: center; padding: 6px 0 0; background: #0b0c0d; }
+.ks-chatdemo-error { padding: 8px 12px 0; background: #0b0c0d; color: var(--alert); font-size: 12.5px; text-align: center; }
+.ks-chatdemo-input, .ks-chatdemo-done { display: flex; gap: 8px; align-items: center; padding: 10px; border-radius: 0 0 26px 26px; background: #111214; }
+.ks-chatdemo-input input { flex: 1; min-width: 0; height: 40px; padding-inline: 14px; border-radius: 99px; border: 1px solid var(--hair-2); background: #1a1b1e; color: var(--warm); font-size: 14px; }
+.ks-chatdemo-input input:focus { outline: none; border-color: var(--ember); }
+.ks-chatdemo-input button { flex: none; width: 40px; height: 40px; display: grid; place-items: center; border-radius: 99px; background: var(--ember); color: var(--black); cursor: pointer; }
+.ks-chatdemo-input button:disabled { opacity: 0.4; cursor: default; }
+.ks-chatdemo-done { justify-content: space-between; font-size: 13px; color: var(--warm-70); padding-inline: 16px; }
+.ks-chatdemo-done button { color: var(--ember); font-weight: 600; }
+.ks-chatdemo .ks-chat { border-radius: 0; }
+.ks-chatdemo .ks-msg { white-space: pre-wrap; }
+@media (prefers-reduced-motion: reduce) { .ks-chatdemo-typing i { animation: none; } }

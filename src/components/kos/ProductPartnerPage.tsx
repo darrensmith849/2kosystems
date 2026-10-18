@@ -2,6 +2,7 @@ import Link from "next/link";
 import Rise from "@/components/cinema/Rise";
 import { LANDING_PAGE, PRICE_NOTE, partnerKeeps, rand, type Product } from "@/lib/kos/catalogue";
 import ProductDemo from "./ProductDemo";
+import ReceptionistChat from "./ReceptionistChat";
 
 /** The partner's view of one product: what it is, who does what, the money. */
 export default function ProductPartnerPage({ product }: { product: Product }) {
@@ -20,7 +21,12 @@ export default function ProductPartnerPage({ product }: { product: Product }) {
           </Rise>
           <Rise step={1}>
             <div className="ks-actions">
-              <Link href={`/kit/demo/${product.key}`} className="k-btn k-btn--solid">
+              {product.key === "receptionist" ? (
+                <Link href="#try" className="k-btn k-btn--solid">
+                  Talk to it now
+                </Link>
+              ) : null}
+              <Link href={`/kit/demo/${product.key}`} className={`k-btn ${product.key === "receptionist" ? "k-btn--ghost" : "k-btn--solid"}`}>
                 Show your client →
               </Link>
               <Link href="/apply" className="k-btn k-btn--ghost">
@@ -33,6 +39,24 @@ export default function ProductPartnerPage({ product }: { product: Product }) {
           <ProductDemo k={product.key} />
         </div>
       </section>
+
+      {product.key === "receptionist" ? (
+        <section className="k-band k-hairline" id="try">
+          <div className="k-shell">
+            <div className="ks-head">
+              <p className="k-mono k-mono--ember">Try it yourself</p>
+              <h2 className="k-title">Talk to it. Then try it as your client&apos;s business.</h2>
+              <p className="k-lead">
+                This is the real thing answering, not a recording. Ask what a customer would ask, book a time, or ask
+                for something it doesn&apos;t do.
+              </p>
+            </div>
+            <div style={{ marginTop: 32 }}>
+              <ReceptionistChat />
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       <section className="k-band k-hairline">
         <div className="k-shell">

@@ -19,7 +19,15 @@ export type Partner = {
   website?: string;
   /** The partner's own price, if they want it shown. Rand a month. */
   prices?: Partial<Record<ProductKey, number>>;
+  /** Where this partner's client pages live, when not /kit/<slug> (brands made from a link). */
+  base?: string;
+  /** Made by a partner with "see it with your name" — nothing stored, brand carried in the link. */
+  preview?: boolean;
 };
+
+export function kitBase(partner: Partner) {
+  return partner.base ?? `/kit/${partner.slug}`;
+}
 
 export const PARTNERS: Partner[] = [
   {

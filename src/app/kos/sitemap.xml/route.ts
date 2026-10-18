@@ -2,7 +2,7 @@ import { PRODUCTS } from "@/lib/kos/catalogue";
 import { KOS_URL } from "@/lib/site";
 
 // Served as 2kosystems.com/sitemap.xml. Partner pages only.
-const PATHS = ["/", ...PRODUCTS.map((p) => `/${p.key}`), "/earn", "/apply", "/faq", "/contact", "/privacy", "/terms"];
+const PATHS = ["/", ...PRODUCTS.map((p) => `/${p.key}`), "/earn", "/try", "/apply", "/faq", "/contact", "/privacy", "/terms"];
 
 export function GET() {
   const urls = PATHS.map((path) => `  <url><loc>${KOS_URL}${path === "/" ? "" : path}</loc></url>`).join("\n");

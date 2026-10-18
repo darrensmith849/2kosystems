@@ -84,6 +84,11 @@ export default function ProductShowcase() {
           </div>
           <small className="ks-show-unit">{p.unit}, per client</small>
           <div className="ks-actions" style={{ marginTop: 18 }}>
+            {p.key === "receptionist" ? (
+              <Link href="/receptionist#try" className="k-link">
+                Talk to it now →
+              </Link>
+            ) : null}
             <Link href={`/${p.key}`} className="k-link">
               All about {p.name.toLowerCase()} →
             </Link>

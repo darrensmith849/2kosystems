@@ -8,6 +8,7 @@ import { PRODUCTS } from "@/lib/kos/catalogue";
 const LINKS = [
   ...PRODUCTS.map((p) => ({ href: `/${p.key}`, label: p.name })),
   { href: "/earn", label: "How you earn" },
+  { href: "/try", label: "Try it" },
   { href: "/faq", label: "Questions" },
 ];
 
