@@ -265,6 +265,9 @@ export default function KosHome() {
               The only place we appear is the small print on the card receipt, because the law asks for it.
             </p>
             <div className="ks-actions">
+              <Link href="/try" className="k-btn k-btn--solid">
+                See it with your name
+              </Link>
               <Link href="/kit/demo" className="k-link">
                 Open a client page →
               </Link>
