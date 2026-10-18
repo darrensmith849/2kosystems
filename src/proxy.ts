@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { LEGACY_SITE_HOSTS, SITE_HOST } from "@/lib/site";
+import { KOS_HOST, KOS_HOSTS, LEGACY_SITE_HOSTS, SITE_HOST } from "@/lib/site";
 import { legacyDestination } from "@/lib/legacy-redirects";
 import { isTrackingHost } from "@/lib/tracking/domains";
 import { REQUESTED_PATH } from "@/lib/site";
@@ -165,6 +165,88 @@ function internalAuthorised(request: NextRequest) {
   }
 }
 
+
+/**
+ * Consultancy addresses that were served on 2kosystems.com before it became
+ * the partner site. Google Ads and old links still point at some of them
+ * (`/systems/*`, `/review/*` above all), so they keep going to the page they
+ * always meant, now on www.2ko.co.za.
+ */
+const CONSULTANCY_PATHS = [
+  "/systems", "/review", "/process-review", "/audit", "/method", "/results",
+  "/sectors", "/automation", "/get-off-excel", "/managed-improvement",
+  "/training", "/sigmafy", "/studio", "/websites", "/quote", "/pricing",
+  "/services",
+];
+
+function isConsultancyPath(pathname: string) {
+  return CONSULTANCY_PATHS.some((path) => pathname === path || pathname.startsWith(`${path}/`));
+}
+
+/**
+ * 2kosystems.com — the partner platform's site. Its pages live under app/kos
+ * and are rewritten there, so the visitor never sees `/kos` in the address.
+ */
+function systemsSite(request: NextRequest, hostname: string) {
+  const { pathname } = request.nextUrl;
+
+  if (hostname === `www.${KOS_HOST}`) {
+    const apex = request.nextUrl.clone();
+    apex.protocol = "https:";
+    apex.hostname = KOS_HOST;
+    apex.port = "";
+    return NextResponse.redirect(apex, 308);
+  }
+
+  if (isConsultancyPath(pathname)) {
+    const target = request.nextUrl.clone();
+    target.protocol = "https:";
+    target.hostname = SITE_HOST;
+    target.port = "";
+    return NextResponse.redirect(target, 308);
+  }
+
+  const destination = legacyDestination(pathname);
+  if (destination) {
+    const target = destination.startsWith("http")
+      ? new URL(destination)
+      : new URL(destination, `https://${SITE_HOST}`);
+    return NextResponse.redirect(target, 301);
+  }
+
+  // The consultancy's internal tools are not part of this site at all.
+  if (pathname === "/internal" || pathname.startsWith("/internal/")) {
+    return new NextResponse("Not found", {
+      status: 404,
+      headers: { "Cache-Control": "no-store" },
+    });
+  }
+
+  if (pathname === "/robots.txt" || pathname === "/sitemap.xml") {
+    return NextResponse.rewrite(new URL(`/kos${pathname}`, request.url));
+  }
+
+  // Pages are addressed without the folder name. Social preview images keep
+  // it, because Next writes those URLs into the page metadata itself.
+  if (pathname === "/kos" || pathname.startsWith("/kos/")) {
+    if (/\/(opengraph|twitter)-image/.test(pathname)) return NextResponse.next();
+    const bare = request.nextUrl.clone();
+    bare.pathname = pathname.slice(4) || "/";
+    return NextResponse.redirect(bare, 308);
+  }
+
+  // Shared plumbing, and files (icons, images, the manifest), pass through.
+  if (
+    pathname.startsWith("/api/") ||
+    pathname.startsWith("/_next/") ||
+    /\.[a-z0-9]+$/i.test(pathname)
+  ) {
+    return NextResponse.next();
+  }
+
+  return NextResponse.rewrite(new URL(`/kos${pathname === "/" ? "" : pathname}${request.nextUrl.search}`, request.url));
+}
+
 export default async function proxy(request: NextRequest) {
   const hostname = (request.headers.get("host") || request.nextUrl.hostname)
     .split(":")[0]
@@ -198,6 +280,16 @@ export default async function proxy(request: NextRequest) {
       status: 404,
       headers: { "Cache-Control": "no-store" },
     });
+  }
+
+  if (KOS_HOSTS.has(hostname)) {
+    return systemsSite(request, hostname);
+  }
+
+  // The partner site's pages exist only on its own domain.
+  const { pathname } = request.nextUrl;
+  if (pathname === "/kos" || pathname.startsWith("/kos/")) {
+    return NextResponse.rewrite(new URL("/__not-found", request.url));
   }
 
   const destination = legacyDestination(request.nextUrl.pathname);
