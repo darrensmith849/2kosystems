@@ -144,5 +144,17 @@ export function rand(value: number) {
   return `${whole < 0 ? "-" : ""}R${digits}`;
 }
 
-/** Card fees on the monthly charge: 2.9% + R1, the local card rate. */
-export const CARD_FEE = { percent: 0.029, fixed: 1 };
+/**
+ * The card fee on a monthly charge, in rand: (2.9% + R1) plus VAT. The same rule the platform uses
+ * (2ko-sites src/lib/gateway-fee.ts), measured from a real Paystack payment.
+ */
+export const CARD_FEE = { percent: 0.029, fixed: 1, vat: 0.15 };
+
+export function cardFee(amount: number) {
+  return (amount * CARD_FEE.percent + CARD_FEE.fixed) * (1 + CARD_FEE.vat);
+}
+
+/** What the partner keeps from one client's monthly payment. */
+export function partnerKeeps(pays: number, wholesale: number) {
+  return pays - wholesale - cardFee(pays);
+}
