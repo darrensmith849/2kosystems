@@ -114,6 +114,11 @@ export default function PricingTabs({ initialCategory }: { initialCategory?: str
   return (
     <main className="pt-page pt-page--cards">
       <header className="pt-hero-strip">
+        <div className="pt-hero-strip__tech" aria-hidden>
+          <span className="pt-trace pt-trace--1" />
+          <span className="pt-trace pt-trace--2" />
+          <span className="pt-trace pt-trace--3" />
+        </div>
         <div className="k-shell">
           <h1>Pricing.</h1>
           <p>Clear costs for every way to work with 2KO.</p>
