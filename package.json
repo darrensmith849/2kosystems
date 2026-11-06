@@ -34,13 +34,13 @@
     "cf:secrets": "./scripts/with-node.sh scripts/cf-secrets.ts"
   },
   "dependencies": {
-    "next": "^16.3.8",
+    "next": "^16.4.5",
     "openai": "^7.15.0",
     "pdf-lib": "^1.17.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "server-only": "^0.0.1",
-    "zod": "^3.23.8"
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@opennextjs/cloudflare": "^1.20.2",
@@ -50,7 +50,7 @@
     "@types/react-dom": "^19",
     "d3-geo": "^3.1.1",
     "eslint": "^9",
-    "eslint-config-next": "^16.3.8",
+    "eslint-config-next": "^16.4.5",
     "tailwindcss": "^4",
     "topojson-client": "^3.1.0",
     "typescript": "^5",
