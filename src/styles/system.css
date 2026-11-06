@@ -4846,6 +4846,54 @@ fieldset[disabled] .k-choice { cursor: not-allowed; }
   position: relative;
   z-index: 1;
 }
+/* A quiet moving backdrop: dot grid, drifting glow, and thin signal traces. */
+.pt-hero-strip__tech {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(rgba(255,255,255,.16) 1px, transparent 1.2px);
+  background-size: 22px 22px;
+  -webkit-mask-image: linear-gradient(90deg, transparent 18%, #000 70%);
+  mask-image: linear-gradient(90deg, transparent 18%, #000 70%);
+  animation: pt-grid-drift 40s linear infinite;
+}
+.pt-hero-strip__tech::before {
+  content: "";
+  position: absolute;
+  top: -40%;
+  right: 6%;
+  width: 46%;
+  height: 180%;
+  background: radial-gradient(closest-side, rgba(217,169,90,.16), transparent);
+  animation: pt-glow 14s ease-in-out infinite alternate;
+}
+.pt-trace {
+  position: absolute;
+  left: 0;
+  height: 1px;
+  width: 180px;
+  background: linear-gradient(90deg, transparent, var(--ember), transparent);
+  opacity: 0;
+  animation: pt-trace 9s cubic-bezier(.45,0,.25,1) infinite;
+}
+.pt-trace--1 { top: 38%; }
+.pt-trace--2 { top: 62%; width: 120px; animation-delay: 3s; animation-duration: 11s; }
+.pt-trace--3 { top: 84%; width: 220px; animation-delay: 6.5s; animation-duration: 13s; }
+@keyframes pt-grid-drift { to { background-position: 22px 22px; } }
+@keyframes pt-glow {
+  from { transform: translateX(0); opacity: .7; }
+  to { transform: translateX(-18%); opacity: 1; }
+}
+@keyframes pt-trace {
+  0% { transform: translateX(35vw); opacity: 0; }
+  15% { opacity: .7; }
+  85% { opacity: .7; }
+  100% { transform: translateX(100vw); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pt-hero-strip__tech, .pt-hero-strip__tech::before { animation: none; }
+  .pt-trace { display: none; }
+}
 .pt-hero-strip h1 {
   font-size: clamp(3rem,5.2vw,5rem);
   font-weight: 520;
