@@ -4842,22 +4842,6 @@ fieldset[disabled] .k-choice { cursor: not-allowed; }
   background: var(--black);
   color: var(--warm);
 }
-.pt-hero-strip__image {
-  position: absolute;
-  inset: 0;
-  background-position: center 48%;
-  background-size: cover;
-  animation: pt-hero-image-in .35s ease both;
-}
-.pt-hero-strip::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(to bottom, rgba(7,8,9,.42) 0 58px, transparent 58px),
-    linear-gradient(90deg, rgba(7,8,9,.97) 0%, rgba(7,8,9,.88) 32%, rgba(7,8,9,.58) 65%, rgba(7,8,9,.42) 100%);
-  pointer-events: none;
-}
 .pt-hero-strip .k-shell {
   position: relative;
   z-index: 1;
@@ -4874,7 +4858,6 @@ fieldset[disabled] .k-choice { cursor: not-allowed; }
   font-size: .92rem;
   line-height: 1.5;
 }
-@keyframes pt-hero-image-in { from { opacity: .35; transform: scale(1.012); } to { opacity: 1; transform: scale(1); } }
 .pt-tab-wrap--cards { background: rgba(8,8,8,.96); }
 .pt-tab-wrap--cards .pt-tab { padding-block: 1rem .95rem; text-align: center; }
 .pt-tab-wrap--cards .pt-tab::after { left: 22%; right: 22%; }

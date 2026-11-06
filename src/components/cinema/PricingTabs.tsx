@@ -17,15 +17,6 @@ const categories = [
 
 type CategoryId = (typeof categories)[number]["id"];
 
-const heroImages: Record<CategoryId, { src: string; position: string }> = {
-  retainers: { src: "/imagery/managed-improvement/partnership-close-v1.webp", position: "center 17%" },
-  training: { src: "/imagery/training/hero-v2.webp", position: "center 14%" },
-  sigmafy: { src: "/imagery/sigmafy/analysis-v1.webp", position: "center 25%" },
-  consulting: { src: "/imagery/audit/scope-decision-v1.webp", position: "center 18%" },
-  systems: { src: "/imagery/automation/operations-v1.webp", position: "center 12%" },
-  websites: { src: "/work/crimson-media.webp", position: "center 30%" },
-};
-
 const partnerships = [
   {
     name: "Improvement Programme",
@@ -123,12 +114,6 @@ export default function PricingTabs({ initialCategory }: { initialCategory?: str
   return (
     <main className="pt-page pt-page--cards">
       <header className="pt-hero-strip">
-        <div
-          key={active}
-          className="pt-hero-strip__image"
-          style={{ backgroundImage: `url(${heroImages[active].src})`, backgroundPosition: heroImages[active].position }}
-          aria-hidden="true"
-        />
         <div className="k-shell">
           <h1>Pricing.</h1>
           <p>Clear costs for every way to work with 2KO.</p>
