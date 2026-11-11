@@ -94,7 +94,8 @@ export default function GroupOperatingSystem() {
           <span className="gos-tag">EXAMPLE</span>
         </div>
 
-        <div className="gos-result" aria-live="polite">
+        {/* Announce only steps the visitor picks, not the autoplay loop. */}
+        <div className="gos-result" aria-live={auto ? "off" : "polite"}>
           <div className="gos-result-copy">
             <span>SUPPLIER INVOICE APPROVAL · TIME TO APPROVE</span>
             <strong data-state={step <= 0 ? "before" : holding ? "holding" : "moving"}>{now.display}</strong>
