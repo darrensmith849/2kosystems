@@ -1,125 +1,159 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-const views = [
+// One example process, followed from the problem to a bespoke system whose
+// result holds. The build is the centre; Six Sigma is what frames it.
+const before = {
+  hours: 149,
+  display: "6.2 days",
+  touches: 9,
+  line: "Invoices wait in inboxes, suppliers chase and late-payment fees pile up.",
+};
+
+const moves = [
   {
-    id: "improve",
-    label: "Improve",
-    eyebrow: "PROCESS PERFORMANCE",
-    metric: "18.4h",
-    metricLabel: "cycle time · down 31%",
-    signal: "Constraint isolated",
-    rows: [
-      ["Intake", "Owner assigned", "12m"],
-      ["Validate", "Duplicate capture removed", "1.8h"],
-      ["Approve", "Threshold route active", "6.2h"],
-      ["Close", "Evidence attached", "10.2h"],
-    ],
+    verb: "Measure",
+    after: "Baseline measured. Now we know where the time goes.",
+    by: "Six Sigma baseline",
+    did: "Timed 200 invoices. Most of the 6.2 days is waiting in approvers' inboxes.",
+    hours: 149,
+    display: "6.2 days",
+    readout: "6.2 days · baseline",
+    touches: 9,
   },
   {
-    id: "train",
-    label: "Train",
-    eyebrow: "CAPABILITY PIPELINE",
-    metric: "24 / 28",
-    metricLabel: "delegates on track",
-    signal: "Projects in application",
-    rows: [
-      ["Define", "Cohort complete", "100%"],
-      ["Measure", "Projects evidenced", "86%"],
-      ["Analyse", "Coach review", "72%"],
-      ["Control", "Benefits sign-off", "54%"],
-    ],
+    verb: "Fix",
+    after: "After fixing the process. No software yet.",
+    by: "Process first",
+    did: "Cut 11 hand-offs to 4 and gave every invoice one owner, before any code.",
+    hours: 74,
+    display: "3.1 days",
+    readout: "3.1 days",
+    touches: 5,
   },
   {
-    id: "automate",
-    label: "Automate",
-    eyebrow: "WORKFLOW CONTROL",
-    metric: "73%",
-    metricLabel: "manual touches removed",
-    signal: "Human authority retained",
-    rows: [
-      ["REQ–2418", "Rule validated · routed", "AUTO"],
-      ["REQ–2419", "Limit exceeded · review", "HUMAN"],
-      ["REQ–2420", "Evidence complete · closed", "AUTO"],
-      ["REQ–2421", "Exception · escalated", "HUMAN"],
-    ],
+    verb: "Build",
+    after: "After the bespoke system went live.",
+    by: "2KO Systems",
+    did: "A bespoke approval system: matched invoices route themselves and exceptions go straight to the right person.",
+    hours: 18,
+    display: "18 hours",
+    readout: "18 hours",
+    touches: 1,
   },
   {
-    id: "measure",
-    label: "Measure",
-    eyebrow: "SIGMAFY · BENEFITS REGISTER",
-    metric: "1.41",
-    metricLabel: "process capability · Cpk",
-    signal: "Improvement holding",
-    rows: [
-      ["Yield", "Current operating period", "96.8%"],
-      ["Variation", "Within control limits", "−22%"],
-      ["Benefit", "Verified to source", "R684k"],
-      ["Sustain", "Control owner active", "91d"],
-    ],
+    verb: "Prove",
+    after: "Measured every week. The gain is holding.",
+    by: "Sigmafy",
+    did: "Tracked weekly against the baseline. Still 18 hours after 90 days.",
+    hours: 18,
+    display: "18 hours",
+    readout: "18 hours · holding",
+    touches: 1,
   },
 ] as const;
 
+// -1 is the starting problem; 0–3 are the four moves.
+const STEP_MS = 3800;
+
 export default function GroupOperatingSystem() {
-  const [activeId, setActiveId] = useState<(typeof views)[number]["id"]>("improve");
-  const active = views.find((view) => view.id === activeId) ?? views[0];
+  const [step, setStep] = useState(-1);
+  const [auto, setAuto] = useState(true);
+  const [paused, setPaused] = useState(false);
+
+  useEffect(() => {
+    // Reduced motion: no autoplay; the steps stay clickable.
+    if (!auto || paused || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    // Hold on the finished result a little longer before starting again.
+    const delay = step === moves.length - 1 ? STEP_MS * 1.6 : STEP_MS;
+    const timer = window.setTimeout(() => setStep((s) => (s >= moves.length - 1 ? -1 : s + 1)), delay);
+    return () => window.clearTimeout(timer);
+  }, [step, auto, paused]);
+
+  const now = step < 0 ? before : moves[step];
+  const holding = step === moves.length - 1;
+
+  const choose = (index: number) => {
+    setAuto(false);
+    setStep(index);
+  };
 
   return (
-    <div className="gos-wrap">
+    <div
+      className="gos-wrap"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onFocus={() => setPaused(true)}
+      onBlur={() => setPaused(false)}
+    >
       <div className="gos-window">
         <div className="gos-topbar">
           <span className="gos-lights" aria-hidden="true"><i /><i /><i /></span>
-          <span>2KO · IMPROVEMENT OPERATING SYSTEM</span>
-          <span className="gos-live"><i /> LIVE MODEL</span>
+          <span>ONE PROCESS · ONE BESPOKE SYSTEM</span>
+          <span className="gos-tag">EXAMPLE</span>
         </div>
 
-        <div className="gos-body">
-          <aside className="gos-rail">
-            <div className="gos-account"><span>2K</span><div><strong>Marula Operations</strong><small>Group workspace</small></div></div>
-            <nav aria-label="Operating system view">
-              {views.map((view, index) => (
-                <button
-                  key={view.id}
-                  type="button"
-                  data-active={activeId === view.id}
-                  onClick={() => setActiveId(view.id)}
-                >
-                  <span>0{index + 1}</span>{view.label}
-                </button>
-              ))}
-            </nav>
-            <div className="gos-rail-foot"><span>ACCOUNTABLE LOOP</span><strong>One record.<br />Four capabilities.</strong></div>
-          </aside>
+        {/* Announce only steps the visitor picks, not the autoplay loop. */}
+        <div className="gos-result" aria-live={auto ? "off" : "polite"}>
+          <div className="gos-result-copy">
+            <span>SUPPLIER INVOICE APPROVAL · TIME TO APPROVE</span>
+            <strong data-state={step <= 0 ? "before" : holding ? "holding" : "moving"}>{now.display}</strong>
+            <p>
+              {step < 0 ? (
+                before.line
+              ) : (
+                <>
+                  Was <b>{before.display}</b>.{" "}
+                  {moves[step].after}
+                </>
+              )}
+            </p>
+          </div>
 
-          <main className="gos-main" aria-live="polite">
-            <header className="gos-main-head">
-              <div><span>{active.eyebrow}</span><h3>{active.label}</h3></div>
-              <div className="gos-state"><i /> {active.signal}</div>
-            </header>
-
-            <div className="gos-metrics">
-              <article><span>PRIMARY READOUT</span><strong>{active.metric}</strong><small>{active.metricLabel}</small></article>
-              <article className="gos-chart"><span>12-WEEK SIGNAL</span><div className="gos-bars" aria-hidden="true">{[38, 50, 43, 62, 58, 72, 68, 79, 74, 88, 84, 94].map((height, index) => <i key={index} style={{ height: `${height}%` }} />)}</div><small>trend · controlled</small></article>
-              <article><span>NEXT REVIEW</span><strong className="gos-small-value">Thursday</strong><small>09:00 · owners confirmed</small></article>
+          <div className="gos-meter">
+            <div className="gos-meter-row">
+              <small>Approval time</small>
+              <div className="gos-track">
+                <i className="gos-ghost" />
+                <i className="gos-fill" data-state={step <= 0 ? "before" : "after"} style={{ width: `${(now.hours / before.hours) * 100}%` }} />
+              </div>
             </div>
-
-            <div className="gos-table">
-              <div className="gos-table-head"><span>WORKSTREAM</span><span>CONTROL / STATUS</span><span>READOUT</span></div>
-              {active.rows.map(([name, status, value], index) => (
-                <div className="gos-row" key={name}>
-                  <span><i data-tone={index === 1 ? "warn" : "good"} />{name}</span>
-                  <span>{status}</span>
-                  <strong>{value}</strong>
-                </div>
-              ))}
+            <div className="gos-meter-row">
+              <small>People touching each invoice</small>
+              <div className="gos-dots" aria-label={`${now.touches} of ${before.touches}`}>
+                {Array.from({ length: before.touches }, (_, i) => (
+                  <i key={i} data-on={i < now.touches} />
+                ))}
+              </div>
             </div>
-
-            <footer className="gos-foot"><span>Improve</span><i /> <span>Train</span><i /> <span>Automate</span><i /> <span>Measure</span><b>CONTINUOUS</b></footer>
-          </main>
+          </div>
         </div>
+
+        <ol className="gos-moves">
+          {moves.map((move, index) => (
+            <li key={move.verb} data-build={move.verb === "Build"}>
+              <button
+                type="button"
+                data-state={index === step ? "now" : index < step ? "done" : "next"}
+                aria-current={index === step ? "step" : undefined}
+                onClick={() => choose(index)}
+              >
+                <span className="gos-move-head">
+                  <em>0{index + 1}</em>
+                  <strong>{move.verb}</strong>
+                  {move.verb === "Build" && <span className="gos-move-flag">THE SYSTEM</span>}
+                  <i aria-hidden="true">{index < step ? "✓" : ""}</i>
+                </span>
+                <small>{move.by}</small>
+                <span className="gos-move-did">{move.did}</span>
+                <b>{move.readout}</b>
+              </button>
+            </li>
+          ))}
+        </ol>
       </div>
-      <div className="gos-caption"><span>ILLUSTRATIVE 2KO OPERATING MODEL</span><span>EXAMPLE RECORDS AND VALUES · NOT A CLIENT RESULT</span></div>
+      <div className="gos-caption"><span>ILLUSTRATIVE EXAMPLE OF A 2KO ENGAGEMENT</span><span>EXAMPLE VALUES · NOT A CLIENT RESULT</span></div>
     </div>
   );
 }
