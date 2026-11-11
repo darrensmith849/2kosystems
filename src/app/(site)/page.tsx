@@ -13,9 +13,9 @@ import TrackedLink from "@/components/cinema/TrackedLink";
 import { RATES, TIMEBOX } from "@/lib/pricing";
 
 export const metadata: Metadata = completePageMetadata({
-  title: "Operational Improvement, Training, Automation & Measurement",
+  title: "Bespoke Operational Systems, Built on Six Sigma",
   description:
-    "2KO improves physical and service operations, builds internal capability, automates repeatable work and measures whether the result holds.",
+    "2KO builds bespoke operational systems for organisations across Africa. Every build starts with a Six Sigma baseline, fixes the process before any code and proves afterwards that the result holds.",
   alternates: { canonical: "/" },
 });
 
@@ -29,10 +29,10 @@ const symptoms = [
 ];
 
 const interventions = [
-  ["Improve", "2KO", "Remove unnecessary steps, clarify ownership and redesign the work around a measurable constraint.", "/process-review"],
-  ["Train", "Six Sigma South Africa", "Build accredited capability where judgement, problem-solving and management behaviour determine the result.", "/training"],
-  ["Automate", "2KO Systems", "Move predictable routing, checking, capture, reconciliation and reporting out of manual work.", "/automation"],
-  ["Measure", "Sigmafy", "Put statistical evidence and a benefits register around the improvement so the result remains visible.", "/sigmafy"],
+  ["Measure", "Six Sigma baseline", "Time the work as it runs today, find where it waits and agree the number the system has to move.", "/process-review"],
+  ["Fix", "Process first", "Remove unnecessary steps, give every item one owner and redesign the work before a line of code is written.", "/method"],
+  ["Build", "2KO Systems", "A bespoke system around the fixed process: routing, checks, evidence and reporting built in, with people deciding the exceptions.", "/systems"],
+  ["Prove", "Sigmafy", "Measure the result against the baseline every week, so everyone can see whether the gain is holding.", "/sigmafy"],
 ];
 
 const lifecycle = ["Diagnose", "Measure", "Improve", "Train", "Automate", "Systemise", "Sustain"];
@@ -63,24 +63,24 @@ export default function HomePage() {
   return (
     <>
       <PageHero
-        eyebrow="OPERATIONAL IMPROVEMENT · ACROSS AFRICA"
+        eyebrow="BESPOKE OPERATIONAL SYSTEMS · BUILT ON SIX SIGMA"
         title={
           <>
-            Improve the process.
-            <span className="block text-[var(--warm-70)]">Make the result permanent.</span>
+            We build the system your process runs on.
+            <span className="block text-[var(--warm-70)]">Measured first. Proven after.</span>
           </>
         }
-        titleClass="max-w-[18ch]"
-        lead="2KO helps organisations remove operational friction, build internal capability, automate repeatable work and keep the result visible. One partner across process, people, systems and measurement."
+        titleClass="max-w-[20ch]"
+        lead="2KO builds bespoke operational systems for organisations across Africa: approvals, job cards, cases, controls and reporting. Every build starts with a Six Sigma baseline of how the work runs today, fixes the process before any code, and proves afterwards that the result holds."
         ctas={[
           { href: "/contact", label: "Bring us the process", offer: "general enquiry" },
-          { href: "/method", label: "See how improvement works", ghost: true, offer: "method" },
+          { href: "/systems", label: "See how we build", ghost: true, offer: "systems and automation" },
         ]}
         facts={[
           { value: "$5bn+", label: "combined savings influenced", emphasis: true },
           { value: "Since 1998", label: "improvement heritage" },
           { value: "8,000+", label: "organisations served" },
-          { value: "4", label: "connected capabilities" },
+          { value: "Yours", label: "source code, docs and data" },
         ]}
       >
         <div className="relative mt-16">
@@ -148,10 +148,10 @@ export default function HomePage() {
       <section className="k-band overflow-hidden">
         <div className="k-shell grid gap-16 lg:grid-cols-[minmax(280px,0.75fr)_minmax(0,1.25fr)] lg:gap-24">
           <div className="lg:sticky lg:top-32 lg:self-start">
-            <Rise><p className="k-mono k-mono--ember">02 — One improvement system</p></Rise>
-            <Rise step={1}><h2 className="k-title mt-8 max-w-[17ch]">Four capabilities. One accountable outcome.</h2></Rise>
+            <Rise><p className="k-mono k-mono--ember">02 — How a build works</p></Rise>
+            <Rise step={1}><h2 className="k-title mt-8 max-w-[17ch]">Measure. Fix. Build. Prove.</h2></Rise>
             <Rise step={2}>
-              <p className="k-lead mt-7 max-w-[42ch]">We do not decide that you need software before we understand the work. Sometimes the right answer is that nothing should be built.</p>
+              <p className="k-lead mt-7 max-w-[42ch]">We do not decide that you need software before we understand the work. Sometimes the right answer is that nothing should be built. Where your people need the skills to run the new process, Six Sigma South Africa trains them.</p>
             </Rise>
             <Rise step={3}><Link href="/process-review" className="k-link mt-8">Start with a Process Review</Link></Rise>
           </div>
@@ -220,7 +220,7 @@ export default function HomePage() {
 
       <section className="k-band overflow-hidden">
         <div className="k-shell">
-          <Rise><p className="k-mono k-mono--ember">04 — What we automate</p></Rise>
+          <Rise><p className="k-mono k-mono--ember">04 — What we build</p></Rise>
           <Rise step={1}><h2 className="k-state mt-8 max-w-[19ch]">Routine work disappears. Consequential decisions stay human.</h2></Rise>
           <Rise step={2}><p className="k-lead k-measure mt-8">We use the lightest technology that can hold the process reliably. The interface is not the improvement. The control inside the workflow is.</p></Rise>
 
@@ -325,48 +325,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="managed-improvement" className="k-band overflow-hidden">
-        <div className="k-shell grid gap-16 lg:grid-cols-[minmax(320px,.8fr)_minmax(0,1.2fr)] lg:items-center">
-          <Rise>
-            <div className="relative mx-auto aspect-square w-full max-w-[470px] rounded-full p-[1px]" style={{ background: "conic-gradient(from 210deg, rgba(63,185,80,.15), var(--signal), var(--ember), rgba(255,255,255,.08), rgba(63,185,80,.15))" }}>
-              <div className="absolute inset-7 rounded-full border border-[var(--hair-2)] bg-[var(--black)] shadow-[inset_0_0_80px_rgba(63,185,80,.06)]" />
-              <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                <span className="k-mono k-mono--ember">Measured process</span>
-                <strong className="mt-4 text-[clamp(34px,5vw,62px)] font-medium leading-none tracking-[-.05em]">Review.<br />Improve.<br />Repeat.</strong>
-              </div>
-              <span className="absolute left-[7%] top-[48%] rounded-full border border-[var(--hair-2)] bg-[var(--black)] px-4 py-2 k-mono">Baseline</span>
-              <span className="absolute right-[5%] top-[18%] rounded-full border border-[var(--hair-2)] bg-[var(--black)] px-4 py-2 k-mono">Backlog</span>
-              <span className="absolute bottom-[12%] right-[8%] rounded-full border border-[var(--hair-2)] bg-[var(--black)] px-4 py-2 k-mono">Benefit</span>
-            </div>
-          </Rise>
-
-          <div>
-            <Rise><p className="k-mono k-mono--ember">08 — Improvement partnerships</p></Rise>
-            <Rise step={1}><h2 className="k-title mt-8 max-w-[20ch]">One relationship across process, capability, systems and evidence.</h2></Rise>
-            <Rise step={2}><p className="k-lead mt-7 max-w-[52ch]">A 2KO partnership combines the capabilities your workstream actually needs. The balance can move as the constraint moves, without restarting the relationship every quarter.</p></Rise>
-            <div className="mt-10">
-              {[
-                ["Improve", "Active workstream", "Senior process consulting, a prioritised improvement backlog and operating reviews."],
-                ["Train", "Annual capability plan", "Applied Six Sigma learning connected to live improvement projects and coaching."],
-                ["Automate", "Bounded delivery capacity", "Workflow automation and operational systems delivered against explicit controls."],
-                ["Measure", "Evidence and Sigmafy", "Statistical tools, benefits tracking and a visible record of what is holding."],
-              ].map(([title, label, body]) => (
-                <Rise key={title}>
-                  <article className="grid gap-3 border-t border-[var(--hair)] py-6 sm:grid-cols-[minmax(0,.8fr)_minmax(0,1fr)] sm:items-baseline">
-                    <div><p className="k-mono">{label}</p><h3 className="k-sub mt-2">{title}</h3></div>
-                    <p className="k-sm">{body}</p>
-                  </article>
-                </Rise>
-              ))}
-            </div>
-            <Rise className="mt-8"><TrackedLink href="/managed-improvement" eventOffer="improvement partnership" className="k-link">Explore improvement partnerships →</TrackedLink></Rise>
-          </div>
-        </div>
-      </section>
-
-      <section className="k-band k-band--2">
+      <section className="k-band">
         <div className="k-shell">
-          <Rise><p className="k-mono">09 — Where to start</p></Rise>
+          <Rise><p className="k-mono">08 — Where to start</p></Rise>
           <Rise step={1}><h2 className="k-title mt-8 max-w-[25ch]">Start with the smallest engagement that can produce a defensible answer.</h2></Rise>
           <div className="mt-14">
             {offers.map((offer, index) => (
@@ -380,6 +341,44 @@ export default function HomePage() {
                 </Link>
               </Rise>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="managed-improvement" className="k-band k-band--2 overflow-hidden">
+        <div className="k-shell grid gap-16 lg:grid-cols-[minmax(320px,.8fr)_minmax(0,1.2fr)] lg:items-center">
+          <Rise>
+            <div className="relative mx-auto aspect-square w-full max-w-[470px] rounded-full p-[1px]" style={{ background: "conic-gradient(from 210deg, rgba(63,185,80,.15), var(--signal), var(--ember), rgba(255,255,255,.08), rgba(63,185,80,.15))" }}>
+              <div className="absolute inset-7 rounded-full border border-[var(--hair-2)] bg-[var(--black)] shadow-[inset_0_0_80px_rgba(63,185,80,.06)]" />
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+                <span className="k-mono k-mono--ember">Measured process</span>
+                <strong className="mt-4 text-[clamp(34px,5vw,62px)] font-medium leading-none tracking-[-.05em]">Review.<br />Improve.<br />Repeat.</strong>
+              </div>
+              <span className="absolute bottom-[16%] left-[4%] rounded-full border border-[var(--hair-2)] bg-[var(--black)] px-4 py-2 k-mono">Baseline</span>
+              <span className="absolute right-[5%] top-[18%] rounded-full border border-[var(--hair-2)] bg-[var(--black)] px-4 py-2 k-mono">Backlog</span>
+              <span className="absolute bottom-[12%] right-[8%] rounded-full border border-[var(--hair-2)] bg-[var(--black)] px-4 py-2 k-mono">Benefit</span>
+            </div>
+          </Rise>
+
+          <div>
+            <Rise><p className="k-mono k-mono--ember">09 — After go-live</p></Rise>
+            <Rise step={1}><h2 className="k-title mt-8 max-w-[20ch]">Once the system is live, we keep it improving.</h2></Rise>
+            <Rise step={2}><p className="k-lead mt-7 max-w-[52ch]">Most clients keep us on after launch. A monthly retainer keeps the system supported, measured against its baseline and improving as the business changes.</p></Rise>
+            <div className="mt-10">
+              {[
+                ["System Care", `from ${RATES.retainerCare} / month`, "Support, monitoring and bounded monthly improvements for one production system."],
+                ["Managed Systems", `from ${RATES.managedSystems} / month`, "We run the system for you and deliver a planned roadmap of changes as the work evolves."],
+                ["Improvement partnership", `from ${RATES.partnershipProgramme} / month`, "Process, training, systems and Sigmafy measurement across several workstreams, under one relationship."],
+              ].map(([title, label, body]) => (
+                <Rise key={title}>
+                  <article className="grid gap-3 border-t border-[var(--hair)] py-6 sm:grid-cols-[minmax(0,.8fr)_minmax(0,1fr)] sm:items-baseline">
+                    <div><p className="k-mono">{label}</p><h3 className="k-sub mt-2">{title}</h3></div>
+                    <p className="k-sm">{body}</p>
+                  </article>
+                </Rise>
+              ))}
+            </div>
+            <Rise className="mt-8"><TrackedLink href="/pricing" eventOffer="retainers" className="k-link">Compare retainers and partnerships →</TrackedLink></Rise>
           </div>
         </div>
       </section>
