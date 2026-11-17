@@ -109,8 +109,8 @@ export default function MethodPage() {
         titleClass="max-w-[18ch]"
         lead="We diagnose and measure before choosing an intervention. Process redesign, training, automation and operational systems then work together only where the evidence requires them. Every delivery phase has a written scope and a stop decision."
         ctas={[
-          { href: "/process-review", label: "Start with a review", offer: "process review" },
-          { href: "/audit", label: "Quantify the opportunity", ghost: true, offer: "opportunity audit" },
+          { href: "/contact", label: "Plan a deployment", offer: "deployment enquiry" },
+          { href: "/training", label: "See the belts", ghost: true, offer: "training" },
         ]}
       >
         <div className="mt-12 flex flex-wrap gap-2.5">
@@ -186,8 +186,8 @@ export default function MethodPage() {
                     </li>
                   ))}
                 </ul>
-                <Link href="/systems" className="k-link mt-5 inline-flex">
-                  See the fixed-price systems →
+                <Link href="/contact" className="k-link mt-5 inline-flex">
+                  Talk to us about it →
                 </Link>
               </article>
             </Rise>
@@ -215,8 +215,8 @@ export default function MethodPage() {
                     </li>
                   ))}
                 </ul>
-                <Link href="/quote" className="k-link mt-5 inline-flex">
-                  Not sure which? Build a scope →
+                <Link href="/contact" className="k-link mt-5 inline-flex">
+                  Not sure which? Talk to us →
                 </Link>
               </article>
             </Rise>

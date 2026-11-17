@@ -1,12 +1,12 @@
 import Link from "next/link";
 
 const branches = [
-  { side: "right", number: "01", question: "The requirement is already clear", title: "Direct scope", body: "Validate the boundary and move to the appropriate product, pilot or build.", href: "/systems" },
-  { side: "left", number: "02", question: "One process can answer the decision", title: "Process Review", body: "Follow the live work and identify the smallest responsible next step.", href: "/process-review" },
-  { side: "right", number: "03", question: "The investment needs broader evidence", title: "Opportunity Audit", body: "Quantify and prioritise the strongest opportunities before implementation.", href: "/audit" },
-  { side: "left", number: "04", question: "Capability or analysis is the constraint", title: "Training or Sigmafy", body: "Shape the learning, statistical tools and workplace application required.", href: "/training" },
-  { side: "right", number: "05", question: "Several workstreams need sustained capacity", title: "Improvement partnership", body: "Qualify the sponsorship, portfolio and annual operating cadence.", href: "/managed-improvement" },
-  { side: "left", number: "06", question: "Intervention is not justified", title: "No build", body: "Use an existing product, establish readiness, accept a referral—or do nothing.", href: "/method" },
+  { side: "right", number: "01", question: "You know the numbers and the belts", title: "Plan the waves", body: "Agree the cohorts, the order of the belts and the first projects.", href: "/training" },
+  { side: "left", number: "02", question: "You want proof before you scale", title: "Pilot cohort", body: "One Green Belt cohort on real projects, measured, before the wider rollout.", href: "/training" },
+  { side: "right", number: "03", question: "Everyone needs the basics", title: "White Belt for everyone", body: "Every employee on Sigmafy, with certificates and your own progress dashboards.", href: "/sigmafy" },
+  { side: "left", number: "04", question: "Leaders need to see the results", title: "Programme on Sigmafy", body: "Projects, sign-offs and savings against a baseline, visible to the people paying for it.", href: "/sigmafy" },
+  { side: "right", number: "05", question: "Several business units are involved", title: "Improvement partnership", body: "Qualify the sponsorship, the portfolio and the annual cadence.", href: "/managed-improvement" },
+  { side: "left", number: "06", question: "Training is not the answer", title: "We will say so", body: "If the problem is not capability, we tell you, and point you to what is.", href: "/method" },
 ] as const;
 
 export default function PublicEnquiryDecisionTree() {
@@ -15,9 +15,9 @@ export default function PublicEnquiryDecisionTree() {
       <header className="eqd-topbar"><span className="eqd-dots" aria-hidden="true"><i /><i /><i /></span><span>YOUR ENQUIRY · A HUMAN DECISION PATH</span><span className="eqd-live"><i /> TYPICAL, NOT RIGID</span></header>
 
       <div className="eqd-tree">
-        <section className="eqd-start"><span>START</span><h3>Tell us where the work keeps going wrong.</h3><p>A short process description is enough.</p></section>
+        <section className="eqd-start"><span>START</span><h3>Tell us how many people you want to develop.</h3><p>A rough number and the belts in mind are enough.</p></section>
         <div className="eqd-arrow"><i>↓</i><span>READ BY A PERSON</span></div>
-        <section className="eqd-gate"><span>THE QUALIFICATION QUESTION</span><h2>What is the smallest responsible decision we can help you make?</h2><div><i>Problem</i><i>Owner</i><i>Evidence</i><i>Value</i><i>Readiness</i></div></section>
+        <section className="eqd-gate"><span>THE QUALIFICATION QUESTION</span><h2>What is the smallest programme that can prove the result?</h2><div><i>People</i><i>Belts</i><i>Projects</i><i>Sponsor</i><i>Evidence</i></div></section>
 
         <div className="eqd-spine" aria-hidden="true"><span>THE ROUTE CHANGES WITH THE EVIDENCE</span></div>
 
@@ -31,10 +31,10 @@ export default function PublicEnquiryDecisionTree() {
         </div>
 
         <div className="eqd-arrow eqd-arrow--final"><i>↓</i><span>AGREE THE NEXT STEP—or agree to stop</span></div>
-        <section className="eqd-end"><span>ONE CONTROLLED HANDOVER</span><h3>Problem understood. Owner named. Next decision clear.</h3><p>The route may change as evidence improves. That is judgement—not process failure.</p><a href="#process-brief">Send the process brief <i>↓</i></a></section>
+        <section className="eqd-end"><span>ONE CONTROLLED HANDOVER</span><h3>People counted. Sponsor named. First cohort clear.</h3><p>The route may change as evidence improves. That is judgement—not process failure.</p><a href="#process-brief">Send us the brief <i>↓</i></a></section>
       </div>
 
-      <figcaption><span>NO AUTOMATIC SALES SEQUENCE.</span><span>THE RIGHT ANSWER MAY BE NOT TO BUILD ANYTHING.</span></figcaption>
+      <figcaption><span>NO AUTOMATIC SALES SEQUENCE.</span><span>THE RIGHT ANSWER MAY BE A SMALLER PILOT.</span></figcaption>
     </figure>
   );
 }

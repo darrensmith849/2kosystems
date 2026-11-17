@@ -10,7 +10,7 @@ import { Panel, Pill } from "@/components/cinema/instruments";
 import { RATES } from "@/lib/pricing";
 
 export const metadata: Metadata = completePageMetadata({
-  title: "Process Optimisation & Automation Across Industries",
+  title: "Lean and Six Sigma Programmes Across Industries",
   description:
     "Process optimisation, workflow automation and operational systems for physical and service operations across South Africa and Africa—from mining and logistics to banking, contact centres and professional services.",
   alternates: { canonical: "/sectors" },
@@ -276,7 +276,7 @@ export default function SectorsPage() {
                   </ol>
                 </Rise>
                 <Rise step={2} className="mt-9"><SectorArtefact kind={sector.artefact} /></Rise>
-                <Rise step={3} className="mt-8"><TrackedLink href="/audit" eventOffer={`${sector.name} opportunity audit`} className="k-link">Quantify a process in this sector →</TrackedLink></Rise>
+                <Rise step={3} className="mt-8"><TrackedLink href="/contact?interest=training" eventOffer={`${sector.name} deployment`} className="k-link">Plan a deployment in this sector →</TrackedLink></Rise>
               </div>
             </div>
           </div>
@@ -334,7 +334,7 @@ export default function SectorsPage() {
             ))}
           </div>
 
-          <Rise className="mt-10"><TrackedLink href="/audit" eventOffer="service operations opportunity audit" className="k-link">Quantify a service workflow →</TrackedLink></Rise>
+          <Rise className="mt-10"><TrackedLink href="/contact?interest=training" eventOffer="service operations deployment" className="k-link">Plan a deployment for service teams →</TrackedLink></Rise>
         </div>
       </section>
 
@@ -401,7 +401,7 @@ export default function SectorsPage() {
           </div>
           <Rise step={3} className="flex flex-col gap-3">
             <TrackedLink href="/contact" eventOffer="sector process review" className="k-btn k-btn--solid">Bring us the process</TrackedLink>
-            <Link href="/automation" className="k-btn k-btn--ghost">Explore process automation</Link>
+            <Link href="/training" className="k-btn k-btn--ghost">See the belts</Link>
           </Rise>
         </div>
       </section>

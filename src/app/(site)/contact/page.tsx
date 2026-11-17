@@ -7,12 +7,11 @@ import Rise from "@/components/cinema/Rise";
 import ContactForm from "@/components/cinema/ContactForm";
 import PublicEnquiryDecisionTree from "@/components/cinema/PublicEnquiryDecisionTree";
 import { Panel, QueueRows, EventFeed, Pill } from "@/components/cinema/instruments";
-import { RATES } from "@/lib/pricing";
 
 export const metadata: Metadata = completePageMetadata({
-  title: "Bring Us the Result — Start with 2KO",
+  title: "Plan a Lean and Six Sigma Deployment",
   description:
-    "Tell 2KO where work waits, gets repeated or depends on somebody remembering. We will recommend the smallest appropriate next step.",
+    "Tell 2KO how many people you want to develop and what results you need. We will plan the first cohort, the belts and how the results will be measured.",
   alternates: { canonical: "/contact" },
 });
 
@@ -49,29 +48,29 @@ export default async function ContactPage({
     <>
       <PageHero
         eyebrow="CONTACT"
-        title="Bring us the process that keeps going wrong."
+        title="Plan a deployment that proves itself."
         titleClass="max-w-[16ch]"
         lead={
           <>
-            Tell us where the work waits, gets repeated or depends on somebody
-            remembering. We will tell you whether the next step is a process
-            review, an audit, training, automation—or no build at all.
+            Tell us how many people you want to develop and the results you
+            need. We will plan the first cohort, the belts and the projects with
+            you, and show you how every result will be measured.
           </>
         }
       >
         <div className="mt-10 overflow-hidden rounded-2xl border border-white/10 bg-black/50 backdrop-blur-xl">
           <div className="flex items-center justify-between gap-4 border-b border-white/10 px-5 py-4 sm:px-6">
-            <span className="k-mono k-mono--ember">Process brief · intake</span>
+            <span className="k-mono k-mono--ember">Programme brief · intake</span>
             <span className="k-mono">No sensitive records</span>
           </div>
           <div className="grid sm:grid-cols-[minmax(0,1.35fr)_minmax(0,.65fr)]">
             <div className="border-b border-white/10 p-5 sm:border-b-0 sm:border-r sm:p-6">
               <p className="k-mono">Useful first description</p>
-              <p className="k-sub mt-5 max-w-[42ch]">“This process touches six people, waits at approval, and nobody can see where a request is.”</p>
+              <p className="k-sub mt-5 max-w-[42ch]">“We have about 2,000 people in operations, and we want our first 20 Green Belts running projects this year.”</p>
               <div className="mt-7 flex flex-wrap gap-2">
-                <Pill tone="good">The process</Pill>
-                <Pill tone="warn">Where it fails</Pill>
-                <Pill>Who it affects</Pill>
+                <Pill tone="good">How many people</Pill>
+                <Pill tone="warn">The results you need</Pill>
+                <Pill>Who sponsors it</Pill>
               </div>
             </div>
             <div className="p-5 sm:p-6">
@@ -94,14 +93,14 @@ export default async function ContactPage({
         <div className="k-shell grid gap-12 pb-20 pt-40 lg:grid-cols-[minmax(0,1fr)_520px] lg:items-end">
           <div>
             <Rise><p className="k-mono k-mono--ember">A low-friction first handoff</p></Rise>
-            <Rise step={1}><h2 className="k-state mt-8 max-w-[14ch]">You bring the symptom. We help find the next decision.</h2></Rise>
+            <Rise step={1}><h2 className="k-state mt-8 max-w-[14ch]">You bring the ambition. We plan the first cohort.</h2></Rise>
           </div>
           <Rise step={2}>
             <ol className="overflow-hidden rounded-2xl border border-white/10 bg-black/72 backdrop-blur-xl">
               {[
-                ["Send", "Describe the process in ordinary language.", "Now"],
-                ["Fit", "We test whether there is a useful piece of work.", "+1 day"],
-                ["Decide", "Agree the smallest next step—or no engagement.", "Next"],
+                ["Send", "Tell us the people, the belts and the results you need.", "Now"],
+                ["Fit", "We test whether training is the right answer.", "+1 day"],
+                ["Plan", "Agree the first cohort and its projects—or no engagement.", "Next"],
               ].map(([title, body, time], index) => (
                 <li key={title} className="grid grid-cols-[42px_minmax(0,.55fr)_minmax(0,1fr)] items-baseline gap-4 border-b border-white/10 px-5 py-7 last:border-b-0 sm:grid-cols-[48px_minmax(0,.55fr)_minmax(0,1fr)_64px] sm:gap-5 sm:px-6">
                   <span className="k-mono k-mono--ember">0{index + 1}</span>
@@ -122,7 +121,7 @@ export default async function ContactPage({
               <div><p className="k-mono k-mono--ember">WHAT HAPPENS AFTER YOU ENQUIRE</p><h2>One conversation. The right branch from there.</h2></div>
             </Rise>
             <Rise step={1}>
-              <div><p>Not every enquiry is pushed into the same service. We establish what is already known, what still needs evidence and whether intervention is justified—then recommend the smallest responsible next step.</p><a href="#process-brief" className="k-link">Send a process brief ↓</a></div>
+              <div><p>Not every enquiry is pushed into the same service. We establish what is already known, what still needs evidence and whether intervention is justified—then recommend the smallest responsible next step.</p><a href="#process-brief" className="k-link">Send us the brief ↓</a></div>
             </Rise>
           </div>
           <Rise step={2}><PublicEnquiryDecisionTree /></Rise>
@@ -135,10 +134,10 @@ export default async function ContactPage({
         <div className="k-shell relative">
           <div className="mb-12 grid gap-8 lg:grid-cols-[minmax(0,1fr)_400px] lg:items-end">
             <div>
-              <Rise><p className="k-mono k-mono--ember">Your process brief</p></Rise>
+              <Rise><p className="k-mono k-mono--ember">Your programme brief</p></Rise>
               <Rise step={1}><h2 className="k-title mt-6 max-w-[20ch]">Enough context to have a useful first conversation.</h2></Rise>
             </div>
-            <Rise step={2}><p className="k-sm">You do not need a requirements document. A short description of the process, the people it touches and the failure pattern is enough.</p></Rise>
+            <Rise step={2}><p className="k-sm">You do not need a requirements document. A rough number of people, the belts you have in mind and the results that matter are enough.</p></Rise>
           </div>
 
           <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_400px] lg:items-start">
@@ -155,8 +154,8 @@ export default async function ContactPage({
                     lines={[
                       { time: "+1 day", text: "A reply from a person, not a sequence", tone: "good" },
                       { time: "+3 days", text: "Fit conversation · free, no sales deck" },
-                      { time: "Next", text: "Smallest appropriate engagement agreed" },
-                      { time: "Decision", text: "Process, training, automation or no build", tone: "good" },
+                      { time: "Next", text: "First cohort and projects agreed" },
+                      { time: "Decision", text: "A pilot cohort, waves or a full deployment", tone: "good" },
                     ]}
                   />
                 </Panel>
@@ -166,7 +165,7 @@ export default async function ContactPage({
                     rows={[
                       { label: "Reply time", value: "1 business day", tone: "good" },
                       { label: "Scoping call", value: "Free", tone: "good" },
-                      { label: "Process review", value: RATES.review },
+                      { label: "White Belt Online", value: "Free" },
                       { label: "Added to a mailing list", value: "No", tone: "good" },
                     ]}
                   />
@@ -187,9 +186,9 @@ export default async function ContactPage({
           <Rise step={1}><h2 className="k-title mt-6 max-w-[22ch]">Match the starting point to the decision you need.</h2></Rise>
           <div className="mt-12 border-t border-[var(--hair-2)]">
             {[
-              { number: "01", label: "The constraint is unclear", body: `Walk one process with us for half a day and receive a concise build-or-do-not-build recommendation for ${RATES.review}.`, href: "/process-review", cta: "See the Process Review" },
-              { number: "02", label: "The investment needs evidence", body: "Quantify three operational opportunities and the best intervention before deciding what to build.", href: "/audit", cta: "See the Opportunity Audit" },
-              { number: "03", label: "You want the whole operating logic", body: "See how diagnosis, improvement, training, automation and control fit into one method.", href: "/method", cta: "Read the method" },
+              { number: "01", label: "You want to see the belts first", body: "What each belt learns, how long it takes and what people do on their projects.", href: "/training", cta: "See the belts" },
+              { number: "02", label: "You want to see the platform", body: "How every belt learns, works and is measured on Sigmafy, from one person to thousands.", href: "/sigmafy", cta: "See Sigmafy" },
+              { number: "03", label: "You need a long-term partner", body: "Coaching, sign-off and savings tracking across the whole programme, under one relationship.", href: "/managed-improvement", cta: "See partnerships" },
             ].map((item) => (
               <Rise key={item.label}>
                 <Link href={item.href} className="group grid gap-5 border-b border-[var(--hair-2)] py-8 transition-colors hover:bg-white/[.025] md:grid-cols-[54px_minmax(0,.75fr)_minmax(0,1fr)_auto] md:items-baseline md:px-5">
@@ -209,8 +208,8 @@ export default async function ContactPage({
         <div className="absolute inset-0 -z-10 bg-black/48" aria-hidden="true" />
         <div className="k-shell pb-20 pt-40">
           <Rise><p className="k-mono k-mono--ember">No polished brief required</p></Rise>
-          <Rise step={1}><h2 className="k-state mt-8 max-w-[15ch]">Start with the sentence people keep saying at work.</h2></Rise>
-          <Rise step={2}><a href="#process-brief" className="k-btn k-btn--solid mt-8">Send the process brief</a></Rise>
+          <Rise step={1}><h2 className="k-state mt-8 max-w-[15ch]">Start with a number and an ambition.</h2></Rise>
+          <Rise step={2}><a href="#process-brief" className="k-btn k-btn--solid mt-8">Send us the brief</a></Rise>
         </div>
       </section>
     </>

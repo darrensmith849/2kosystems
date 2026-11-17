@@ -50,12 +50,15 @@ const koMark = localFont({
 
 export const metadata: Metadata = {
   title: {
-    default: "2KO — Operational Improvement, Training & Automation",
+    default: "2KO — Lean and Six Sigma Deployment at Scale",
     template: "%s | 2KO",
   },
   description:
-    "2KO improves processes, builds Six Sigma capability, automates operational work and measures whether the result holds across Africa.",
+    "2KO runs large-scale Lean and Six Sigma programmes across Africa: accredited training at every belt, real projects and measured savings on Sigmafy.",
   keywords: [
+    "Lean Six Sigma deployment",
+    "Six Sigma training for companies",
+    "Lean Six Sigma programme Africa",
     "process improvement South Africa",
     "process optimisation",
     "Six Sigma training South Africa",
@@ -81,17 +84,17 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_ZA",
     siteName: "2KO",
-    title: "2KO — Operational Improvement, Training & Automation",
+    title: "2KO — Lean and Six Sigma Deployment at Scale",
     description:
-      "Improve the process, train the people, automate repeatable work and measure whether the result holds.",
+      "Train the people, run real projects and measure whether the result holds, from White Belt to Black Belt on Sigmafy.",
     url: SITE_URL,
     images: [{ url: OG_IMAGE_PATH, ...OG_IMAGE_SIZE, alt: OG_IMAGE_ALT }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "2KO — Operational Improvement, Training & Automation",
+    title: "2KO — Lean and Six Sigma Deployment at Scale",
     description:
-      "Improve the process, train the people, automate repeatable work and measure whether the result holds.",
+      "Train the people, run real projects and measure whether the result holds, from White Belt to Black Belt on Sigmafy.",
     images: [{ url: OG_IMAGE_PATH, ...OG_IMAGE_SIZE, alt: OG_IMAGE_ALT }],
   },
   robots: {

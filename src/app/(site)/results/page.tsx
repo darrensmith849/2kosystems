@@ -22,8 +22,8 @@ const outcomes = [
     measure: "COST PER CASE · REWORK · DEFECTS",
     image: "/imagery/sectors/services/accounting-v1.webp",
     position: "center",
-    href: "/audit",
-    link: "Find the opportunity",
+    href: "/method",
+    link: "Read the method",
   },
   {
     code: "02",
@@ -33,8 +33,8 @@ const outcomes = [
     measure: "LEAD TIME · BACKLOG · THROUGHPUT",
     image: "/imagery/sectors/services/customer-operations-v1.webp",
     position: "62% center",
-    href: "/automation",
-    link: "Explore automation",
+    href: "/sigmafy",
+    link: "See projects on Sigmafy",
   },
   {
     code: "03",
@@ -44,13 +44,13 @@ const outcomes = [
     measure: "EXCEPTIONS · COMPLIANCE · COVERAGE",
     image: "/imagery/sectors/manufacturing-v1.webp",
     position: "center",
-    href: "/systems",
-    link: "See operational systems",
+    href: "/managed-improvement",
+    link: "See improvement partnerships",
   },
   {
     code: "04",
     eyebrow: "CAPABILITY · SUSTAINMENT",
-    title: "Teams that keep improving after we leave.",
+    title: "Teams that keep improving, with us alongside.",
     body: "Training is connected to real work, real projects and operating measures—not treated as an isolated classroom event.",
     measure: "APPLICATION · ADOPTION · SUSTAINMENT",
     image: "/imagery/training/hero-v2.webp",
@@ -169,7 +169,7 @@ export default function ResultsPage() {
           <Rise step={2}><p>Tell us what is slow, costly, unreliable or difficult to control. We will help you define the outcome, locate the constraint and decide whether improvement, training, automation, a system—or a combination—is the right next move.</p></Rise>
           <Rise step={3} className="rs2-close-actions">
             <TrackedLink href="/contact?interest=operational-excellence" eventOffer="results conversation" className="k-btn k-btn--solid">Start the conversation</TrackedLink>
-            <Link href="/audit" className="k-btn k-btn--ghost">Begin with a Process Review</Link>
+            <Link href="/training" className="k-btn k-btn--ghost">See the belts</Link>
           </Rise>
         </div>
       </section>

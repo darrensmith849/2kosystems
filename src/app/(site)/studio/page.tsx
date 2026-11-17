@@ -7,16 +7,16 @@ import Rise from "@/components/cinema/Rise";
 import TrackedLink from "@/components/cinema/TrackedLink";
 
 export const metadata: Metadata = completePageMetadata({
-  title: "About 2KO — Operational Improvement Across Africa",
-  description: "Meet 2KO: one operational improvement group connecting process consulting, Six Sigma training, automation, systems and statistical measurement.",
+  title: "About 2KO — Lean and Six Sigma at Scale Across Africa",
+  description: "Meet 2KO: large-scale Lean and Six Sigma programmes across Africa, from White Belt for everyone to Black Belts who lead the work, all measured on Sigmafy.",
   alternates: { canonical: "/studio" },
 });
 
 const capabilities = [
-  ["01", "Improve", "2KO", "Find the constraint, redesign the work and manage the improvement against a visible benefit.", "/process-review"],
-  ["02", "Train", "Six Sigma South Africa", "Build accredited problem-solving capability and apply it to live operating priorities.", "/training"],
-  ["03", "Automate", "2KO Systems", "Turn the new standard into reliable workflow, controls, evidence and reporting.", "/systems"],
-  ["04", "Measure", "Sigmafy", "Give teams the statistical tools and operating record needed to prove that the gain holds.", "/sigmafy"],
+  ["01", "Train", "Six Sigma South Africa", "Accredited Lean and Six Sigma at every belt, from White Belt for everyone to Black Belts who lead the work.", "/training"],
+  ["02", "Run projects", "2KO", "Real projects on live operating priorities, coached and signed off by our trainers.", "/method"],
+  ["03", "Measure", "Sigmafy", "The platform every belt learns, works and is measured on, so the gain is proved and it holds.", "/sigmafy"],
+  ["04", "Partner", "Improvement partnerships", "We stay inside the programme: coaching, sign-off and savings tracking under one relationship.", "/managed-improvement"],
 ];
 
 const principles = [
@@ -38,8 +38,8 @@ export default function StudioPage() {
           <div className="ab-hero-copy">
             <Rise><p className="k-mono k-mono--ember">ABOUT 2KO · EST. 1998</p></Rise>
             <Rise step={1}><h1>We work where <span>improvement meets the operation.</span></h1></Rise>
-            <Rise step={2}><p className="ab-hero-lead">One group connecting process consulting, accredited Six Sigma training, operational systems and statistical measurement—so the handoffs between disciplines do not become another source of friction.</p></Rise>
-            <Rise step={3} className="ab-hero-actions"><TrackedLink href="/contact" eventOffer="about 2KO" className="k-btn k-btn--solid">Bring us the result</TrackedLink><Link href="/method" className="k-btn k-btn--ghost">See the method</Link></Rise>
+            <Rise step={2}><p className="ab-hero-lead">We run large-scale Lean and Six Sigma programmes inside organisations: accredited training at every belt, real projects coached to the finish, and every result measured on Sigmafy.</p></Rise>
+            <Rise step={3} className="ab-hero-actions"><TrackedLink href="/contact" eventOffer="about 2KO" className="k-btn k-btn--solid">Plan a deployment</TrackedLink><Link href="/method" className="k-btn k-btn--ghost">See the method</Link></Rise>
           </div>
           <Rise step={3} className="ab-hero-proof"><span><b>1998</b><small>operating heritage</small></span><span><b>12,000+</b><small>professionals trained</small></span><span><b>4</b><small>connected capabilities</small></span><span><b>Africa</b><small>delivery reach</small></span></Rise>
         </div>
@@ -71,7 +71,7 @@ export default function StudioPage() {
         <Rise step={2}><div className="grid grid-cols-2 border-l border-[var(--hair)]"><div className="p-6"><strong className="k-num text-[42px]">12,000+</strong><p className="k-sm mt-2">professionals trained</p></div><div className="border-l border-[var(--hair)] p-6"><strong className="k-num text-[42px]">5</strong><p className="k-sm mt-2">South African delivery cities</p></div><div className="border-t border-[var(--hair)] p-6"><strong className="k-sub">Accredited</strong><p className="k-sm mt-2">Six Sigma pathways</p></div><div className="border-l border-t border-[var(--hair)] p-6"><strong className="k-sub">Africa</strong><p className="k-sm mt-2">regional delivery reach</p></div></div></Rise>
       </div></section>
 
-      <section className="k-band"><div className="k-shell text-center"><Rise><p className="k-mono k-mono--ember">Start with the operating result</p></Rise><Rise step={1}><h2 className="k-state mx-auto mt-8 max-w-[17ch]">The answer may be training, technology or neither. We find out first.</h2></Rise><Rise step={2}><p className="k-lead mx-auto mt-8 max-w-[54ch]">Bring us one process and the result it needs to produce. We will help identify the smallest defensible next step.</p></Rise><Rise step={3} className="mt-10 flex flex-wrap justify-center gap-3"><TrackedLink href="/contact" eventOffer="about 2KO" className="k-btn k-btn--solid">Bring us the process</TrackedLink><Link href="/process-review" className="k-btn k-btn--ghost">Start with a review</Link></Rise></div></section>
+      <section className="k-band"><div className="k-shell text-center"><Rise><p className="k-mono k-mono--ember">Start with the operating result</p></Rise><Rise step={1}><h2 className="k-state mx-auto mt-8 max-w-[17ch]">Start with one cohort. Scale on the evidence.</h2></Rise><Rise step={2}><p className="k-lead mx-auto mt-8 max-w-[54ch]">Tell us how many people you want to develop. We will plan the first cohort and its projects with you, and how the results will be measured.</p></Rise><Rise step={3} className="mt-10 flex flex-wrap justify-center gap-3"><TrackedLink href="/contact" eventOffer="about 2KO" className="k-btn k-btn--solid">Plan a deployment</TrackedLink><Link href="/training" className="k-btn k-btn--ghost">See the belts</Link></Rise></div></section>
     </>
   );
 }
