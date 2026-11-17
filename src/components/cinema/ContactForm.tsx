@@ -164,24 +164,26 @@ export default function ContactForm({ initialInterest = "" }: { initialInterest?
             }}
           >
             <option value="">Not sure yet</option>
-            <option value="process-review">Half-Day Process Review</option>
-            <option value="audit">Process &amp; Automation Audit</option>
-            <option value="automation">Process Automation</option>
-            <option value="systems-automation">Systems &amp; Automation</option>
-            <option value="training">Six Sigma &amp; Company Training</option>
+            <option value="training">Lean &amp; Six Sigma training or deployment</option>
             <option value="sigmafy">Sigmafy &amp; Statistical Tools</option>
-            <option value="get-off-excel">Get Off Excel</option>
-            <option value="job-card-system">Job Card System</option>
-            <option value="sheq-incident-reporting">SHEQ Incident Reporting</option>
-            <option value="contractor-compliance">Contractor Compliance Register</option>
-            <option value="stock-and-asset-register">Stock &amp; Asset Register</option>
-            <option value="website-project">Website Project</option>
-            <option value="care">System Care</option>
-            <option value="managed-systems">Managed Systems Partnership</option>
             <option value="improvement-programme">Improvement Programme</option>
             <option value="operational-excellence">Operational Excellence Partner</option>
             <option value="transformation-office">Transformation Office</option>
             <option value="outcome-partnership">Outcome Partnership</option>
+            <optgroup label="Other services">
+              <option value="process-review">Half-Day Process Review</option>
+              <option value="audit">Process &amp; Automation Audit</option>
+              <option value="automation">Process Automation</option>
+              <option value="systems-automation">Systems &amp; Automation</option>
+              <option value="get-off-excel">Get Off Excel</option>
+              <option value="job-card-system">Job Card System</option>
+              <option value="sheq-incident-reporting">SHEQ Incident Reporting</option>
+              <option value="contractor-compliance">Contractor Compliance Register</option>
+              <option value="stock-and-asset-register">Stock &amp; Asset Register</option>
+              <option value="website-project">Website Project</option>
+              <option value="care">System Care</option>
+              <option value="managed-systems">Managed Systems Partnership</option>
+            </optgroup>
           </select>
         </label>
         <label className="flex flex-col gap-2">

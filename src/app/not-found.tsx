@@ -22,10 +22,10 @@ export default async function NotFound() {
 
   // Four entries either way, so the two-column grid below never leaves a hole.
   const links = retired?.links ?? [
-    { href: "/systems", label: "What we build", note: "The six operational layers" },
+    { href: "/training", label: "Programmes", note: "White to Black Belt, at scale" },
     { href: "/pricing", label: "Pricing", note: "Every price, published" },
-    { href: "/get-off-excel", label: "Get Off Excel", note: "One spreadsheet, four weeks" },
-    { href: "/contact", label: "Contact", note: "Book a process review" },
+    { href: "/sigmafy", label: "Sigmafy", note: "The platform every belt runs on" },
+    { href: "/contact", label: "Contact", note: "Plan a deployment" },
   ];
 
   return (

@@ -3,39 +3,38 @@ import { completePageMetadata } from "@/lib/siteMetadata";
 import Link from "next/link";
 import AfricaMap from "@/components/cinema/AfricaMap";
 import ClientStrip from "@/components/cinema/ClientStrip";
-import { UptimeCard } from "@/components/cinema/HeroCards";
-import GroupOperatingSystem from "@/components/cinema/GroupOperatingSystem";
+import DeploymentClimb from "@/components/cinema/DeploymentClimb";
 import PageHero from "@/components/cinema/PageHero";
 import Photo from "@/components/cinema/Photo";
 import Rise from "@/components/cinema/Rise";
 import ServiceFlowCard from "@/components/cinema/ServiceFlowCard";
 import TrackedLink from "@/components/cinema/TrackedLink";
-import { RATES, TIMEBOX } from "@/lib/pricing";
+import { RATES } from "@/lib/pricing";
 
 export const metadata: Metadata = completePageMetadata({
-  title: "Bespoke Operational Systems, Built on Six Sigma",
+  title: "Lean and Six Sigma Deployment at Scale",
   description:
-    "2KO builds bespoke operational systems for organisations across Africa. Every build starts with a Six Sigma baseline, fixes the process before any code and proves afterwards that the result holds.",
+    "2KO runs large-scale Lean and Six Sigma programmes inside organisations across Africa: White Belt for everyone, Green and Black Belts who lead real projects, all on Sigmafy so every project and saving is measured.",
   alternates: { canonical: "/" },
 });
 
 const symptoms = [
-  ["Approvals wait in inboxes", "No shared queue, visible owner or automatic escalation."],
-  ["Reports are assembled", "The same information is copied from the same sources every month."],
-  ["Everyone has a version", "The process lives across spreadsheets, email, paper and WhatsApp."],
-  ["Exceptions arrive late", "A threshold is crossed days before the right person sees it."],
-  ["Controls depend on memory", "Nothing prevents the work from moving when a check is skipped."],
-  ["The gain slips backwards", "The project closes and the old workarounds quietly return."],
+  ["Training ends at the certificate", "People pass the course and go back to work exactly as before."],
+  ["Projects stall after class", "Nobody looks at the work between sessions, so most projects never finish."],
+  ["A few experts carry everything", "Improvement depends on a handful of people who are always busy."],
+  ["Nobody can see the programme", "HR counts attendance. Nobody counts projects or savings."],
+  ["Savings are claimed, not measured", "There is no baseline, so no result can be proved."],
+  ["Every wave starts from scratch", "There is no ladder from one belt to the next, so capability never builds."],
 ];
 
-const interventions = [
-  ["Measure", "Six Sigma baseline", "Time the work as it runs today, find where it waits and agree the number the system has to move.", "/process-review"],
-  ["Fix", "Process first", "Remove unnecessary steps, give every item one owner and redesign the work before a line of code is written.", "/method"],
-  ["Build", "2KO Systems", "A bespoke system around the fixed process: routing, checks, evidence and reporting built in, with people deciding the exceptions.", "/systems"],
-  ["Prove", "Sigmafy", "Measure the result against the baseline every week, so everyone can see whether the gain is holding.", "/sigmafy"],
+const belts = [
+  ["Everyone", "White Belt", "Every person learns the basics in a hands-on simulation and starts spotting waste in their own work.", "/training"],
+  ["Teams", "Yellow Belt", "Team members run a guided mini-project and join the bigger projects as they start.", "/training"],
+  ["Project leads", "Green Belt", "Leads run real DMAIC projects on Sigmafy. The right tool appears at each step, the coach checks the work as it is written, and our trainers sign it off.", "/training"],
+  ["Experts", "Black Belt", "Your own experts lead the hardest problems and coach the next wave, with our trainers behind them.", "/training"],
 ];
 
-const lifecycle = ["Diagnose", "Measure", "Improve", "Train", "Automate", "Systemise", "Sustain"];
+const lifecycle = ["Diagnose", "Plan the waves", "Train", "Run projects", "Coach", "Certify", "Sustain"];
 
 const operatingWorlds = [
   {
@@ -53,34 +52,34 @@ const operatingWorlds = [
 ];
 
 const offers = [
-  { name: "Half-Day Process Review", price: RATES.review, time: TIMEBOX.review, line: "One process, one site and a concise recommendation.", href: "/process-review" },
-  { name: "Process & Automation Audit", price: RATES.audit, time: TIMEBOX.audit, line: "Three costed findings and one recommended intervention.", href: "/audit" },
-  { name: "Workflow Automation Pilot", price: `from ${RATES.pilotFrom}`, time: TIMEBOX.pilot, line: "One workflow in production against a baseline and target.", href: "/automation#pilot" },
-  { name: "Operational System Build", price: `${RATES.buildFrom}–${RATES.buildTo}`, time: "per phase", line: "The proven workflow extended in separately scoped phases.", href: "/systems" },
+  { name: "Pilot cohort", price: "Quoted", time: "3 months", line: "One Green Belt cohort of about 20, running real projects on Sigmafy, so you see results before you scale.", href: "/contact" },
+  { name: "White Belt for everyone", price: "Per person", time: "per year", line: "Every employee on Sigmafy: the simulation, certificates and your own progress dashboards.", href: "/training" },
+  { name: "Deployment waves", price: "Per cohort", time: "rolling", line: "Yellow, Green and Black Belt cohorts in waves, each one running projects that are measured.", href: "/training" },
+  { name: "Improvement partnership", price: `from ${RATES.partnershipProgramme}`, time: "per month", line: "Coaching, governance and savings tracking across the whole programme, under one relationship.", href: "/pricing" },
 ];
 
 export default function HomePage() {
   return (
     <>
       <PageHero
-        eyebrow="BESPOKE OPERATIONAL SYSTEMS · BUILT ON SIX SIGMA"
+        eyebrow="LEAN AND SIX SIGMA · DEPLOYED AT SCALE"
         title={
           <>
-            We build the system your process runs on.
-            <span className="block text-[var(--warm-70)]">Measured first. Proven after.</span>
+            We build your organisation’s improvement capability.
+            <span className="block text-[var(--warm-70)]">Trained people. Real projects. Measured savings.</span>
           </>
         }
-        titleClass="max-w-[20ch]"
-        lead="2KO builds bespoke operational systems for organisations across Africa: approvals, job cards, cases, controls and reporting. Every build starts with a Six Sigma baseline of how the work runs today, fixes the process before any code, and proves afterwards that the result holds."
+        titleClass="max-w-[22ch]"
+        lead="2KO runs large-scale Lean and Six Sigma programmes inside organisations across Africa, from White Belt for everyone to Black Belts who lead the work. Every person climbs on Sigmafy, our platform, so every project and every saving is visible to the people paying for it."
         ctas={[
-          { href: "/contact", label: "Bring us the process", offer: "general enquiry" },
-          { href: "/systems", label: "See how we build", ghost: true, offer: "systems and automation" },
+          { href: "/contact", label: "Plan a deployment", offer: "deployment enquiry" },
+          { href: "/training", label: "See the belts", ghost: true, offer: "training" },
         ]}
         facts={[
           { value: "$5bn+", label: "combined savings influenced", emphasis: true },
           { value: "Since 1998", label: "improvement heritage" },
           { value: "8,000+", label: "organisations served" },
-          { value: "Yours", label: "source code, docs and data" },
+          { value: "White to Black", label: "every belt on one platform" },
         ]}
       >
         <div className="relative mt-16">
@@ -90,7 +89,7 @@ export default function HomePage() {
             aria-hidden="true"
             style={{ background: "radial-gradient(ellipse at 50% 45%, rgba(63,185,80,0.18), transparent 62%)" }}
           />
-          <GroupOperatingSystem />
+          <DeploymentClimb />
         </div>
       </PageHero>
 
@@ -110,11 +109,11 @@ export default function HomePage() {
           <div>
             <Rise><p className="k-mono k-mono--ember">01 — Where it breaks</p></Rise>
             <Rise step={1}>
-              <h2 className="k-state mt-8 max-w-[15ch]">The work is moving. Friction is moving with it.</h2>
+              <h2 className="k-state mt-8 max-w-[16ch]">Most training programmes stop at the certificate.</h2>
             </Rise>
             <Rise step={2}>
               <p className="k-lead mt-8 max-w-[46ch]">
-                Operational problems rarely announce themselves as a software requirement. They appear as waiting, rework, missing information and controls that depend on somebody remembering.
+                Large organisations have trained thousands of people in Lean and Six Sigma. Far fewer can show the projects, the savings or the next generation of experts it produced.
               </p>
             </Rise>
           </div>
@@ -125,7 +124,7 @@ export default function HomePage() {
               style={{ background: "rgba(10,11,12,.76)" }}
             >
               <div className="flex items-center justify-between border-b border-white/10 px-6 py-4">
-                <span className="k-mono">Process exceptions</span>
+                <span className="k-mono">Programme warning signs</span>
                 <span className="flex items-center gap-2 k-mono text-[var(--warm-70)]"><span className="k-dot" /> live pattern</span>
               </div>
               <div className="grid sm:grid-cols-2">
@@ -148,17 +147,17 @@ export default function HomePage() {
       <section className="k-band overflow-hidden">
         <div className="k-shell grid gap-16 lg:grid-cols-[minmax(280px,0.75fr)_minmax(0,1.25fr)] lg:gap-24">
           <div className="lg:sticky lg:top-32 lg:self-start">
-            <Rise><p className="k-mono k-mono--ember">02 — How a build works</p></Rise>
-            <Rise step={1}><h2 className="k-title mt-8 max-w-[17ch]">Measure. Fix. Build. Prove.</h2></Rise>
+            <Rise><p className="k-mono k-mono--ember">02 — How a deployment works</p></Rise>
+            <Rise step={1}><h2 className="k-title mt-8 max-w-[17ch]">Everyone starts. The best climb.</h2></Rise>
             <Rise step={2}>
-              <p className="k-lead mt-7 max-w-[42ch]">We do not decide that you need software before we understand the work. Sometimes the right answer is that nothing should be built. Where your people need the skills to run the new process, Six Sigma South Africa trains them.</p>
+              <p className="k-lead mt-7 max-w-[42ch]">A deployment is a ladder, not a course. Everyone gets the basics, and people climb as their projects prove it. Each belt opens more of Sigmafy: new tools, new challenges, bigger projects. Our trainers sign off every step.</p>
             </Rise>
-            <Rise step={3}><Link href="/process-review" className="k-link mt-8">Start with a Process Review</Link></Rise>
+            <Rise step={3}><Link href="/training" className="k-link mt-8">See the belts</Link></Rise>
           </div>
 
           <div className="relative">
             <div className="absolute bottom-0 left-[27px] top-8 w-px bg-gradient-to-b from-[var(--ember)] via-[var(--hair-2)] to-transparent" aria-hidden="true" />
-            {interventions.map(([title, brand, body, href], index) => (
+            {belts.map(([title, brand, body, href], index) => (
               <Rise key={title} step={(index % 3) as 0 | 1 | 2}>
                 <Link href={href} className="group relative grid gap-5 border-t border-[var(--hair)] py-9 pl-20 sm:grid-cols-[minmax(0,.8fr)_minmax(0,1fr)] sm:items-baseline">
                   <span
@@ -182,16 +181,12 @@ export default function HomePage() {
         </Rise>
         <div className="absolute inset-0 -z-10 bg-gradient-to-r from-black/35 via-transparent to-black/20" aria-hidden="true" />
         <div className="k-shell relative pb-20 pt-40">
-          <div className="pointer-events-none absolute right-14 top-20 hidden lg:block">
-            <Rise step={1}><UptimeCard /></Rise>
-            <p className="k-mono mt-3 text-right">Illustrative control readout</p>
-          </div>
           <Rise><p className="k-mono k-mono--ember">At the point of work</p></Rise>
           <Rise step={1}>
-            <h2 className="k-state mt-8 max-w-[16ch]">A better process should hold when nobody is watching.</h2>
+            <h2 className="k-state mt-8 max-w-[16ch]">Improvement should become the job, not a course people attended.</h2>
           </Rise>
           <Rise step={2}>
-            <p className="k-lead mt-8 max-w-[48ch]">The check happens. The exception routes. The evidence stays attached. The improvement becomes part of the work—not a presentation about it.</p>
+            <p className="k-lead mt-8 max-w-[48ch]">Projects run on the work people already do. The coach checks every answer, managers see every project, and the savings are measured against a baseline, not claimed in a presentation.</p>
           </Rise>
         </div>
       </section>
@@ -199,9 +194,9 @@ export default function HomePage() {
       <section className="k-band k-band--2 relative overflow-hidden">
         <div className="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 text-center text-[clamp(78px,17vw,250px)] font-semibold leading-none tracking-[-.08em] text-white/[.018]" aria-hidden="true">CONTINUOUS</div>
         <div className="k-shell relative">
-          <Rise><p className="k-mono">03 — How improvement holds</p></Rise>
-          <Rise step={1}><h2 className="k-title mt-8 max-w-[22ch]">One improvement loop. The intervention changes with the problem.</h2></Rise>
-          <Rise step={2}><p className="k-lead k-measure mt-7">Automate where the rules repeat. Train where judgement matters. Measure both.</p></Rise>
+          <Rise><p className="k-mono">03 — How a programme holds</p></Rise>
+          <Rise step={1}><h2 className="k-title mt-8 max-w-[22ch]">One programme. Every belt. Measured all the way.</h2></Rise>
+          <Rise step={2}><p className="k-lead k-measure mt-7">Train where judgement matters, run real projects, and measure every result. Where a fix needs software, we build that too.</p></Rise>
 
           <ol className="mt-16 grid gap-y-10 sm:grid-cols-2 lg:grid-cols-7">
             {lifecycle.map((stage, index) => (
@@ -220,15 +215,15 @@ export default function HomePage() {
 
       <section className="k-band overflow-hidden">
         <div className="k-shell">
-          <Rise><p className="k-mono k-mono--ember">04 — What we build</p></Rise>
-          <Rise step={1}><h2 className="k-state mt-8 max-w-[19ch]">Routine work disappears. Consequential decisions stay human.</h2></Rise>
-          <Rise step={2}><p className="k-lead k-measure mt-8">We use the lightest technology that can hold the process reliably. The interface is not the improvement. The control inside the workflow is.</p></Rise>
+          <Rise><p className="k-mono k-mono--ember">04 — The platform</p></Rise>
+          <Rise step={1}><h2 className="k-state mt-8 max-w-[19ch]">Sigmafy is where every belt learns, works and is measured.</h2></Rise>
+          <Rise step={2}><p className="k-lead k-measure mt-8">Our own platform, built for programmes of thousands. It does the scaling, so our trainers can spend their time where people need judgement.</p></Rise>
 
           <div className="mt-16">
             {[
-              ["01", "ROUTE", "Rules-based automation", "Approvals, reminders, escalation, validation, reconciliation, scheduled reporting, integrations and audit trails."],
-              ["02", "ASSIST", "Intelligence-assisted work", "Document extraction, classification, triage, summarisation, knowledge retrieval and assisted drafting."],
-              ["03", "HOLD", "Operational systems", "One dependable record for the people, work, evidence, exceptions and decisions currently living across disconnected tools."],
+              ["01", "LEARN", "Learn by doing", "A hands-on simulation, short videos, practice and exams, so people learn the method on a problem before they meet their own."],
+              ["02", "PROJECT", "Guided projects", "The right tool at the right step, a coach that checks each answer as it is written, and trainer sign-off before the next phase."],
+              ["03", "SEE", "One view of the programme", "Who is climbing, which projects are live, what has been signed off and what has been saved against its baseline."],
             ].map(([number, signal, title, body]) => (
               <Rise key={number}>
                 <article className="group relative grid overflow-hidden border-t border-[var(--hair)] py-8 md:grid-cols-[90px_minmax(0,.7fr)_minmax(0,1fr)] md:items-baseline">
@@ -242,7 +237,7 @@ export default function HomePage() {
               </Rise>
             ))}
           </div>
-          <Rise className="mt-10"><Link href="/automation" className="k-link">Explore process automation →</Link></Rise>
+          <Rise className="mt-10"><Link href="/sigmafy" className="k-link">Explore Sigmafy →</Link></Rise>
         </div>
       </section>
 
@@ -328,7 +323,7 @@ export default function HomePage() {
       <section className="k-band">
         <div className="k-shell">
           <Rise><p className="k-mono">08 — Where to start</p></Rise>
-          <Rise step={1}><h2 className="k-title mt-8 max-w-[25ch]">Start with the smallest engagement that can produce a defensible answer.</h2></Rise>
+          <Rise step={1}><h2 className="k-title mt-8 max-w-[25ch]">Start with one cohort. Scale on the evidence.</h2></Rise>
           <div className="mt-14">
             {offers.map((offer, index) => (
               <Rise key={offer.name}>
@@ -361,14 +356,14 @@ export default function HomePage() {
           </Rise>
 
           <div>
-            <Rise><p className="k-mono k-mono--ember">09 — After go-live</p></Rise>
-            <Rise step={1}><h2 className="k-title mt-8 max-w-[20ch]">Once the system is live, we keep it improving.</h2></Rise>
-            <Rise step={2}><p className="k-lead mt-7 max-w-[52ch]">Most clients keep us on after launch. A monthly retainer keeps the system supported, measured against its baseline and improving as the business changes.</p></Rise>
+            <Rise><p className="k-mono k-mono--ember">09 — Partnership</p></Rise>
+            <Rise step={1}><h2 className="k-title mt-8 max-w-[20ch]">We stay inside the programme.</h2></Rise>
+            <Rise step={2}><p className="k-lead mt-7 max-w-[52ch]">The platform does the scaling. We do what needs people: coaching, marking, sign-off and the accredited certificate at every belt, under one monthly partnership.</p></Rise>
             <div className="mt-10">
               {[
-                ["System Care", `from ${RATES.retainerCare} / month`, "Support, monitoring and bounded monthly improvements for one production system."],
-                ["Managed Systems", `from ${RATES.managedSystems} / month`, "We run the system for you and deliver a planned roadmap of changes as the work evolves."],
-                ["Improvement partnership", `from ${RATES.partnershipProgramme} / month`, "Process, training, systems and Sigmafy measurement across several workstreams, under one relationship."],
+                ["Programme", `from ${RATES.partnershipProgramme} / month`, "Coaching and sign-off for your belt cohorts, with the programme measured on Sigmafy."],
+                ["Operational", `from ${RATES.partnershipOperational} / month`, "Several business units, project governance and savings reported to your executives."],
+                ["Transformation", `from ${RATES.partnershipTransformation} / month`, "A whole-organisation deployment, including the systems your best projects need."],
               ].map(([title, label, body]) => (
                 <Rise key={title}>
                   <article className="grid gap-3 border-t border-[var(--hair)] py-6 sm:grid-cols-[minmax(0,.8fr)_minmax(0,1fr)] sm:items-baseline">
@@ -389,12 +384,12 @@ export default function HomePage() {
         </Rise>
         <div className="k-shell relative pb-20 pt-44">
           <Rise><p className="k-mono k-mono--ember">Start</p></Rise>
-          <Rise step={1}><h2 className="k-state mt-8 max-w-[16ch]">Bring us the result that needs to improve.</h2></Rise>
-          <Rise step={2}><p className="k-lead mt-9 max-w-[52ch]">Tell us where performance is slipping or opportunity is being lost. We will tell you whether the constraint is process, capability, technology, measurement—or some combination of all four.</p></Rise>
+          <Rise step={1}><h2 className="k-state mt-8 max-w-[16ch]">Tell us how many people you want to grow.</h2></Rise>
+          <Rise step={2}><p className="k-lead mt-9 max-w-[52ch]">Ten people or ten thousand, we will plan the waves, the belts and the first projects with you, and show you how the results will be measured.</p></Rise>
           <Rise step={3}>
             <div className="mt-11 flex flex-col gap-3 sm:flex-row">
-              <TrackedLink href="/contact" eventOffer="general enquiry" className="k-btn k-btn--solid">Bring us the process</TrackedLink>
-              <Link href="/process-review" className="k-btn k-btn--ghost">Start with a review</Link>
+              <TrackedLink href="/contact" eventOffer="deployment enquiry" className="k-btn k-btn--solid">Plan a deployment</TrackedLink>
+              <Link href="/training" className="k-btn k-btn--ghost">See the belts</Link>
             </div>
           </Rise>
         </div>

@@ -9,34 +9,19 @@ type NavLink = { href: string; label: string; children?: Child[] };
 
 const serviceLinks: Child[] = [
   {
-    href: "/process-review",
-    name: "Process Improvement",
-    line: "Find the constraint, redesign the work and verify the gain.",
-  },
-  {
-    href: "/systems",
-    name: "Systems & Automation",
-    line: "Build the workflow, controls and operating record.",
-  },
-  {
-    href: "/automation",
-    name: "Process Automation",
-    line: "Automate repeatable work with explicit controls and human authority.",
-  },
-  {
     href: "/training",
-    name: "Training",
-    line: "Accredited Six Sigma capability through Six Sigma South Africa.",
+    name: "Lean & Six Sigma programmes",
+    line: "White to Black Belt, accredited, delivered in waves across your organisation.",
   },
   {
     href: "/sigmafy",
     name: "Sigmafy",
-    line: "Statistical tools and a visible improvement evidence layer.",
+    line: "The platform every belt learns, works and is measured on.",
   },
   {
     href: "/managed-improvement",
-    name: "Improvement Partnerships",
-    line: "One accountable relationship across process, people and systems.",
+    name: "Improvement partnerships",
+    line: "Coaching, sign-off and savings tracking under one relationship.",
   },
 ];
 
@@ -85,7 +70,7 @@ export default function Nav() {
     };
   }, [open, mobileOpen]);
 
-  const servicesActive = ["/process-review", "/audit", "/automation", "/systems", "/training", "/sigmafy", "/managed-improvement"].some((href) =>
+  const servicesActive = ["/training", "/sigmafy", "/managed-improvement"].some((href) =>
     path.startsWith(href),
   );
 
@@ -178,7 +163,7 @@ export default function Nav() {
               setMobileOpen(false);
             }}
           >
-            Bring us the process
+            Plan a deployment
           </Link>
           <button
             type="button"
@@ -232,7 +217,7 @@ export default function Nav() {
             ))}
           </div>
           <Link href="/contact" className="k-btn k-btn--solid mt-4 w-full sm:hidden" onClick={() => setMobileOpen(false)}>
-            Bring us the process
+            Plan a deployment
           </Link>
         </div>
       </nav>

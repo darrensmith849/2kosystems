@@ -160,11 +160,6 @@ export default function ManagedImprovementPage() {
             ))}
           </div>
           <Rise className="mt-8 text-center"><Link href="/pricing" className="k-link">See every commercial term →</Link></Rise>
-          <Rise className="mi-systems-path">
-            <div><p className="k-mono k-mono--ember">SYSTEMS-ONLY PATH</p><h3>Need the system, but not the training or Sigmafy?</h3></div>
-            <p>A Managed Systems Partnership operates and evolves one production system without bundling the wider improvement capability.</p>
-            <TrackedLink href="/systems#managed-systems" eventOffer="managed systems partnership" className="k-btn k-btn--ghost">See managed systems</TrackedLink>
-          </Rise>
         </div>
       </section>
 

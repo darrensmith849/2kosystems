@@ -2,31 +2,27 @@ import Link from "next/link";
 
 const columns = [
   {
-    heading: "Improve",
+    heading: "Programmes",
     links: [
-      { href: "/process-review", label: "Process Review" },
-      { href: "/audit", label: "Opportunity Audit" },
-      { href: "/method", label: "The 2KO method" },
-      { href: "/results", label: "Results & evidence" },
-    ],
-  },
-  {
-    heading: "Build",
-    links: [
-      { href: "/automation", label: "Process Automation" },
-      { href: "/systems", label: "Operational Systems" },
-      { href: "/managed-improvement", label: "Improvement Partnerships" },
+      { href: "/training", label: "Lean & Six Sigma programmes" },
+      { href: "/sigmafy", label: "Sigmafy" },
+      { href: "/managed-improvement", label: "Improvement partnerships" },
       { href: "/pricing", label: "Pricing & terms" },
     ],
   },
   {
-    heading: "Learn & measure",
+    heading: "Evidence",
     links: [
-      { href: "/training", label: "Training & capability" },
-      { href: "/sigmafy", label: "Sigmafy statistics" },
+      { href: "/method", label: "The 2KO method" },
+      { href: "/results", label: "Results & evidence" },
       { href: "/sectors", label: "Sectors" },
+    ],
+  },
+  {
+    heading: "Company",
+    links: [
       { href: "/studio", label: "About 2KO" },
-      { href: "/websites", label: "Website services" },
+      { href: "/contact", label: "Contact" },
     ],
   },
 ];
@@ -42,11 +38,11 @@ export default function Footer() {
               <span className="text-[16px] font-semibold tracking-[-0.02em]">2KO</span>
             </div>
             <p className="k-sm mt-4 max-w-[34ch]">
-              Improve the process, train the people, build the system and measure
-              whether the result holds.
+              Lean and Six Sigma at scale: train the people, run real projects
+              and measure whether the result holds.
             </p>
             <Link href="/contact" className="k-btn k-btn--ghost mt-6">
-              Bring us the process
+              Plan a deployment
             </Link>
           </div>
 

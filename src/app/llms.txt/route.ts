@@ -19,19 +19,16 @@ const SECTIONS: { title: string; entries: [string, string, string][] }[] = [
   {
     title: "What 2KO does",
     entries: [
-      ["How it works", "/method", "The sequence: find the constraint, prove the change, then hold it with a system."],
-      ["Integrated Improvement Partnerships", "/managed-improvement", "Annual partnerships combining senior process consulting, Six Sigma training allowance, automation capacity and Sigmafy benefit evidence."],
-      ["Systems and automation", "/systems", "Replacing manual, spreadsheet-bound processes with operational systems."],
-      ["Six Sigma training", "/training", "Applied capability programmes. Public certification runs through sixsigmasouthafrica.co.za and sixsigmauk.com."],
-      ["Sigmafy", "/sigmafy", "Project tracking, statistical analysis and verified benefit in one place."],
+      ["Lean and Six Sigma programmes", "/training", "Large-scale deployments inside organisations: White Belt for everyone, Yellow, Green and Black Belts in waves, each running real projects. Public certification runs through sixsigmasouthafrica.co.za and sixsigmauk.com."],
+      ["Sigmafy", "/sigmafy", "The platform every belt learns, works and is measured on: guided projects, a coach that checks the work, trainer sign-off and verified savings."],
+      ["Improvement partnerships", "/managed-improvement", "Monthly partnerships for coaching, sign-off, governance and savings tracking across a whole programme."],
+      ["How it works", "/method", "The sequence: diagnose, train, run real projects, measure the result and hold it."],
     ],
   },
   {
     title: "Starting points",
     entries: [
-      ["Process review", "/process-review", "A bounded diagnostic that identifies the active constraint before any build."],
-      ["Get off Excel", "/get-off-excel", "Productised replacement for a spreadsheet that has become load-bearing."],
-      ["Pricing", "/pricing", "Published rates for retainers, training, systems and Sigmafy."],
+      ["Pricing", "/pricing", "Training, partnerships and Sigmafy Statistics."],
       ["Results", "/results", "What previous engagements produced."],
       ["Contact", "/contact", "Enquiries."],
     ],
