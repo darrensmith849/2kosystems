@@ -178,7 +178,7 @@ export default function Nav() {
               setMobileOpen(false);
             }}
           >
-            Bring us the process
+            Plan a deployment
           </Link>
           <button
             type="button"
@@ -232,7 +232,7 @@ export default function Nav() {
             ))}
           </div>
           <Link href="/contact" className="k-btn k-btn--solid mt-4 w-full sm:hidden" onClick={() => setMobileOpen(false)}>
-            Bring us the process
+            Plan a deployment
           </Link>
         </div>
       </nav>

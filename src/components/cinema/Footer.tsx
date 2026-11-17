@@ -42,11 +42,11 @@ export default function Footer() {
               <span className="text-[16px] font-semibold tracking-[-0.02em]">2KO</span>
             </div>
             <p className="k-sm mt-4 max-w-[34ch]">
-              Improve the process, train the people, build the system and measure
-              whether the result holds.
+              Lean and Six Sigma at scale: train the people, run real projects
+              and measure whether the result holds.
             </p>
             <Link href="/contact" className="k-btn k-btn--ghost mt-6">
-              Bring us the process
+              Plan a deployment
             </Link>
           </div>
 
