@@ -132,7 +132,7 @@ export default async function ContactPage({
       </section>
 
       <section id="process-brief" className="k-band k-band--2 relative overflow-hidden">
-        <div className="pointer-events-none absolute -left-12 top-24 text-[clamp(120px,22vw,320px)] font-semibold leading-none tracking-[-.09em] text-white/[.018]" aria-hidden="true">START</div>
+        <div className="pointer-events-none absolute -left-12 top-24 text-[clamp(120px,22vw,320px)] font-semibold leading-none tracking-[-.038em] text-white/[.018]" aria-hidden="true">START</div>
         <div className="k-shell relative">
           <div className="mb-12 grid gap-8 lg:grid-cols-[minmax(0,1fr)_400px] lg:items-end">
             <div>

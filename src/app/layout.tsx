@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Inter, IBM_Plex_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 import "@/styles/system.css";
@@ -9,32 +8,6 @@ import {
   OG_IMAGE_SIZE,
   SITE_URL,
 } from "@/lib/site";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-/* v2 type. Apple hardware renders SF Pro through the system stack in
-   system.css; Inter is the fallback everywhere else, and IBM Plex Mono
-   supplies the monospace labels where SF Mono is unavailable. */
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const plexMono = IBM_Plex_Mono({
-  variable: "--font-mono-fallback",
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  display: "swap",
-});
 
 /* The 2KO mark itself. Three glyphs — 2, K and O — carrying the real
    letterforms, so typing "2KO" sets the logo with Africa in the counter.
@@ -123,7 +96,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} ${plexMono.variable} ${koMark.variable} antialiased`}
+        className={`${koMark.variable} antialiased`}
       >
         {children}
       </body>

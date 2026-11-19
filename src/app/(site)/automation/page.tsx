@@ -129,16 +129,16 @@ export default function AutomationPage() {
       </section>
 
       <section id="suitable-work" className="k-band k-band--2 relative overflow-hidden">
-        <div className="pointer-events-none absolute -right-10 top-1/2 -translate-y-1/2 text-[clamp(90px,21vw,320px)] font-semibold leading-none tracking-[-.09em] text-white/[.018]" aria-hidden="true">DECIDE</div>
+        <div className="pointer-events-none absolute -right-10 top-1/2 -translate-y-1/2 text-[clamp(90px,21vw,320px)] font-semibold leading-none tracking-[-.038em] text-white/[.018]" aria-hidden="true">DECIDE</div>
         <div className="k-shell relative">
           <Rise><p className="k-mono k-mono--ember">Should this be automated?</p></Rise>
           <Rise step={1}><h2 className="k-title mt-6 max-w-[21ch]">Repetition is a signal. Clarity and value are the gate.</h2></Rise>
           <div className="mt-14 grid gap-12 lg:grid-cols-2 lg:gap-20">
             <Rise>
-              <article className="border-t border-[var(--signal)] pt-8"><p className="text-[clamp(68px,10vw,138px)] font-medium leading-none tracking-[-.07em] text-white/[.055]">YES</p><h3 className="k-title mt-5">A strong candidate</h3><ul className="mt-7 flex flex-col gap-3">{automateWhen.map((item) => <li key={item} className="flex gap-3 text-[13px] text-[var(--warm-70)]"><span className="text-[var(--signal)]">✓</span>{item}</li>)}</ul></article>
+              <article className="border-t border-[var(--signal)] pt-8"><p className="text-[clamp(68px,10vw,138px)] font-medium leading-none tracking-[-.032em] text-white/[.055]">YES</p><h3 className="k-title mt-5">A strong candidate</h3><ul className="mt-7 flex flex-col gap-3">{automateWhen.map((item) => <li key={item} className="flex gap-3 text-[13px] text-[var(--warm-70)]"><span className="text-[var(--signal)]">✓</span>{item}</li>)}</ul></article>
             </Rise>
             <Rise step={1}>
-              <article className="border-t border-[var(--ember)] pt-8"><p className="text-[clamp(68px,10vw,138px)] font-medium leading-none tracking-[-.07em] text-white/[.055]">WAIT</p><h3 className="k-title mt-5">Improve or clarify first</h3><ul className="mt-7 flex flex-col gap-3">{waitWhen.map((item) => <li key={item} className="flex gap-3 text-[13px] text-[var(--warm-70)]"><span className="text-[var(--ember)]">—</span>{item}</li>)}</ul></article>
+              <article className="border-t border-[var(--ember)] pt-8"><p className="text-[clamp(68px,10vw,138px)] font-medium leading-none tracking-[-.032em] text-white/[.055]">WAIT</p><h3 className="k-title mt-5">Improve or clarify first</h3><ul className="mt-7 flex flex-col gap-3">{waitWhen.map((item) => <li key={item} className="flex gap-3 text-[13px] text-[var(--warm-70)]"><span className="text-[var(--ember)]">—</span>{item}</li>)}</ul></article>
             </Rise>
           </div>
           <Rise className="mt-12"><p className="k-sm max-w-[68ch] rounded-xl border border-[var(--hair-2)] bg-black/25 p-5">If the process is unclear, a {RATES.review} Process Review names the constraint first. If the investment needs quantified evidence, the {RATES.audit} Opportunity Audit prices the problem before a pilot is commissioned.</p></Rise>
@@ -168,7 +168,7 @@ export default function AutomationPage() {
       <section className="k-band relative overflow-hidden">
         <div className="k-shell">
           <Rise><p className="k-mono k-mono--ember">Suitable workstreams</p></Rise><Rise step={1}><h2 className="k-title mt-6 max-w-[22ch]">Automation follows the work—not the department chart.</h2></Rise>
-          <div className="mt-12 border-t border-[var(--hair-2)]">{workstreams.map((work, index) => <Rise key={work.name}><article className="group grid gap-5 border-b border-[var(--hair-2)] py-8 md:grid-cols-[54px_minmax(150px,.45fr)_minmax(0,.7fr)_minmax(0,1.2fr)] md:items-baseline"><span className="k-mono k-mono--ember">0{index + 1}</span><span className="text-[clamp(42px,6vw,82px)] font-semibold leading-none tracking-[-.06em] text-white/[.07] transition-colors group-hover:text-[var(--ember)]/20">{work.signal}</span><h3 className="k-sub">{work.name}</h3><p className="k-sm">{work.line}</p></article></Rise>)}</div>
+          <div className="mt-12 border-t border-[var(--hair-2)]">{workstreams.map((work, index) => <Rise key={work.name}><article className="group grid gap-5 border-b border-[var(--hair-2)] py-8 md:grid-cols-[54px_minmax(150px,.45fr)_minmax(0,.7fr)_minmax(0,1.2fr)] md:items-baseline"><span className="k-mono k-mono--ember">0{index + 1}</span><span className="text-[clamp(42px,6vw,82px)] font-semibold leading-none tracking-[-.028em] text-white/[.07] transition-colors group-hover:text-[var(--ember)]/20">{work.signal}</span><h3 className="k-sub">{work.name}</h3><p className="k-sm">{work.line}</p></article></Rise>)}</div>
         </div>
       </section>
 
@@ -189,7 +189,7 @@ export default function AutomationPage() {
       </section>
 
       <section className="k-band k-band--2 relative overflow-hidden">
-        <div className="pointer-events-none absolute -right-10 top-1/2 -translate-y-1/2 text-[clamp(90px,20vw,300px)] font-semibold leading-none tracking-[-.08em] text-white/[.018]" aria-hidden="true">PORTFOLIO</div>
+        <div className="pointer-events-none absolute -right-10 top-1/2 -translate-y-1/2 text-[clamp(90px,20vw,300px)] font-semibold leading-none tracking-[-.035em] text-white/[.018]" aria-hidden="true">PORTFOLIO</div>
         <div className="k-shell relative">
           <Rise><p className="k-mono k-mono--ember">A dedicated automation capability</p></Rise><Rise step={1}><h2 className="k-title mt-6 max-w-[22ch]">Start with one automation. Build the portfolio from evidence.</h2></Rise><Rise step={2}><p className="k-lead k-measure mt-5">A business-wide automation function needs opportunity governance, delivery capacity and operational ownership—not simply access to automation software.</p></Rise>
           <div className="mt-14 grid gap-5 lg:grid-cols-3">

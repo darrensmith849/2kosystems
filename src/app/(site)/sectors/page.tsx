@@ -296,7 +296,7 @@ export default function SectorsPage() {
       </section>
 
       <section className="k-band k-band--2 relative overflow-hidden">
-        <div className="pointer-events-none absolute -right-14 top-14 text-[clamp(92px,19vw,300px)] font-semibold leading-none tracking-[-.08em] text-white/[.018]" aria-hidden="true">SERVICE</div>
+        <div className="pointer-events-none absolute -right-14 top-14 text-[clamp(92px,19vw,300px)] font-semibold leading-none tracking-[-.035em] text-white/[.018]" aria-hidden="true">SERVICE</div>
         <div className="k-shell relative">
           <div className="grid gap-5 lg:grid-cols-12">
             {serviceSectors.map((sector, index) => (
@@ -339,7 +339,7 @@ export default function SectorsPage() {
       </section>
 
       <section id="broader-fit" className="k-band k-band--2 relative overflow-hidden">
-        <div className="pointer-events-none absolute -right-10 top-24 text-[clamp(92px,20vw,310px)] font-semibold leading-none tracking-[-.08em] text-white/[.018]" aria-hidden="true">BEYOND</div>
+        <div className="pointer-events-none absolute -right-10 top-24 text-[clamp(92px,20vw,310px)] font-semibold leading-none tracking-[-.035em] text-white/[.018]" aria-hidden="true">BEYOND</div>
         <div className="k-shell relative">
           <Rise><p className="k-mono k-mono--ember">Broader reach · same qualification bar</p></Rise>
           <Rise step={1}><h2 className="k-title mt-6 max-w-[21ch]">The opportunity is larger than any sector list.</h2></Rise>
@@ -353,7 +353,7 @@ export default function SectorsPage() {
               <Rise key={group.code} step={(groupIndex % 3) as 0 | 1 | 2}>
                 <article className="relative h-full overflow-hidden rounded-2xl border border-[var(--hair-2)] bg-black/25 p-6 sm:p-8">
                   <span className="absolute left-0 top-0 h-[2px] w-[62%] bg-gradient-to-r from-[var(--signal)] via-[var(--ember)] to-transparent" />
-                  <p className="text-[clamp(52px,7vw,88px)] font-semibold leading-none tracking-[-.07em] text-white/[.045]">{group.code}</p>
+                  <p className="text-[clamp(52px,7vw,88px)] font-semibold leading-none tracking-[-.032em] text-white/[.045]">{group.code}</p>
                   <h3 className="k-sub mt-4">{group.title}</h3>
                   <div className="mt-8 divide-y divide-[var(--hair-2)] border-y border-[var(--hair-2)]">
                     {group.sectors.map(([name, body]) => (

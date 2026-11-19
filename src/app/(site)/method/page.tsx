@@ -145,7 +145,7 @@ export default function MethodPage() {
 
       {/* ═══ TWO WAYS IN ═══ */}
       <section className="k-band k-band--2 relative overflow-hidden">
-        <div className="pointer-events-none absolute -right-12 top-1/2 -translate-y-1/2 text-[clamp(120px,24vw,360px)] font-semibold leading-none tracking-[-.09em] text-white/[.018]" aria-hidden="true">CHOOSE</div>
+        <div className="pointer-events-none absolute -right-12 top-1/2 -translate-y-1/2 text-[clamp(120px,24vw,360px)] font-semibold leading-none tracking-[-.038em] text-white/[.018]" aria-hidden="true">CHOOSE</div>
         <div className="k-shell relative">
           <Rise>
             <p className="k-mono k-mono--ember">Two ways in</p>
@@ -166,7 +166,7 @@ export default function MethodPage() {
             <Rise>
               <article className="border-t border-[var(--signal)] pt-8">
                 <p className="k-mono k-mono--ember">If you already know what is broken</p>
-                <p className="mt-6 text-[clamp(52px,8vw,104px)] font-medium leading-none tracking-[-.065em] text-white/10">KNOWN</p>
+                <p className="mt-6 text-[clamp(52px,8vw,104px)] font-medium leading-none tracking-[-.029em] text-white/10">KNOWN</p>
                 <h3 className="k-title mt-5">Straight to a fixed price. No site visit.</h3>
                 <p className="k-sm mt-5 max-w-[52ch]">
                   A spreadsheet that has outgrown itself, job cards coming back
@@ -195,7 +195,7 @@ export default function MethodPage() {
             <Rise step={1}>
               <article className="border-t border-[var(--ember)] pt-8">
                 <p className="k-mono k-mono--ember">If something is wrong and you cannot name it</p>
-                <p className="mt-6 text-[clamp(52px,8vw,104px)] font-medium leading-none tracking-[-.065em] text-white/10">UNCLEAR</p>
+                <p className="mt-6 text-[clamp(52px,8vw,104px)] font-medium leading-none tracking-[-.029em] text-white/10">UNCLEAR</p>
                 <h3 className="k-title mt-5">Start on site. That is what the review is for.</h3>
                 <p className="k-sm mt-5 max-w-[52ch]">
                   When the problem lives in how work actually moves — a control

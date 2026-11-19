@@ -117,7 +117,7 @@ export default function AuditPage() {
       </section>
 
       <section className="k-band k-band--2 relative overflow-hidden">
-        <div className="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 text-center text-[clamp(90px,19vw,280px)] font-semibold leading-none tracking-[-.09em] text-white/[.018]" aria-hidden="true">EVIDENCE</div>
+        <div className="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 text-center text-[clamp(90px,19vw,280px)] font-semibold leading-none tracking-[-.038em] text-white/[.018]" aria-hidden="true">EVIDENCE</div>
         <div className="k-shell relative grid gap-14 lg:grid-cols-[minmax(0,1fr)_minmax(390px,.75fr)] lg:items-center">
           <div>
             <Rise><p className="k-mono">03 — Evidence before recommendation</p></Rise>

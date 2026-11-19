@@ -189,7 +189,7 @@ export default function HomePage() {
                 <article className="group relative grid overflow-hidden border-t border-[var(--hair)] py-8 md:grid-cols-[90px_minmax(0,.7fr)_minmax(0,1fr)] md:items-baseline">
                   <span className="k-mono k-mono--ember">{number}</span>
                   <div>
-                    <span className="block text-[clamp(42px,6vw,82px)] font-semibold leading-none tracking-[-.06em] text-white/[.07] transition-colors duration-500 group-hover:text-[var(--ember)]/20">{signal}</span>
+                    <span className="block text-[clamp(42px,6vw,82px)] font-semibold leading-none tracking-[-.028em] text-white/[.07] transition-colors duration-500 group-hover:text-[var(--ember)]/20">{signal}</span>
                     <h3 className="k-sub mt-3">{title}</h3>
                   </div>
                   <p className="k-sm mt-5 md:mt-0">{body}</p>
