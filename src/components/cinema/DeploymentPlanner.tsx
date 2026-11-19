@@ -107,7 +107,8 @@ export default function DeploymentPlanner() {
         ))}
       </ol>
 
-      <TrackedLink href="/contact?interest=training" eventOffer="deployment enquiry" className="k-btn k-btn--solid mt-5 w-full justify-center">
+      <TrackedLink
+        href={headcount ? `/contact?interest=training&people=${headcount}` : "/contact?interest=training"} eventOffer="deployment enquiry" className="k-btn k-btn--solid mt-5 w-full justify-center">
         {headcount ? `Plan a deployment for ${fmt(headcount)} people` : "Plan a deployment"}
       </TrackedLink>
       <p className="mt-3 text-[12px] text-[var(--warm-50)]">Typical ratios. We size yours together.</p>

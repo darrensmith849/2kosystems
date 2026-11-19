@@ -18,7 +18,14 @@ const partnershipInterests = new Set([
  * Posts to the same /api/contact endpoint the current site uses, so enquiries
  * land in the same pipeline as every other enquiry.
  */
-export default function ContactForm({ initialInterest = "" }: { initialInterest?: string }) {
+export default function ContactForm({
+  initialInterest = "",
+  initialHeadcount = "",
+}: {
+  initialInterest?: string;
+  /** People in the organisation, from the home page planner. */
+  initialHeadcount?: string;
+}) {
   const [state, setState] = useState<State>("idle");
   const [error, setError] = useState<string | null>(null);
   const [receipt, setReceipt] = useState<Receipt | null>(null);
@@ -27,6 +34,7 @@ export default function ContactForm({ initialInterest = "" }: { initialInterest?
   const [turnstileReset, setTurnstileReset] = useState(0);
   const started = useRef(false);
   const partnershipMode = partnershipInterests.has(interest);
+  const askHeadcount = interest === "training" || initialHeadcount !== "";
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -197,6 +205,22 @@ export default function ContactForm({ initialInterest = "" }: { initialInterest?
           </select>
         </label>
       </div>
+
+      {askHeadcount && (
+        <label className="flex flex-col gap-2">
+          <span className="k-mono">People in your organisation</span>
+          <input
+            type="number"
+            name="headcount"
+            inputMode="numeric"
+            min={1}
+            max={1_000_000}
+            defaultValue={initialHeadcount}
+            className="k-field sm:max-w-[240px]"
+            placeholder="8000"
+          />
+        </label>
+      )}
 
       {partnershipMode && (
         <fieldset className="mt-2 overflow-hidden rounded-2xl border border-[rgba(232,142,74,.45)] bg-[linear-gradient(145deg,rgba(232,142,74,.08),rgba(0,0,0,.18)_58%)]">

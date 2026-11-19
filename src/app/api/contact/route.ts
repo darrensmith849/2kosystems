@@ -54,6 +54,7 @@ export async function POST(req: NextRequest) {
       trainingPopulation: field(body.trainingPopulation, 80),
       dataReadiness: field(body.dataReadiness, 80),
       decisionTiming: field(body.decisionTiming, 80),
+      headcount: field(body.headcount, 12),
       consent: field(body.consent, 10),
       message: field(body.message, 4_000),
       attribution:
@@ -130,6 +131,7 @@ export async function POST(req: NextRequest) {
         routingRecordText(routing),
         enquiry.interest ? `Starting point: ${enquiry.interest}` : "",
         enquiry.processState ? `Process state: ${enquiry.processState}` : "",
+        enquiry.headcount ? `People in the organisation: ${enquiry.headcount}` : "",
         enquiry.sponsorStatus ? `Executive sponsorship: ${enquiry.sponsorStatus}` : "",
         enquiry.workstreamCount ? `Active workstreams: ${enquiry.workstreamCount}` : "",
         enquiry.trainingPopulation ? `Training population: ${enquiry.trainingPopulation}` : "",
