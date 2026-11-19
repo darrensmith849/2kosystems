@@ -77,7 +77,7 @@ export default function DeploymentPricing() {
     <div className="dp">
       <div className="dp-top">
         <p className="dp-built">
-          Every price adds up from the rows below it. Built from Yellow Belt {rand(list.yellow)}, Green Belt {rand(list.green)} and Black Belt {rand(list.black)} a person, coaching at {rand(DEPLOYMENT_RATES.coachingDay)} a day, and a Sigmafy licence per delegate.
+          Every price adds up from the rows below it. Built from our published pre-paid belt prices (Yellow Belt {DEPLOYMENT_RATES.beltMode.yellow} {rand(list.yellow)}, Green Belt {DEPLOYMENT_RATES.beltMode.green} {rand(list.green)}, Black Belt {DEPLOYMENT_RATES.beltMode.black} {rand(list.black)} a person), coaching at {rand(DEPLOYMENT_RATES.coachingDay)} a day, and a Sigmafy licence per delegate.
         </p>
         <div className="dp-picker">
           <div className="dp-picker__head">

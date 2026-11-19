@@ -138,8 +138,15 @@ export type DeploymentTier = {
   singleSignOn: boolean;
 };
 
+/**
+ * Belt list prices are Sigmafy's own pre-paid prices from Sales › Pricing in
+ * the portal (sf_belt_levels), the same figures the Email Agent quotes:
+ * Yellow Belt online, Green and Black Belt virtual (live online). Copied on
+ * 19 Nov 2026 — when the portal prices change, change them here too.
+ */
 export const DEPLOYMENT_RATES = {
-  beltList: { yellow: 6500, green: 14500, black: 28000 },
+  beltList: { yellow: 5000, green: 20500, black: 34500 },
+  beltMode: { yellow: "online", green: "live online", black: "live online" },
   coachingDay: 9500,
 } as const;
 
