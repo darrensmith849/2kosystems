@@ -69,8 +69,8 @@ export default function HomePage() {
     <>
       <PageHero
         eyebrow="LEAN AND SIX SIGMA · DEPLOYED AT SCALE"
-        title="Lean Six Sigma for your whole organisation."
-        titleClass="max-w-[16ch]"
+        title="Large-scale Lean Six Sigma training for your organisation."
+        titleClass="max-w-[18ch]"
         lead="We train your people, run their real projects with them on Sigmafy, and report the savings to your executives."
         ctas={[
           { href: "/contact?interest=training", label: "Plan a deployment", offer: "deployment enquiry" },
