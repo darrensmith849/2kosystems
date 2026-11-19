@@ -168,6 +168,8 @@ export type Enquiry = {
   trainingPopulation?: string;
   dataReadiness?: string;
   decisionTiming?: string;
+  /** People in the organisation, carried over from the home page planner. */
+  headcount?: string;
   consent?: string;
   message?: string;
   /** Which ad or campaign paid for this visit, when there was one. */
@@ -327,6 +329,7 @@ export async function sendEnquiryNotification(
     ["Site or region", enquiry.siteRegion || "—"],
     ["Starting point", enquiry.interest || "Not sure"],
     ["Process state", enquiry.processState || "Not supplied"],
+    ...(enquiry.headcount ? [["People in the organisation", enquiry.headcount]] as [string, string][] : []),
     ...(partnership ? [
       ["Executive sponsorship", enquiry.sponsorStatus || "Not supplied"],
       ["Active workstreams", enquiry.workstreamCount || "Not supplied"],

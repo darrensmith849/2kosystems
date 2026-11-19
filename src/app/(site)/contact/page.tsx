@@ -39,10 +39,12 @@ const interests = new Set([
 export default async function ContactPage({
   searchParams,
 }: {
-  searchParams: Promise<{ interest?: string }>;
+  searchParams: Promise<{ interest?: string; people?: string }>;
 }) {
   const params = await searchParams;
   const initialInterest = params.interest && interests.has(params.interest) ? params.interest : "";
+  const people = Math.round(Number(params.people));
+  const initialHeadcount = Number.isFinite(people) && people > 0 && people <= 1_000_000 ? String(people) : "";
 
   return (
     <>
@@ -143,7 +145,7 @@ export default async function ContactPage({
           <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_400px] lg:items-start">
             <Rise>
               <div className="rounded-2xl border border-[var(--hair-2)] bg-black/35 p-5 shadow-[0_30px_90px_rgba(0,0,0,.28)] sm:p-8">
-                <ContactForm initialInterest={initialInterest} />
+                <ContactForm initialInterest={initialInterest} initialHeadcount={initialHeadcount} />
               </div>
             </Rise>
 
