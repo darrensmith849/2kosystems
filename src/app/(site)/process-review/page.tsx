@@ -132,7 +132,7 @@ export default function ProcessReviewPage() {
       </section>
 
       <section className="k-band k-band--2 relative overflow-hidden">
-        <div className="pointer-events-none absolute -right-20 top-0 text-[clamp(120px,24vw,360px)] font-semibold leading-none tracking-[-.09em] text-white/[.018]" aria-hidden="true">DECIDE</div>
+        <div className="pointer-events-none absolute -right-20 top-0 text-[clamp(120px,24vw,360px)] font-semibold leading-none tracking-[-.038em] text-white/[.018]" aria-hidden="true">DECIDE</div>
         <div className="k-shell relative grid gap-14 lg:grid-cols-[minmax(0,.82fr)_minmax(0,1.18fr)] lg:gap-24">
           <div className="lg:sticky lg:top-32 lg:self-start">
             <Rise><p className="k-mono">03 — The recommendation</p></Rise>
@@ -144,7 +144,7 @@ export default function ProcessReviewPage() {
               <Rise key={signal} step={(index % 3) as 0 | 1 | 2}>
                 <article className="group grid grid-cols-[44px_minmax(0,.7fr)_minmax(0,1fr)] items-baseline gap-5 border-t border-[var(--hair)] py-6">
                   <span className="k-mono k-mono--ember">0{index + 1}</span>
-                  <strong className="text-[clamp(22px,3vw,42px)] font-medium leading-none tracking-[-.045em] text-white/20 transition-colors duration-500 group-hover:text-[var(--ember)]">{signal}</strong>
+                  <strong className="text-[clamp(22px,3vw,42px)] font-medium leading-none tracking-[-.023em] text-white/20 transition-colors duration-500 group-hover:text-[var(--ember)]">{signal}</strong>
                   <p className="k-sm">{item}</p>
                 </article>
               </Rise>

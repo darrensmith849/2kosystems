@@ -114,7 +114,7 @@ export default function ManagedImprovementPage() {
       </section>
 
       <section className="k-band k-band--2 relative overflow-hidden">
-        <div className="pointer-events-none absolute -right-10 top-16 text-[clamp(100px,22vw,330px)] font-semibold leading-none tracking-[-.09em] text-white/[.018]" aria-hidden="true">TOGETHER</div>
+        <div className="pointer-events-none absolute -right-10 top-16 text-[clamp(100px,22vw,330px)] font-semibold leading-none tracking-[-.038em] text-white/[.018]" aria-hidden="true">TOGETHER</div>
         <div className="k-shell relative">
           <Rise><p className="k-mono k-mono--ember">01 — The integrated operating model</p></Rise>
           <div className="mt-6 grid gap-10 lg:grid-cols-[minmax(0,.8fr)_minmax(0,1.2fr)] lg:items-end">
@@ -126,7 +126,7 @@ export default function ManagedImprovementPage() {
               <Rise key={title}>
                 <article className="group grid gap-5 border-b border-[var(--hair-2)] p-6 last:border-b-0 md:grid-cols-[54px_minmax(0,.62fr)_minmax(0,.82fr)_minmax(0,1.25fr)] md:items-center md:p-8">
                   <span className="k-mono k-mono--ember">0{index + 1}</span>
-                  <h3 className="text-[clamp(30px,4vw,52px)] font-medium leading-none tracking-[-.055em] transition-colors group-hover:text-[var(--ember)]">{title}</h3>
+                  <h3 className="text-[clamp(30px,4vw,52px)] font-medium leading-none tracking-[-.026em] transition-colors group-hover:text-[var(--ember)]">{title}</h3>
                   <p className="k-mono text-[var(--warm-70)]">{label}</p>
                   <p className="k-sm">{body}</p>
                 </article>
@@ -149,7 +149,7 @@ export default function ManagedImprovementPage() {
                 <article className={`relative flex h-full flex-col overflow-hidden rounded-2xl border p-6 sm:p-8 ${plan.featured ? "border-[var(--ember)] bg-[linear-gradient(155deg,rgba(232,142,74,.14),rgba(0,0,0,.4)_42%)] shadow-[0_28px_90px_rgba(232,142,74,.1)]" : "border-[var(--hair-2)] bg-[var(--panel)]"}`}>
                   {plan.featured && <span className="absolute right-0 top-0 rounded-bl-xl bg-[var(--ember)] px-4 py-2 font-[var(--mono)] text-[10px] uppercase tracking-[.16em] text-[var(--black)]">Preferred</span>}
                   <div className="flex items-center gap-3"><span className="k-mono k-mono--ember">{plan.code}</span><span className="k-mono pr-20">{plan.fit}</span></div>
-                  <h3 className="mt-9 min-h-[2em] text-[clamp(27px,3vw,36px)] font-medium leading-[1.02] tracking-[-.045em]">{plan.name}</h3>
+                  <h3 className="mt-9 min-h-[2em] text-[clamp(27px,3vw,36px)] font-medium leading-[1.02] tracking-[-.023em]">{plan.name}</h3>
                   <p className="k-num mt-8 text-[clamp(36px,4vw,52px)]">{index === 2 ? "from " : ""}{plan.price}</p>
                   <p className="k-mono mt-1">per month · ex VAT</p>
                   <div className="mt-6 grid gap-2 border-y border-[var(--hair-2)] py-5"><p className="k-mono text-[var(--warm-70)]">{plan.annual}</p><p className="k-mono k-mono--ember">+ {plan.mobilisation}</p></div>

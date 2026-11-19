@@ -349,7 +349,7 @@ export default function SystemsPage() {
 
       {/* ═══ 04 REPORTING ═══ */}
       <section className="k-band relative overflow-hidden">
-        <div className="pointer-events-none absolute -right-12 top-1/2 -translate-y-1/2 text-[clamp(110px,24vw,360px)] font-semibold leading-none tracking-[-.09em] text-white/[.018]" aria-hidden="true">REPORT</div>
+        <div className="pointer-events-none absolute -right-12 top-1/2 -translate-y-1/2 text-[clamp(110px,24vw,360px)] font-semibold leading-none tracking-[-.038em] text-white/[.018]" aria-hidden="true">REPORT</div>
         <div className="k-shell relative">
           <Rise>
             <p className="k-mono k-mono--ember">04 — Reporting</p>

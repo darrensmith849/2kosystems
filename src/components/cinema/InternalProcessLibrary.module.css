@@ -16,7 +16,7 @@
   overflow: auto;
   color: var(--warm);
   background: var(--black);
-  font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: var(--font);
 }
 
 .topbar {
@@ -33,7 +33,7 @@
   border-bottom: 1px solid var(--hair-2);
   background: rgb(8 9 10 / 90%);
   backdrop-filter: blur(18px);
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: var(--mono);
   font-size: 0.67rem;
   letter-spacing: 0.11em;
 }
@@ -41,10 +41,10 @@
 .brand {
   width: max-content;
   color: var(--ember);
-  font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: var(--font);
   font-size: 1.25rem;
   font-weight: 750;
-  letter-spacing: -0.055em;
+  letter-spacing: -.026em;
   text-decoration: none;
 }
 
@@ -101,7 +101,7 @@
 .processCard dt,
 .processCard footer,
 .footer {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: var(--mono);
   font-size: 0.67rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -115,7 +115,7 @@
   font-size: clamp(4.7rem, 7.4vw, 8.2rem);
   font-weight: 510;
   line-height: 0.89;
-  letter-spacing: -0.07em;
+  letter-spacing: -.032em;
   text-wrap: balance;
 }
 
@@ -146,7 +146,7 @@
   padding: 13px 15px;
   color: var(--warm-45);
   border-bottom: 1px solid var(--hair);
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: var(--mono);
   font-size: 0.59rem;
   letter-spacing: 0.09em;
 }
@@ -191,7 +191,7 @@
 .heroConsoleBody button > span,
 .heroConsoleBody button > small {
   color: var(--warm-45);
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: var(--mono);
   font-size: 0.62rem;
   letter-spacing: 0.07em;
 }
@@ -224,7 +224,7 @@
 .heroCopy dd {
   margin: 5px 0 0;
   color: var(--warm-45);
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: var(--mono);
   font-size: 0.59rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -277,7 +277,7 @@
   border: 1px solid var(--hair-2);
   border-radius: 999px;
   background: var(--panel);
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: var(--mono);
   font-size: 0.6rem;
   letter-spacing: 0.065em;
   cursor: pointer;
@@ -324,7 +324,7 @@
 .categoryHeader > span,
 .categoryHeader > strong {
   color: var(--ember);
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: var(--mono);
   font-size: 0.72rem;
   letter-spacing: 0.1em;
 }
@@ -337,7 +337,7 @@
   font-size: clamp(3.2rem, 5vw, 5.6rem);
   font-weight: 510;
   line-height: 0.94;
-  letter-spacing: -0.06em;
+  letter-spacing: -.028em;
 }
 
 .categoryHeader p { max-width: 690px; margin: 0; color: var(--warm-70); font-size: 0.95rem; line-height: 1.58; }
@@ -397,7 +397,7 @@ a.processCard:hover { transform: translateY(-5px); border-color: rgb(63 185 80 /
   font-size: clamp(1.75rem, 2.2vw, 2.3rem);
   font-weight: 520;
   line-height: 1.04;
-  letter-spacing: -0.045em;
+  letter-spacing: -.023em;
 }
 
 .processCard > p { max-width: 58ch; margin: 0 0 32px; color: var(--warm-70); font-size: 0.87rem; line-height: 1.58; }
