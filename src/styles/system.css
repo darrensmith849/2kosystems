@@ -1094,6 +1094,10 @@ fieldset[disabled] .k-choice { cursor: not-allowed; }
 
 .k-hero-web-inner { position: relative; }
 
+/* A hero with a panel beside the headline: less air above, so the whole panel
+   fits on a laptop screen. */
+.k-hero-web--aside { padding-top: clamp(56px, 6vw, 96px); }
+
 .k-web-h1 {
   margin-top: 18px;
   font-size: clamp(38px, 5.6vw, 82px);

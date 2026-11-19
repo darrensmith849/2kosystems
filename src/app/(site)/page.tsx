@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { completePageMetadata } from "@/lib/siteMetadata";
 import Link from "next/link";
 import ClientStrip from "@/components/cinema/ClientStrip";
-import DeploymentClimb from "@/components/cinema/DeploymentClimb";
+import DeploymentPlanner from "@/components/cinema/DeploymentPlanner";
 import PageHero from "@/components/cinema/PageHero";
 import Photo from "@/components/cinema/Photo";
 import Rise from "@/components/cinema/Rise";
@@ -69,35 +69,15 @@ export default function HomePage() {
     <>
       <PageHero
         eyebrow="LEAN AND SIX SIGMA · DEPLOYED AT SCALE"
-        title={
-          <>
-            We build your organisation’s improvement capability.
-            <span className="block text-[var(--warm-70)]">Trained people. Real projects. Measured savings.</span>
-          </>
-        }
-        titleClass="max-w-[22ch]"
-        lead="2KO runs large-scale Lean and Six Sigma programmes inside organisations across Africa, from White Belt for everyone to Black Belts who lead the work. Every person climbs on Sigmafy, our platform, so every project and every saving is visible to the people paying for it."
+        title="Lean Six Sigma for your whole organisation."
+        titleClass="max-w-[16ch]"
+        lead="We train your people, run their real projects with them on Sigmafy, and report the savings to your executives."
         ctas={[
-          { href: "/contact", label: "Plan a deployment", offer: "deployment enquiry" },
+          { href: "/contact?interest=training", label: "Plan a deployment", offer: "deployment enquiry" },
           { href: "/training", label: "See the belts", ghost: true, offer: "training" },
         ]}
-        facts={[
-          { value: "$5bn+", label: "combined savings influenced", emphasis: true },
-          { value: "Since 1998", label: "improvement heritage" },
-          { value: "8,000+", label: "organisations served" },
-          { value: "White to Black", label: "every belt on one platform" },
-        ]}
-      >
-        <div className="relative mt-16">
-          <div className="k-horizon top-0" aria-hidden="true" />
-          <div
-            className="pointer-events-none absolute -inset-x-20 -inset-y-24 -z-10 blur-3xl"
-            aria-hidden="true"
-            style={{ background: "radial-gradient(ellipse at 50% 45%, rgba(63,185,80,0.18), transparent 62%)" }}
-          />
-          <DeploymentClimb />
-        </div>
-      </PageHero>
+        aside={<DeploymentPlanner />}
+      />
 
       <ClientStrip />
 

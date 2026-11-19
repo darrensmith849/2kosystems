@@ -33,6 +33,7 @@ export default function PageHero({
   facts,
   titleClass,
   children,
+  aside,
 }: {
   eyebrow: ReactNode;
   title: ReactNode;
@@ -43,51 +44,56 @@ export default function PageHero({
   titleClass?: string;
   /** The hero visual — a reel, a diagram, a panel. */
   children?: ReactNode;
+  /** A panel beside the headline on wide screens, below it on phones. */
+  aside?: ReactNode;
 }) {
   return (
-    <section className="k-hero-web">
+    <section className={`k-hero-web${aside ? " k-hero-web--aside" : ""}`}>
       <div className="k-web-aurora" aria-hidden />
-      <div className="k-shell k-hero-web-inner">
-        <Rise>
-          <p className="k-mono k-mono--ember">{eyebrow}</p>
-        </Rise>
-        <Rise step={1}>
-          <h1 className={`k-web-h1${titleClass ? ` ${titleClass}` : ""}`}>{title}</h1>
-        </Rise>
-        {lead && (
-          <Rise step={2}>
-            <p className="k-lead k-web-lead">{lead}</p>
+      <div className={`k-shell k-hero-web-inner${aside ? " grid gap-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)] lg:items-center lg:gap-16" : ""}`}>
+        <div>
+          <Rise>
+            <p className="k-mono k-mono--ember">{eyebrow}</p>
           </Rise>
-        )}
-        {ctas?.length ? (
-          <Rise step={3}>
-            <div className="k-web-cta">
-              {ctas.map((c) => (
-                <TrackedLink
-                  key={c.href + c.label}
-                  href={c.href}
-                  eventOffer={c.offer}
-                  className={`k-btn ${c.ghost ? "k-btn--ghost" : "k-btn--solid"}`}
-                >
-                  {c.label}
-                </TrackedLink>
-              ))}
-            </div>
+          <Rise step={1}>
+            <h1 className={`k-web-h1${titleClass ? ` ${titleClass}` : ""}`}>{title}</h1>
           </Rise>
-        ) : null}
-        {children && <Rise step={3}>{children}</Rise>}
-        {facts?.length ? (
-          <Rise step={3}>
-            <div className="k-web-facts">
-              {facts.map((f) => (
-                <div key={f.label} data-emphasis={f.emphasis || undefined}>
-                  <strong>{f.value}</strong>
-                  <span>{f.label}</span>
-                </div>
-              ))}
-            </div>
-          </Rise>
-        ) : null}
+          {lead && (
+            <Rise step={2}>
+              <p className="k-lead k-web-lead">{lead}</p>
+            </Rise>
+          )}
+          {ctas?.length ? (
+            <Rise step={3}>
+              <div className="k-web-cta">
+                {ctas.map((c) => (
+                  <TrackedLink
+                    key={c.href + c.label}
+                    href={c.href}
+                    eventOffer={c.offer}
+                    className={`k-btn ${c.ghost ? "k-btn--ghost" : "k-btn--solid"}`}
+                  >
+                    {c.label}
+                  </TrackedLink>
+                ))}
+              </div>
+            </Rise>
+          ) : null}
+          {children && <Rise step={3}>{children}</Rise>}
+          {facts?.length ? (
+            <Rise step={3}>
+              <div className="k-web-facts">
+                {facts.map((f) => (
+                  <div key={f.label} data-emphasis={f.emphasis || undefined}>
+                    <strong>{f.value}</strong>
+                    <span>{f.label}</span>
+                  </div>
+                ))}
+              </div>
+            </Rise>
+          ) : null}
+        </div>
+        {aside && <Rise step={2}>{aside}</Rise>}
       </div>
     </section>
   );
