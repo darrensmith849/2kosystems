@@ -1,13 +1,11 @@
 import type { Metadata } from "next";
 import { completePageMetadata } from "@/lib/siteMetadata";
 import Link from "next/link";
-import AfricaMap from "@/components/cinema/AfricaMap";
 import ClientStrip from "@/components/cinema/ClientStrip";
 import DeploymentClimb from "@/components/cinema/DeploymentClimb";
 import PageHero from "@/components/cinema/PageHero";
 import Photo from "@/components/cinema/Photo";
 import Rise from "@/components/cinema/Rise";
-import ServiceFlowCard from "@/components/cinema/ServiceFlowCard";
 import TrackedLink from "@/components/cinema/TrackedLink";
 import { RATES } from "@/lib/pricing";
 
@@ -34,28 +32,36 @@ const belts = [
   ["Experts", "Black Belt", "Your own experts lead the hardest problems and coach the next wave, with our trainers behind them.", "/training"],
 ];
 
-const lifecycle = ["Diagnose", "Plan the waves", "Train", "Run projects", "Coach", "Certify", "Sustain"];
+const sectors = [
+  "Banking and insurance",
+  "Telecoms and technology",
+  "Contact centres",
+  "Mining and minerals",
+  "Manufacturing",
+  "Logistics and distribution",
+  "Agri-processing",
+  "Professional services",
+];
 
-const operatingWorlds = [
-  {
-    code: "PHYSICAL",
-    title: "Physical operations",
-    line: "Work moving through sites, equipment, goods and field teams.",
-    sectors: ["Mining and minerals", "Agriculture and agri-processing", "Logistics and distribution", "Industrial and manufacturing"],
-  },
-  {
-    code: "INFORMATION",
-    title: "Information operations",
-    line: "Cases, conversations, documents and decisions moving through service teams.",
-    sectors: ["Financial services and insurance", "Contact centres and customer operations", "Accounting and professional services", "Multi-site and regulated services"],
-  },
+const platform = [
+  ["01", "LEARN", "Learn by doing", "A hands-on simulation, short videos and practice, so people learn the method on a problem before they meet their own."],
+  ["02", "PROJECT", "Guided projects", "The right tool at the right step, a coach that checks each answer as it is written, and trainer sign-off before the next phase."],
+  ["03", "CERTIFY", "Exams and certificates", "Belt exams, marking and accredited certificates, kept on one record for every person in the programme."],
+  ["04", "ANALYSE", "Statistics", "The analysis tools a project needs, built in. Also sold on its own seat as Sigmafy Statistics."],
+  ["05", "SEE", "One view of the programme", "Who is climbing, which projects are live, what has been signed off and what has been saved against its baseline."],
+];
+
+const group = [
+  { name: "2KO", role: "Runs your deployment", line: "Plans the waves, coaches the projects, signs off every belt and reports the savings to your executives.", href: "/contact", cta: "Plan a deployment" },
+  { name: "Sigmafy", role: "The platform, built by 2KO", line: "Where every belt learns, runs projects, sits exams and is measured. Sigmafy Statistics is also sold on its own.", href: "/sigmafy", cta: "Explore Sigmafy" },
+  { name: "Six Sigma South Africa", role: "Open courses", line: "Accredited public courses for individuals and smaller teams who want a belt without a full deployment.", href: "https://www.sixsigmasouthafrica.co.za/", cta: "See open courses" },
 ];
 
 const offers = [
   { name: "Pilot cohort", price: "Quoted", time: "3 months", line: "One Green Belt cohort of about 20, running real projects on Sigmafy, so you see results before you scale.", href: "/contact" },
   { name: "White Belt for everyone", price: "Per person", time: "per year", line: "Every employee on Sigmafy: the simulation, certificates and your own progress dashboards.", href: "/training" },
   { name: "Deployment waves", price: "Per cohort", time: "rolling", line: "Yellow, Green and Black Belt cohorts in waves, each one running projects that are measured.", href: "/training" },
-  { name: "Improvement partnership", price: `from ${RATES.partnershipProgramme}`, time: "per month", line: "Coaching, governance and savings tracking across the whole programme, under one relationship.", href: "/pricing" },
+  { name: "Improvement partnership", price: `from ${RATES.partnershipProgramme}`, time: "per month", line: "We stay inside the programme: coaching, marking, sign-off, governance and savings reported to your executives, under one relationship.", href: "/pricing" },
 ];
 
 export default function HomePage() {
@@ -191,40 +197,14 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="k-band k-band--2 relative overflow-hidden">
-        <div className="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 text-center text-[clamp(78px,17vw,250px)] font-semibold leading-none tracking-[-.08em] text-white/[.018]" aria-hidden="true">CONTINUOUS</div>
-        <div className="k-shell relative">
-          <Rise><p className="k-mono">03 — How a programme holds</p></Rise>
-          <Rise step={1}><h2 className="k-title mt-8 max-w-[22ch]">One programme. Every belt. Measured all the way.</h2></Rise>
-          <Rise step={2}><p className="k-lead k-measure mt-7">Train where judgement matters, run real projects, and measure every result. Where a fix needs software, we build that too.</p></Rise>
-
-          <ol className="mt-16 grid gap-y-10 sm:grid-cols-2 lg:grid-cols-7">
-            {lifecycle.map((stage, index) => (
-              <Rise key={stage} step={(index % 3) as 0 | 1 | 2}>
-                <li className="relative border-t border-[var(--hair-2)] pt-8 lg:pr-5">
-                  <span className="absolute -top-[6px] left-0 h-3 w-3 rounded-full border border-[var(--ember)] bg-[var(--black-2)] shadow-[0_0_18px_rgba(217, 169, 90,.4)]" />
-                  <span className="k-mono k-mono--ember">0{index + 1}</span>
-                  <h3 className="k-sub mt-5">{stage}</h3>
-                </li>
-              </Rise>
-            ))}
-          </ol>
-          <Rise className="mt-12"><Link href="/method" className="k-link">Read the method</Link></Rise>
-        </div>
-      </section>
-
       <section className="k-band overflow-hidden">
         <div className="k-shell">
-          <Rise><p className="k-mono k-mono--ember">04 — The platform</p></Rise>
+          <Rise><p className="k-mono k-mono--ember">03 — The platform</p></Rise>
           <Rise step={1}><h2 className="k-state mt-8 max-w-[19ch]">Sigmafy is where every belt learns, works and is measured.</h2></Rise>
-          <Rise step={2}><p className="k-lead k-measure mt-8">Our own platform, built for programmes of thousands. It does the scaling, so our trainers can spend their time where people need judgement.</p></Rise>
+          <Rise step={2}><p className="k-lead k-measure mt-8">One platform, built by 2KO for programmes of thousands. It does the scaling, so our trainers can spend their time where people need judgement.</p></Rise>
 
           <div className="mt-16">
-            {[
-              ["01", "LEARN", "Learn by doing", "A hands-on simulation, short videos, practice and exams, so people learn the method on a problem before they meet their own."],
-              ["02", "PROJECT", "Guided projects", "The right tool at the right step, a coach that checks each answer as it is written, and trainer sign-off before the next phase."],
-              ["03", "SEE", "One view of the programme", "Who is climbing, which projects are live, what has been signed off and what has been saved against its baseline."],
-            ].map(([number, signal, title, body]) => (
+            {platform.map(([number, signal, title, body]) => (
               <Rise key={number}>
                 <article className="group relative grid overflow-hidden border-t border-[var(--hair)] py-8 md:grid-cols-[90px_minmax(0,.7fr)_minmax(0,1fr)] md:items-baseline">
                   <span className="k-mono k-mono--ember">{number}</span>
@@ -241,64 +221,31 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="information-operations" className="relative isolate min-h-[96svh] overflow-hidden">
-        <Rise variant="settle" className="absolute inset-0 -z-20">
-          <Photo src="/imagery/home/professional-handoff-v1.webp" sizes="100vw" scrim="left" position="center" />
-        </Rise>
-        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-black/88 via-black/46 to-black/55" aria-hidden="true" />
-        <div className="k-shell grid min-h-[96svh] gap-14 py-24 lg:grid-cols-[minmax(0,.82fr)_minmax(440px,1fr)] lg:items-center">
-          <div>
-            <Rise><p className="k-mono k-mono--ember">05 — Information operations</p></Rise>
-            <Rise step={1}><h2 className="k-state mt-8 max-w-[16ch]">When the work is made of cases, conversations and documents, it is still operations.</h2></Rise>
-            <Rise step={2}><p className="k-lead mt-8 max-w-[48ch]">Banks, contact centres, accounting firms and service organisations carry their own queues, handoffs, exceptions and controls. The product may be intangible. The delay and rework are not.</p></Rise>
-            <Rise step={3} className="mt-10 flex max-w-[720px] flex-wrap gap-2.5">
-              {["Client onboarding", "Claims and cases", "Customer escalation", "Month-end close", "Review workflow", "Multi-site requests"].map((item) => <span key={item} className="rounded-full border border-white/15 bg-black/45 px-4 py-2 k-mono text-[var(--warm-70)] backdrop-blur-md">{item}</span>)}
-            </Rise>
+      <section className="k-band k-band--2">
+        <div className="k-shell">
+          <Rise><p className="k-mono">04 — How you start</p></Rise>
+          <Rise step={1}><h2 className="k-title mt-8 max-w-[25ch]">Start with one cohort. Scale on the evidence.</h2></Rise>
+          <div className="mt-14">
+            {offers.map((offer, index) => (
+              <Rise key={offer.name}>
+                <Link href={offer.href} className="k-row group md:grid-cols-[64px_minmax(0,.8fr)_minmax(0,1fr)_120px_auto] md:items-baseline">
+                  <span className="k-mono k-mono--ember">0{index + 1}</span>
+                  <h3 className="k-sub transition-colors group-hover:text-[var(--ember)]">{offer.name}</h3>
+                  <p className="k-sm">{offer.line}</p>
+                  <span className="k-mono">{offer.time}</span>
+                  <span className="k-num text-[19px] md:text-right">{offer.price}</span>
+                </Link>
+              </Rise>
+            ))}
           </div>
-
-          <Rise step={2} className="lg:justify-self-end lg:w-full lg:max-w-[560px]">
-            <ServiceFlowCard />
-          </Rise>
+          <Rise className="mt-10"><TrackedLink href="/pricing" eventOffer="retainers" className="k-link">Compare cohorts and partnerships →</TrackedLink></Rise>
         </div>
       </section>
 
-      <section id="operating-worlds" className="relative isolate min-h-[92svh] overflow-hidden">
-        <div className="pointer-events-none absolute inset-y-0 right-[-18%] -z-20 w-[100%] opacity-95 sm:right-[-10%] lg:right-[-2%] lg:w-[62%]">
-          <AfricaMap />
-        </div>
-        <div
-          className="absolute inset-0 -z-10"
-          aria-hidden="true"
-          style={{ background: "linear-gradient(100deg, rgba(8,9,10,.98) 0%, rgba(8,9,10,.9) 34%, rgba(8,9,10,.42) 62%, rgba(8,9,10,0) 84%)" }}
-        />
-        <div className="k-shell flex min-h-[92svh] items-center py-24">
-          <div>
-            <Rise><p className="k-mono k-mono--ember">06 — Operational reach</p></Rise>
-            <Rise step={1}><h2 className="k-state mt-8 max-w-[16ch]">Two operating worlds. One improvement discipline.</h2></Rise>
-            <Rise step={2}><p className="k-lead mt-7 max-w-[56ch]">Whether the work moves through a plant or a case queue, we follow the same questions: where does it wait, where does it break, who decides and what evidence remains?</p></Rise>
-            <div className="mt-12 grid max-w-[880px] gap-4 md:grid-cols-2">
-              {operatingWorlds.map((world, index) => (
-                <Rise key={world.code} step={(index + 1) as 1 | 2}>
-                  <article className="h-full rounded-2xl border border-white/10 bg-black/65 p-6 backdrop-blur-xl sm:p-7">
-                    <p className="k-mono k-mono--ember">{world.code}</p>
-                    <h3 className="k-sub mt-5">{world.title}</h3>
-                    <p className="k-sm mt-3">{world.line}</p>
-                    <ul className="mt-7 divide-y divide-white/10 border-y border-white/10">
-                      {world.sectors.map((sector) => <li key={sector} className="py-3 text-[13px] text-[var(--warm-70)]">{sector}</li>)}
-                    </ul>
-                  </article>
-                </Rise>
-              ))}
-            </div>
-            <Rise step={3}><Link href="/sectors" className="k-link mt-10">Explore the broader sector fit</Link></Rise>
-          </div>
-        </div>
-      </section>
-
-      <section id="results" className="k-band k-band--2">
+      <section id="results" className="k-band">
         <div className="k-shell grid gap-14 lg:grid-cols-[minmax(0,1fr)_minmax(340px,.65fr)] lg:items-center">
           <div>
-            <Rise><p className="k-mono">07 — Results on record</p></Rise>
+            <Rise><p className="k-mono">05 — Results on record</p></Rise>
             <Rise step={1}><h2 className="k-state mt-8 max-w-[18ch]">A result needs a baseline, a period and evidence.</h2></Rise>
             <Rise step={2}><p className="k-lead k-measure mt-8">We separate what we observed, what we calculated and what a client reported. Every published result will state how it was measured and what else contributed.</p></Rise>
             <Rise step={3}><Link href="/results" className="k-link mt-9">Open the public evidence record →</Link></Rise>
@@ -318,62 +265,31 @@ export default function HomePage() {
             </aside>
           </Rise>
         </div>
-      </section>
-
-      <section className="k-band">
-        <div className="k-shell">
-          <Rise><p className="k-mono">08 — Where to start</p></Rise>
-          <Rise step={1}><h2 className="k-title mt-8 max-w-[25ch]">Start with one cohort. Scale on the evidence.</h2></Rise>
-          <div className="mt-14">
-            {offers.map((offer, index) => (
-              <Rise key={offer.name}>
-                <Link href={offer.href} className="k-row group md:grid-cols-[64px_minmax(0,.8fr)_minmax(0,1fr)_120px_auto] md:items-baseline">
-                  <span className="k-mono k-mono--ember">0{index + 1}</span>
-                  <h3 className="k-sub transition-colors group-hover:text-[var(--ember)]">{offer.name}</h3>
-                  <p className="k-sm">{offer.line}</p>
-                  <span className="k-mono">{offer.time}</span>
-                  <span className="k-num text-[19px] md:text-right">{offer.price}</span>
-                </Link>
-              </Rise>
-            ))}
-          </div>
+        <div className="k-shell mt-20 border-t border-[var(--hair)] pt-10">
+          <Rise><p className="k-mono">Where we work</p></Rise>
+          <Rise step={1} className="mt-6 flex flex-wrap gap-2.5">
+            {sectors.map((sector) => <span key={sector} className="rounded-full border border-[var(--hair-2)] px-4 py-2 k-mono text-[var(--warm-70)]">{sector}</span>)}
+          </Rise>
+          <Rise step={2}><Link href="/sectors" className="k-link mt-8">See the sector fit</Link></Rise>
         </div>
       </section>
 
-      <section id="managed-improvement" className="k-band k-band--2 overflow-hidden">
-        <div className="k-shell grid gap-16 lg:grid-cols-[minmax(320px,.8fr)_minmax(0,1.2fr)] lg:items-center">
-          <Rise>
-            <div className="relative mx-auto aspect-square w-full max-w-[470px] rounded-full p-[1px]" style={{ background: "conic-gradient(from 210deg, rgba(63,185,80,.15), var(--signal), var(--ember), rgba(255,255,255,.08), rgba(63,185,80,.15))" }}>
-              <div className="absolute inset-7 rounded-full border border-[var(--hair-2)] bg-[var(--black)] shadow-[inset_0_0_80px_rgba(63,185,80,.06)]" />
-              <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                <span className="k-mono k-mono--ember">Measured process</span>
-                <strong className="mt-4 text-[clamp(34px,5vw,62px)] font-medium leading-none tracking-[-.05em]">Review.<br />Improve.<br />Repeat.</strong>
-              </div>
-              <span className="absolute bottom-[16%] left-[4%] rounded-full border border-[var(--hair-2)] bg-[var(--black)] px-4 py-2 k-mono">Baseline</span>
-              <span className="absolute right-[5%] top-[18%] rounded-full border border-[var(--hair-2)] bg-[var(--black)] px-4 py-2 k-mono">Backlog</span>
-              <span className="absolute bottom-[12%] right-[8%] rounded-full border border-[var(--hair-2)] bg-[var(--black)] px-4 py-2 k-mono">Benefit</span>
-            </div>
-          </Rise>
-
-          <div>
-            <Rise><p className="k-mono k-mono--ember">09 — Partnership</p></Rise>
-            <Rise step={1}><h2 className="k-title mt-8 max-w-[20ch]">We stay inside the programme.</h2></Rise>
-            <Rise step={2}><p className="k-lead mt-7 max-w-[52ch]">The platform does the scaling. We do what needs people: coaching, marking, sign-off and the accredited certificate at every belt, under one monthly partnership.</p></Rise>
-            <div className="mt-10">
-              {[
-                ["Programme", `from ${RATES.partnershipProgramme} / month`, "Coaching and sign-off for your belt cohorts, with the programme measured on Sigmafy."],
-                ["Operational", `from ${RATES.partnershipOperational} / month`, "Several business units, project governance and savings reported to your executives."],
-                ["Transformation", `from ${RATES.partnershipTransformation} / month`, "A whole-organisation deployment, including the systems your best projects need."],
-              ].map(([title, label, body]) => (
-                <Rise key={title}>
-                  <article className="grid gap-3 border-t border-[var(--hair)] py-6 sm:grid-cols-[minmax(0,.8fr)_minmax(0,1fr)] sm:items-baseline">
-                    <div><p className="k-mono">{label}</p><h3 className="k-sub mt-2">{title}</h3></div>
-                    <p className="k-sm">{body}</p>
-                  </article>
-                </Rise>
-              ))}
-            </div>
-            <Rise className="mt-8"><TrackedLink href="/pricing" eventOffer="retainers" className="k-link">Compare retainers and partnerships →</TrackedLink></Rise>
+      <section id="group" className="k-band k-band--2">
+        <div className="k-shell">
+          <Rise><p className="k-mono k-mono--ember">06 — The 2KO group</p></Rise>
+          <Rise step={1}><h2 className="k-title mt-8 max-w-[22ch]">One group. Three ways in.</h2></Rise>
+          <Rise step={2}><p className="k-lead k-measure mt-7">2KO runs the deployment, Sigmafy carries it, and Six Sigma South Africa trains the people who come to us one at a time.</p></Rise>
+          <div className="mt-14 grid gap-4 md:grid-cols-3">
+            {group.map((item, index) => (
+              <Rise key={item.name} step={index as 0 | 1 | 2}>
+                <TrackedLink href={item.href} eventOffer={item.name} className="group flex h-full flex-col rounded-2xl border border-[var(--hair)] p-7 transition-colors hover:border-[var(--ember)]">
+                  <p className="k-mono k-mono--ember">{item.role}</p>
+                  <h3 className="k-sub mt-5">{item.name}</h3>
+                  <p className="k-sm mt-3 flex-1">{item.line}</p>
+                  <span className="k-link mt-8 group-hover:text-[var(--ember)]">{item.cta} →</span>
+                </TrackedLink>
+              </Rise>
+            ))}
           </div>
         </div>
       </section>
