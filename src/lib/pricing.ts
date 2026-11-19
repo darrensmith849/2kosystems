@@ -113,3 +113,82 @@ export const TIMEBOX = {
   pilot: "4–6 weeks",
   buildPhase: "4–6 weeks per phase",
 } as const;
+
+/* ---------- Deployments ----------
+   Every deployment tier is priced bottom-up from the rates below, so the
+   column a buyer reads always adds up from the rows above it and no tier can
+   fall below what it costs to deliver. Change a rate here and the pricing
+   table recalculates. All figures are rand, ex VAT, per year. */
+
+export type DeploymentTier = {
+  id: string;
+  name: string;
+  /** Delegates who start a belt in the year. */
+  cap: number;
+  places: { yellow: number; green: number; black: number };
+  /** Discount off the belt list price, 0–1. */
+  discount: { yellow: number; green: number; black: number };
+  coachingDaysPerMonth: number;
+  /** Sigmafy licence per delegate per year. */
+  licencePerDelegate: number;
+  report: string;
+  programmeLead: boolean;
+  trainTheTrainer: boolean;
+  industrySimulation: boolean;
+  singleSignOn: boolean;
+};
+
+export const DEPLOYMENT_RATES = {
+  beltList: { yellow: 6500, green: 14500, black: 28000 },
+  coachingDay: 9500,
+} as const;
+
+export const DEPLOYMENT_TIERS: readonly DeploymentTier[] = [
+  { id: "pilot", name: "Pilot", cap: 100, places: { yellow: 15, green: 10, black: 1 }, discount: { yellow: 0, green: 0, black: 0 }, coachingDaysPerMonth: 2, licencePerDelegate: 250, report: "Quarterly", programmeLead: false, trainTheTrainer: false, industrySimulation: false, singleSignOn: false },
+  { id: "programme", name: "Programme", cap: 500, places: { yellow: 75, green: 25, black: 2 }, discount: { yellow: 0.15, green: 0.1, black: 0.1 }, coachingDaysPerMonth: 4, licencePerDelegate: 200, report: "Quarterly", programmeLead: false, trainTheTrainer: false, industrySimulation: false, singleSignOn: false },
+  { id: "division", name: "Division", cap: 1000, places: { yellow: 150, green: 40, black: 4 }, discount: { yellow: 0.3, green: 0.2, black: 0.15 }, coachingDaysPerMonth: 8, licencePerDelegate: 180, report: "Monthly", programmeLead: true, trainTheTrainer: true, industrySimulation: false, singleSignOn: false },
+  { id: "enterprise", name: "Enterprise", cap: 10000, places: { yellow: 1500, green: 200, black: 20 }, discount: { yellow: 0.5, green: 0.3, black: 0.3 }, coachingDaysPerMonth: 16, licencePerDelegate: 150, report: "Monthly", programmeLead: true, trainTheTrainer: true, industrySimulation: true, singleSignOn: true },
+  { id: "group", name: "Group", cap: 50000, places: { yellow: 7500, green: 600, black: 60 }, discount: { yellow: 0.6, green: 0.3, black: 0.3 }, coachingDaysPerMonth: 60, licencePerDelegate: 100, report: "Monthly + live", programmeLead: true, trainTheTrainer: true, industrySimulation: true, singleSignOn: true },
+];
+
+/**
+ * Savings per finished project, deliberately set below published medians, and
+ * the share of projects assumed to finish. Yellow and White Belt savings are
+ * left out because no reliable published figure exists for them.
+ */
+export const SAVINGS_BASIS = {
+  greenProject: 500_000,
+  blackProject: 2_000_000,
+  /** Our own cautious assumption: no published completion rate was found. */
+  completionRate: 0.5,
+  sources: [
+    { label: "iSixSigma Black Belt survey: median hard savings of $187,500 a project (about R3.3m). We count R2m.", href: "https://www.isixsigma.com/press-releases/ignoring-six-sigma-can-cost-you-money-black-belts-deliver-188k-hard-financial-savings-project/" },
+    { label: "The Lean Six Sigma Company, 200 completed projects: median Green Belt saving of £36,700 (about R850,000). We count R500,000.", href: "https://www.theleansixsigmacompany.com/uk/library/lean-six-sigma-roi-200-projects/" },
+  ],
+} as const;
+
+export type DeploymentPrice = {
+  belts: number;
+  coaching: number;
+  licences: number;
+  total: number;
+  perDelegate: number;
+  savingsLow: number;
+  savingsLikely: number;
+};
+
+export function priceDeploymentTier(tier: DeploymentTier): DeploymentPrice {
+  const list = DEPLOYMENT_RATES.beltList;
+  const belts =
+    tier.places.yellow * list.yellow * (1 - tier.discount.yellow) +
+    tier.places.green * list.green * (1 - tier.discount.green) +
+    tier.places.black * list.black * (1 - tier.discount.black);
+  const coaching = tier.coachingDaysPerMonth * 12 * DEPLOYMENT_RATES.coachingDay;
+  const licences = tier.cap * tier.licencePerDelegate;
+  const total = belts + coaching + licences;
+  const savingsLikely =
+    tier.places.green * SAVINGS_BASIS.completionRate * SAVINGS_BASIS.greenProject +
+    tier.places.black * SAVINGS_BASIS.completionRate * SAVINGS_BASIS.blackProject;
+
+  return { belts, coaching, licences, total, perDelegate: total / tier.cap, savingsLow: savingsLikely / 2, savingsLikely };
+}
