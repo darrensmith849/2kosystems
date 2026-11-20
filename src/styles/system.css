@@ -5057,9 +5057,9 @@ fieldset[disabled] .k-choice { cursor: not-allowed; }
 /* ============================================================
    Deployment pricing table
    ============================================================
-   Five tiers side by side, online for everyone plus a bank of live trainer
-   hours. The table scrolls sideways on narrow screens rather than squeezing
-   the figures. */
+   Five tiers side by side, repriced by the recommended mix or one format
+   for everyone. The table scrolls sideways on narrow screens rather than
+   squeezing the figures. */
 .dp { display: flex; flex-direction: column; gap: 1.25rem; }
 
 
@@ -5101,16 +5101,25 @@ fieldset[disabled] .k-choice { cursor: not-allowed; }
 }
 
 .dp-head { display: flex; flex-direction: column; align-items: center; gap: .1rem; padding: 1.1rem .5rem; }
-.dp-ways { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
-.dp-ways__grid { display: grid; width: 100%; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .85rem; }
-@media (min-width: 900px) { .dp-ways__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
-.dp-way { display: flex; flex-direction: column; align-items: center; gap: .3rem; padding: 1.4rem 1rem; border: 2px solid var(--hair); border-radius: 18px; background: var(--black-2); text-align: center; }
-.dp-way strong { font-size: 1.1rem; font-weight: 600; }
-.dp-way__icon { display: flex; align-items: center; justify-content: center; width: 52px; height: 52px; margin-bottom: .35rem; border-radius: 14px; background: rgba(217,169,90,.16); color: var(--ember); }
-.dp-way__line { font-size: .82rem; color: var(--warm-70); }
-.dp-way__uses { margin-top: .6rem; font-weight: 600; color: var(--ember); }
-.dp-way__per { font-size: .75rem; color: var(--warm-45); }
-.dp-way[data-included] { border-color: rgba(63,185,80,.4); background: rgba(63,185,80,.06); }
-.dp-way[data-included] .dp-way__icon { background: var(--signal); color: var(--black); }
-.dp-way[data-included] .dp-way__uses { color: var(--signal); }
-.dp-ways__more { font-size: .9rem; color: var(--warm-70); }
+
+.dp-choose { display: flex; flex-direction: column; align-items: center; gap: 1.25rem; }
+.dp-switch { display: inline-flex; max-width: 100%; padding: 5px; border: 1px solid var(--hair-2); border-radius: 999px; background: var(--black-2); }
+.dp-switch button { display: flex; align-items: center; gap: .6rem; padding: .85rem 1.5rem; border: 0; border-radius: 999px; background: transparent; color: var(--warm-70); font-size: 1rem; font-weight: 600; white-space: nowrap; transition: background .2s, color .2s; }
+.dp-switch button[aria-checked="true"] { background: var(--warm); color: var(--black); }
+.dp-switch button:focus-visible, .dp-format:focus-visible { outline: 2px solid var(--ember); outline-offset: 3px; }
+.dp-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: .75rem; }
+.dp-chips li { display: flex; align-items: center; gap: .6rem; padding: .7rem 1.1rem; border: 1px solid var(--hair-2); border-radius: 999px; font-size: .95rem; }
+.dp-chips svg { color: var(--ember); }
+.dp-chips span { color: var(--warm-45); }
+.dp-formats { display: grid; width: 100%; max-width: 1080px; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .85rem; }
+@media (min-width: 900px) { .dp-formats { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.dp-format { display: flex; flex-direction: column; align-items: center; gap: .3rem; padding: 1.4rem 1rem; border: 2px solid var(--hair); border-radius: 18px; background: var(--black-2); color: var(--warm); text-align: center; }
+.dp-format strong { font-size: 1.1rem; font-weight: 600; }
+.dp-format > span:last-child { font-size: .82rem; color: var(--warm-70); }
+.dp-format__icon { display: flex; align-items: center; justify-content: center; width: 52px; height: 52px; margin-bottom: .35rem; border-radius: 14px; background: rgba(255,255,255,.06); color: var(--warm-70); }
+.dp-format[aria-checked="true"] { border-color: var(--ember); background: rgba(217,169,90,.08); }
+.dp-format[aria-checked="true"] .dp-format__icon { background: var(--ember); color: var(--black); }
+@media (max-width: 560px) { .dp-switch { display: flex; width: 100%; } .dp-switch button { flex: 1 1 0; min-width: 0; justify-content: center; padding: .75rem .7rem; font-size: .88rem; line-height: 1.2; white-space: normal; text-align: left; } }
+.dp-page { padding-block: clamp(3.5rem, 6vw, 5.5rem) clamp(4rem, 8vw, 7rem); }
+.dp-intro { display: flex; flex-direction: column; align-items: center; gap: 1rem; margin-bottom: 2.25rem; text-align: center; }
+.dp-intro h1 { max-width: 22ch; font-size: clamp(2.1rem, 4vw, 3.3rem); line-height: 1.04; letter-spacing: -.026em; font-weight: 560; text-wrap: balance; }

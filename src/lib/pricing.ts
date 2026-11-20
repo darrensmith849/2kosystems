@@ -115,23 +115,57 @@ export const TIMEBOX = {
 } as const;
 
 /* ---------- Deployments ----------
-   Online is included for every delegate; each tier adds a yearly bank of
-   live trainer hours the client spends on any belt, in any format. Every
-   tier is priced bottom-up from the rates below, so the column a buyer reads
-   always adds up from the rows above it. Figures are rand, ex VAT, per year. */
+   A deployment is priced per year by tier (delegates who start a belt) and by
+   how the people learn: the recommended mix, or one format for everyone.
+   Every tier is priced bottom-up from the rates below, so the column a buyer
+   reads always adds up from the rows above it. Rand, ex VAT, per year. */
+
+export type DeliveryFormat = "online" | "hybrid" | "virtual" | "onsite";
+export type DeploymentMode = "mix" | DeliveryFormat;
+type Belts<T> = { yellow: T; green: T; black: T };
+
+/**
+ * Pre-paid belt prices per format. Online, live virtual and on-site are
+ * Sigmafy's own prices from Sales › Pricing in the portal (sf_belt_levels),
+ * the figures the Email Agent quotes, copied on 19 Nov 2026 — when the portal
+ * prices change, change them here too. Hybrid is not in the portal yet: it is
+ * set between online and live virtual until it is priced there.
+ */
+export const BELT_PRICES: Record<DeliveryFormat, Belts<number>> = {
+  online: { yellow: 5000, green: 16995, black: 26000 },
+  hybrid: { yellow: 5600, green: 18500, black: 29500 },
+  virtual: { yellow: 6500, green: 20500, black: 34500 },
+  onsite: { yellow: 8400, green: 24000, black: 40500 },
+};
+
+/**
+ * Discount off the belt price per format, by tier (Pilot to Group). The more
+ * live trainer time a format needs, the lower its ceiling: online costs almost
+ * nothing per extra person, on-site costs a trainer for every cohort.
+ */
+export const FORMAT_DISCOUNTS: Record<DeliveryFormat, Belts<readonly number[]>> = {
+  online: { yellow: [0, 0.2, 0.35, 0.5, 0.6], green: [0, 0.15, 0.25, 0.35, 0.45], black: [0, 0.1, 0.2, 0.3, 0.35] },
+  hybrid: { yellow: [0, 0.15, 0.3, 0.45, 0.55], green: [0, 0.1, 0.2, 0.3, 0.4], black: [0, 0.1, 0.15, 0.25, 0.3] },
+  virtual: { yellow: [0, 0.1, 0.15, 0.25, 0.3], green: [0, 0.1, 0.15, 0.25, 0.3], black: [0, 0.05, 0.1, 0.2, 0.25] },
+  onsite: { yellow: [0, 0.05, 0.1, 0.15, 0.15], green: [0, 0.05, 0.1, 0.15, 0.15], black: [0, 0.05, 0.1, 0.15, 0.15] },
+};
+
+export const DEPLOYMENT_MODES: Record<DeploymentMode, { name: string; tagline: string; belts: Belts<DeliveryFormat>; coachingDaysPerMonth: readonly number[]; liveTime: string; travelAtCost: boolean }> = {
+  mix: { name: "Recommended mix", tagline: "The right format for each belt", belts: { yellow: "online", green: "hybrid", black: "virtual" }, coachingDaysPerMonth: [1, 3, 6, 12, 40], liveTime: "Hybrid for Green, live days for Black", travelAtCost: false },
+  online: { name: "Fully online", tagline: "Software and every recorded lesson", belts: { yellow: "online", green: "online", black: "online" }, coachingDaysPerMonth: [0, 0, 0, 0, 0], liveTime: "Project sign-off only", travelAtCost: false },
+  hybrid: { name: "Hybrid", tagline: "Recorded, with live check-ins", belts: { yellow: "hybrid", green: "hybrid", black: "hybrid" }, coachingDaysPerMonth: [1, 2, 3, 6, 20], liveTime: "3 × 10 min each training day", travelAtCost: false },
+  virtual: { name: "Live virtual", tagline: "A trainer live, online", belts: { yellow: "virtual", green: "virtual", black: "virtual" }, coachingDaysPerMonth: [2, 4, 8, 16, 60], liveTime: "Full training days, live online", travelAtCost: false },
+  onsite: { name: "On-site", tagline: "A trainer in your building", belts: { yellow: "onsite", green: "onsite", black: "onsite" }, coachingDaysPerMonth: [2, 4, 8, 16, 60], liveTime: "Full training days, in person", travelAtCost: true },
+};
+
+export const COACHING_DAY_RATE = 9500;
 
 export type DeploymentTier = {
   id: string;
   name: string;
   /** Delegates who start a belt in the year. */
   cap: number;
-  places: { yellow: number; green: number; black: number };
-  /** Discount off the online belt price, 0–1. */
-  discount: { yellow: number; green: number; black: number };
-  /** Live trainer hours included in the year. */
-  liveHours: number;
-  /** Discount off the hourly rate for the bank, 0–1. */
-  hoursDiscount: number;
+  places: Belts<number>;
   /** Sigmafy licence per delegate per year. */
   licencePerDelegate: number;
   report: string;
@@ -141,34 +175,12 @@ export type DeploymentTier = {
   singleSignOn: boolean;
 };
 
-/**
- * Online belt prices are Sigmafy's own pre-paid online prices from Sales ›
- * Pricing in the portal (sf_belt_levels), the figures the Email Agent quotes.
- * Copied on 19 Nov 2026 — when the portal prices change, change them here too.
- */
-export const DEPLOYMENT_RATES = {
-  onlineBelt: { yellow: 5000, green: 16995, black: 26000 },
-  liveHour: 1250,
-  liveDay: 9500,
-} as const;
-
-/** How each format draws on the bank of live hours. */
-export const LIVE_HOUR_USE = {
-  /** Three ten-minute check-ins per cohort per training day. */
-  hybridHoursPerCohortDay: 0.5,
-  virtualHoursPerHour: 1,
-  onsiteHoursPerHour: 1.5,
-  /** A Green Belt cohort of about 20, run fully live: five days of eight hours. */
-  liveGreenBeltCohortHours: 40,
-  greenBeltTrainingDays: 5,
-} as const;
-
 export const DEPLOYMENT_TIERS: readonly DeploymentTier[] = [
-  { id: "pilot", name: "Pilot", cap: 100, places: { yellow: 15, green: 10, black: 1 }, discount: { yellow: 0, green: 0, black: 0 }, liveHours: 120, hoursDiscount: 0, licencePerDelegate: 250, report: "Quarterly", programmeLead: false, trainTheTrainer: false, industrySimulation: false, singleSignOn: false },
-  { id: "programme", name: "Programme", cap: 500, places: { yellow: 75, green: 25, black: 2 }, discount: { yellow: 0.2, green: 0.15, black: 0.1 }, liveHours: 300, hoursDiscount: 0.05, licencePerDelegate: 200, report: "Quarterly", programmeLead: false, trainTheTrainer: false, industrySimulation: false, singleSignOn: false },
-  { id: "division", name: "Division", cap: 1000, places: { yellow: 150, green: 40, black: 4 }, discount: { yellow: 0.35, green: 0.25, black: 0.2 }, liveHours: 600, hoursDiscount: 0.1, licencePerDelegate: 180, report: "Monthly", programmeLead: true, trainTheTrainer: true, industrySimulation: false, singleSignOn: false },
-  { id: "enterprise", name: "Enterprise", cap: 10000, places: { yellow: 1500, green: 200, black: 20 }, discount: { yellow: 0.5, green: 0.35, black: 0.3 }, liveHours: 2000, hoursDiscount: 0.15, licencePerDelegate: 150, report: "Monthly", programmeLead: true, trainTheTrainer: true, industrySimulation: true, singleSignOn: true },
-  { id: "group", name: "Group", cap: 50000, places: { yellow: 7500, green: 600, black: 60 }, discount: { yellow: 0.6, green: 0.45, black: 0.35 }, liveHours: 6000, hoursDiscount: 0.2, licencePerDelegate: 100, report: "Monthly + live", programmeLead: true, trainTheTrainer: true, industrySimulation: true, singleSignOn: true },
+  { id: "pilot", name: "Pilot", cap: 100, places: { yellow: 15, green: 10, black: 1 }, licencePerDelegate: 250, report: "Quarterly", programmeLead: false, trainTheTrainer: false, industrySimulation: false, singleSignOn: false },
+  { id: "programme", name: "Programme", cap: 500, places: { yellow: 75, green: 25, black: 2 }, licencePerDelegate: 200, report: "Quarterly", programmeLead: false, trainTheTrainer: false, industrySimulation: false, singleSignOn: false },
+  { id: "division", name: "Division", cap: 1000, places: { yellow: 150, green: 40, black: 4 }, licencePerDelegate: 180, report: "Monthly", programmeLead: true, trainTheTrainer: true, industrySimulation: false, singleSignOn: false },
+  { id: "enterprise", name: "Enterprise", cap: 10000, places: { yellow: 1500, green: 200, black: 20 }, licencePerDelegate: 150, report: "Monthly", programmeLead: true, trainTheTrainer: true, industrySimulation: true, singleSignOn: true },
+  { id: "group", name: "Group", cap: 50000, places: { yellow: 7500, green: 600, black: 60 }, licencePerDelegate: 100, report: "Monthly + live", programmeLead: true, trainTheTrainer: true, industrySimulation: true, singleSignOn: true },
 ];
 
 /**
@@ -188,42 +200,35 @@ export const SAVINGS_BASIS = {
 } as const;
 
 export type DeploymentPrice = {
+  discount: Belts<number>;
+  coachingDaysPerMonth: number;
   belts: number;
-  liveHours: number;
+  coaching: number;
   licences: number;
   total: number;
   perDelegate: number;
   savingsLow: number;
   savingsLikely: number;
-  cohorts: { virtual: number; hybrid: number; onsite: number };
 };
 
-export function priceDeploymentTier(tier: DeploymentTier): DeploymentPrice {
-  const list = DEPLOYMENT_RATES.onlineBelt;
+export function priceDeploymentTier(tier: DeploymentTier, tierIndex: number, mode: DeploymentMode): DeploymentPrice {
+  const formats = DEPLOYMENT_MODES[mode].belts;
+  const discount = {
+    yellow: FORMAT_DISCOUNTS[formats.yellow].yellow[tierIndex],
+    green: FORMAT_DISCOUNTS[formats.green].green[tierIndex],
+    black: FORMAT_DISCOUNTS[formats.black].black[tierIndex],
+  };
   const belts =
-    tier.places.yellow * list.yellow * (1 - tier.discount.yellow) +
-    tier.places.green * list.green * (1 - tier.discount.green) +
-    tier.places.black * list.black * (1 - tier.discount.black);
-  const liveHours = tier.liveHours * DEPLOYMENT_RATES.liveHour * (1 - tier.hoursDiscount);
+    tier.places.yellow * BELT_PRICES[formats.yellow].yellow * (1 - discount.yellow) +
+    tier.places.green * BELT_PRICES[formats.green].green * (1 - discount.green) +
+    tier.places.black * BELT_PRICES[formats.black].black * (1 - discount.black);
+  const coachingDaysPerMonth = DEPLOYMENT_MODES[mode].coachingDaysPerMonth[tierIndex];
+  const coaching = coachingDaysPerMonth * 12 * COACHING_DAY_RATE;
   const licences = tier.cap * tier.licencePerDelegate;
-  const total = belts + liveHours + licences;
+  const total = belts + coaching + licences;
   const savingsLikely =
     tier.places.green * SAVINGS_BASIS.completionRate * SAVINGS_BASIS.greenProject +
     tier.places.black * SAVINGS_BASIS.completionRate * SAVINGS_BASIS.blackProject;
-  const use = LIVE_HOUR_USE;
 
-  return {
-    belts,
-    liveHours,
-    licences,
-    total,
-    perDelegate: total / tier.cap,
-    savingsLow: savingsLikely / 2,
-    savingsLikely,
-    cohorts: {
-      virtual: Math.floor(tier.liveHours / (use.liveGreenBeltCohortHours * use.virtualHoursPerHour)),
-      hybrid: Math.floor(tier.liveHours / (use.greenBeltTrainingDays * use.hybridHoursPerCohortDay)),
-      onsite: Math.floor(tier.liveHours / (use.liveGreenBeltCohortHours * use.onsiteHoursPerHour)),
-    },
-  };
+  return { discount, coachingDaysPerMonth, belts, coaching, licences, total, perDelegate: total / tier.cap, savingsLow: savingsLikely / 2, savingsLikely };
 }
