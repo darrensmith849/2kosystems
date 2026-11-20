@@ -5053,3 +5053,64 @@ fieldset[disabled] .k-choice { cursor: not-allowed; }
   .cwa-head{padding:16px 10px}.cwa-journey small{display:none}.cwa-shop,.cwa-checkout,.cwa-order{padding:66px 18px 40px}.cwa-store-nav i{display:none}.cwa-shop-layout{grid-template-columns:1fr}.cwa-shop-layout>aside:first-child{display:none}.cwa-products{grid-template-columns:1fr 1fr}.cwa-order-list header,.cwa-order-list p{grid-template-columns:.8fr .8fr 1fr}.cwa-order-list header span:nth-child(3),.cwa-order-list p span:nth-child(3){display:none}.cwa-order-flow article{min-width:0}
   .xwa-head{grid-template-columns:1fr;gap:6px}.xwa-head strong{display:none}.xwa-head span:last-child{text-align:left}.xwa-entry,.xwa-identity,.xwa-workspace,.xwa-integrations,.xwa-control{padding:66px 18px 40px}.xwa-entry-screen>div{padding:60px 22px}.xwa-entry-screen nav i{display:none}.xwa-entry-screen>aside{right:-10%;top:38%;width:48%;opacity:.5}.xwa-role-row{grid-template-columns:1fr}.xwa-role-row::before{display:none}.xwa-app{grid-template-columns:38px 1fr}.xwa-app>aside{padding-inline:5px}.xwa-app>aside i{width:14px}.xwa-work-grid{grid-template-columns:1fr}.xwa-work-grid>section{border-right:0;border-bottom:1px solid var(--hair)}.xwa-work-grid>aside{min-height:260px}.xwa-system-map article{min-width:0}.xwa-control ul{grid-template-columns:1fr}
 }
+
+/* ============================================================
+   Deployment pricing table
+   ============================================================
+   Five tiers side by side, online for everyone plus a bank of live trainer
+   hours. The table scrolls sideways on narrow screens rather than squeezing
+   the figures. */
+.dp { display: flex; flex-direction: column; gap: 1.25rem; }
+
+
+.dp-scroll { overflow-x: auto; border: 1px solid var(--hair-2); border-radius: 20px; }
+.dp-scroll:focus-visible { outline: 2px solid var(--ember); outline-offset: 3px; }
+.dp-table { width: 100%; min-width: 900px; border-collapse: collapse; font-size: .9rem; }
+.dp-table th, .dp-table td { padding: .7rem .75rem; text-align: center; vertical-align: middle; }
+.dp-table thead th { padding: 0; background: var(--black-2); vertical-align: bottom; }
+.dp-corner { padding: 1.1rem 1.25rem !important; text-align: left !important; vertical-align: bottom !important; font-size: var(--t-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--warm-45); font-weight: 500; }
+.dp-head__cap { font-size: 1.05rem; font-weight: 600; }
+.dp-head__unit { font-size: .75rem; color: var(--warm-70); }
+.dp-head__price { margin-top: .45rem; font-size: 1.35rem; }
+.dp-head__each { margin-top: .35rem; font-size: .85rem; color: var(--signal); }
+.dp-section th { padding: .65rem 1.25rem; border-top: 1px solid var(--hair-2); background: var(--black-2); text-align: left; font-size: var(--t-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ember); font-weight: 500; }
+.dp-table tbody tr:not(.dp-section) { border-top: 1px solid var(--hair); }
+.dp-table tbody th[scope="row"] { padding-left: 1.25rem; text-align: left; font-weight: 400; }
+.dp-table tbody th[scope="row"] span { display: block; color: var(--warm); }
+.dp-table tbody th[scope="row"] small { display: block; margin-top: .1rem; font-size: .75rem; color: var(--warm-45); }
+.dp-table td { color: var(--warm-70); font-variant-numeric: tabular-nums; }
+.dp-table td small { display: block; margin-top: .15rem; font-size: .72rem; color: var(--warm-45); }
+.dp-table tr[data-strong] td, .dp-table tr[data-strong] th span { font-weight: 600; color: var(--warm); }
+.dp-table tr[data-tone="signal"] td { color: var(--signal); }
+.dp-table tr[data-tone="ember"] td { color: var(--ember); }
+.dp-table tfoot td { padding: 1rem .6rem; border-top: 1px solid var(--hair-2); }
+.dp-cta { width: 100%; justify-content: center; white-space: nowrap; }
+.dp-note { font-size: .82rem; color: var(--warm-45); }
+.dp-sources { display: flex; flex-direction: column; gap: .6rem; padding: 1.25rem 1.5rem; border: 1px solid var(--hair-2); border-radius: 16px; }
+.dp-sources > p:not(.k-mono) { color: var(--warm); font-size: .92rem; }
+.dp-sources ul { padding-left: 1.1rem; list-style: disc; color: var(--warm-70); font-size: .85rem; line-height: 1.6; }
+.dp-sources a { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--hair-2); }
+.dp-sources a:hover { color: var(--ember); }
+/* The row labels stay put while the tiers scroll sideways on a phone. */
+.dp-table tbody th[scope="row"], .dp-corner, .dp-table tfoot td:first-child { position: sticky; left: 0; z-index: 1; min-width: 190px; background: var(--black); }
+.dp-corner { background: var(--black-2); }
+@media (max-width: 899px) { .dp-table tbody th[scope="row"], .dp-corner, .dp-table tfoot td:first-child { min-width: 150px; box-shadow: 1px 0 0 var(--hair-2); } }
+.dp-section th span { position: sticky; left: 1.25rem; }
+@media (max-width: 899px) {
+  .dp-table tbody th[scope="row"], .dp-corner, .dp-table tfoot td:first-child { min-width: 130px; max-width: 130px; padding-left: .9rem; }
+}
+
+.dp-head { display: flex; flex-direction: column; align-items: center; gap: .1rem; padding: 1.1rem .5rem; }
+.dp-ways { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+.dp-ways__grid { display: grid; width: 100%; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .85rem; }
+@media (min-width: 900px) { .dp-ways__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.dp-way { display: flex; flex-direction: column; align-items: center; gap: .3rem; padding: 1.4rem 1rem; border: 2px solid var(--hair); border-radius: 18px; background: var(--black-2); text-align: center; }
+.dp-way strong { font-size: 1.1rem; font-weight: 600; }
+.dp-way__icon { display: flex; align-items: center; justify-content: center; width: 52px; height: 52px; margin-bottom: .35rem; border-radius: 14px; background: rgba(217,169,90,.16); color: var(--ember); }
+.dp-way__line { font-size: .82rem; color: var(--warm-70); }
+.dp-way__uses { margin-top: .6rem; font-weight: 600; color: var(--ember); }
+.dp-way__per { font-size: .75rem; color: var(--warm-45); }
+.dp-way[data-included] { border-color: rgba(63,185,80,.4); background: rgba(63,185,80,.06); }
+.dp-way[data-included] .dp-way__icon { background: var(--signal); color: var(--black); }
+.dp-way[data-included] .dp-way__uses { color: var(--signal); }
+.dp-ways__more { font-size: .9rem; color: var(--warm-70); }

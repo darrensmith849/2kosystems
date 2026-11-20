@@ -113,3 +113,117 @@ export const TIMEBOX = {
   pilot: "4–6 weeks",
   buildPhase: "4–6 weeks per phase",
 } as const;
+
+/* ---------- Deployments ----------
+   Online is included for every delegate; each tier adds a yearly bank of
+   live trainer hours the client spends on any belt, in any format. Every
+   tier is priced bottom-up from the rates below, so the column a buyer reads
+   always adds up from the rows above it. Figures are rand, ex VAT, per year. */
+
+export type DeploymentTier = {
+  id: string;
+  name: string;
+  /** Delegates who start a belt in the year. */
+  cap: number;
+  places: { yellow: number; green: number; black: number };
+  /** Discount off the online belt price, 0–1. */
+  discount: { yellow: number; green: number; black: number };
+  /** Live trainer hours included in the year. */
+  liveHours: number;
+  /** Discount off the hourly rate for the bank, 0–1. */
+  hoursDiscount: number;
+  /** Sigmafy licence per delegate per year. */
+  licencePerDelegate: number;
+  report: string;
+  programmeLead: boolean;
+  trainTheTrainer: boolean;
+  industrySimulation: boolean;
+  singleSignOn: boolean;
+};
+
+/**
+ * Online belt prices are Sigmafy's own pre-paid online prices from Sales ›
+ * Pricing in the portal (sf_belt_levels), the figures the Email Agent quotes.
+ * Copied on 19 Nov 2026 — when the portal prices change, change them here too.
+ */
+export const DEPLOYMENT_RATES = {
+  onlineBelt: { yellow: 5000, green: 16995, black: 26000 },
+  liveHour: 1250,
+  liveDay: 9500,
+} as const;
+
+/** How each format draws on the bank of live hours. */
+export const LIVE_HOUR_USE = {
+  /** Three ten-minute check-ins per cohort per training day. */
+  hybridHoursPerCohortDay: 0.5,
+  virtualHoursPerHour: 1,
+  onsiteHoursPerHour: 1.5,
+  /** A Green Belt cohort of about 20, run fully live: five days of eight hours. */
+  liveGreenBeltCohortHours: 40,
+  greenBeltTrainingDays: 5,
+} as const;
+
+export const DEPLOYMENT_TIERS: readonly DeploymentTier[] = [
+  { id: "pilot", name: "Pilot", cap: 100, places: { yellow: 15, green: 10, black: 1 }, discount: { yellow: 0, green: 0, black: 0 }, liveHours: 120, hoursDiscount: 0, licencePerDelegate: 250, report: "Quarterly", programmeLead: false, trainTheTrainer: false, industrySimulation: false, singleSignOn: false },
+  { id: "programme", name: "Programme", cap: 500, places: { yellow: 75, green: 25, black: 2 }, discount: { yellow: 0.2, green: 0.15, black: 0.1 }, liveHours: 300, hoursDiscount: 0.05, licencePerDelegate: 200, report: "Quarterly", programmeLead: false, trainTheTrainer: false, industrySimulation: false, singleSignOn: false },
+  { id: "division", name: "Division", cap: 1000, places: { yellow: 150, green: 40, black: 4 }, discount: { yellow: 0.35, green: 0.25, black: 0.2 }, liveHours: 600, hoursDiscount: 0.1, licencePerDelegate: 180, report: "Monthly", programmeLead: true, trainTheTrainer: true, industrySimulation: false, singleSignOn: false },
+  { id: "enterprise", name: "Enterprise", cap: 10000, places: { yellow: 1500, green: 200, black: 20 }, discount: { yellow: 0.5, green: 0.35, black: 0.3 }, liveHours: 2000, hoursDiscount: 0.15, licencePerDelegate: 150, report: "Monthly", programmeLead: true, trainTheTrainer: true, industrySimulation: true, singleSignOn: true },
+  { id: "group", name: "Group", cap: 50000, places: { yellow: 7500, green: 600, black: 60 }, discount: { yellow: 0.6, green: 0.45, black: 0.35 }, liveHours: 6000, hoursDiscount: 0.2, licencePerDelegate: 100, report: "Monthly + live", programmeLead: true, trainTheTrainer: true, industrySimulation: true, singleSignOn: true },
+];
+
+/**
+ * Savings per finished project, deliberately set below published medians, and
+ * the share of projects assumed to finish. Yellow and White Belt savings are
+ * left out because no reliable published figure exists for them.
+ */
+export const SAVINGS_BASIS = {
+  greenProject: 500_000,
+  blackProject: 2_000_000,
+  /** Our own cautious assumption: no published completion rate was found. */
+  completionRate: 0.5,
+  sources: [
+    { label: "iSixSigma Black Belt survey: median hard savings of $187,500 a project (about R3.3m). We count R2m.", href: "https://www.isixsigma.com/press-releases/ignoring-six-sigma-can-cost-you-money-black-belts-deliver-188k-hard-financial-savings-project/" },
+    { label: "The Lean Six Sigma Company, 200 completed projects: median Green Belt saving of £36,700 (about R850,000). We count R500,000.", href: "https://www.theleansixsigmacompany.com/uk/library/lean-six-sigma-roi-200-projects/" },
+  ],
+} as const;
+
+export type DeploymentPrice = {
+  belts: number;
+  liveHours: number;
+  licences: number;
+  total: number;
+  perDelegate: number;
+  savingsLow: number;
+  savingsLikely: number;
+  cohorts: { virtual: number; hybrid: number; onsite: number };
+};
+
+export function priceDeploymentTier(tier: DeploymentTier): DeploymentPrice {
+  const list = DEPLOYMENT_RATES.onlineBelt;
+  const belts =
+    tier.places.yellow * list.yellow * (1 - tier.discount.yellow) +
+    tier.places.green * list.green * (1 - tier.discount.green) +
+    tier.places.black * list.black * (1 - tier.discount.black);
+  const liveHours = tier.liveHours * DEPLOYMENT_RATES.liveHour * (1 - tier.hoursDiscount);
+  const licences = tier.cap * tier.licencePerDelegate;
+  const total = belts + liveHours + licences;
+  const savingsLikely =
+    tier.places.green * SAVINGS_BASIS.completionRate * SAVINGS_BASIS.greenProject +
+    tier.places.black * SAVINGS_BASIS.completionRate * SAVINGS_BASIS.blackProject;
+  const use = LIVE_HOUR_USE;
+
+  return {
+    belts,
+    liveHours,
+    licences,
+    total,
+    perDelegate: total / tier.cap,
+    savingsLow: savingsLikely / 2,
+    savingsLikely,
+    cohorts: {
+      virtual: Math.floor(tier.liveHours / (use.liveGreenBeltCohortHours * use.virtualHoursPerHour)),
+      hybrid: Math.floor(tier.liveHours / (use.greenBeltTrainingDays * use.hybridHoursPerCohortDay)),
+      onsite: Math.floor(tier.liveHours / (use.liveGreenBeltCohortHours * use.onsiteHoursPerHour)),
+    },
+  };
+}
