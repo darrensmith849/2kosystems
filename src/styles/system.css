@@ -5112,7 +5112,7 @@ fieldset[disabled] .k-choice { cursor: not-allowed; }
 .dp-chips svg { color: var(--ember); }
 .dp-chips span { color: var(--warm-45); }
 .dp-formats { display: grid; width: 100%; max-width: 1080px; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .85rem; }
-@media (min-width: 900px) { .dp-formats { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (min-width: 900px) { .dp-formats { max-width: 1180px; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr); align-items: stretch; } }
 .dp-format { display: flex; flex-direction: column; align-items: center; gap: .3rem; padding: 1.4rem 1rem; border: 2px solid var(--hair); border-radius: 18px; background: var(--black-2); color: var(--warm); text-align: center; }
 .dp-format strong { font-size: 1.1rem; font-weight: 600; }
 .dp-format > span:last-child { font-size: .82rem; color: var(--warm-70); }
@@ -5123,3 +5123,11 @@ fieldset[disabled] .k-choice { cursor: not-allowed; }
 .dp-page { padding-block: clamp(3.5rem, 6vw, 5.5rem) clamp(4rem, 8vw, 7rem); }
 .dp-intro { display: flex; flex-direction: column; align-items: center; gap: 1rem; margin-bottom: 2.25rem; text-align: center; }
 .dp-intro h1 { max-width: 22ch; font-size: clamp(2.1rem, 4vw, 3.3rem); line-height: 1.04; letter-spacing: -.026em; font-weight: 560; text-wrap: balance; }
+
+.dp-format { position: relative; }
+.dp-format__badge { position: absolute; top: -.7rem; left: 50%; transform: translateX(-50%); padding: .2rem .6rem; border-radius: 999px; background: var(--ember); color: var(--black); font-size: .68rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
+.dp-format > span.dp-format__saving { margin-top: .55rem; font-size: .95rem; font-weight: 600; color: var(--signal); }
+.dp-format[data-recommended] { border-color: rgba(217,169,90,.45); }
+.dp-step { display: none; }
+@media (min-width: 900px) { .dp-step { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .3rem; width: 74px; color: var(--signal); text-align: center; } .dp-step small { font-size: .7rem; line-height: 1.25; color: var(--warm-45); } }
+.dp-format > span.dp-format__saving[data-full] { color: var(--warm-45); font-weight: 500; }
