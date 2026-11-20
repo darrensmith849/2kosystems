@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { Fragment, useState, type ReactNode } from "react";
 import TrackedLink from "@/components/cinema/TrackedLink";
 import {
   BELT_PRICES,
@@ -15,8 +15,8 @@ import {
   type DeploymentPrice,
 } from "@/lib/pricing";
 
-// One deployment table. A switch picks the recommended mix or one format for
-// everyone; the second shows four format cards. Every column adds up from the
+// One deployment table. A switch picks one format for everyone (hybrid by
+// default) or a mix by belt; the first shows four format cards, on-site first. Every column adds up from the
 // rates in lib/pricing.ts and reprices when the choice changes.
 const fmt = (n: number) => Math.round(n).toLocaleString("en-US");
 const rand = (n: number) => `R${fmt(n)}`;
@@ -24,16 +24,28 @@ const short = (n: number) => (n >= 1_000_000 ? `R${(n / 1_000_000).toFixed(n >= 
 const pct = (n: number) => `${Math.round(n * 100)}%`;
 const times = (n: number) => `${Math.round(n)}×`;
 
-const FORMATS: readonly DeliveryFormat[] = ["online", "hybrid", "virtual", "onsite"];
+// Most live time first, so each step to the right reads as money saved.
+const FORMATS: readonly DeliveryFormat[] = ["onsite", "virtual", "hybrid", "online"];
+const RECOMMENDED: DeliveryFormat = "hybrid";
+const STEP_GIVES_UP: Partial<Record<DeliveryFormat, string>> = { virtual: "No travel", hybrid: "Shorter live sessions", online: "No live sessions" };
+
+/** The most a format saves against on-site, across the tiers. */
+const SAVING_VS_ONSITE = Object.fromEntries(
+  FORMATS.map((format) => [
+    format,
+    Math.max(...DEPLOYMENT_TIERS.map((tier, index) => 1 - priceDeploymentTier(tier, index, format).total / priceDeploymentTier(tier, index, "onsite").total)),
+  ]),
+) as Record<DeliveryFormat, number>;
 const FORMAT_WORD: Record<DeliveryFormat, string> = { online: "online", hybrid: "hybrid", virtual: "live virtual", onsite: "on-site" };
 
-const paths: Record<DeliveryFormat | "mix" | "single", ReactNode> = {
+const paths: Record<DeliveryFormat | "mix" | "single" | "arrow", ReactNode> = {
   online: <><rect x="3" y="4" width="18" height="12" rx="2" /><path d="M2 20h20" /></>,
   hybrid: <><circle cx="12" cy="12" r="9" /><path d="M10 8.5l5 3.5-5 3.5z" /></>,
   virtual: <><rect x="2" y="6" width="14" height="12" rx="2" /><path d="M16 10l6-3v10l-6-3" /></>,
   onsite: <><path d="M4 21V6l8-3 8 3v15" /><path d="M9 21v-5h6v5" /><path d="M8 9h1M15 9h1M8 13h1M15 13h1" /></>,
   mix: <><path d="M12 3l9 5-9 5-9-5z" /><path d="M3 13l9 5 9-5" /></>,
   single: <><path d="M4 6h16M4 12h16M4 18h16" /><circle cx="9" cy="6" r="2" /><circle cx="15" cy="12" r="2" /><circle cx="7" cy="18" r="2" /></>,
+  arrow: <path d="M5 12h14M13 6l6 6-6 6" />,
 };
 
 function Icon({ name, size = 20 }: { name: keyof typeof paths; size?: number }) {
@@ -86,8 +98,8 @@ function sectionsFor(mode: DeploymentMode): { title: string; rows: Row[] }[] {
 }
 
 export default function DeploymentPricing() {
-  const [single, setSingle] = useState(false);
-  const [format, setFormat] = useState<DeliveryFormat>("hybrid");
+  const [single, setSingle] = useState(true);
+  const [format, setFormat] = useState<DeliveryFormat>(RECOMMENDED);
   const mode: DeploymentMode = single ? format : "mix";
   const plan = DEPLOYMENT_MODES[mode];
   const priced: Priced[] = DEPLOYMENT_TIERS.map((tier, index) => ({ tier, price: priceDeploymentTier(tier, index, mode) }));
@@ -97,22 +109,27 @@ export default function DeploymentPricing() {
     <div className="dp">
       <div className="dp-choose">
         <div className="dp-switch" role="radiogroup" aria-label="How your people learn">
-          <button type="button" role="radio" aria-checked={!single} onClick={() => setSingle(false)}><Icon name="mix" />Recommended mix</button>
           <button type="button" role="radio" aria-checked={single} onClick={() => setSingle(true)}><Icon name="single" />One format for everyone</button>
+          <button type="button" role="radio" aria-checked={!single} onClick={() => setSingle(false)}><Icon name="mix" />{DEPLOYMENT_MODES.mix.name}</button>
         </div>
 
         {single ? (
-          <div className="dp-formats" role="radiogroup" aria-label="Format">
+          <div className="dp-formats" role="radiogroup" aria-label="Format, from the most live time to the least">
             {FORMATS.map((id) => (
-              <button key={id} type="button" role="radio" aria-checked={format === id} className="dp-format" onClick={() => setFormat(id)}>
-                <span className="dp-format__icon"><Icon name={id} size={26} /></span>
-                <strong>{DEPLOYMENT_MODES[id].name}</strong>
-                <span>{DEPLOYMENT_MODES[id].tagline}</span>
-              </button>
+              <Fragment key={id}>
+                {STEP_GIVES_UP[id] && <span className="dp-step" aria-hidden><Icon name="arrow" size={18} /><small>{STEP_GIVES_UP[id]}</small></span>}
+                <button type="button" role="radio" aria-checked={format === id} className="dp-format" data-recommended={id === RECOMMENDED || undefined} onClick={() => setFormat(id)}>
+                  {id === RECOMMENDED && <span className="dp-format__badge">Recommended</span>}
+                  <span className="dp-format__icon"><Icon name={id} size={26} /></span>
+                  <strong>{DEPLOYMENT_MODES[id].name}</strong>
+                  <span>{DEPLOYMENT_MODES[id].tagline}</span>
+                  <span className="dp-format__saving" data-full={id === "onsite" || undefined}>{id === "onsite" ? "Full price" : `Up to ${pct(SAVING_VS_ONSITE[id])} less`}</span>
+                </button>
+              </Fragment>
             ))}
           </div>
         ) : (
-          <ul className="dp-chips" aria-label="How the recommended mix delivers each belt">
+          <ul className="dp-chips" aria-label="How the mix delivers each belt">
             <li><Icon name={mix.yellow} />White and Yellow Belt <span>{FORMAT_WORD[mix.yellow]}</span></li>
             <li><Icon name={mix.green} />Green Belt <span>{FORMAT_WORD[mix.green]}</span></li>
             <li><Icon name={mix.black} />Black Belt <span>{FORMAT_WORD[mix.black]}</span></li>

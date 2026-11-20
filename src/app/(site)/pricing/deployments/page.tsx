@@ -8,7 +8,7 @@ import DeploymentPricing from "@/components/cinema/DeploymentPricing";
  */
 export const metadata: Metadata = {
   title: "Deployment pricing",
-  description: "Lean Six Sigma deployments priced per year: the recommended mix of online, hybrid and live training, or one format for everyone.",
+  description: "Lean Six Sigma deployments priced per year: on-site, live virtual, hybrid or fully online for everyone, or a mix by belt.",
   robots: { index: false, follow: false, nocache: true },
 };
 

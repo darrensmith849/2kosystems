@@ -141,18 +141,21 @@ export const BELT_PRICES: Record<DeliveryFormat, Belts<number>> = {
 /**
  * Discount off the belt price per format, by tier (Pilot to Group). The more
  * live trainer time a format needs, the lower its ceiling: online costs almost
- * nothing per extra person, on-site costs a trainer for every cohort.
+ * nothing per extra person, so it takes by far the deepest discount; on-site
+ * costs a trainer for every cohort.
  */
 export const FORMAT_DISCOUNTS: Record<DeliveryFormat, Belts<readonly number[]>> = {
-  online: { yellow: [0, 0.2, 0.35, 0.5, 0.6], green: [0, 0.15, 0.25, 0.35, 0.45], black: [0, 0.1, 0.2, 0.3, 0.35] },
+  online: { yellow: [0, 0.25, 0.45, 0.65, 0.75], green: [0, 0.2, 0.35, 0.5, 0.65], black: [0, 0.15, 0.25, 0.4, 0.55] },
   hybrid: { yellow: [0, 0.15, 0.3, 0.45, 0.55], green: [0, 0.1, 0.2, 0.3, 0.4], black: [0, 0.1, 0.15, 0.25, 0.3] },
   virtual: { yellow: [0, 0.1, 0.15, 0.25, 0.3], green: [0, 0.1, 0.15, 0.25, 0.3], black: [0, 0.05, 0.1, 0.2, 0.25] },
   onsite: { yellow: [0, 0.05, 0.1, 0.15, 0.15], green: [0, 0.05, 0.1, 0.15, 0.15], black: [0, 0.05, 0.1, 0.15, 0.15] },
 };
 
 export const DEPLOYMENT_MODES: Record<DeploymentMode, { name: string; tagline: string; belts: Belts<DeliveryFormat>; coachingDaysPerMonth: readonly number[]; liveTime: string; travelAtCost: boolean }> = {
-  mix: { name: "Recommended mix", tagline: "The right format for each belt", belts: { yellow: "online", green: "hybrid", black: "virtual" }, coachingDaysPerMonth: [1, 3, 6, 12, 40], liveTime: "Hybrid for Green, live days for Black", travelAtCost: false },
-  online: { name: "Fully online", tagline: "Software and every recorded lesson", belts: { yellow: "online", green: "online", black: "online" }, coachingDaysPerMonth: [0, 0, 0, 0, 0], liveTime: "Project sign-off only", travelAtCost: false },
+  mix: { name: "Mix by belt", tagline: "The right format for each belt", belts: { yellow: "online", green: "hybrid", black: "virtual" }, coachingDaysPerMonth: [1, 3, 6, 12, 40], liveTime: "Hybrid for Green, live days for Black", travelAtCost: false },
+  // Black Belts always get live check-ins: an online-only deal must not
+  // produce Black Belts who never trained with a person.
+  online: { name: "Fully online", tagline: "No live sessions; Black Belt stays hybrid", belts: { yellow: "online", green: "online", black: "hybrid" }, coachingDaysPerMonth: [0, 0, 0, 0, 0], liveTime: "None, except Black Belt check-ins", travelAtCost: false },
   hybrid: { name: "Hybrid", tagline: "Recorded, with live check-ins", belts: { yellow: "hybrid", green: "hybrid", black: "hybrid" }, coachingDaysPerMonth: [1, 2, 3, 6, 20], liveTime: "3 × 10 min each training day", travelAtCost: false },
   virtual: { name: "Live virtual", tagline: "A trainer live, online", belts: { yellow: "virtual", green: "virtual", black: "virtual" }, coachingDaysPerMonth: [2, 4, 8, 16, 60], liveTime: "Full training days, live online", travelAtCost: false },
   onsite: { name: "On-site", tagline: "A trainer in your building", belts: { yellow: "onsite", green: "onsite", black: "onsite" }, coachingDaysPerMonth: [2, 4, 8, 16, 60], liveTime: "Full training days, in person", travelAtCost: true },
