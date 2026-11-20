@@ -1,12 +1,10 @@
 "use client";
 
 import { useRef, useState } from "react";
-import DeploymentPricing from "@/components/cinema/DeploymentPricing";
 import TrackedLink from "@/components/cinema/TrackedLink";
 import { RATES, SIGMAFY_RATES, TERMS } from "@/lib/pricing";
 
 const categories = [
-  { id: "deployments", label: "Deployments" },
   { id: "training", label: "Training" },
   { id: "retainers", label: "Partnerships" },
   { id: "sigmafy", label: "Sigmafy Statistics" },
@@ -86,13 +84,13 @@ function CardLink({ href, label, offer, solid = false }: { href: string; label: 
 }
 
 export default function PricingTabs({ initialCategory }: { initialCategory?: string }) {
-  const [active, setActive] = useState<CategoryId>(() => categories.some((category) => category.id === initialCategory) ? initialCategory as CategoryId : "deployments");
+  const [active, setActive] = useState<CategoryId>(() => categories.some((category) => category.id === initialCategory) ? initialCategory as CategoryId : "training");
   const tabRefs = useRef<Array<HTMLButtonElement | null>>([]);
 
   function select(category: CategoryId) {
     setActive(category);
     const url = new URL(window.location.href);
-    if (category === "deployments") url.searchParams.delete("category");
+    if (category === "training") url.searchParams.delete("category");
     else url.searchParams.set("category", category);
     window.history.replaceState({}, "", `${url.pathname}${url.search}${url.hash}`);
   }
@@ -113,7 +111,7 @@ export default function PricingTabs({ initialCategory }: { initialCategory?: str
         </div>
         <div className="k-shell">
           <h1>Pricing.</h1>
-          <p>Clear costs for deployments, training, partnerships and Sigmafy.</p>
+          <p>Clear costs for training, partnerships and Sigmafy.</p>
         </div>
       </header>
 
@@ -122,11 +120,6 @@ export default function PricingTabs({ initialCategory }: { initialCategory?: str
       </div></div></div>
 
       <div className="k-shell pt-content pt-content--cards">
-        <section id="pricing-panel-deployments" role="tabpanel" aria-labelledby="pricing-tab-deployments" hidden={active !== "deployments"}>
-          <div className="pt-intro pt-intro--cards"><div><p className="k-mono k-mono--ember">DEPLOYMENTS</p><h2>One deployment. Everything in it. The bigger it gets, the less each person costs.</h2></div><p>Training, real projects, coaching and Sigmafy for everyone, priced per year by how many people start a belt.</p></div>
-          <DeploymentPricing />
-        </section>
-
         <section id="pricing-panel-retainers" role="tabpanel" aria-labelledby="pricing-tab-retainers" hidden={active !== "retainers"}>
           <div className="pt-intro pt-intro--cards"><div><p className="k-mono k-mono--ember">IMPROVEMENT PARTNERSHIPS</p><h2>We stay inside the programme.</h2></div><p>Annual partnerships for coaching, sign-off, governance and savings tracking, with a training allowance and Sigmafy included.</p></div>
           <div className="pt-grid pt-grid--three">{partnerships.map((plan) => <article key={plan.name} className={`pt-card pt-card--plan${plan.featured ? " pt-card--featured" : ""}`}>

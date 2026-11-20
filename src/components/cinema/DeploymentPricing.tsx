@@ -1,15 +1,10 @@
-"use client";
-
-import { useState, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import TrackedLink from "@/components/cinema/TrackedLink";
-import { DEPLOYMENT_RATES, DEPLOYMENT_TIERS, SAVINGS_BASIS, priceDeploymentTier, type DeploymentTier } from "@/lib/pricing";
+import { DEPLOYMENT_RATES, DEPLOYMENT_TIERS, LIVE_HOUR_USE, SAVINGS_BASIS, priceDeploymentTier, type DeploymentTier } from "@/lib/pricing";
 
-// One deployment table: what each tier includes, how its price adds up from
-// published rates, and what it could save on published benchmarks. The slider
-// lights up the visitor's tier; every column is always visible to compare.
-const MIN_DELEGATES = 10;
-const MAX_DELEGATES = 50_000;
-
+// One deployment table. Online is included for every delegate; each tier adds
+// a yearly bank of live trainer hours the client spends on any belt, in any
+// format. Every column adds up from the rates in lib/pricing.ts.
 const priced = DEPLOYMENT_TIERS.map((tier) => ({ tier, price: priceDeploymentTier(tier) }));
 
 const fmt = (n: number) => Math.round(n).toLocaleString("en-US");
@@ -18,29 +13,49 @@ const short = (n: number) => (n >= 1_000_000 ? `R${(n / 1_000_000).toFixed(n >= 
 const pct = (n: number) => `${Math.round(n * 100)}%`;
 const times = (n: number) => `${Math.round(n)}×`;
 
-function delegatesAt(position: number) {
-  return Math.round(MIN_DELEGATES * Math.pow(MAX_DELEGATES / MIN_DELEGATES, position / 100));
-}
+const icons = {
+  online: <><rect x="3" y="4" width="18" height="12" rx="2" /><path d="M2 20h20" /></>,
+  hybrid: <><circle cx="12" cy="12" r="9" /><path d="M10 8.5l5 3.5-5 3.5z" /></>,
+  virtual: <><rect x="2" y="6" width="14" height="12" rx="2" /><path d="M16 10l6-3v10l-6-3" /></>,
+  onsite: <><path d="M4 21V6l8-3 8 3v15" /><path d="M9 21v-5h6v5" /><path d="M8 9h1M15 9h1M8 13h1M15 13h1" /></>,
+};
 
-function tierFor(delegates: number) {
-  const index = DEPLOYMENT_TIERS.findIndex((tier) => delegates <= tier.cap);
-  return index === -1 ? DEPLOYMENT_TIERS.length - 1 : index;
-}
+const ways: { id: keyof typeof icons; name: string; line: string; uses: string; per: string; included?: boolean }[] = [
+  { id: "online", name: "Online", line: "Software and every recorded lesson", uses: "Included for everyone", per: "Uses no hours", included: true },
+  { id: "hybrid", name: "Hybrid", line: "Recorded, with live check-ins", uses: `${LIVE_HOUR_USE.hybridHoursPerCohortDay * 60} min a training day`, per: "per cohort" },
+  { id: "virtual", name: "Live virtual", line: "A trainer live, online", uses: `${LIVE_HOUR_USE.virtualHoursPerHour} hour per hour`, per: "training or coaching" },
+  { id: "onsite", name: "On-site", line: "A trainer in your building", uses: `${LIVE_HOUR_USE.onsiteHoursPerHour} hours per hour`, per: "plus travel at cost" },
+];
 
 type Row = { label: string; hint?: string; cell: (tier: DeploymentTier, index: number) => ReactNode; strong?: boolean; tone?: "signal" | "ember" };
 
 const tick = (on: boolean) => (on ? "✓" : "—");
+const cohorts = (n: number) => <>{fmt(n)}<small>cohorts</small></>;
 
 const sections: { title: string; rows: Row[] }[] = [
   {
-    title: "What you get",
+    title: "Online, for everyone",
     rows: [
       { label: "White Belt for every delegate", hint: "Simulation, exam and certificate", cell: () => "✓" },
-      { label: "Yellow Belt places", hint: "Guided mini-projects", cell: (t) => fmt(t.places.yellow) },
-      { label: "Green Belt places", hint: "Each runs a real project", cell: (t) => fmt(t.places.green) },
-      { label: "Black Belt places", hint: "Your future coaches", cell: (t) => fmt(t.places.black) },
+      { label: "Yellow Belt places", hint: "Online course, mini-project, exam", cell: (t) => fmt(t.places.yellow) },
+      { label: "Green Belt places", hint: "Online course and a real project", cell: (t) => fmt(t.places.green) },
+      { label: "Black Belt places", hint: "Online course and a strategic project", cell: (t) => fmt(t.places.black) },
       { label: "Sigmafy licence for every delegate", hint: "Learning, projects, exams, Statistics", cell: () => "✓" },
-      { label: "Coaching days per month", hint: "On site or live online", cell: (t) => fmt(t.coachingDaysPerMonth) },
+      { label: "AI coach and trainer sign-off", hint: "On every project", cell: () => "✓" },
+    ],
+  },
+  {
+    title: "Live trainer hours, spent your way",
+    rows: [
+      { label: "Live trainer hours a year", hint: "Any belt, any format", cell: (t) => fmt(t.liveHours), strong: true, tone: "ember" },
+      { label: "Enough for, as live virtual", hint: `Green Belt cohorts of 20, about ${LIVE_HOUR_USE.liveGreenBeltCohortHours} hours each`, cell: (_, i) => cohorts(priced[i].price.cohorts.virtual) },
+      { label: "Or, as hybrid", hint: `Check-ins for ${LIVE_HOUR_USE.greenBeltTrainingDays}-day Green Belt cohorts`, cell: (_, i) => cohorts(priced[i].price.cohorts.hybrid) },
+      { label: "Or, on-site", hint: `At ${LIVE_HOUR_USE.onsiteHoursPerHour} hours per hour, plus travel`, cell: (_, i) => cohorts(priced[i].price.cohorts.onsite) },
+    ],
+  },
+  {
+    title: "Programme",
+    rows: [
       { label: "Executive savings report", hint: "Against a measured baseline", cell: (t) => t.report },
       { label: "Named programme lead", hint: "One person accountable", cell: (t) => tick(t.programmeLead) },
       { label: "Train-the-trainer", hint: "Your Black Belts licensed to coach", cell: (t) => tick(t.trainTheTrainer) },
@@ -51,8 +66,8 @@ const sections: { title: string; rows: Row[] }[] = [
   {
     title: "How the price adds up",
     rows: [
-      { label: "Belt training", hint: "Yellow / Green / Black off list", cell: (_, i) => <>{short(priced[i].price.belts)}<small>{`${pct(priced[i].tier.discount.yellow)} / ${pct(priced[i].tier.discount.green)} / ${pct(priced[i].tier.discount.black)} off`}</small></> },
-      { label: "Coaching", hint: `Days × 12 × ${rand(DEPLOYMENT_RATES.coachingDay)}`, cell: (_, i) => short(priced[i].price.coaching) },
+      { label: "Online belt places", hint: "Yellow / Green / Black off list", cell: (t, i) => <>{short(priced[i].price.belts)}<small>{`${pct(t.discount.yellow)} / ${pct(t.discount.green)} / ${pct(t.discount.black)} off`}</small></> },
+      { label: "Live trainer hours", hint: `Hours × ${rand(DEPLOYMENT_RATES.liveHour)}`, cell: (t, i) => <>{short(priced[i].price.liveHours)}<small>{t.hoursDiscount ? `${pct(t.hoursDiscount)} off` : "list"}</small></> },
       { label: "Sigmafy licences", hint: "Per delegate per year", cell: (t, i) => <>{short(priced[i].price.licences)}<small>{`${rand(t.licencePerDelegate)} each`}</small></> },
       { label: "Total per year", cell: (_, i) => short(priced[i].price.total), strong: true },
     ],
@@ -67,58 +82,44 @@ const sections: { title: string; rows: Row[] }[] = [
 ];
 
 export default function DeploymentPricing() {
-  const [position, setPosition] = useState(70);
-  const delegates = delegatesAt(position);
-  const current = tierFor(delegates);
-  const { tier, price } = priced[current];
-  const list = DEPLOYMENT_RATES.beltList;
+  const list = DEPLOYMENT_RATES.onlineBelt;
 
   return (
     <div className="dp">
-      <div className="dp-top">
-        <p className="dp-built">
-          Every price adds up from the rows below it. Built from our published pre-paid belt prices (Yellow Belt {DEPLOYMENT_RATES.beltMode.yellow} {rand(list.yellow)}, Green Belt {DEPLOYMENT_RATES.beltMode.green} {rand(list.green)}, Black Belt {DEPLOYMENT_RATES.beltMode.black} {rand(list.black)} a person), coaching at {rand(DEPLOYMENT_RATES.coachingDay)} a day, and a Sigmafy licence per delegate.
-        </p>
-        <div className="dp-picker">
-          <div className="dp-picker__head">
-            <label htmlFor="dp-delegates">Delegates per year</label>
-            <strong className="k-num">{fmt(delegates)}</strong>
-          </div>
-          <input
-            id="dp-delegates"
-            className="dp-range"
-            type="range"
-            min={0}
-            max={100}
-            step={1}
-            value={position}
-            onChange={(event) => setPosition(Number(event.target.value))}
-            aria-valuetext={`${fmt(delegates)} delegates per year, ${tier.name} tier`}
-          />
-          <dl className="dp-picker__facts">
-            <div><dt>Your tier</dt><dd>{tier.name}</dd></div>
-            <div><dt>Per delegate</dt><dd className="k-num dp-signal">{rand(price.perDelegate)}</dd></div>
-            <div><dt>Estimated return</dt><dd className="k-num dp-ember">{times(price.savingsLow / price.total)}–{times(price.savingsLikely / price.total)}</dd></div>
-          </dl>
-        </div>
-      </div>
+      <section className="dp-ways" aria-labelledby="dp-ways-title">
+        <p id="dp-ways-title" className="k-mono">Ways to use your hours</p>
+        <ul className="dp-ways__grid">
+          {ways.map((way) => (
+            <li key={way.id} className="dp-way" data-included={way.included || undefined}>
+              <span className="dp-way__icon" aria-hidden>
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">{icons[way.id]}</svg>
+              </span>
+              <strong>{way.name}</strong>
+              <span className="dp-way__line">{way.line}</span>
+              <span className="dp-way__uses">{way.uses}</span>
+              <span className="dp-way__per">{way.per}</span>
+            </li>
+          ))}
+        </ul>
+        <p className="dp-ways__more">Need more? Extra hours are {rand(DEPLOYMENT_RATES.liveHour)} each, or {rand(DEPLOYMENT_RATES.liveDay)} a day.</p>
+      </section>
 
       <div className="dp-scroll" tabIndex={0} role="region" aria-label="Deployment tiers compared">
         <table className="dp-table">
-          <caption className="sr-only">Deployment tiers, what each includes, its yearly price and estimated savings</caption>
+          <caption className="sr-only">Deployment tiers: what each includes, its yearly price and estimated savings</caption>
           <thead>
             <tr>
               <th scope="col" className="dp-corner">Per year</th>
-              {priced.map(({ tier: column, price: columnPrice }, index) => (
-                <th key={column.id} scope="col" data-current={index === current || undefined}>
-                  <button type="button" className="dp-head" onClick={() => setPosition(Math.floor((Math.log(column.cap / MIN_DELEGATES) / Math.log(MAX_DELEGATES / MIN_DELEGATES)) * 100))}>
-                    <span className="k-mono">{column.name}</span>
-                    <span className="dp-head__cap">Up to {fmt(column.cap)}</span>
+              {priced.map(({ tier, price }) => (
+                <th key={tier.id} scope="col">
+                  <span className="dp-head">
+                    <span className="k-mono">{tier.name}</span>
+                    <span className="dp-head__cap">Up to {fmt(tier.cap)}</span>
                     <span className="dp-head__unit">delegates a year</span>
-                    <span className="dp-head__price k-num">{short(columnPrice.total / 12)}</span>
+                    <span className="dp-head__price k-num">{short(price.total / 12)}</span>
                     <span className="dp-head__unit">a month</span>
-                    <span className="dp-head__each k-num">{rand(columnPrice.perDelegate)} a delegate</span>
-                  </button>
+                    <span className="dp-head__each k-num">{rand(price.perDelegate)} a delegate</span>
+                  </span>
                 </th>
               ))}
             </tr>
@@ -129,7 +130,7 @@ export default function DeploymentPricing() {
               {section.rows.map((row) => (
                 <tr key={row.label} data-strong={row.strong || undefined} data-tone={row.tone}>
                   <th scope="row"><span>{row.label}</span>{row.hint && <small>{row.hint}</small>}</th>
-                  {DEPLOYMENT_TIERS.map((column, index) => <td key={column.id} data-current={index === current || undefined}>{row.cell(column, index)}</td>)}
+                  {DEPLOYMENT_TIERS.map((tier, index) => <td key={tier.id}>{row.cell(tier, index)}</td>)}
                 </tr>
               ))}
             </tbody>
@@ -137,9 +138,9 @@ export default function DeploymentPricing() {
           <tfoot>
             <tr>
               <td />
-              {priced.map(({ tier: column }, index) => (
-                <td key={column.id} data-current={index === current || undefined}>
-                  <TrackedLink href="/contact?interest=training" eventOffer={`deployment ${column.name}`} className={`k-btn ${index === current ? "k-btn--solid" : "k-btn--ghost"} dp-cta`}>
+              {priced.map(({ tier }, index) => (
+                <td key={tier.id}>
+                  <TrackedLink href="/contact?interest=training" eventOffer={`deployment ${tier.name}`} className="k-btn k-btn--ghost dp-cta">
                     {index === priced.length - 1 ? "Talk to us" : "Plan this tier"}
                   </TrackedLink>
                 </td>
@@ -149,7 +150,9 @@ export default function DeploymentPricing() {
         </table>
       </div>
 
-      <p className="dp-note">Ex VAT, billed monthly on an annual term. Your final quote follows a scoping call.</p>
+      <p className="dp-note">
+        Belt places are priced at our published pre-paid online prices (Yellow Belt {rand(list.yellow)}, Green Belt {rand(list.green)}, Black Belt {rand(list.black)} a person), live hours at {rand(DEPLOYMENT_RATES.liveHour)} an hour. Ex VAT, billed monthly on an annual term. Unused hours do not roll over. Your final quote follows a scoping call.
+      </p>
 
       <aside className="dp-sources" aria-labelledby="dp-sources-title">
         <p id="dp-sources-title" className="k-mono k-mono--ember">Where the savings estimate comes from</p>
