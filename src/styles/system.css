@@ -5086,6 +5086,23 @@ fieldset[disabled] .k-choice { cursor: not-allowed; }
 .dp-table tfoot td { padding: 1rem .6rem; border-top: 1px solid var(--hair-2); }
 .dp-cta { width: 100%; justify-content: center; white-space: nowrap; }
 .dp-note { font-size: .82rem; color: var(--warm-45); }
+.dp-credits { display: flex; flex-direction: column; gap: 1.25rem; padding: 1.75rem 1.5rem; border: 1px solid var(--hair-2); border-radius: 22px; background: var(--black-2); }
+.dp-credits header { display: flex; flex-direction: column; gap: .5rem; max-width: 46rem; }
+.dp-credits h2 { font-size: clamp(1.4rem, 2.4vw, 1.9rem); color: var(--warm); }
+.dp-credits header > p:not(.k-mono) { color: var(--warm-70); line-height: 1.6; }
+.dp-credits__grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 1.5rem; align-items: start; }
+.dp-credits__belts { width: 100%; border-collapse: collapse; }
+.dp-credits__belts th, .dp-credits__belts td { padding: .7rem .25rem; border-bottom: 1px solid var(--hair); text-align: left; color: var(--warm); }
+.dp-credits__belts thead th { font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--warm-45); font-weight: 500; }
+.dp-credits__belts tbody th span { display: block; }
+.dp-credits__belts tbody th small { display: block; color: var(--warm-45); font-size: .8rem; font-weight: 400; margin-top: .15rem; }
+.dp-credits__belts td { text-align: right; font-size: 1.05rem; }
+.dp-credits__packs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; list-style: none; padding: 0; margin: 0; }
+.dp-credits__packs li { display: flex; flex-direction: column; gap: .2rem; padding: 1rem 1.1rem; border: 1px solid var(--hair); border-radius: 16px; color: var(--warm); }
+.dp-credits__packs strong { font-size: 1.5rem; }
+.dp-credits__packs li > span:not(.k-mono) { color: var(--warm-70); font-size: .9rem; }
+.dp-credits__packs small { color: var(--ember); font-size: .78rem; }
+@media (max-width: 760px) { .dp-credits__grid { grid-template-columns: minmax(0, 1fr); } .dp-credits { padding: 1.25rem 1rem; } }
 .dp-sources { display: flex; flex-direction: column; gap: .6rem; padding: 1.25rem 1.5rem; border: 1px solid var(--hair-2); border-radius: 16px; }
 .dp-sources > p:not(.k-mono) { color: var(--warm); font-size: .92rem; }
 .dp-sources ul { padding-left: 1.1rem; list-style: disc; color: var(--warm-70); font-size: .85rem; line-height: 1.6; }

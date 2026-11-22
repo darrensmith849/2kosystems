@@ -3,8 +3,12 @@
 import { Fragment, useState, type ReactNode } from "react";
 import TrackedLink from "@/components/cinema/TrackedLink";
 import {
+  BELT_CREDITS,
   BELT_PRICES,
   COACHING_DAY_RATE,
+  CREDIT_PACKS,
+  beltCredits,
+  packCredits,
   DEPLOYMENT_MODES,
   DEPLOYMENT_TIERS,
   SAVINGS_BASIS,
@@ -65,6 +69,7 @@ function sectionsFor(mode: DeploymentMode): { title: string; rows: Row[] }[] {
       rows: [
         { label: "White Belt for every delegate", hint: "Simulation, exam and certificate, online", cell: () => "✓" },
         { label: "Yellow Belt places", hint: `Delivered ${FORMAT_WORD[plan.belts.yellow]}`, cell: ({ tier }) => fmt(tier.places.yellow) },
+        { label: "Orange Belt places", hint: "Delivered online · a small AI-marked project", cell: () => "With credits" },
         { label: "Green Belt places", hint: `Delivered ${FORMAT_WORD[plan.belts.green]} · each runs a real project`, cell: ({ tier }) => fmt(tier.places.green) },
         { label: "Black Belt places", hint: `Delivered ${FORMAT_WORD[plan.belts.black]} · your future coaches`, cell: ({ tier }) => fmt(tier.places.black) },
         { label: "Live trainer time", hint: "How much of the training is live", cell: () => plan.liveTime },
@@ -182,6 +187,39 @@ export default function DeploymentPricing() {
           </tfoot>
         </table>
       </div>
+
+      <section className="dp-credits" aria-labelledby="dp-credits-title">
+        <header>
+          <p className="k-mono k-mono--ember">More places when you need them</p>
+          <h2 id="dp-credits-title">Belt credits</h2>
+          <p>Every tier includes up to its listed places. When more of your people want to go further, buy belt credits and spend them on any belt. One credit is R1,000, and a place costs its list price.</p>
+        </header>
+        <div className="dp-credits__grid">
+          <table className="dp-credits__belts">
+            <caption className="sr-only">Credits per belt place</caption>
+            <thead><tr><th scope="col">One place</th><th scope="col">Credits</th></tr></thead>
+            <tbody>
+              {BELT_CREDITS.map((b) => (
+                <tr key={b.belt}>
+                  <th scope="row"><span>{b.belt}</span><small>{b.format} · {b.note}</small></th>
+                  <td className="k-num">{String(+beltCredits(b.price).toFixed(2))}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <ul className="dp-credits__packs" aria-label="Credit packs">
+            {CREDIT_PACKS.map((pack) => (
+              <li key={pack.name}>
+                <span className="k-mono">{pack.name}</span>
+                <strong className="k-num">{short(pack.price)}</strong>
+                <span>{fmt(packCredits(pack))} credits</span>
+                <small>{pack.bonus ? `${pct(pack.bonus)} bonus` : "No bonus"}</small>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <p className="dp-note">Credits last for the contract year and roll over once. Each tier&apos;s included places are used first. Higher belts still need their prerequisites: a Green Belt place needs a project with a sponsor.</p>
+      </section>
 
       <p className="dp-note">
         Built from our published pre-paid belt prices for each format (Green Belt, for example, is {rand(BELT_PRICES.online.green)} online, {rand(BELT_PRICES.virtual.green)} live virtual and {rand(BELT_PRICES.onsite.green)} on-site), coaching at {rand(COACHING_DAY_RATE)} a day and a Sigmafy licence per delegate. Ex VAT, billed monthly on an annual term. Your final quote follows a scoping call.

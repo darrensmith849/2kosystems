@@ -163,6 +163,40 @@ export const DEPLOYMENT_MODES: Record<DeploymentMode, { name: string; tagline: s
 
 export const COACHING_DAY_RATE = 9500;
 
+/* ---------- Belt credits ----------
+   Each tier includes up to a set number of places per belt. Anything beyond is
+   bought as belt credits, so growth is paid for and never becomes unpaid work
+   (Darren, 22 Nov 2026). One credit is worth R1,000. A place costs its belt's
+   list price in the recommended mix format, so credits never undercut the
+   price list; the volume discount comes from the bonus credits in the bigger
+   packs. Credits last for the contract year and roll over once at most. */
+
+export const CREDIT_VALUE = 1000;
+
+/** Orange Belt is not priced in the portal yet: set between Yellow and Green online until it is. */
+export const ORANGE_PRICE = 9500;
+
+export type BeltCredit = { belt: string; format: string; price: number; note: string };
+
+export const BELT_CREDITS: readonly BeltCredit[] = [
+  { belt: "White Belt", format: "Online", price: 250, note: "Licence, simulation, exam and certificate" },
+  { belt: "Yellow Belt", format: "Online", price: BELT_PRICES.online.yellow, note: "Recorded lessons, exam and certificate" },
+  { belt: "Orange Belt", format: "Online", price: ORANGE_PRICE, note: "Recorded lessons and a small AI-marked project" },
+  { belt: "Green Belt", format: "Hybrid", price: BELT_PRICES.hybrid.green, note: "A real project, coached at each phase" },
+  { belt: "Black Belt", format: "Live virtual", price: BELT_PRICES.virtual.black, note: "Mentored, and licensed to coach" },
+];
+
+export const beltCredits = (price: number) => price / CREDIT_VALUE;
+
+export const CREDIT_PACKS = [
+  { name: "Top-up", price: 100_000, bonus: 0 },
+  { name: "Growth", price: 250_000, bonus: 0.1 },
+  { name: "Scale", price: 500_000, bonus: 0.15 },
+  { name: "Expansion", price: 1_000_000, bonus: 0.2 },
+] as const;
+
+export const packCredits = (pack: { price: number; bonus: number }) => Math.round((pack.price / CREDIT_VALUE) * (1 + pack.bonus));
+
 export type DeploymentTier = {
   id: string;
   name: string;
